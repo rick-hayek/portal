@@ -189,4 +189,85 @@ export const adminRouter = router({
         .mutation(({ ctx, input }) =>
             ctx.prisma.guestbookEntry.delete({ where: { id: input.id } }),
         ),
+
+    // ── Portfolio CRUD ─────────────────────────────────
+
+    /** List all projects (admin) */
+    projectList: adminProcedure.query(({ ctx }) =>
+        ctx.prisma.project.findMany({
+            orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+        }),
+    ),
+
+    /** Create project */
+    projectCreate: adminProcedure
+        .input(
+            z.object({
+                title: z.string().min(1).max(200),
+                slug: z.string().min(1).max(200),
+                description: z.string().min(1),
+                coverImage: z.string().optional(),
+                liveUrl: z.string().optional(),
+                repoUrl: z.string().optional(),
+                techStack: z.array(z.string()).default([]),
+                sortOrder: z.number().int().default(0),
+                featured: z.boolean().default(false),
+            }),
+        )
+        .mutation(({ ctx, input }) =>
+            ctx.prisma.project.create({ data: input }),
+        ),
+
+    /** Update project */
+    projectUpdate: adminProcedure
+        .input(
+            z.object({
+                id: z.string(),
+                title: z.string().min(1).max(200).optional(),
+                slug: z.string().min(1).max(200).optional(),
+                description: z.string().min(1).optional(),
+                coverImage: z.string().nullable().optional(),
+                liveUrl: z.string().nullable().optional(),
+                repoUrl: z.string().nullable().optional(),
+                techStack: z.array(z.string()).optional(),
+                sortOrder: z.number().int().optional(),
+                featured: z.boolean().optional(),
+            }),
+        )
+        .mutation(({ ctx, input }) => {
+            const { id, ...data } = input;
+            return ctx.prisma.project.update({ where: { id }, data });
+        }),
+
+    /** Delete project */
+    projectDelete: adminProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(({ ctx, input }) =>
+            ctx.prisma.project.delete({ where: { id: input.id } }),
+        ),
+
+    // ── Site Settings ──────────────────────────────────
+
+    /** Get a site config value */
+    configGet: adminProcedure
+        .input(z.object({ key: z.string() }))
+        .query(({ ctx, input }) =>
+            ctx.prisma.siteConfig.findUnique({ where: { key: input.key } }),
+        ),
+
+    /** Set a site config value */
+    configSet: adminProcedure
+        .input(z.object({ key: z.string(), value: z.any() }))
+        .mutation(({ ctx, input }) =>
+            ctx.prisma.siteConfig.upsert({
+                where: { key: input.key },
+                update: { value: input.value },
+                create: { key: input.key, value: input.value },
+            }),
+        ),
+
+    /** List all config entries */
+    configList: adminProcedure.query(({ ctx }) =>
+        ctx.prisma.siteConfig.findMany({ orderBy: { key: 'asc' } }),
+    ),
 });

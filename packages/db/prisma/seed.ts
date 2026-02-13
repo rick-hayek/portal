@@ -13,6 +13,9 @@ async function main() {
     await prisma.post.deleteMany();
     await prisma.tag.deleteMany();
     await prisma.category.deleteMany();
+    await prisma.project.deleteMany();
+    await prisma.pageView.deleteMany();
+    await prisma.siteConfig.deleteMany();
     await prisma.session.deleteMany();
     await prisma.account.deleteMany();
     await prisma.user.deleteMany();
@@ -289,6 +292,53 @@ const elapsedMs = Date.now() - startTime;
         ],
     });
     console.log('  ✓ Guestbook entries: 2');
+
+    // ── Portfolio Projects ──────────────────────────────
+    await prisma.project.createMany({
+        data: [
+            {
+                title: 'Portal',
+                slug: 'portal',
+                description: '全栈个人网站引擎，基于 Next.js 16 + tRPC + Prisma + PostgreSQL 构建。支持多主题、模块化架构、实时搜索与管理后台。',
+                techStack: ['Next.js', 'TypeScript', 'tRPC', 'Prisma', 'PostgreSQL', 'Tailwind CSS'],
+                featured: true,
+                sortOrder: 0,
+                liveUrl: 'https://portal.dev',
+                repoUrl: 'https://github.com/rick/portal',
+            },
+            {
+                title: 'Chat App',
+                slug: 'chat-app',
+                description: '实时聊天应用，支持群组、私聊和文件分享，基于 WebSocket 实现毫秒级消息推送。',
+                techStack: ['React', 'Node.js', 'WebSocket', 'Redis'],
+                featured: true,
+                sortOrder: 1,
+                repoUrl: 'https://github.com/rick/chat-app',
+            },
+            {
+                title: 'CLI Tool Kit',
+                slug: 'cli-toolkit',
+                description: '一套命令行工具集，包含文件批处理、JSON 格式化、代码统计等实用工具。',
+                techStack: ['Rust', 'CLI'],
+                featured: false,
+                sortOrder: 2,
+                repoUrl: 'https://github.com/rick/cli-toolkit',
+            },
+        ],
+    });
+    console.log('  ✓ Portfolio projects: 3');
+
+    // ── Sample Page Views ────────────────────────────────
+    const paths = ['/', '/blog', '/about', '/portfolio', '/guestbook', '/blog/nextjs-16-new-features'];
+    const pvData = [];
+    for (let i = 0; i < 50; i++) {
+        const daysAgo = Math.floor(Math.random() * 30);
+        const d = new Date();
+        d.setDate(d.getDate() - daysAgo);
+        pvData.push({ path: paths[Math.floor(Math.random() * paths.length)]!, createdAt: d });
+    }
+    await prisma.pageView.createMany({ data: pvData });
+    console.log('  ✓ Page views: 50');
 
     console.log('\n✅ Seed complete!');
 }

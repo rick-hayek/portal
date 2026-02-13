@@ -7,8 +7,11 @@ import { UserMenu } from '@/components/auth/UserMenu';
 const navItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/posts', label: 'Posts', icon: '📝' },
+    { href: '/admin/portfolio', label: 'Portfolio', icon: '🚀' },
     { href: '/admin/comments', label: 'Comments', icon: '💬' },
     { href: '/admin/guestbook', label: 'Guestbook', icon: '📒' },
+    { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
+    { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -40,8 +43,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 key={item.href}
                                 href={item.href}
                                 className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${isActive
-                                        ? 'bg-[var(--portal-color-primary)]/10 font-medium text-[var(--portal-color-primary)]'
-                                        : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-text)]'
+                                    ? 'bg-[var(--portal-color-primary)]/10 font-medium text-[var(--portal-color-primary)]'
+                                    : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-text)]'
                                     }`}
                             >
                                 <span>{item.icon}</span>
