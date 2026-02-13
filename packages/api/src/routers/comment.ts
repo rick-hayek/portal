@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '../trpc';
+import { router, publicProcedure, protectedProcedure } from '../trpc';
 
 export const commentRouter = router({
     /** Get comments for a post (top-level with nested replies) */
@@ -18,13 +18,11 @@ export const commentRouter = router({
             });
         }),
 
-    /** Submit a new comment */
-    create: publicProcedure
+    /** Submit a new comment — requires authentication */
+    create: protectedProcedure
         .input(
             z.object({
                 postId: z.string(),
-                authorName: z.string().min(1).max(100),
-                authorEmail: z.string().email().optional(),
                 content: z.string().min(1).max(2000),
                 parentId: z.string().optional(),
             }),
@@ -33,11 +31,11 @@ export const commentRouter = router({
             return ctx.prisma.comment.create({
                 data: {
                     postId: input.postId,
-                    authorName: input.authorName,
-                    authorEmail: input.authorEmail,
+                    authorName: ctx.user.name ?? ctx.user.email ?? 'Anonymous',
+                    authorEmail: ctx.user.email,
                     content: input.content,
                     parentId: input.parentId,
-                    status: 'pending', // Auto-approve can be added later
+                    status: 'pending',
                 },
             });
         }),

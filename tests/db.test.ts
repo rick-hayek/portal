@@ -59,7 +59,7 @@ describe('@portal/db — Data Model Integrity', () => {
 describe('@portal/db — Key Field Validation', () => {
     // User Model
     it('User contains email unique constraint', () => {
-        expect(schema).toContain('email     String   @unique');
+        expect(schema).toMatch(/email\s+String\s+@unique/);
     });
 
     it('User contains role field (default viewer)', () => {

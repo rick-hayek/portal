@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { ThemeSwitcher } from './ThemeSwitcher';
+import { UserMenu } from '../auth/UserMenu';
+import { SearchDialog } from '../search/SearchDialog';
 import type { NavItem } from '@portal/shared';
 
 interface HeaderProps {
@@ -37,7 +39,13 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                         </a>
                     ))}
                     <div className="ml-2 border-l border-[var(--portal-color-border)] pl-2">
+                        <SearchDialog />
+                    </div>
+                    <div className="ml-2 border-l border-[var(--portal-color-border)] pl-2">
                         <ThemeSwitcher />
+                    </div>
+                    <div className="ml-2 border-l border-[var(--portal-color-border)] pl-2">
+                        <UserMenu />
                     </div>
                 </nav>
 
@@ -76,8 +84,9 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                                 {item.label}
                             </a>
                         ))}
-                        <div className="border-t border-[var(--portal-color-border)] pt-3">
+                        <div className="flex items-center justify-between border-t border-[var(--portal-color-border)] pt-3">
                             <ThemeSwitcher />
+                            <UserMenu />
                         </div>
                     </nav>
                 </div>
