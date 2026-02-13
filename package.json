@@ -1,0 +1,26 @@
+{
+  "name": "portal",
+  "private": true,
+  "description": "Modular personal website platform",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "turbo typecheck",
+    "clean": "turbo clean && rm -rf node_modules",
+    "db:generate": "pnpm --filter @portal/db generate",
+    "db:migrate": "pnpm --filter @portal/db migrate:dev",
+    "db:studio": "pnpm --filter @portal/db studio"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.15",
+    "turbo": "^2.8.7",
+    "typescript": "^5.9.3"
+  }
+}

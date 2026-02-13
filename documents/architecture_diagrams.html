@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal — 架构图集</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d2e;
+      --text: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --accent: #6366f1;
+      --border: #2d3148;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #6366f1, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    h1 + p { color: var(--text-secondary); margin-bottom: 2.5rem; }
+    h2 {
+      font-size: 1.4rem;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h2 span { color: var(--accent); margin-right: 0.5rem; }
+    .diagram-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+    .diagram-card .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+    .note {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--accent);
+    }
+    nav {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+    nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    nav a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<h1>Portal — 架构图集</h1>
+<p>本文件使用 Mermaid.js 渲染，请在浏览器中打开查看所有架构图。</p>
+
+<nav>
+  <ul>
+    <li><a href="#system-arch">系统架构</a></li>
+    <li><a href="#module-arch">模块化架构</a></li>
+    <li><a href="#theme-arch">主题系统</a></li>
+    <li><a href="#admin-arch">管理后台</a></li>
+    <li><a href="#data-model">数据模型</a></li>
+    <li><a href="#deploy-flow">部署流程</a></li>
+    <li><a href="#impl-gantt">实现路线图</a></li>
+  </ul>
+</nav>
+
+<!-- ==================== 1. 系统架构 ==================== -->
+<h2 id="system-arch"><span>1</span>系统架构总览</h2>
+<div class="diagram-card">
+<pre class="mermaid">
+graph TB
+    subgraph Frontend["前端 (Next.js 15)"]
+        A["主题引擎<br/>ThemeProvider"] --> B["模块加载器<br/>Module Loader"]
+        B --> C["功能模块<br/>Feature Modules"]
+        B --> D["布局系统<br/>Layout System"]
+        C --> E["页面路由<br/>App Router"]
+    end
+
+    subgraph Admin["管理后台 (Admin)"]
+        F["仪表盘<br/>Dashboard"] --> G["内容管理<br/>CMS"]
+        F --> H["主题/模块配置<br/>Config Manager"]
+        F --> I["监控面板<br/>Monitoring"]
+        F --> J["用户管理<br/>User Mgmt"]
+    end
+
+    subgraph Backend["后端 (tRPC + Next.js API)"]
+        K["tRPC Router"] --> L["认证服务<br/>Auth Service"]
+        K --> M["内容服务<br/>Content Service"]
+        K --> N["配置服务<br/>Config Service"]
+        K --> O["分析服务<br/>Analytics Service"]
+        K --> P["媒体服务<br/>Media Service"]
+    end
+
+    subgraph Data["数据层"]
+        Q[("PostgreSQL<br/>主数据库")]
+        R[("Redis<br/>缓存/限流")]
+        S[("S3/R2<br/>对象存储")]
+        T[("MeiliSearch<br/>搜索引擎")]
+    end
+
+    E --> K
+    F --> K
+    L & M & N & O & P --> Q
+    L & M & N --> R
+    P --> S
+    M --> T
+
+    style Frontend fill:#1e293b,stroke:#6366f1,color:#e2e8f0
+    style Admin fill:#1e293b,stroke:#a78bfa,color:#e2e8f0
+    style Backend fill:#1e293b,stroke:#22d3ee,color:#e2e8f0
+    style Data fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+</pre>
+</div>
+<p class="note">全栈 TypeScript 架构：Next.js 15 承载前端 + API 层，tRPC 实现端到端类型安全。</p>
+
+<!-- ==================== 2. 模块化架构 ==================== -->
+<h2 id="module-arch"><span>2</span>模块化架构</h2>
+<div class="diagram-card">
+<pre class="mermaid">
+graph LR
+    subgraph Core["核心层 (始终启用)"]
+        CORE["核心框架"] --> THEME["🎨 主题系统"]
+        CORE --> AUTH["🔐 认证系统"]
+        CORE --> ROUTER["🔀 路由系统"]
+        CORE --> I18N["🌐 国际化"]
+        CORE --> SEO["📈 SEO 引擎"]
+    end
+
+    subgraph Modules["可选功能模块"]
+        MOD_BLOG["📝 博客"]
+        MOD_PORTFOLIO["🎨 作品集"]
+        MOD_RESUME["📄 简历"]
+        MOD_GALLERY["🖼️ 图库"]
+        MOD_GUESTBOOK["💬 留言板"]
+        MOD_LINKS["🔗 友链"]
+        MOD_ABOUT["👤 关于我"]
+        MOD_TOOLS["🛠️ 工具箱"]
+        MOD_ANALYTICS["📊 数据统计"]
+        MOD_SEARCH["🔍 全站搜索"]
+    end
+
+    CORE --> MOD_BLOG
+    CORE --> MOD_PORTFOLIO
+    CORE --> MOD_RESUME
+    CORE --> MOD_GALLERY
+    CORE --> MOD_GUESTBOOK
+    CORE --> MOD_LINKS
+    CORE --> MOD_ABOUT
+    CORE --> MOD_TOOLS
+    CORE --> MOD_ANALYTICS
+    CORE --> MOD_SEARCH
+
+    style Core fill:#1e293b,stroke:#6366f1,color:#e2e8f0
+    style Modules fill:#1e293b,stroke:#22d3ee,color:#e2e8f0
+</pre>
+</div>
+
+<!-- ==================== 3. 主题系统 ==================== -->
+<h2 id="theme-arch"><span>3</span>主题系统架构</h2>
+<div class="diagram-card">
+<pre class="mermaid">
+graph TD
+    A["主题配置文件<br/>theme.config.ts"] --> B["主题引擎<br/>ThemeProvider"]
+    B --> C["CSS 变量注入<br/>:root { --color-primary: ... }"]
+    B --> D["组件级变体<br/>Tailwind dark: / theme-*"]
+    C --> E["全局样式"]
+    D --> F["模块样式适配"]
+
+    G["用户偏好<br/>localStorage"] --> B
+    H["系统偏好<br/>prefers-color-scheme"] --> B
+
+    I["极简白"] --> A
+    J["暗夜黑"] --> A
+    K["赛博朋克"] --> A
+    L["自然绿"] --> A
+    M["复古棕"] --> A
+
+    style B fill:#6366f1,stroke:#818cf8,color:#fff
+</pre>
+</div>
+
+<!-- ==================== 4. 管理后台 ==================== -->
+<h2 id="admin-arch"><span>4</span>管理后台功能结构</h2>
+<div class="diagram-card">
+<pre class="mermaid">
+graph TB
+    subgraph AdminDashboard["管理后台"]
+        A["📊 仪表盘"]
+        B["📝 内容管理"]
+        C["🎨 外观配置"]
+        D["⚙️ 模块管理"]
+        E["👥 用户管理"]
+        F["📈 数据分析"]
+        G["🔧 系统设置"]
+    end
+
+    A --> A1["实时访问量"]
+    A --> A2["系统状态"]
+    A --> A3["近期活动"]
+    A --> A4["快捷操作"]
+
+    B --> B1["文章管理"]
+    B --> B2["项目管理"]
+    B --> B3["媒体库"]
+    B --> B4["评论管理"]
+
+    C --> C1["主题切换"]
+    C --> C2["布局配置"]
+    C --> C3["导航菜单"]
+    C --> C4["自定义 CSS"]
+
+    D --> D1["模块启用/禁用"]
+    D --> D2["预设组合"]
+    D --> D3["模块配置"]
+
+    F --> F1["访问统计"]
+    F --> F2["来源分析"]
+    F --> F3["热门内容"]
+    F --> F4["性能监控"]
+
+    style AdminDashboard fill:#1e293b,stroke:#a78bfa,color:#e2e8f0
+</pre>
+</div>
+
+<!-- ==================== 5. 数据模型 ==================== -->
+<h2 id="data-model"><span>5</span>数据模型 (ER 图)</h2>
+<div class="diagram-card">
+<pre class="mermaid">
+erDiagram
+    User {
+        string id PK
+        string email
+        string name
+        string role
+        datetime createdAt
+    }
+
+    Post {
+        string id PK
+        string title
+        string slug
+        string content
+        string status
+        string categoryId FK
+        string authorId FK
+        datetime publishedAt
+    }
+
+    Tag {
+        string id PK
+        string name
+        string slug
+    }
+
+    PostTag {
+        string postId FK
+        string tagId FK
+    }
+
+    Category {
+        string id PK
+        string name
+        string slug
+    }
+
+    Project {
+        string id PK
+        string title
+        string description
+        string coverImage
+        string liveUrl
+        string repoUrl
+        int sortOrder
+    }
+
+    ProjectTech {
+        string projectId FK
+        string techName
+    }
+
+    Media {
+        string id PK
+        string url
+        string type
+        int size
+        string alt
+        datetime uploadedAt
+    }
+
+    Comment {
+        string id PK
+        string content
+        string authorName
+        string authorEmail
+        string postId FK
+        string parentId FK
+        string status
+        datetime createdAt
+    }
+
+    GuestbookEntry {
+        string id PK
+        string content
+        string authorName
+        string avatar
+        datetime createdAt
+    }
+
+    Link {
+        string id PK
+        string name
+        string url
+        string avatar
+        string description
+        string category
+        boolean isAlive
+    }
+
+    PageView {
+        string id PK
+        string path
+        string referrer
+        string userAgent
+        string country
+        datetime timestamp
+    }
+
+    SiteConfig {
+        string id PK
+        string key
+        json value
+    }
+
+    User ||--o{ Post : "writes"
+    Category ||--o{ Post : "contains"
+    Post ||--o{ Comment : "has"
+    Post ||--o{ PostTag : "tagged"
+    Tag ||--o{ PostTag : "used in"
+    Comment ||--o{ Comment : "replies to"
+    Project ||--o{ ProjectTech : "uses"
+</pre>
+</div>
+
+<!-- ==================== 6. 部署流程 ==================== -->
+<h2 id="deploy-flow"><span>6</span>CI/CD 与部署流程</h2>
+<div class="diagram-card">
+<pre class="mermaid">
+graph LR
+    A["🧑‍💻 本地开发"] -->|"git push"| B["GitHub"]
+    B -->|"Webhook"| C["GitHub Actions"]
+    C --> D{"分支判断"}
+    D -->|"main"| E["🚀 生产部署<br/>Vercel Production"]
+    D -->|"feature/*"| F["👀 预览部署<br/>Vercel Preview"]
+
+    C --> G["自动化检查"]
+    G --> G1["✅ 类型检查<br/>tsc --noEmit"]
+    G --> G2["✅ Lint / Format<br/>Biome"]
+    G --> G3["✅ 单元测试<br/>Vitest"]
+    G --> G4["✅ E2E 测试<br/>Playwright"]
+
+    E --> H["🌐 生产环境"]
+    H --> H1["Vercel CDN"]
+    H --> H2["Neon PostgreSQL"]
+    H --> H3["Upstash Redis"]
+
+    style E fill:#22c55e,stroke:#16a34a,color:#fff
+    style F fill:#f59e0b,stroke:#d97706,color:#fff
+</pre>
+</div>
+
+<!-- ==================== 7. 实现路线图 ==================== -->
+<h2 id="impl-gantt"><span>7</span>实现路线图 (Gantt)</h2>
+<div class="diagram-card">
+<pre class="mermaid">
+gantt
+    title Portal 实现路线图 (MVP 优先)
+    dateFormat  YYYY-MM-DD
+    axisFormat  %m/%d
+
+    section Phase 0 基础设施
+    Monorepo + 工具链 + Docker    :p0, 2026-02-17, 3d
+
+    section Phase 1 核心系统
+    主题引擎                      :p1a, after p0, 4d
+    布局系统与导航                :p1b, after p1a, 3d
+    配置系统与模块加载器          :p1c, after p1b, 3d
+
+    section Phase 2 MVP 最小系统
+    数据库 Prisma + tRPC API 层   :p2a, after p1c, 4d
+    About 关于我模块              :p2b, after p2a, 2d
+    Blog 博客模块                 :p2c, after p2b, 5d
+    Guestbook 留言板              :p2d, after p2c, 3d
+
+    section Phase 3 内容增强
+    Search 全站搜索               :p3a, after p2d, 3d
+    认证与权限系统                :p3b, after p3a, 3d
+    管理后台 (仪表盘+内容管理)    :p3c, after p3b, 7d
+
+    section Phase 4 展示模块
+    Portfolio 作品集              :p4a, after p3c, 4d
+    Analytics 数据统计            :p4b, after p4a, 3d
+    管理后台 (外观+模块管理)      :p4c, after p4b, 3d
+
+    section Phase 5 扩展模块
+    Resume 简历                   :p5a, after p4c, 3d
+    Gallery 图库                  :p5b, after p5a, 4d
+    Links 友链                    :p5c, after p5b, 2d
+    Tools 工具箱                  :p5d, after p5c, 3d
+
+    section Phase 6 优化与上线
+    SEO / i18n / 性能优化         :p6a, after p5d, 3d
+    CI/CD + 生产部署              :p6b, after p6a, 3d
+</pre>
+</div>
+<p class="note">MVP 优先策略：Phase 0-2 快速搭起可运行系统（DB→API→前端），之后迭代增强。</p>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#6366f1',
+      primaryTextColor: '#e2e8f0',
+      lineColor: '#6366f1',
+      secondaryColor: '#1e293b',
+      tertiaryColor: '#1e293b',
+    },
+    flowchart: { curve: 'basis', padding: 20 },
+    er: { fontSize: 12 },
+    gantt: {
+      fontSize: 12,
+      barHeight: 24,
+      barGap: 6,
+    }
+  });
+</script>
+
+</body>
+</html>
