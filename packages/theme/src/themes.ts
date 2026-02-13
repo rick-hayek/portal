@@ -3,7 +3,7 @@ import type { ThemeConfig } from '@portal/shared';
 export const themes: Record<string, ThemeConfig> = {
   'minimal-light': {
     id: 'minimal-light',
-    name: '极简白',
+    name: 'Minimal Light',
     mode: 'light',
     colors: {
       primary: '#1a1a2e',
@@ -30,9 +30,10 @@ export const themes: Record<string, ThemeConfig> = {
       transition: '0.2s ease',
     },
   },
+
   'dark-neon': {
     id: 'dark-neon',
-    name: '暗夜黑',
+    name: 'Dark Neon',
     mode: 'dark',
     colors: {
       primary: '#6366f1',
@@ -57,6 +58,96 @@ export const themes: Record<string, ThemeConfig> = {
       shadow: '0 4px 14px rgba(99, 102, 241, 0.15)',
       blur: '12px',
       transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    },
+  },
+
+  cyberpunk: {
+    id: 'cyberpunk',
+    name: 'Cyberpunk',
+    mode: 'dark',
+    colors: {
+      primary: '#ff2a6d',
+      secondary: '#d300c5',
+      accent: '#05d9e8',
+      background: '#0d0221',
+      surface: '#1a0a2e',
+      text: '#f0e7ff',
+      textSecondary: '#b8a9d4',
+      border: '#2d1b69',
+      error: '#ff4757',
+      success: '#7bed9f',
+    },
+    typography: {
+      fontFamily: '"Rajdhani", system-ui, sans-serif',
+      headingFont: '"Orbitron", system-ui, sans-serif',
+      monoFont: '"Share Tech Mono", monospace',
+      scale: 1.05,
+    },
+    spacing: { unit: 4, radius: '0.25rem' },
+    effects: {
+      shadow: '0 0 20px rgba(255, 42, 109, 0.3), 0 0 40px rgba(5, 217, 232, 0.1)',
+      blur: '16px',
+      transition: '0.15s ease-out',
+    },
+  },
+
+  'nature-green': {
+    id: 'nature-green',
+    name: 'Nature Green',
+    mode: 'light',
+    colors: {
+      primary: '#2d6a4f',
+      secondary: '#40916c',
+      accent: '#d4a373',
+      background: '#fefae0',
+      surface: '#ffffff',
+      text: '#1b4332',
+      textSecondary: '#52796f',
+      border: '#d8e2dc',
+      error: '#bc4749',
+      success: '#2d6a4f',
+    },
+    typography: {
+      fontFamily: '"Lora", Georgia, serif',
+      headingFont: '"Playfair Display", Georgia, serif',
+      monoFont: '"IBM Plex Mono", monospace',
+      scale: 1,
+    },
+    spacing: { unit: 4, radius: '0.75rem' },
+    effects: {
+      shadow: '0 2px 8px rgba(45, 106, 79, 0.1)',
+      blur: '10px',
+      transition: '0.3s ease',
+    },
+  },
+
+  'retro-brown': {
+    id: 'retro-brown',
+    name: 'Retro Brown',
+    mode: 'light',
+    colors: {
+      primary: '#5c4033',
+      secondary: '#8b6914',
+      accent: '#c44536',
+      background: '#f5f0e8',
+      surface: '#fffef9',
+      text: '#3c2415',
+      textSecondary: '#6b5745',
+      border: '#d4c5a9',
+      error: '#c44536',
+      success: '#588157',
+    },
+    typography: {
+      fontFamily: '"Merriweather", Georgia, serif',
+      headingFont: '"Playfair Display SC", Georgia, serif',
+      monoFont: '"Courier Prime", monospace',
+      scale: 1,
+    },
+    spacing: { unit: 4, radius: '0.375rem' },
+    effects: {
+      shadow: '0 1px 4px rgba(92, 64, 51, 0.12)',
+      blur: '6px',
+      transition: '0.25s ease',
     },
   },
 };

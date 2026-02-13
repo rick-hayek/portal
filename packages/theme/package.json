@@ -10,5 +10,8 @@
   },
   "dependencies": {
     "@portal/shared": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18"
   }
 }

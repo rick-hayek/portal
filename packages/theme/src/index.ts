@@ -1,2 +1,3 @@
-// Theme engine — will be implemented in Phase 1
 export { themes } from './themes';
+export { ThemeProvider, ThemeContext, type ThemeProviderProps, type ThemeContextValue } from './ThemeProvider';
+export { useTheme } from './useTheme';

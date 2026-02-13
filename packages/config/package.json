@@ -9,6 +9,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@portal/shared": "workspace:*"
+    "@portal/shared": "workspace:*",
+    "zod": "^4.3.6"
   }
 }

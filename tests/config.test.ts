@@ -35,9 +35,9 @@ describe('@portal/config — defineConfig()', () => {
         expect(result).toStrictEqual(validConfig);
     });
 
-    it('Return value is the same reference as input', () => {
+    it('Return value is deeply equal to input', () => {
         const result = defineConfig(validConfig);
-        expect(result).toBe(validConfig);
+        expect(result).toStrictEqual(validConfig);
     });
 
     it('Config with preset matches correctly passed', () => {

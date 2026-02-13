@@ -1,26 +1,79 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ──────────────────────────────────────────────
+   Tailwind v4 @theme — map CSS variables to Tailwind tokens
+   These are set dynamically by ThemeProvider at runtime
+   ────────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--portal-color-background, #fafafa);
+  --color-foreground: var(--portal-color-text, #1a1a2e);
+  --color-primary: var(--portal-color-primary, #1a1a2e);
+  --color-secondary: var(--portal-color-secondary, #16213e);
+  --color-accent: var(--portal-color-accent, #e94560);
+  --color-surface: var(--portal-color-surface, #ffffff);
+  --color-border: var(--portal-color-border, #e5e7eb);
+  --color-muted: var(--portal-color-text-secondary, #6b7280);
+  --color-error: var(--portal-color-error, #ef4444);
+  --color-success: var(--portal-color-success, #22c55e);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ──────────────────────────────────────────────
+   Base resets
+   ────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--portal-color-background, #fafafa);
+  color: var(--portal-color-text, #1a1a2e);
+  font-family: var(--portal-font-family, system-ui, sans-serif);
+  line-height: 1.6;
+  transition: background var(--portal-transition, 0.2s ease),
+    color var(--portal-transition, 0.2s ease);
+}
+
+/* Smooth theme transitions for key elements */
+a,
+button,
+input,
+select,
+textarea {
+  transition: color var(--portal-transition, 0.2s ease),
+    background-color var(--portal-transition, 0.2s ease),
+    border-color var(--portal-transition, 0.2s ease);
+}
+
+/* Selection color */
+::selection {
+  background: var(--portal-color-primary, #1a1a2e);
+  color: var(--portal-color-background, #fafafa);
+}
+
+/* Scrollbar (Webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--portal-color-background, #fafafa);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--portal-color-border, #e5e7eb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--portal-color-text-secondary, #6b7280);
 }
