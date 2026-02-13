@@ -41,6 +41,23 @@ export const siteConfigSchema = z.object({
             enabled: false,
             basePath: '/admin',
         }),
+    about: z
+        .object({
+            name: z.string().optional(),
+            bio: z.string().optional(),
+            avatar: z.string().optional(),
+            skills: z.array(z.string()).optional(),
+            socialLinks: z
+                .array(
+                    z.object({
+                        label: z.string(),
+                        href: z.string(),
+                        icon: z.string().optional(),
+                    }),
+                )
+                .optional(),
+        })
+        .optional(),
 });
 
 export type SiteConfigInput = z.input<typeof siteConfigSchema>;

@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@portal/db": "workspace:*",
-    "@portal/shared": "workspace:*"
+    "@portal/shared": "workspace:*",
+    "@trpc/client": "^11.10.0",
+    "@trpc/server": "^11.10.0",
+    "superjson": "^2.2.6",
+    "zod": "^4.3.6"
   }
 }

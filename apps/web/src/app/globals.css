@@ -77,3 +77,116 @@ textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--portal-color-text-secondary, #6b7280);
 }
+
+/* ──────────────────────────────────────────────
+   MDX / Prose styles for blog content
+   ────────────────────────────────────────────── */
+.prose-portal {
+  color: var(--portal-color-text);
+  line-height: 1.8;
+}
+
+.prose-portal h1,
+.prose-portal h2,
+.prose-portal h3,
+.prose-portal h4 {
+  color: var(--portal-color-text);
+  font-weight: 700;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+
+.prose-portal h1 {
+  font-size: 2em;
+}
+
+.prose-portal h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid var(--portal-color-border);
+  padding-bottom: 0.3em;
+}
+
+.prose-portal h3 {
+  font-size: 1.25em;
+}
+
+.prose-portal p {
+  margin-bottom: 1.25em;
+}
+
+.prose-portal a {
+  color: var(--portal-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-portal a:hover {
+  opacity: 0.8;
+}
+
+.prose-portal blockquote {
+  border-left: 4px solid var(--portal-color-primary);
+  padding: 0.5em 1em;
+  margin: 1.5em 0;
+  background: var(--portal-color-surface);
+  border-radius: 0 8px 8px 0;
+  color: var(--portal-color-text-secondary);
+}
+
+.prose-portal pre {
+  background: var(--portal-color-surface);
+  border: 1px solid var(--portal-color-border);
+  border-radius: 8px;
+  padding: 1em;
+  overflow-x: auto;
+  margin: 1.5em 0;
+  font-size: 0.875em;
+}
+
+.prose-portal :not(pre)>code {
+  background: var(--portal-color-surface);
+  border: 1px solid var(--portal-color-border);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
+}
+
+.prose-portal ul,
+.prose-portal ol {
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+
+.prose-portal li {
+  margin-bottom: 0.5em;
+}
+
+.prose-portal table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+
+.prose-portal th,
+.prose-portal td {
+  border: 1px solid var(--portal-color-border);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+
+.prose-portal th {
+  background: var(--portal-color-surface);
+  font-weight: 600;
+}
+
+.prose-portal hr {
+  border: none;
+  border-top: 1px solid var(--portal-color-border);
+  margin: 2em 0;
+}
+
+.prose-portal img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 1.5em 0;
+}

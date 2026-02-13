@@ -18,6 +18,8 @@
     "clean": "turbo clean && rm -rf node_modules",
     "db:generate": "pnpm --filter @portal/db generate",
     "db:migrate": "pnpm --filter @portal/db migrate:dev",
+    "db:migrate:dev": "pnpm --filter @portal/db migrate:dev",
+    "db:seed": "pnpm --filter @portal/db exec prisma db seed",
     "db:studio": "pnpm --filter @portal/db studio"
   },
   "devDependencies": {

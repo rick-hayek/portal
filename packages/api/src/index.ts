@@ -1,4 +1,16 @@
-// tRPC API — will be implemented in Phase 2
-// This package will contain all tRPC routers and procedures
+import { router } from './trpc';
+import { postRouter } from './routers/post';
+import { categoryRouter } from './routers/category';
+import { commentRouter } from './routers/comment';
+import { guestbookRouter } from './routers/guestbook';
 
-export const placeholder = true;
+export { createContext } from './trpc';
+
+export const appRouter = router({
+    post: postRouter,
+    category: categoryRouter,
+    comment: commentRouter,
+    guestbook: guestbookRouter,
+});
+
+export type AppRouter = typeof appRouter;
