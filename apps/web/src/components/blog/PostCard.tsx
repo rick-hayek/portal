@@ -1,74 +1,69 @@
-interface PostAuthor {
-    id: string;
-    name: string | null;
-    image: string | null;
-}
-
-interface PostCategory {
-    id: string;
-    name: string;
-    slug: string;
-}
-
-interface PostTag {
-    tag: { id: string; name: string; slug: string };
-}
-
-interface PostWithRelations {
-    id: string;
-    title: string;
-    slug: string;
-    excerpt: string | null;
-    publishedAt: Date | null;
-    author: PostAuthor;
-    category: PostCategory | null;
-    tags: PostTag[];
-}
+import type { PostWithRelations } from '@portal/api';
 
 export function PostCard({ post }: { post: PostWithRelations }) {
     return (
-        <article className="group rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 transition-all hover:border-[var(--portal-color-primary)] hover:shadow-lg">
-            <a href={`/blog/${post.slug}`} className="block">
-                {/* Category & Date */}
-                <div className="mb-3 flex items-center gap-3 text-xs text-[var(--portal-color-text-secondary)]">
-                    {post.category && (
-                        <span className="rounded-full bg-[var(--portal-color-primary)] px-2 py-0.5 text-white">
-                            {post.category.name}
-                        </span>
-                    )}
-                    {post.publishedAt && (
-                        <time dateTime={post.publishedAt.toISOString()}>
-                            {new Date(post.publishedAt).toLocaleDateString('zh-CN')}
-                        </time>
-                    )}
-                </div>
+        <a
+            href={`/blog/${post.slug}`}
+            className="group grid items-baseline text-inherit no-underline transition-all hover:bg-[var(--portal-color-primary)]/5 hover:border-transparent"
+            style={{
+                gridTemplateColumns: '80px 1fr auto',
+                gap: '1.5rem',
+                padding: '1.2rem 1rem',
+                borderBottom: '1px solid var(--portal-color-border-soft)',
+                borderRadius: 12,
+            }}
+        >
+            {/* Date */}
+            <span className="font-mono text-[var(--portal-color-text-secondary)]"
+                style={{ fontSize: '.72rem', whiteSpace: 'nowrap' }}
+            >
+                {post.publishedAt
+                    ? new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    : '—'}
+            </span>
 
-                {/* Title */}
-                <h2 className="mb-2 text-xl font-bold text-[var(--portal-color-text)] transition-colors group-hover:text-[var(--portal-color-primary)]">
-                    {post.title}
-                </h2>
-
-                {/* Excerpt */}
-                {post.excerpt && (
-                    <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-[var(--portal-color-text-secondary)]">
-                        {post.excerpt}
-                    </p>
+            {/* Content */}
+            <div>
+                {post.category && (
+                    <span className="mb-1 inline-block uppercase text-[var(--portal-color-primary)]"
+                        style={{ fontSize: '.6rem', fontWeight: 600, letterSpacing: '.08em', padding: '.1rem .5rem', background: 'rgba(107,142,201,.08)', borderRadius: 6 }}
+                    >
+                        {post.category.name}
+                    </span>
                 )}
-
-                {/* Tags */}
+                <div className="text-[var(--portal-color-text)]"
+                    style={{ fontSize: '1rem', fontWeight: 600, lineHeight: 1.4, letterSpacing: '-.02em' }}
+                >
+                    {post.title}
+                </div>
+                {post.excerpt && (
+                    <div className="text-[var(--portal-color-text-secondary)]"
+                        style={{ fontSize: '.82rem', marginTop: '.2rem', lineHeight: 1.6 }}
+                    >
+                        {post.excerpt}
+                    </div>
+                )}
                 {post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex font-mono" style={{ gap: '.3rem', marginTop: '.4rem' }}>
                         {post.tags.map(({ tag }) => (
                             <span
                                 key={tag.id}
-                                className="rounded-md border border-[var(--portal-color-border)] px-2 py-0.5 text-xs text-[var(--portal-color-text-secondary)]"
+                                className="border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)]"
+                                style={{ fontSize: '.6rem', padding: '.1rem .35rem', borderRadius: 4 }}
                             >
                                 #{tag.name}
                             </span>
                         ))}
                     </div>
                 )}
-            </a>
-        </article>
+            </div>
+
+            {/* Arrow */}
+            <span className="text-[var(--portal-color-primary)] opacity-0 transition-all -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
+                style={{ fontSize: 18 }}
+            >
+                →
+            </span>
+        </a>
     );
 }

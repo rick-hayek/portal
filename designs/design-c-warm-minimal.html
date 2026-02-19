@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design C — Warm Minimal</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #faf8f5;
+            --surface: #fff;
+            --surface2: #f5f0eb;
+            --text: #1a1a1a;
+            --text2: #666;
+            --text3: #999;
+            --accent: #e85d04;
+            --accent2: #f48c06;
+            --accent-soft: rgba(232, 93, 4, .08);
+            --border: #e8e4de;
+            --heading: 'Fraunces', Georgia, serif;
+            --body: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+            --shadow: 0 1px 3px rgba(0, 0, 0, .04), 0 8px 30px rgba(0, 0, 0, .06);
+            --shadow-lg: 0 4px 6px rgba(0, 0, 0, .03), 0 20px 60px rgba(0, 0, 0, .1);
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--body);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased
+        }
+
+        /* ── HEADER ─────────────────── */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            height: 64px;
+            background: rgba(250, 248, 245, .8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--heading);
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: -.03em
+        }
+
+        .logo em {
+            font-style: italic;
+            color: var(--accent);
+            font-weight: 700
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem
+        }
+
+        nav a {
+            color: var(--text2);
+            font-size: .84rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color .3s;
+            letter-spacing: .01em;
+        }
+
+        nav a:hover {
+            color: var(--accent)
+        }
+
+        .h-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .35rem 1rem;
+            border-radius: 10px;
+            background: var(--surface2);
+            border: 1px solid transparent;
+            font-size: .8rem;
+            color: var(--text3);
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .search-box:hover {
+            border-color: var(--border)
+        }
+
+        .search-box kbd {
+            font-family: var(--mono);
+            font-size: .6rem;
+            opacity: .5;
+            padding: 1px 4px;
+            background: var(--bg);
+            border-radius: 4px
+        }
+
+        .sign-btn {
+            padding: .4rem 1.2rem;
+            border-radius: 10px;
+            background: var(--text);
+            color: var(--bg);
+            font-size: .8rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .sign-btn:hover {
+            background: var(--accent)
+        }
+
+        /* ── HERO ──────────────────── */
+        .hero {
+            padding: 10rem 3rem 6rem;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .hero-hello {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-family: var(--mono);
+            font-size: .78rem;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-hello .wave {
+            font-size: 1.2rem;
+            display: inline-block;
+            animation: wave 2.5s ease-in-out infinite;
+            transform-origin: 70% 70%
+        }
+
+        @keyframes wave {
+            0% {
+                transform: rotate(0)
+            }
+
+            10% {
+                transform: rotate(14deg)
+            }
+
+            20% {
+                transform: rotate(-8deg)
+            }
+
+            30% {
+                transform: rotate(14deg)
+            }
+
+            40% {
+                transform: rotate(-4deg)
+            }
+
+            50%,
+            100% {
+                transform: rotate(0)
+            }
+        }
+
+        .hero h1 {
+            font-family: var(--heading);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            letter-spacing: -.03em;
+            color: var(--text);
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            font-weight: 700;
+            color: var(--accent)
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text2);
+            font-weight: 400;
+            line-height: 1.8;
+            max-width: 550px;
+            margin-bottom: 2.5rem
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem
+        }
+
+        .btn-fill {
+            padding: .75rem 1.8rem;
+            border-radius: 12px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 600;
+            font-size: .88rem;
+            text-decoration: none;
+            transition: all .3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(232, 93, 4, .2);
+        }
+
+        .btn-fill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(232, 93, 4, .35)
+        }
+
+        .btn-line {
+            padding: .75rem 1.8rem;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            font-weight: 500;
+            font-size: .88rem;
+            text-decoration: none;
+            transition: all .3s;
+            cursor: pointer;
+        }
+
+        .btn-line:hover {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        /* Decorative dots */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 8rem;
+            right: 3rem;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--accent) 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
+            opacity: .1;
+        }
+
+        /* ── SECTIONS ──────────────── */
+        section {
+            padding: 5rem 3rem
+        }
+
+        .sec-label {
+            font-family: var(--mono);
+            font-size: .72rem;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: .5rem;
+        }
+
+        .sec-title {
+            font-family: var(--heading);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+            letter-spacing: -.02em
+        }
+
+        /* ── BLOG ────────────────────── */
+        .blog-list {
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: 0
+        }
+
+        .blog-item {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .blog-item:hover {
+            padding-left: 1rem;
+            background: var(--accent-soft);
+            margin: 0 -1rem;
+            padding-right: 1rem;
+            border-radius: 12px;
+            border-color: transparent
+        }
+
+        .blog-date-col {
+            font-family: var(--mono);
+            font-size: .72rem;
+            color: var(--text3);
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .blog-content {
+            flex: 1
+        }
+
+        .blog-cat-pill {
+            display: inline-block;
+            font-size: .62rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding: .15rem .5rem;
+            background: var(--accent-soft);
+            border-radius: 6px;
+            margin-bottom: .4rem;
+        }
+
+        .blog-title {
+            font-family: var(--heading);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: .3rem;
+            line-height: 1.3;
+            color: var(--text)
+        }
+
+        .blog-excerpt {
+            font-size: .85rem;
+            color: var(--text2);
+            font-weight: 400;
+            line-height: 1.6
+        }
+
+        .blog-item-tags {
+            display: flex;
+            gap: .3rem;
+            margin-top: .5rem
+        }
+
+        .blog-item-tags span {
+            font-size: .62rem;
+            color: var(--text3);
+            padding: .1rem .4rem;
+            border: 1px solid var(--border);
+            border-radius: 4px
+        }
+
+        .blog-arrow {
+            color: var(--accent);
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity .3s, transform .3s;
+            flex-shrink: 0
+        }
+
+        .blog-item:hover .blog-arrow {
+            opacity: 1;
+            transform: translateX(4px)
+        }
+
+        /* ── PORTFOLIO ─────────────── */
+        .portfolio-area {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border)
+        }
+
+        .projects {
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem
+        }
+
+        .proj-card {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--bg);
+            transition: all .4s ease;
+            cursor: pointer;
+        }
+
+        .proj-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent)
+        }
+
+        .proj-thumb {
+            height: 160px;
+            background: linear-gradient(135deg, var(--surface2), rgba(232, 93, 4, .06));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            position: relative;
+        }
+
+        .proj-feat {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: .2rem .6rem;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-size: .6rem;
+            font-weight: 700;
+        }
+
+        .proj-body {
+            padding: 1.3rem
+        }
+
+        .proj-name {
+            font-family: var(--heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: .4rem
+        }
+
+        .proj-desc {
+            font-size: .82rem;
+            color: var(--text2);
+            line-height: 1.6;
+            margin-bottom: .8rem
+        }
+
+        .proj-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .3rem
+        }
+
+        .proj-tech span {
+            font-family: var(--mono);
+            font-size: .6rem;
+            padding: .2rem .5rem;
+            border-radius: 6px;
+            background: var(--surface2);
+            color: var(--text2);
+        }
+
+        /* ── FOOTER ─────────────────── */
+        footer {
+            padding: 3rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer p {
+            font-size: .78rem;
+            color: var(--text3)
+        }
+
+        footer .social {
+            display: flex;
+            gap: 1.2rem
+        }
+
+        footer .social a {
+            color: var(--text3);
+            font-size: .78rem;
+            text-decoration: none;
+            transition: color .3s
+        }
+
+        footer .social a:hover {
+            color: var(--accent)
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">Portal<em>.</em></div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Blog</a>
+            <a href="#">Portfolio</a>
+            <a href="#">About</a>
+            <a href="#">Guestbook</a>
+        </nav>
+        <div class="h-right">
+            <button class="search-box">🔍 Search <kbd>⌘K</kbd></button>
+            <button class="sign-btn">Sign In</button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-hello"><span class="wave">👋</span> Hello, I'm Rick</div>
+        <h1>Full-stack developer<br>who crafts <em>elegant</em> web experiences</h1>
+        <p>I write thoughtful code, share learnings through my blog, and build tools that make developers' lives easier.
+        </p>
+        <div class="hero-btns">
+            <a href="#" class="btn-fill">Read Blog →</a>
+            <a href="#" class="btn-line">View Projects</a>
+        </div>
+    </section>
+
+    <!-- BLOG -->
+    <section>
+        <div class="sec-label">// Latest Posts</div>
+        <h2 class="sec-title">Blog</h2>
+        <div class="blog-list">
+            <div class="blog-item">
+                <div class="blog-date-col">Feb 10</div>
+                <div class="blog-content">
+                    <div class="blog-cat-pill">随笔</div>
+                    <div class="blog-title">写代码的一些感悟</div>
+                    <div class="blog-excerpt">编程多年后的一些思考：关于简洁、可读性和工程实践。</div>
+                </div>
+                <span class="blog-arrow">→</span>
+            </div>
+            <div class="blog-item">
+                <div class="blog-date-col">Feb 07</div>
+                <div class="blog-content">
+                    <div class="blog-cat-pill">生活</div>
+                    <div class="blog-title">我的开发环境搭建</div>
+                    <div class="blog-excerpt">分享我的 macOS 开发环境配置，包括编辑器、终端、工具链。</div>
+                </div>
+                <span class="blog-arrow">→</span>
+            </div>
+            <div class="blog-item">
+                <div class="blog-date-col">Feb 04</div>
+                <div class="blog-content">
+                    <div class="blog-cat-pill">技术</div>
+                    <div class="blog-title">React Server Components 实践指南</div>
+                    <div class="blog-excerpt">从概念到实战，全面掌握 React Server Components。</div>
+                    <div class="blog-item-tags"><span>#React</span><span>#Next.js</span></div>
+                </div>
+                <span class="blog-arrow">→</span>
+            </div>
+            <div class="blog-item">
+                <div class="blog-date-col">Feb 01</div>
+                <div class="blog-content">
+                    <div class="blog-cat-pill">技术</div>
+                    <div class="blog-title">TypeScript 高级类型技巧</div>
+                    <div class="blog-excerpt">深入理解条件类型、映射类型和模板字面量类型。</div>
+                    <div class="blog-item-tags"><span>#TypeScript</span></div>
+                </div>
+                <span class="blog-arrow">→</span>
+            </div>
+            <div class="blog-item">
+                <div class="blog-date-col">Jan 29</div>
+                <div class="blog-content">
+                    <div class="blog-cat-pill">技术</div>
+                    <div class="blog-title">使用 Next.js 16 构建现代 Web 应用</div>
+                    <div class="blog-excerpt">探索 Next.js 16 的新特性：React 19 支持、改进的缓存策略和 Turbopack。</div>
+                    <div class="blog-item-tags"><span>#Next.js</span></div>
+                </div>
+                <span class="blog-arrow">→</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section class="portfolio-area">
+        <div class="sec-label">// Selected Work</div>
+        <h2 class="sec-title">Projects</h2>
+        <div class="projects">
+            <div class="proj-card">
+                <div class="proj-thumb">🚀<span class="proj-feat">Featured</span></div>
+                <div class="proj-body">
+                    <div class="proj-name">Portal</div>
+                    <div class="proj-desc">全栈个人网站引擎，支持多主题、模块化架构。</div>
+                    <div class="proj-tech">
+                        <span>Next.js</span><span>TypeScript</span><span>tRPC</span><span>Prisma</span></div>
+                </div>
+            </div>
+            <div class="proj-card">
+                <div class="proj-thumb">💬<span class="proj-feat">Featured</span></div>
+                <div class="proj-body">
+                    <div class="proj-name">Chat App</div>
+                    <div class="proj-desc">实时聊天，WebSocket 毫秒级消息推送。</div>
+                    <div class="proj-tech">
+                        <span>React</span><span>Node.js</span><span>WebSocket</span><span>Redis</span></div>
+                </div>
+            </div>
+            <div class="proj-card">
+                <div class="proj-thumb">⚡</div>
+                <div class="proj-body">
+                    <div class="proj-name">CLI Tool Kit</div>
+                    <div class="proj-desc">命令行工具集：批处理、JSON、代码统计。</div>
+                    <div class="proj-tech"><span>Rust</span><span>CLI</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 Portal. All rights reserved.</p>
+        <div class="social">
+            <a href="#">GitHub</a>
+            <a href="#">Twitter</a>
+            <a href="#">Email</a>
+        </div>
+    </footer>
+
+</body>
+
+</html>

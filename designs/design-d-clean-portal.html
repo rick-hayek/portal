@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal — Clean Redesign</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f8f9fb;
+            --surface: #ffffff;
+            --surface-alt: #f1f3f7;
+            --text: #111827;
+            --text-2: #4b5563;
+            --text-3: #9ca3af;
+            --primary: #6b8ec9;
+            --primary-soft: rgba(107, 142, 201, .08);
+            --primary-hover: #5a7db8;
+            --border: #e5e7eb;
+            --border-soft: #f0f1f3;
+            --green: #10b981;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, .04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, .06);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, .08);
+            --radius: 12px;
+            --font: 'Sora', system-ui, -apple-system, sans-serif;
+            --mono: 'IBM Plex Mono', 'SF Mono', monospace;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection {
+            background: rgba(107, 142, 201, .18);
+            color: var(--primary);
+        }
+
+        /* ── NAV ───────────────────────────────── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 2rem;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(248, 249, 251, .72);
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .nav-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -.03em;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .nav-logo .dot {
+            color: var(--primary);
+        }
+
+        .nav-logo .icon-box {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-2);
+            font-size: .82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color .2s;
+            letter-spacing: -.01em;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: .75rem;
+            align-items: center;
+        }
+
+        .search-trigger {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .35rem .85rem;
+            border-radius: 100px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-3);
+            font-size: .78rem;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .search-trigger:hover {
+            border-color: var(--primary);
+            color: var(--text-2);
+        }
+
+        .search-trigger kbd {
+            font-family: var(--mono);
+            font-size: .6rem;
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: var(--surface-alt);
+            color: var(--text-3);
+        }
+
+        .btn-signin {
+            padding: .35rem 1rem;
+            border-radius: 100px;
+            background: var(--text);
+            color: #fff;
+            font-size: .78rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all .25s;
+        }
+
+        .btn-signin:hover {
+            background: var(--primary);
+        }
+
+        /* ── HERO ───────────────────────────────── */
+        .hero {
+            min-height: 100vh;
+            padding: 8rem 2rem 4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text {}
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .3rem .8rem;
+            border-radius: 100px;
+            background: var(--primary-soft);
+            border: 1px solid rgba(107, 142, 201, .15);
+            font-size: .72rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            letter-spacing: .02em;
+        }
+
+        .hero-badge .pulse {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -.04em;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .hero-title .accent {
+            color: var(--primary);
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--text-2);
+            font-weight: 400;
+            line-height: 1.75;
+            max-width: 440px;
+            margin-bottom: 2.5rem;
+            border-left: 2px solid rgba(107, 142, 201, .25);
+            padding-left: 1.2rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: .8rem;
+            align-items: center;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .75rem 1.8rem;
+            border-radius: 100px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            font-size: .88rem;
+            border: none;
+            cursor: pointer;
+            transition: all .25s;
+            text-decoration: none;
+            box-shadow: 0 2px 12px rgba(107, 142, 201, .2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(107, 142, 201, .25);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .75rem 1.8rem;
+            border-radius: 100px;
+            background: transparent;
+            color: var(--text);
+            font-weight: 500;
+            font-size: .88rem;
+            border: 1.5px solid var(--border);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all .25s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            color: var(--text-3);
+            font-size: .78rem;
+            font-weight: 500;
+        }
+
+        .hero-tags span {
+            display: flex;
+            align-items: center;
+            gap: .3rem;
+        }
+
+        .hero-tags .material-icons {
+            font-size: 16px;
+        }
+
+        /* ── HERO CARD (code terminal) ────────── */
+        .hero-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .hero-card-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .7rem 1rem;
+            border-bottom: 1px solid var(--border-soft);
+            background: var(--surface-alt);
+        }
+
+        .hero-card-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .hero-card-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .hero-card-dots span:nth-child(1) {
+            background: #ef4444aa;
+        }
+
+        .hero-card-dots span:nth-child(2) {
+            background: #f59e0baa;
+        }
+
+        .hero-card-dots span:nth-child(3) {
+            background: #10b981aa;
+        }
+
+        .hero-card-label {
+            font-family: var(--mono);
+            font-size: .65rem;
+            color: var(--text-3);
+        }
+
+        .hero-card-body {
+            padding: 1.5rem;
+            font-family: var(--mono);
+            font-size: .82rem;
+            line-height: 1.8;
+            color: var(--text-2);
+        }
+
+        .hero-card-body .comment {
+            color: var(--text-3);
+        }
+
+        .hero-card-body .keyword {
+            color: #7c3aed;
+        }
+
+        .hero-card-body .var-name {
+            color: #2563eb;
+        }
+
+        .hero-card-body .string {
+            color: #059669;
+        }
+
+        .hero-card-body .number {
+            color: #d97706;
+        }
+
+        .hero-card-body .indent {
+            padding-left: 1.5rem;
+        }
+
+        .hero-card-body .prompt {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-top: 1rem;
+            color: var(--text-3);
+        }
+
+        .hero-card-body .prompt .caret {
+            display: inline-block;
+            width: 2px;
+            height: 14px;
+            background: var(--primary);
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0
+            }
+        }
+
+        /* ── SECTIONS ──────────────────────────── */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: .8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-tag {
+            font-family: var(--mono);
+            font-size: .7rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -.03em;
+        }
+
+        .section-divider {
+            width: 28px;
+            height: 2px;
+            background: var(--primary);
+            flex-shrink: 0;
+        }
+
+        /* ── BLOG LIST ─────────────────────────── */
+        .blog-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-item {
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 1.5rem;
+            align-items: baseline;
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid var(--border-soft);
+            cursor: pointer;
+            transition: all .2s;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .blog-item:hover {
+            background: var(--primary-soft);
+            border-color: transparent;
+            padding-left: 1.5rem;
+        }
+
+        .blog-item:last-child {
+            border-bottom: none;
+        }
+
+        .blog-date {
+            font-family: var(--mono);
+            font-size: .72rem;
+            color: var(--text-3);
+            white-space: nowrap;
+        }
+
+        .blog-content {}
+
+        .blog-cat {
+            display: inline-block;
+            font-size: .6rem;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--primary);
+            padding: .1rem .5rem;
+            background: var(--primary-soft);
+            border-radius: 6px;
+            margin-bottom: .3rem;
+        }
+
+        .blog-title {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            letter-spacing: -.02em;
+        }
+
+        .blog-excerpt {
+            font-size: .82rem;
+            color: var(--text-2);
+            margin-top: .2rem;
+            line-height: 1.6;
+        }
+
+        .blog-tags {
+            display: flex;
+            gap: .3rem;
+            margin-top: .4rem;
+        }
+
+        .blog-tags span {
+            font-size: .6rem;
+            color: var(--text-3);
+            padding: .1rem .35rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: var(--mono);
+        }
+
+        .blog-arrow {
+            color: var(--primary);
+            font-size: 18px;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: all .25s;
+        }
+
+        .blog-item:hover .blog-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ── PROJECT CARDS ─────────────────────── */
+        .projects-section {
+            background: var(--surface);
+            border-top: 1px solid var(--border-soft);
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .project-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all .3s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .project-cover {
+            height: 180px;
+            position: relative;
+            background: linear-gradient(135deg, var(--surface-alt), rgba(107, 142, 201, .06));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .project-featured {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: .2rem .6rem;
+            border-radius: 100px;
+            background: var(--primary);
+            color: #fff;
+            font-size: .58rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+        }
+
+        .project-body {
+            padding: 1.3rem;
+        }
+
+        .project-name {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: .3rem;
+            letter-spacing: -.02em;
+        }
+
+        .project-desc {
+            font-size: .82rem;
+            color: var(--text-2);
+            line-height: 1.6;
+            margin-bottom: .8rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .3rem;
+        }
+
+        .project-tech span {
+            font-family: var(--mono);
+            font-size: .6rem;
+            padding: .2rem .5rem;
+            border-radius: 6px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* ── GUESTBOOK PREVIEW ────────────────── */
+        .guestbook-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .guest-msg {
+            padding: 1.2rem;
+            border-radius: var(--radius);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            transition: all .25s;
+        }
+
+        .guest-msg:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .guest-top {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            margin-bottom: .5rem;
+        }
+
+        .guest-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary-soft);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .65rem;
+            font-weight: 700;
+        }
+
+        .guest-name {
+            font-size: .78rem;
+            font-weight: 600;
+        }
+
+        .guest-time {
+            font-size: .6rem;
+            color: var(--text-3);
+            font-family: var(--mono);
+            margin-left: auto;
+        }
+
+        .guest-text {
+            font-size: .82rem;
+            color: var(--text-2);
+            line-height: 1.6;
+        }
+
+        /* ── STATS ROW ─────────────────────────── */
+        .stats-row {
+            display: flex;
+            gap: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-soft);
+            margin-top: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -.04em;
+            color: var(--text);
+        }
+
+        .stat-label {
+            font-size: .72rem;
+            color: var(--text-3);
+            font-weight: 500;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            margin-top: .2rem;
+        }
+
+        /* ── FOOTER ────────────────────────────── */
+        footer {
+            padding: 2rem 2rem;
+            border-top: 1px solid var(--border);
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer p {
+            font-size: .75rem;
+            color: var(--text-3);
+        }
+
+        footer .social {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        footer .social a {
+            color: var(--text-3);
+            font-size: .75rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color .2s;
+        }
+
+        footer .social a:hover {
+            color: var(--primary);
+        }
+
+        /* ── SUBTLE BG DECORATION ─────────────── */
+        .bg-glow {
+            position: fixed;
+            pointer-events: none;
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: .3;
+        }
+
+        .bg-glow-1 {
+            top: -10%;
+            right: 0;
+            width: 500px;
+            height: 500px;
+            background: rgba(107, 142, 201, .06);
+        }
+
+        .bg-glow-2 {
+            bottom: 10%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: rgba(107, 142, 201, .05);
+        }
+
+        /* ── RESPONSIVE ────────────────────────── */
+        @media (max-width: 768px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-card {
+                display: none;
+            }
+
+            .guestbook-preview {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- ── NAV ─────────────────────────────── -->
+    <nav class="nav">
+        <a class="nav-logo" href="#">
+            <span class="icon-box"><span class="material-icons" style="font-size:14px">code</span></span>
+            Portal<span class="dot">.</span>
+        </a>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Blog</a>
+            <a href="#">Portfolio</a>
+            <a href="#">About</a>
+            <a href="#">Guestbook</a>
+        </div>
+        <div class="nav-right">
+            <button class="search-trigger">
+                <span class="material-icons" style="font-size:14px">search</span>
+                Search
+                <kbd>⌘K</kbd>
+            </button>
+            <button class="btn-signin">Sign In</button>
+        </div>
+    </nav>
+
+    <!-- ── HERO ─────────────────────────────── -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <span class="pulse"></span>
+                    Full-Stack Developer
+                </div>
+                <h1 class="hero-title">
+                    Building the<br>
+                    <span class="accent">Modern Web</span>
+                </h1>
+                <p class="hero-desc">
+                    Focused on TypeScript & Next.js ecosystem. I write clean code,
+                    share learnings, and build tools that developers love.
+                </p>
+                <div class="hero-cta">
+                    <a href="#" class="btn-primary">
+                        Explore Blog
+                        <span class="material-icons" style="font-size:16px">arrow_forward</span>
+                    </a>
+                    <a href="#" class="btn-secondary">View Projects</a>
+                </div>
+                <div class="hero-tags">
+                    <span><span class="material-icons">layers</span> Next.js</span>
+                    <span><span class="material-icons">data_object</span> TypeScript</span>
+                    <span><span class="material-icons">dns</span> tRPC</span>
+                </div>
+            </div>
+
+            <!-- Code Terminal Card -->
+            <div class="hero-card">
+                <div class="hero-card-bar">
+                    <div class="hero-card-dots"><span></span><span></span><span></span></div>
+                    <span class="hero-card-label">portal — zsh</span>
+                </div>
+                <div class="hero-card-body">
+                    <div class="comment">// Initializing Portal</div>
+                    <div>
+                        <span class="keyword">const</span>
+                        <span class="var-name"> developer</span> = {
+                    </div>
+                    <div class="indent"><span class="var-name">name:</span> <span class="string">'Rick'</span>,</div>
+                    <div class="indent"><span class="var-name">role:</span> <span class="string">'Full-Stack
+                            Engineer'</span>,</div>
+                    <div class="indent"><span class="var-name">stack:</span> [<span class="string">'Next.js'</span>,
+                        <span class="string">'TypeScript'</span>, <span class="string">'Prisma'</span>],
+                    </div>
+                    <div class="indent"><span class="var-name">status:</span> <span class="string">'Building'</span>
+                    </div>
+                    <div>};</div>
+                    <div class="prompt">
+                        <span style="color:var(--green)">➜</span>
+                        <span>pnpm dev</span>
+                        <span class="caret"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── BLOG ─────────────────────────────── -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-divider"></span>
+            <span class="section-tag">Latest Posts</span>
+            <h2 class="section-title">Blog</h2>
+        </div>
+        <div class="blog-list">
+            <a class="blog-item" href="#">
+                <span class="blog-date">Feb 10</span>
+                <div class="blog-content">
+                    <span class="blog-cat">随笔</span>
+                    <div class="blog-title">写代码的一些感悟</div>
+                    <div class="blog-excerpt">编程多年后的一些思考：关于简洁、可读性和工程实践。</div>
+                </div>
+                <span class="material-icons blog-arrow">arrow_forward</span>
+            </a>
+            <a class="blog-item" href="#">
+                <span class="blog-date">Feb 07</span>
+                <div class="blog-content">
+                    <span class="blog-cat">生活</span>
+                    <div class="blog-title">我的开发环境搭建</div>
+                    <div class="blog-excerpt">分享我的 macOS 开发环境配置，包括编辑器、终端、工具链。</div>
+                </div>
+                <span class="material-icons blog-arrow">arrow_forward</span>
+            </a>
+            <a class="blog-item" href="#">
+                <span class="blog-date">Feb 04</span>
+                <div class="blog-content">
+                    <span class="blog-cat">技术</span>
+                    <div class="blog-title">React Server Components 实践指南</div>
+                    <div class="blog-excerpt">从概念到实战，全面掌握 RSC 的核心用法与最佳实践。</div>
+                    <div class="blog-tags"><span>#React</span><span>#Next.js</span></div>
+                </div>
+                <span class="material-icons blog-arrow">arrow_forward</span>
+            </a>
+            <a class="blog-item" href="#">
+                <span class="blog-date">Feb 01</span>
+                <div class="blog-content">
+                    <span class="blog-cat">技术</span>
+                    <div class="blog-title">TypeScript 高级类型技巧</div>
+                    <div class="blog-excerpt">条件类型、映射类型和模板字面量类型的深入理解与运用。</div>
+                    <div class="blog-tags"><span>#TypeScript</span></div>
+                </div>
+                <span class="material-icons blog-arrow">arrow_forward</span>
+            </a>
+            <a class="blog-item" href="#">
+                <span class="blog-date">Jan 29</span>
+                <div class="blog-content">
+                    <span class="blog-cat">技术</span>
+                    <div class="blog-title">tRPC + Prisma 全栈类型安全实战</div>
+                    <div class="blog-excerpt">端到端类型安全：从数据库到前端的完整类型推导链路。</div>
+                    <div class="blog-tags"><span>#tRPC</span><span>#Prisma</span></div>
+                </div>
+                <span class="material-icons blog-arrow">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ── PORTFOLIO ────────────────────────── -->
+    <div class="projects-section">
+        <div class="section" style="padding-bottom: 5rem;">
+            <div class="section-header">
+                <span class="section-divider"></span>
+                <span class="section-tag">Selected Work</span>
+                <h2 class="section-title">Projects</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-cover">
+                        🚀
+                        <span class="project-featured">FEATURED</span>
+                    </div>
+                    <div class="project-body">
+                        <div class="project-name">Portal</div>
+                        <div class="project-desc">全栈个人网站引擎，支持多主题切换与模块化架构。</div>
+                        <div class="project-tech">
+                            <span>Next.js</span><span>TypeScript</span><span>tRPC</span><span>Prisma</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-cover">💬<span class="project-featured">FEATURED</span></div>
+                    <div class="project-body">
+                        <div class="project-name">Chat App</div>
+                        <div class="project-desc">实时聊天应用，基于 WebSocket 毫秒级消息推送。</div>
+                        <div class="project-tech">
+                            <span>React</span><span>Node.js</span><span>WebSocket</span><span>Redis</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-cover">⚡</div>
+                    <div class="project-body">
+                        <div class="project-name">CLI Tool Kit</div>
+                        <div class="project-desc">命令行工具集：批处理、JSON 解析、代码统计。</div>
+                        <div class="project-tech">
+                            <span>Rust</span><span>CLI</span><span>Cross-platform</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── GUESTBOOK ────────────────────────── -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-divider"></span>
+            <span class="section-tag">Community</span>
+            <h2 class="section-title">Guestbook</h2>
+        </div>
+        <div class="guestbook-preview">
+            <div class="guest-msg">
+                <div class="guest-top">
+                    <div class="guest-avatar">JL</div>
+                    <span class="guest-name">John Lee</span>
+                    <span class="guest-time">2d ago</span>
+                </div>
+                <div class="guest-text">Great blog! Learned a lot about RSC patterns from your posts. Keep it up! 🙌
+                </div>
+            </div>
+            <div class="guest-msg">
+                <div class="guest-top">
+                    <div class="guest-avatar">AW</div>
+                    <span class="guest-name">Alice Wang</span>
+                    <span class="guest-time">5d ago</span>
+                </div>
+                <div class="guest-text">Portal 这个项目太酷了，架构设计很用心，期待更多分享！</div>
+            </div>
+            <div class="guest-msg">
+                <div class="guest-top">
+                    <div class="guest-avatar">TK</div>
+                    <span class="guest-name">Tom Kim</span>
+                    <span class="guest-time">1w ago</span>
+                </div>
+                <div class="guest-text">The tRPC integration is beautifully done. Thanks for the open source work! 🎉
+                </div>
+            </div>
+            <div class="guest-msg">
+                <div class="guest-top">
+                    <div class="guest-avatar">LS</div>
+                    <span class="guest-name">Lisa Sun</span>
+                    <span class="guest-time">1w ago</span>
+                </div>
+                <div class="guest-text">刚好在学 Next.js，你的文章对我帮助很大，谢谢！</div>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat">
+                <div class="stat-num">42</div>
+                <div class="stat-label">Posts</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">12</div>
+                <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">3.2K</div>
+                <div class="stat-label">Page Views</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">86</div>
+                <div class="stat-label">Guestbook</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── FOOTER ──────────────────────────── -->
+    <footer>
+        <p>© 2026 Portal. Built with Next.js & tRPC.</p>
+        <div class="social">
+            <a href="#">GitHub</a>
+            <a href="#">Twitter</a>
+            <a href="#">Email</a>
+        </div>
+    </footer>
+
+</body>
+
+</html>

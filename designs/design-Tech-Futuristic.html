@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Tech Futuristic Personal Home</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1a2233",
+                        "neon-cyan": "#00f0ff",
+                        "neon-lime": "#39ff14",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["monospace"] // For code snippets
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "glow": "0 0 15px rgba(19, 91, 236, 0.5)",
+                        "glow-cyan": "0 0 15px rgba(0, 240, 255, 0.4)",
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #1f2937 1px, transparent 1px), linear-gradient(to bottom, #1f2937 1px, transparent 1px)",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Custom geometric animations and glows */
+        .glass-panel {
+            background: rgba(16, 22, 34, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-typing {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .15em solid #135bec;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #135bec;
+            }
+        }
+
+        .animated-grid {
+            background-size: 40px 40px;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        /* Scanline effect */
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(19, 91, 236, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% {
+                top: -100px;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display transition-colors duration-300 antialiased overflow-x-hidden relative">
+    <!-- Background Effects -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-grid-pattern opacity-[0.07] animated-grid"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] opacity-20">
+        </div>
+        <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] opacity-20">
+        </div>
+        <div class="scanline"></div>
+    </div>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto">
+            <div
+                class="glass-panel rounded-full px-6 py-3 flex items-center justify-between border border-white/5 shadow-lg">
+                <a class="flex items-center gap-2 group" href="#">
+                    <div
+                        class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center border border-primary/50 group-hover:bg-primary group-hover:shadow-glow transition-all duration-300">
+                        <span class="material-icons text-primary text-sm group-hover:text-white">terminal</span>
+                    </div>
+                    <span
+                        class="font-bold text-lg tracking-wider text-slate-900 dark:text-white group-hover:text-primary transition-colors">DEV<span
+                            class="text-primary">.LOG</span></span>
+                </a>
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                    <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
+                        href="#about">About</a>
+                    <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
+                        href="#stack">Stack</a>
+                    <a class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
+                        href="#projects">Projects</a>
+                </div>
+                <a class="hidden md:block px-5 py-2 rounded-full border border-primary/50 text-primary text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-white hover:shadow-glow transition-all duration-300"
+                    href="#contact">
+                    Connect
+                </a>
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-slate-400 hover:text-white">
+                    <span class="material-icons">menu</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <header class="relative z-10 min-h-screen flex items-center justify-center pt-20 px-6">
+        <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left: Text Content -->
+            <div class="space-y-8 order-2 lg:order-1">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded border border-primary/30 bg-primary/5 text-primary text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    SYSTEM ONLINE: AVAILABLE FOR HIRE
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight text-slate-900 dark:text-white">
+                    ARCHITECTING <br />
+                    THE <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-neon-cyan drop-shadow-lg">DIGITAL
+                        FUTURE</span>
+                </h1>
+                <p
+                    class="text-lg text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed border-l-2 border-primary/30 pl-6">
+                    Full-stack engineer specializing in scalable AI architectures and immersive web experiences. Merging
+                    clean code with cutting-edge design.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <a class="px-8 py-4 bg-primary text-white rounded font-bold uppercase tracking-widest hover:bg-blue-600 shadow-glow transition-all duration-300 text-center"
+                        href="#projects">
+                        View Protocols
+                    </a>
+                    <a class="px-8 py-4 bg-transparent border border-slate-700 dark:border-white/20 text-slate-900 dark:text-white rounded font-bold uppercase tracking-widest hover:border-primary hover:text-primary transition-all duration-300 text-center"
+                        href="#contact">
+                        Initialize Chat
+                    </a>
+                </div>
+                <div class="flex items-center gap-6 pt-8 text-slate-500 dark:text-slate-500">
+                    <div class="flex items-center gap-2">
+                        <span class="material-icons text-xl">layers</span>
+                        <span class="text-sm font-mono">FULL_STACK</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="material-icons text-xl">psychology</span>
+                        <span class="text-sm font-mono">AI_MODELS</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="material-icons text-xl">security</span>
+                        <span class="text-sm font-mono">SEC_OPS</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Right: Interactive/Visual Element -->
+            <div class="relative order-1 lg:order-2 flex justify-center lg:justify-end">
+                <div class="relative w-full max-w-md aspect-square">
+                    <!-- Rotating Circles decoration -->
+                    <div
+                        class="absolute inset-0 border border-primary/20 rounded-full animate-[spin_10s_linear_infinite]">
+                    </div>
+                    <div
+                        class="absolute inset-8 border border-dashed border-primary/30 rounded-full animate-[spin_15s_linear_infinite_reverse]">
+                    </div>
+                    <div
+                        class="absolute inset-20 border border-dotted border-neon-cyan/20 rounded-full animate-[spin_20s_linear_infinite]">
+                    </div>
+                    <!-- Code Terminal Card -->
+                    <div
+                        class="absolute inset-0 m-auto w-full max-w-[380px] h-fit glass-panel rounded-xl shadow-2xl transform hover:scale-[1.02] transition-transform duration-500 z-10 border border-slate-700/50 dark:border-white/10">
+                        <div class="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-white/5">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                            </div>
+                            <div class="text-[10px] font-mono text-slate-400">user@mainframe:~</div>
+                        </div>
+                        <div class="p-6 font-mono text-sm leading-relaxed overflow-hidden">
+                            <div class="text-slate-400 mb-2">// Initializing Portfolio Sequence</div>
+                            <div class="flex">
+                                <span class="text-purple-400 mr-2">const</span>
+                                <span class="text-yellow-400 mr-2">engineer</span>
+                                <span class="text-white mr-2">=</span>
+                                <span class="text-white">{</span>
+                            </div>
+                            <div class="pl-4">
+                                <span class="text-blue-400">name:</span> <span class="text-green-400">'Alex
+                                    Chen'</span>,
+                            </div>
+                            <div class="pl-4">
+                                <span class="text-blue-400">role:</span> <span class="text-green-400">'Solutions
+                                    Architect'</span>,
+                            </div>
+                            <div class="pl-4">
+                                <span class="text-blue-400">level:</span> <span class="text-orange-400">99</span>,
+                            </div>
+                            <div class="pl-4">
+                                <span class="text-blue-400">status:</span> <span class="text-green-400">'Building the
+                                    Future'</span>
+                            </div>
+                            <div><span class="text-white">};</span></div>
+                            <br />
+                            <div class="flex items-center">
+                                <span class="text-green-500 mr-2">➜</span>
+                                <span class="text-slate-300 code-typing w-fit">npm run build-future</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative blurred glow behind -->
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-primary/20 blur-[80px] -z-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Tech Stack / Skills Grid -->
+    <section
+        class="relative z-10 py-24 px-6 bg-slate-100/50 dark:bg-surface-dark/30 border-y border-slate-200 dark:border-white/5"
+        id="stack">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div>
+                    <h2
+                        class="text-3xl font-bold uppercase tracking-wide text-slate-900 dark:text-white flex items-center gap-3">
+                        <span class="w-8 h-1 bg-primary"></span>
+                        System Capabilities
+                    </h2>
+                    <p class="mt-4 text-slate-600 dark:text-slate-400 max-w-xl">
+                        A comprehensive matrix of languages, frameworks, and tools utilized to construct robust digital
+                        environments.
+                    </p>
+                </div>
+                <div class="hidden md:block">
+                    <span
+                        class="text-xs font-mono text-slate-500 dark:text-slate-500 border border-slate-700/50 px-2 py-1 rounded">V.4.2.0
+                        STABLE</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- Skill Item -->
+                <div
+                    class="group glass-panel p-6 rounded-lg border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 text-center cursor-default relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <span
+                        class="material-icons text-4xl text-slate-400 group-hover:text-primary mb-3 transition-colors">code</span>
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm">React / Next</h3>
+                    <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full w-[95%]"></div>
+                    </div>
+                </div>
+                <div
+                    class="group glass-panel p-6 rounded-lg border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 text-center cursor-default relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <span
+                        class="material-icons text-4xl text-slate-400 group-hover:text-primary mb-3 transition-colors">data_object</span>
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm">TypeScript</h3>
+                    <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full w-[90%]"></div>
+                    </div>
+                </div>
+                <div
+                    class="group glass-panel p-6 rounded-lg border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 text-center cursor-default relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <span
+                        class="material-icons text-4xl text-slate-400 group-hover:text-primary mb-3 transition-colors">dns</span>
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm">Node.js</h3>
+                    <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full w-[85%]"></div>
+                    </div>
+                </div>
+                <div
+                    class="group glass-panel p-6 rounded-lg border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 text-center cursor-default relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <span
+                        class="material-icons text-4xl text-slate-400 group-hover:text-primary mb-3 transition-colors">smart_toy</span>
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm">Python / AI</h3>
+                    <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full w-[80%]"></div>
+                    </div>
+                </div>
+                <div
+                    class="group glass-panel p-6 rounded-lg border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 text-center cursor-default relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <span
+                        class="material-icons text-4xl text-slate-400 group-hover:text-primary mb-3 transition-colors">cloud</span>
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm">AWS / GCP</h3>
+                    <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full w-[75%]"></div>
+                    </div>
+                </div>
+                <div
+                    class="group glass-panel p-6 rounded-lg border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 text-center cursor-default relative overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <span
+                        class="material-icons text-4xl text-slate-400 group-hover:text-primary mb-3 transition-colors">view_in_ar</span>
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm">Three.js</h3>
+                    <div class="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full w-[70%]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Projects Section -->
+    <section class="relative z-10 py-24 px-6" id="projects">
+        <div class="max-w-7xl mx-auto">
+            <h2
+                class="text-3xl font-bold uppercase tracking-wide text-slate-900 dark:text-white flex items-center gap-3 mb-16">
+                <span class="w-8 h-1 bg-primary"></span>
+                Deployed Projects
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project Card 1 -->
+                <article
+                    class="group relative rounded-xl overflow-hidden bg-surface-dark border border-white/5 hover:border-primary/50 transition-all duration-500">
+                    <div class="h-48 overflow-hidden relative">
+                        <img alt="Abstract futuristic dashboard interface with blue neon lights"
+                            class="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                            data-alt="Abstract futuristic dashboard interface with blue neon lights"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEeWpSsAMVDEGYfo_4tzAa0qKoxRcEJOpElhwwfMcQda00vhRFXzbw5BEfA_keenmnIOeEylsTalQGHtWka9LuIK_nzNx6jIbvG5Ozr6egOX9D6uiblPNx4RCkFxaWV7PU8akqRdtxGS8zLcmQE-0jOgDwsycNPd8wMBo48YnLr5lF4j4O6RFgzfXdnFz9tUou6iLijR3am70uNRhGI4sPm19pkRM9ACVQBcEgNcseTixOC0Tnth7UWolfJ_xar1iX5QJydvsbGRgo" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-surface-dark to-transparent"></div>
+                    </div>
+                    <div class="p-6 relative">
+                        <div
+                            class="absolute top-0 right-6 -translate-y-1/2 w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
+                            <span class="material-icons text-white text-sm">rocket_launch</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Neural Nexus Dashboard</h3>
+                        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                            A real-time analytics platform for AI model performance monitoring. Features live data
+                            visualization and predictive maintenance alerts.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">React</span>
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">D3.js</span>
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">Python</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <a class="text-white text-sm font-bold uppercase hover:text-primary transition-colors flex items-center gap-1"
+                                href="#">
+                                View Case <span class="material-icons text-sm">arrow_outward</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <!-- Project Card 2 -->
+                <article
+                    class="group relative rounded-xl overflow-hidden bg-surface-dark border border-white/5 hover:border-primary/50 transition-all duration-500">
+                    <div class="h-48 overflow-hidden relative">
+                        <img alt="Abstract dark AI neural network visualization with connecting nodes"
+                            class="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                            data-alt="Abstract dark AI neural network visualization with connecting nodes"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9jo6Dtt7GBoBgRBW_PXn73z7yNwXa4JXU1Q6FfRJhGXpEn9f8JArNpGJqNVl2ibfGvv9n3gx7aeDdsXthSwwbbneBXR4yrP5PlMJ5vkENKmPnE7ArZTVVeQYGaz2EbOBbI8T43MO7ZqPr7fKlwtvdpXk2Yty49Ok_iFUahPah7OlK1vaaf3L6Wjl0VKPi1vr7FC_3VBz2rY8pZxQSI0_T-X26ctIedn2OKYoCyKAu5lwSMKvyp-jCeVWqj2kU2XQqlrNgu_M71QJh" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-surface-dark to-transparent"></div>
+                    </div>
+                    <div class="p-6 relative">
+                        <div
+                            class="absolute top-0 right-6 -translate-y-1/2 w-10 h-10 rounded-full bg-surface-dark border border-primary text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:shadow-glow transition-all">
+                            <span class="material-icons text-sm">hub</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Crypto Sentinel</h3>
+                        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                            Decentralized finance tracking application with secure wallet integration and automated
+                            trading bots powered by machine learning.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">Solidity</span>
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">Web3.js</span>
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">Node</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <a class="text-white text-sm font-bold uppercase hover:text-primary transition-colors flex items-center gap-1"
+                                href="#">
+                                View Case <span class="material-icons text-sm">arrow_outward</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <!-- Project Card 3 -->
+                <article
+                    class="group relative rounded-xl overflow-hidden bg-surface-dark border border-white/5 hover:border-primary/50 transition-all duration-500">
+                    <div class="h-48 overflow-hidden relative">
+                        <img alt="Abstract flowing liquid metal dark background"
+                            class="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                            data-alt="Abstract flowing liquid metal dark background"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0qYqdRUOZMoaXabFGJe11T7UhKN7SNgLf59hnFraayenOy6Kgzbk3btLPT9ciTj5Sk3MqJRZ1bOX1WX0jJyhphOZR1kdx9wTflLd8Wsvu5tNI0OCOqM_JVzNMTZP1piX3jptOQcRIkm67muisHiu9d3s4BuCjAvTTAeip1hHZfqxw-vs3U1lol1A-R0uZeYqEYsZoud5r0GPgay92G5xsAfXzy2MGSeYdcRiKuCl9IKlgi9WzcUXslpP8IR9ASl-NiQvk4j6SSZR5" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-surface-dark to-transparent"></div>
+                    </div>
+                    <div class="p-6 relative">
+                        <div
+                            class="absolute top-0 right-6 -translate-y-1/2 w-10 h-10 rounded-full bg-surface-dark border border-primary text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:shadow-glow transition-all">
+                            <span class="material-icons text-sm">view_in_ar</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Immersive Art Gallery</h3>
+                        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                            A 3D virtual environment for digital artists to showcase NFT collections. Built with
+                            Three.js for browser-based VR experiences.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">Three.js</span>
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">WebGL</span>
+                            <span
+                                class="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">Vue</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <a class="text-white text-sm font-bold uppercase hover:text-primary transition-colors flex items-center gap-1"
+                                href="#">
+                                View Case <span class="material-icons text-sm">arrow_outward</span>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+    <!-- Map / Location Section -->
+    <section class="relative z-10 py-12 px-6">
+        <div class="max-w-7xl mx-auto glass-panel rounded-2xl overflow-hidden border border-white/5 p-1">
+            <div class="relative h-64 md:h-80 w-full rounded-xl overflow-hidden">
+                <img alt="San Francisco city skyline at night"
+                    class="w-full h-full object-cover grayscale opacity-50 hover:grayscale-0 hover:opacity-80 transition-all duration-700"
+                    data-alt="San Francisco city skyline at night with lights" data-location="San Francisco"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfOSEQbAmAQOmWaZd8yQtNZD-MRnNAJGq7Md2tE5BE8PSaO34N0mvdFQ8z_Fxwsc5zb24p1etV_ubPQ_2o5EBW3yxX5NAsnNlWyfT20DvJgv9uY7Lm344EJzJk9oFtooX0q7g02BFrwqgO2eH-6xzMq9N7b4CKqd1XdRbznx3gBeq5Rdgb1TxPcQsuYXqXnuNKiuU4Qmhxs4U1ozEoT8h_HMCVGSF-PSCwl6_h3HnR1XlVzZ_fB6iHycGGLX6GGkwOfpXRuYVvgbvI" />
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-background-dark/90 via-background-dark/40 to-transparent flex items-center">
+                    <div class="pl-8 md:pl-16 max-w-md">
+                        <h3 class="text-sm font-mono text-primary mb-2">BASE_LOCATION</h3>
+                        <h2 class="text-4xl font-bold text-white mb-4">SAN FRANCISCO, CA</h2>
+                        <div class="flex items-center gap-2 text-slate-300">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            <span class="text-sm">Available for relocation &amp; remote work</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer / Contact -->
+    <footer class="relative z-10 border-t border-white/5 bg-background-dark pt-16 pb-8 px-6" id="contact">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-5xl font-bold text-white mb-6">READY TO <span class="text-primary">COLLABORATE?</span></h2>
+            <p class="text-slate-400 max-w-xl mx-auto mb-10 text-lg">
+                Initiate a communication link. Whether it's a project inquiry or a tech discussion, my inbox is open.
+            </p>
+            <a class="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white rounded font-bold uppercase tracking-widest hover:bg-blue-600 shadow-glow transition-all duration-300 text-lg mb-16"
+                href="mailto:hello@example.com">
+                <span class="material-icons">mail</span>
+                Send Transmission
+            </a>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-white/5 pt-8 items-center">
+                <div class="text-slate-500 text-sm text-center md:text-left">
+                    © 2023 DEV.LOG SYSTEMS
+                </div>
+                <div class="flex justify-center gap-6">
+                    <a class="w-10 h-10 rounded bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white text-slate-400 transition-all duration-300"
+                        href="#">
+                        <span class="text-xs font-mono">GH</span>
+                    </a>
+                    <a class="w-10 h-10 rounded bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white text-slate-400 transition-all duration-300"
+                        href="#">
+                        <span class="text-xs font-mono">LI</span>
+                    </a>
+                    <a class="w-10 h-10 rounded bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white text-slate-400 transition-all duration-300"
+                        href="#">
+                        <span class="text-xs font-mono">TW</span>
+                    </a>
+                </div>
+                <div class="text-slate-500 text-sm font-mono text-center md:text-right">
+                    SYS.STATUS: <span class="text-green-500">NORMAL</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

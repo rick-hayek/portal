@@ -61,6 +61,36 @@ function applyThemeToDOM(theme: ThemeConfig): void {
         root.style.setProperty(`--portal-color-${camelToKebab(key)}`, value);
     }
 
+    // Derived / convenience color tokens
+    const primary = (theme.colors as any).primary as string | undefined;
+    const border = (theme.colors as any).border as string | undefined;
+
+    function hexToRgba(hex?: string, alpha = 1) {
+        if (!hex) return undefined;
+        const h = hex.replace('#', '');
+        const bigint = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    // primary-soft: gentle translucent variant of primary color
+    const primarySoft = (theme.colors as any).primarySoft ?? hexToRgba(primary, 0.08);
+    if (primarySoft) root.style.setProperty('--portal-color-primary-soft', primarySoft);
+
+    // border-soft: fallback to border color if specialized token not provided
+    const borderSoft = (theme.colors as any).borderSoft ?? border;
+    if (borderSoft) root.style.setProperty('--portal-color-border-soft', borderSoft);
+
+    // text-tertiary: fallback to textSecondary
+    const textTertiary = (theme.colors as any).textTertiary ?? theme.colors.textSecondary;
+    if (textTertiary) root.style.setProperty('--portal-color-text-tertiary', textTertiary);
+
+    // surface-alt: fallback to surface
+    const surfaceAlt = (theme.colors as any).surfaceAlt ?? theme.colors.surface;
+    if (surfaceAlt) root.style.setProperty('--portal-color-surface-alt', surfaceAlt);
+
     // Typography
     root.style.setProperty('--portal-font-family', theme.typography.fontFamily);
     root.style.setProperty('--portal-font-heading', theme.typography.headingFont);

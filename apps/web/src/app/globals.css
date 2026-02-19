@@ -7,26 +7,54 @@
 @theme inline {
   --color-background: var(--portal-color-background, #fafafa);
   --color-foreground: var(--portal-color-text, #1a1a2e);
-  --color-primary: var(--portal-color-primary, #1a1a2e);
-  --color-secondary: var(--portal-color-secondary, #16213e);
-  --color-accent: var(--portal-color-accent, #e94560);
+  --color-primary: var(--portal-color-primary, #6b8ec9);
+  --color-secondary: var(--portal-color-secondary, #5a7db8);
+  --color-accent: var(--portal-color-accent, #10b981);
   --color-surface: var(--portal-color-surface, #ffffff);
-  --color-border: var(--portal-color-border, #e5e7eb);
-  --color-muted: var(--portal-color-text-secondary, #6b7280);
+  --color-border: var(--portal-color-border, #f0f1f3);
+  --color-muted: var(--portal-color-text-secondary, #4b5563);
   --color-error: var(--portal-color-error, #ef4444);
-  --color-success: var(--portal-color-success, #22c55e);
+  --color-success: var(--portal-color-success, #10b981);
+}
+
+:root {
+  /* Default Theme: Clean Portal (minimal-light) */
+  --portal-color-primary: #6b8ec9;
+  --portal-color-secondary: #5a7db8;
+  --portal-color-accent: #10b981;
+  --portal-color-background: #f8f9fb;
+  --portal-color-surface: #ffffff;
+  --portal-color-text: #111827;
+  --portal-color-text-secondary: #4b5563;
+  --portal-color-text-tertiary: #9ca3af;
+  --portal-color-border: #f0f1f3;
+  --portal-color-surface-alt: #f1f3f7;
+  --portal-color-error: #ef4444;
+  --portal-color-success: #10b981;
+
+  /* Derived Defaults */
+  --portal-color-primary-soft: rgba(107, 142, 201, 0.08);
+  --portal-color-border-soft: #f0f1f3;
+
+  /* Typography */
+  --portal-font-family: var(--font-sora), system-ui, sans-serif;
+  --portal-font-heading: var(--font-sora), system-ui, sans-serif;
+  --portal-font-mono: var(--font-mono), monospace;
+  --portal-font-scale: 1;
+
+  /* Spacing */
+  --portal-spacing-unit: 4px;
+  --portal-radius: 0.75rem;
+
+  /* Effects */
+  --portal-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  --portal-blur: 12px;
+  --portal-transition: 0.2s ease;
 }
 
 /* ──────────────────────────────────────────────
    Base resets
    ────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 html {
   -webkit-font-smoothing: antialiased;
@@ -189,4 +217,34 @@ textarea {
   max-width: 100%;
   border-radius: 8px;
   margin: 1.5em 0;
+}
+
+/* ──────────────────────────────────────────────
+   Form Input Styles
+   ────────────────────────────────────────────── */
+.input-base {
+  display: block;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--portal-color-border, #e5e7eb);
+  background-color: var(--portal-color-surface-alt, #f1f3f7);
+  padding: 0.625rem 1rem;
+  font-size: 0.85rem;
+  color: var(--portal-color-text, #111827);
+  transition: all 0.2s ease;
+}
+
+.input-base::placeholder {
+  color: var(--portal-color-text-tertiary, #9ca3af);
+}
+
+.input-base:focus {
+  outline: none;
+  border-color: var(--portal-color-primary, #6b8ec9);
+  background-color: var(--portal-color-surface, #ffffff);
+  box-shadow: 0 0 0 3px rgba(107, 142, 201, 0.1);
+}
+
+.input-base:hover {
+  border-color: var(--portal-color-primary, #6b8ec9);
 }

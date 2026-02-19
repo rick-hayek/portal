@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design B — Aurora Glass</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #05070a;
+            --surface: rgba(255, 255, 255, .04);
+            --surface2: rgba(255, 255, 255, .07);
+            --text: #f0f0f5;
+            --text2: rgba(255, 255, 255, .55);
+            --text3: rgba(255, 255, 255, .3);
+            --accent: #7c6aef;
+            --accent2: #38bdf8;
+            --accent3: #a78bfa;
+            --gradient: linear-gradient(135deg, #7c6aef 0%, #38bdf8 50%, #818cf8 100%);
+            --border: rgba(255, 255, 255, .08);
+            --heading: 'Instrument Serif', Georgia, serif;
+            --body: 'DM Sans', system-ui, sans-serif;
+            --mono: 'Fira Code', monospace;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--body);
+            line-height: 1.6;
+            overflow-x: hidden
+        }
+
+        /* ── BACKGROUND ORB ────────── */
+        .bg-orb {
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 106, 239, .12), rgba(56, 189, 248, .06), transparent 70%);
+            filter: blur(60px);
+            animation: drift 25s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-orb-2 {
+            position: fixed;
+            bottom: -300px;
+            left: -100px;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, .08), rgba(167, 139, 250, .04), transparent 70%);
+            filter: blur(80px);
+            animation: drift 30s ease-in-out infinite reverse;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            50% {
+                transform: translate(50px, -30px)
+            }
+        }
+
+        /* ── HEADER ─────────────────── */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2.5rem;
+            height: 60px;
+            background: rgba(5, 7, 10, .6);
+            backdrop-filter: blur(24px) saturate(150%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--heading);
+            font-size: 1.5rem;
+            color: var(--text)
+        }
+
+        .logo i {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        nav {
+            display: flex;
+            gap: 1.8rem
+        }
+
+        nav a {
+            color: var(--text2);
+            font-size: .82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color .3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width .3s
+        }
+
+        nav a:hover {
+            color: var(--text)
+        }
+
+        nav a:hover::after {
+            width: 100%
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center
+        }
+
+        .search-pill {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            padding: .35rem .9rem;
+            border-radius: 100px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text3);
+            font-size: .78rem;
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .search-pill:hover {
+            border-color: var(--accent);
+            color: var(--text2)
+        }
+
+        .search-pill kbd {
+            font-family: var(--mono);
+            font-size: .6rem;
+            opacity: .5
+        }
+
+        .login-btn {
+            padding: .4rem 1.4rem;
+            border-radius: 100px;
+            background: var(--gradient);
+            color: #fff;
+            font-size: .8rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform .3s, box-shadow .3s;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(124, 106, 239, .4)
+        }
+
+        /* ── HERO ──────────────────── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem 1rem;
+            border-radius: 100px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: .78rem;
+            color: var(--text2);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent2);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
+        }
+
+        .hero h1 {
+            font-family: var(--heading);
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 400;
+            line-height: 1.08;
+            margin-bottom: 1.5rem;
+            letter-spacing: -.02em;
+        }
+
+        .hero h1 i {
+            font-style: italic;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text2);
+            font-weight: 300;
+            max-width: 480px;
+            line-height: 1.8;
+            margin-bottom: 2.5rem
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem
+        }
+
+        .btn-glow {
+            padding: .85rem 2.2rem;
+            border-radius: 14px;
+            background: var(--gradient);
+            color: #fff;
+            font-weight: 600;
+            font-size: .9rem;
+            border: none;
+            cursor: pointer;
+            transition: all .3s;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(124, 106, 239, .25);
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(124, 106, 239, .4)
+        }
+
+        .btn-outline {
+            padding: .85rem 2.2rem;
+            border-radius: 14px;
+            background: transparent;
+            color: var(--text);
+            font-weight: 500;
+            font-size: .9rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all .3s;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: var(--surface)
+        }
+
+        /* ── SECTION BASE ──────────── */
+        section {
+            padding: 6rem 2.5rem;
+            position: relative;
+            z-index: 1
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem
+        }
+
+        .section-tag {
+            font-family: var(--mono);
+            font-size: .7rem;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: .6rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: var(--heading);
+            font-size: 2.5rem;
+            letter-spacing: -.02em
+        }
+
+        /* ── BLOG CARDS ────────────── */
+        .blog-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.2rem
+        }
+
+        .blog-card {
+            padding: 1.6rem;
+            border-radius: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            transition: all .4s cubic-bezier(.4, 0, .2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(124, 106, 239, .08), transparent 60%);
+            opacity: 0;
+            transition: opacity .4s;
+        }
+
+        .blog-card:hover {
+            border-color: rgba(124, 106, 239, .3);
+            transform: translateY(-6px);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, .5)
+        }
+
+        .blog-card:hover::before {
+            opacity: 1
+        }
+
+        .blog-card * {
+            position: relative;
+            z-index: 1
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            margin-bottom: .7rem
+        }
+
+        .blog-cat {
+            font-size: .65rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: .2rem .6rem;
+            border-radius: 8px;
+            background: rgba(124, 106, 239, .15);
+            color: var(--accent3);
+        }
+
+        .blog-date {
+            font-size: .72rem;
+            color: var(--text3);
+            font-family: var(--mono)
+        }
+
+        .blog-title {
+            font-family: var(--heading);
+            font-size: 1.3rem;
+            margin-bottom: .5rem;
+            line-height: 1.3
+        }
+
+        .blog-excerpt {
+            font-size: .85rem;
+            color: var(--text2);
+            font-weight: 300;
+            line-height: 1.7
+        }
+
+        .blog-tags {
+            display: flex;
+            gap: .3rem;
+            margin-top: .8rem
+        }
+
+        .blog-tags span {
+            font-size: .65rem;
+            color: var(--text3);
+            padding: .15rem .5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px
+        }
+
+        /* ── PORTFOLIO ─────────────── */
+        .portfolio-section {
+            background: rgba(124, 106, 239, .02);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border)
+        }
+
+        .portfolio-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.2rem
+        }
+
+        .project {
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            transition: all .4s cubic-bezier(.4, 0, .2, 1);
+            cursor: pointer;
+        }
+
+        .project:hover {
+            border-color: rgba(56, 189, 248, .3);
+            transform: translateY(-6px);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, .5)
+        }
+
+        .project-img {
+            height: 190px;
+            background: linear-gradient(135deg, rgba(124, 106, 239, .1), rgba(56, 189, 248, .08));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .feat {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: .2rem .7rem;
+            border-radius: 100px;
+            background: var(--gradient);
+            color: #fff;
+            font-size: .6rem;
+            font-weight: 700;
+        }
+
+        .project-info {
+            padding: 1.4rem
+        }
+
+        .project-name {
+            font-family: var(--heading);
+            font-size: 1.15rem;
+            margin-bottom: .4rem
+        }
+
+        .project-text {
+            font-size: .82rem;
+            color: var(--text2);
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: .8rem
+        }
+
+        .stacks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .3rem
+        }
+
+        .stacks span {
+            font-size: .6rem;
+            font-family: var(--mono);
+            padding: .2rem .5rem;
+            border-radius: 6px;
+            background: var(--surface2);
+            color: var(--text2)
+        }
+
+        /* ── FOOTER ─────────────────── */
+        footer {
+            padding: 2.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer p {
+            font-size: .78rem;
+            color: var(--text3)
+        }
+
+        footer .links {
+            display: flex;
+            gap: 1.2rem
+        }
+
+        footer .links a {
+            color: var(--text3);
+            font-size: .78rem;
+            text-decoration: none;
+            transition: color .3s
+        }
+
+        footer .links a:hover {
+            color: var(--accent)
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-orb"></div>
+    <div class="bg-orb-2"></div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo"><i>Portal</i></div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Blog</a>
+            <a href="#">Portfolio</a>
+            <a href="#">About</a>
+            <a href="#">Guestbook</a>
+        </nav>
+        <div class="header-actions">
+            <button class="search-pill">🔍 Search <kbd>⌘K</kbd></button>
+            <button class="login-btn">Sign In</button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge"><span class="dot"></span> Building with Next.js & TypeScript</div>
+        <h1>Where code<br>becomes <i>art</i></h1>
+        <p>Personal engineering hub — writing about web development, sharing projects, and exploring the craft of
+            building software.</p>
+        <div class="hero-actions">
+            <a href="#" class="btn-glow">Explore Blog</a>
+            <a href="#" class="btn-outline">View Projects</a>
+        </div>
+    </section>
+
+    <!-- BLOG -->
+    <section>
+        <div class="section-header">
+            <span class="section-tag">// Latest Posts</span>
+            <h2 class="section-title">Recent Writing</h2>
+        </div>
+        <div class="blog-grid">
+            <div class="blog-card">
+                <div class="blog-meta"><span class="blog-cat">随笔</span><span class="blog-date">Feb 10</span></div>
+                <div class="blog-title">写代码的一些感悟</div>
+                <div class="blog-excerpt">编程多年后的一些思考：关于简洁、可读性和工程实践。</div>
+            </div>
+            <div class="blog-card">
+                <div class="blog-meta"><span class="blog-cat">生活</span><span class="blog-date">Feb 07</span></div>
+                <div class="blog-title">我的开发环境搭建</div>
+                <div class="blog-excerpt">分享我的 macOS 开发环境配置，包括编辑器、终端、工具链。</div>
+            </div>
+            <div class="blog-card">
+                <div class="blog-meta"><span class="blog-cat">技术</span><span class="blog-date">Feb 04</span></div>
+                <div class="blog-title">React Server Components 实践指南</div>
+                <div class="blog-excerpt">从概念到实战，全面掌握 React Server Components。</div>
+                <div class="blog-tags"><span>#React</span><span>#Next.js</span></div>
+            </div>
+            <div class="blog-card">
+                <div class="blog-meta"><span class="blog-cat">技术</span><span class="blog-date">Feb 01</span></div>
+                <div class="blog-title">TypeScript 高级类型技巧</div>
+                <div class="blog-excerpt">深入理解条件类型、映射类型和模板字面量类型。</div>
+                <div class="blog-tags"><span>#TypeScript</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section class="portfolio-section">
+        <div class="section-header">
+            <span class="section-tag">// Selected Work</span>
+            <h2 class="section-title">Projects</h2>
+        </div>
+        <div class="portfolio-grid">
+            <div class="project">
+                <div class="project-img">🚀<span class="feat">FEATURED</span></div>
+                <div class="project-info">
+                    <div class="project-name">Portal</div>
+                    <div class="project-text">全栈个人网站引擎，支持多主题切换与模块化架构。</div>
+                    <div class="stacks"><span>Next.js</span><span>TypeScript</span><span>tRPC</span><span>Prisma</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project">
+                <div class="project-img">💬<span class="feat">FEATURED</span></div>
+                <div class="project-info">
+                    <div class="project-name">Chat App</div>
+                    <div class="project-text">实时聊天，基于 WebSocket 毫秒级消息推送。</div>
+                    <div class="stacks"><span>React</span><span>Node.js</span><span>WebSocket</span><span>Redis</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 Portal</p>
+        <div class="links">
+            <a href="#">GitHub</a>
+            <a href="#">Twitter</a>
+            <a href="#">Email</a>
+        </div>
+    </footer>
+
+</body>
+
+</html>

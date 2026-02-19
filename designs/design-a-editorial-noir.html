@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design A — Editorial Noir</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface2: #1c1c1c;
+            --text: #e8e8e8;
+            --text2: #888;
+            --text3: #555;
+            --accent: #c8a97e;
+            --accent2: #d4af37;
+            --border: #252525;
+            --serif: 'Playfair Display', Georgia, serif;
+            --sans: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased
+        }
+
+        /* Grainy texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: .03;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ── HEADER ─────────────────── */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            height: 64px;
+            background: rgba(10, 10, 10, .85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--serif);
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            color: var(--text)
+        }
+
+        .logo span {
+            color: var(--accent)
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem
+        }
+
+        nav a {
+            color: var(--text2);
+            font-size: .85rem;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            transition: color .3s
+        }
+
+        nav a:hover {
+            color: var(--accent)
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem
+        }
+
+        .search-btn {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem .8rem;
+            border-radius: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text3);
+            font-size: .8rem;
+            cursor: pointer;
+            transition: border-color .3s;
+        }
+
+        .search-btn:hover {
+            border-color: var(--accent)
+        }
+
+        .search-btn kbd {
+            font-family: var(--mono);
+            font-size: .65rem;
+            padding: 2px 5px;
+            background: var(--surface2);
+            border-radius: 4px
+        }
+
+        .signin-btn {
+            padding: .45rem 1.2rem;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: .8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .3s;
+        }
+
+        .signin-btn:hover {
+            background: var(--accent);
+            color: var(--bg)
+        }
+
+        /* ── HERO ──────────────────── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(200, 169, 126, .06) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            50% {
+                transform: translate(-30px, 40px)
+            }
+        }
+
+        .hero-content {
+            max-width: 700px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: .3rem .8rem;
+            border-radius: 100px;
+            background: rgba(200, 169, 126, .1);
+            border: 1px solid rgba(200, 169, 126, .2);
+            color: var(--accent);
+            font-size: .75rem;
+            font-weight: 500;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-family: var(--serif);
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -.03em;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--accent)
+        }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text2);
+            font-weight: 300;
+            max-width: 500px;
+            line-height: 1.8;
+            margin-bottom: 2rem
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .8rem 2rem;
+            border-radius: 10px;
+            background: var(--accent);
+            color: var(--bg);
+            font-weight: 600;
+            font-size: .9rem;
+            text-decoration: none;
+            transition: all .3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(200, 169, 126, .3)
+        }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .8rem 2rem;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-weight: 500;
+            font-size: .9rem;
+            text-decoration: none;
+            transition: all .3s;
+            cursor: pointer;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--text2)
+        }
+
+        /* ── SECTION LAYOUT ────────── */
+        section {
+            padding: 6rem 3rem
+        }
+
+        .section-label {
+            font-family: var(--mono);
+            font-size: .7rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: .8rem;
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--accent)
+        }
+
+        .section-title {
+            font-family: var(--serif);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            letter-spacing: -.02em
+        }
+
+        /* ── BLOG CARDS ────────────── */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem
+        }
+
+        .post-card {
+            padding: 1.8rem;
+            border-radius: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            transition: all .4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-card:hover {
+            border-color: rgba(200, 169, 126, .3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .4)
+        }
+
+        .post-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity .4s;
+        }
+
+        .post-card:hover::after {
+            opacity: 1
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            margin-bottom: .8rem
+        }
+
+        .post-cat {
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding: .2rem .6rem;
+            background: rgba(200, 169, 126, .1);
+            border-radius: 6px;
+        }
+
+        .post-date {
+            font-size: .75rem;
+            color: var(--text3);
+            font-family: var(--mono)
+        }
+
+        .post-title {
+            font-family: var(--serif);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: .6rem;
+            line-height: 1.3
+        }
+
+        .post-excerpt {
+            font-size: .9rem;
+            color: var(--text2);
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: 1rem
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem
+        }
+
+        .post-tags span {
+            font-size: .7rem;
+            color: var(--text3);
+            padding: .2rem .5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px
+        }
+
+        /* ── PORTFOLIO CARDS ────────── */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem
+        }
+
+        .project-card {
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            transition: all .4s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            border-color: rgba(200, 169, 126, .3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .4)
+        }
+
+        .project-cover {
+            height: 200px;
+            background: linear-gradient(135deg, var(--surface2) 0%, rgba(200, 169, 126, .15) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .project-cover .featured-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: .25rem .7rem;
+            border-radius: 100px;
+            background: var(--accent);
+            color: var(--bg);
+            font-size: .65rem;
+            font-weight: 600;
+            letter-spacing: .05em;
+        }
+
+        .project-body {
+            padding: 1.5rem
+        }
+
+        .project-title {
+            font-family: var(--serif);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: .5rem
+        }
+
+        .project-desc {
+            font-size: .85rem;
+            color: var(--text2);
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: 1rem
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem
+        }
+
+        .tech-tags span {
+            font-size: .65rem;
+            font-family: var(--mono);
+            padding: .25rem .6rem;
+            border-radius: 6px;
+            background: var(--surface2);
+            color: var(--text2);
+        }
+
+        /* ── FOOTER ─────────────────── */
+        footer {
+            padding: 3rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer p {
+            font-size: .8rem;
+            color: var(--text3)
+        }
+
+        footer .social {
+            display: flex;
+            gap: 1rem
+        }
+
+        footer .social a {
+            color: var(--text3);
+            font-size: .8rem;
+            text-decoration: none;
+            transition: color .3s
+        }
+
+        footer .social a:hover {
+            color: var(--accent)
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">Portal<span>.</span></div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Blog</a>
+            <a href="#">Portfolio</a>
+            <a href="#">About</a>
+            <a href="#">Guestbook</a>
+        </nav>
+        <div class="header-right">
+            <button class="search-btn">🔍 Search <kbd>⌘K</kbd></button>
+            <button class="signin-btn">Sign In</button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-tag">✦ Full-Stack Developer</span>
+            <h1 class="hero-title">Crafting <em>digital<br>experiences</em> with code</h1>
+            <p class="hero-desc">I build elegant, high-performance web applications. Currently focused on the TypeScript
+                & Next.js ecosystem.</p>
+            <div class="hero-cta">
+                <a href="#" class="btn-primary">Read Blog →</a>
+                <a href="#" class="btn-ghost">View Projects</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOG -->
+    <section>
+        <div class="section-label">Latest Posts</div>
+        <h2 class="section-title">From the Blog</h2>
+        <div class="posts-grid">
+            <div class="post-card">
+                <div class="post-meta"><span class="post-cat">随笔</span><span class="post-date">2026/02/10</span></div>
+                <div class="post-title">写代码的一些感悟</div>
+                <div class="post-excerpt">编程多年后的一些思考：关于简洁、可读性和工程实践。</div>
+            </div>
+            <div class="post-card">
+                <div class="post-meta"><span class="post-cat">生活</span><span class="post-date">2026/02/07</span></div>
+                <div class="post-title">我的开发环境搭建</div>
+                <div class="post-excerpt">分享我的 macOS 开发环境配置，包括编辑器、终端、工具链。</div>
+            </div>
+            <div class="post-card">
+                <div class="post-meta"><span class="post-cat">技术</span><span class="post-date">2026/02/04</span></div>
+                <div class="post-title">React Server Components 实践指南</div>
+                <div class="post-excerpt">从概念到实战，全面掌握 React Server Components。</div>
+                <div class="post-tags"><span>#React</span><span>#Next.js</span></div>
+            </div>
+            <div class="post-card">
+                <div class="post-meta"><span class="post-cat">技术</span><span class="post-date">2026/02/01</span></div>
+                <div class="post-title">TypeScript 高级类型技巧</div>
+                <div class="post-excerpt">深入理解 TypeScript 的条件类型、映射类型和模板字面量类型。</div>
+                <div class="post-tags"><span>#TypeScript</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section style="background:var(--surface)">
+        <div class="section-label">Selected Work</div>
+        <h2 class="section-title">Projects</h2>
+        <div class="portfolio-grid">
+            <div class="project-card">
+                <div class="project-cover">
+                    🚀
+                    <span class="featured-badge">Featured</span>
+                </div>
+                <div class="project-body">
+                    <div class="project-title">Portal</div>
+                    <div class="project-desc">全栈个人网站引擎，支持多主题、模块化架构。</div>
+                    <div class="tech-tags">
+                        <span>Next.js</span><span>TypeScript</span><span>tRPC</span><span>Prisma</span><span>Tailwind</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-cover">💬<span class="featured-badge">Featured</span></div>
+                <div class="project-body">
+                    <div class="project-title">Chat App</div>
+                    <div class="project-desc">实时聊天应用，基于 WebSocket 实现。</div>
+                    <div class="tech-tags">
+                        <span>React</span><span>Node.js</span><span>WebSocket</span><span>Redis</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 Portal. All rights reserved.</p>
+        <div class="social">
+            <a href="#">GitHub</a>
+            <a href="#">Twitter</a>
+            <a href="#">Email</a>
+        </div>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Minimalist Modern Portfolio Home</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased min-h-screen flex flex-col selection:bg-primary/20 selection:text-primary overflow-x-hidden">
+    <!-- Navigation: Discreet and Top Right -->
+    <header class="w-full absolute top-0 left-0 z-50 p-6 md:p-12">
+        <div class="max-w-[1400px] mx-auto flex justify-between items-center">
+            <!-- Logo / Branding (Minimal) -->
+            <a class="text-xl font-bold tracking-tight z-50 mix-blend-difference text-slate-900 dark:text-white"
+                href="#">
+                AM<span class="text-primary">.</span>
+            </a>
+            <!-- Menu -->
+            <nav class="hidden md:flex items-center space-x-12 text-sm font-medium text-slate-600 dark:text-slate-300">
+                <a class="hover:text-primary transition-colors duration-300" href="#">Work</a>
+                <a class="hover:text-primary transition-colors duration-300" href="#">About</a>
+                <a class="hover:text-primary transition-colors duration-300" href="#">Writing</a>
+                <a class="hover:text-primary transition-colors duration-300" href="#">Contact</a>
+            </nav>
+            <!-- Mobile Menu Icon -->
+            <button class="md:hidden p-2 text-slate-900 dark:text-white">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </header>
+    <!-- Main Content: Hero Section -->
+    <main class="flex-grow flex items-center justify-center relative pt-24 pb-12 px-6 md:px-12 lg:px-24">
+        <!-- Decorative Background Shape (Subtle) -->
+        <div
+            class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-b from-primary/5 to-transparent pointer-events-none hidden lg:block">
+        </div>
+        <div class="max-w-[1400px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+            <!-- Text Content (Left, heavy emphasis on whitespace and typography) -->
+            <div class="lg:col-span-7 flex flex-col justify-center order-2 lg:order-1 relative z-10">
+                <span class="text-primary font-semibold tracking-wider text-sm mb-4 uppercase">Product Designer</span>
+                <h1
+                    class="text-6xl md:text-7xl lg:text-[7rem] leading-[0.9] font-extrabold tracking-tighter text-slate-900 dark:text-white mb-8">
+                    Alex <br class="hidden md:block" />Morgan<span class="text-primary">.</span>
+                </h1>
+                <div class="max-w-xl">
+                    <p class="text-xl md:text-2xl text-slate-500 dark:text-slate-400 font-light leading-relaxed mb-10">
+                        Crafting digital experiences that merge functionality with minimalist aesthetics. Currently
+                        leading design at <span class="text-slate-900 dark:text-white font-medium">Archtype</span>.
+                    </p>
+                    <div class="flex items-center gap-6">
+                        <a class="group relative inline-flex items-center justify-center px-8 py-4 bg-primary text-white text-base font-medium rounded-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-1"
+                            href="#">
+                            <span class="relative z-10">Explore Projects</span>
+                            <div
+                                class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
+                            </div>
+                        </a>
+                        <a class="inline-flex items-center text-slate-900 dark:text-white font-medium hover:text-primary transition-colors group"
+                            href="#">
+                            <span class="mr-2">Get in touch</span>
+                            <span
+                                class="material-icons text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Visual Content (Right, Asymmetrical) -->
+            <div class="lg:col-span-5 order-1 lg:order-2 relative">
+                <div class="relative w-full aspect-[4/5] lg:aspect-[3/4] max-w-lg mx-auto lg:ml-auto">
+                    <!-- Background Accent -->
+                    <div
+                        class="absolute -top-6 -right-6 w-full h-full border-2 border-primary/20 rounded-2xl z-0 hidden md:block">
+                    </div>
+                    <!-- Main Image Container -->
+                    <div
+                        class="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-slate-200 dark:bg-slate-800 z-10">
+                        <img alt="Portrait of a creative professional looking confident"
+                            class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                            data-alt="Portrait of a creative professional looking confident"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuARHDGRwlkPxlqErTEBOmIApjriGry_S2IZWbekw5QwDe8348Uexh0nyJ-bWYbxYJL7eFSJhyXfL08LH5QrFfit84dOLf_Exhh78kdqc00ArEMfsyf7dTrX2tv4OauNC-Y6ERnJBGEFcqi_x5nnemK1x5HgbjjzwjECoBOBSgeuQHAyuWdkk_fOarcF6XD5AYZpJBaf5nRkopjeb6QivO4XFv07lxypsZJShoe5jBlwJTDRQFuwLifYMmQcANaNoMfA4DSFHOsQ_EH8" />
+                        <!-- Overlay Text (Optional creative touch) -->
+                        <div class="absolute bottom-0 left-0 p-6 w-full bg-gradient-to-t from-black/60 to-transparent">
+                            <p
+                                class="text-white/90 text-sm font-medium tracking-wide backdrop-blur-sm inline-block px-3 py-1 rounded-full bg-white/10 border border-white/20">
+                                Based in San Francisco
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Floating decorative element -->
+                    <div
+                        class="absolute -bottom-8 -left-8 md:-left-12 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl z-20 max-w-[200px] border border-slate-100 dark:border-slate-700 hidden md:block">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Status</span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-900 dark:text-white">Open for new opportunities in Q4.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Footer Area: Minimal text links anchored to bottom corners -->
+    <footer class="w-full px-6 md:px-12 py-8 relative z-10">
+        <div
+            class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 dark:text-slate-400">
+            <!-- Bottom Left: Copyright -->
+            <div class="mb-4 md:mb-0">
+                © 2024 Alex Morgan. All Rights Reserved.
+            </div>
+            <!-- Bottom Right: Socials -->
+            <div class="flex space-x-8">
+                <a class="hover:text-primary transition-colors duration-300" href="#">Twitter</a>
+                <a class="hover:text-primary transition-colors duration-300" href="#">LinkedIn</a>
+                <a class="hover:text-primary transition-colors duration-300" href="#">Dribbble</a>
+                <a class="hover:text-primary transition-colors duration-300" href="#">Instagram</a>
+            </div>
+        </div>
+    </footer>
+    <!-- Abstract Background Blur for depth -->
+    <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none -z-10">
+    </div>
+    <div class="fixed bottom-1/4 right-1/4 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none -z-10">
+    </div>
+</body>
+
+</html>

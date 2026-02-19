@@ -25,17 +25,27 @@ export default async function BlogPage({
     const categories = await trpc.category.list.query();
 
     return (
-        <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-            <h1 className="mb-8 text-3xl font-bold text-[var(--portal-color-text)]">Blog</h1>
+        <div style={{ padding: '5rem 2rem', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+            {/* Section header */}
+            <div className="flex items-baseline" style={{ gap: '.8rem', marginBottom: '2.5rem' }}>
+                <span style={{ width: 28, height: 2, background: 'var(--portal-color-primary)', flexShrink: 0 }}></span>
+                <span className="font-mono uppercase text-[var(--portal-color-primary)]"
+                    style={{ fontSize: '.7rem', fontWeight: 500, letterSpacing: '.1em' }}
+                >Latest Posts</span>
+                <h1 className="text-[var(--portal-color-text)]"
+                    style={{ fontSize: '1.6rem', fontWeight: 700, letterSpacing: '-.03em' }}
+                >Blog</h1>
+            </div>
 
             {/* Category Filters */}
             <div className="mb-8 flex flex-wrap gap-2">
                 <a
                     href="/blog"
-                    className={`rounded-full px-3 py-1 text-sm transition-colors ${!params.category
-                            ? 'bg-[var(--portal-color-primary)] text-white'
-                            : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
+                    className={`rounded-full transition-colors ${!params.category
+                        ? 'bg-[var(--portal-color-primary)] text-white'
+                        : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
                         }`}
+                    style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
                 >
                     All
                 </a>
@@ -43,19 +53,20 @@ export default async function BlogPage({
                     <a
                         key={cat.id}
                         href={`/blog?category=${cat.slug}`}
-                        className={`rounded-full px-3 py-1 text-sm transition-colors ${params.category === cat.slug
-                                ? 'bg-[var(--portal-color-primary)] text-white'
-                                : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
+                        className={`rounded-full transition-colors ${params.category === cat.slug
+                            ? 'bg-[var(--portal-color-primary)] text-white'
+                            : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
                             }`}
+                        style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
                     >
                         {cat.name} ({cat._count.posts})
                     </a>
                 ))}
             </div>
 
-            {/* Post Grid */}
+            {/* Post List */}
             {data.posts.length > 0 ? (
-                <div className="grid gap-6">
+                <div className="flex flex-col">
                     {data.posts.map((post) => (
                         <PostCard key={post.id} post={post} />
                     ))}
@@ -72,18 +83,20 @@ export default async function BlogPage({
                     {page > 1 && (
                         <a
                             href={`/blog?page=${page - 1}${params.category ? `&category=${params.category}` : ''}`}
-                            className="rounded-lg border border-[var(--portal-color-border)] px-4 py-2 text-sm transition-colors hover:border-[var(--portal-color-primary)]"
+                            className="rounded-full border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] transition-colors hover:border-[var(--portal-color-primary)] hover:text-[var(--portal-color-primary)]"
+                            style={{ padding: '.4rem 1rem', fontSize: '.82rem' }}
                         >
                             ← Previous
                         </a>
                     )}
-                    <span className="text-sm text-[var(--portal-color-text-secondary)]">
+                    <span style={{ fontSize: '.82rem' }} className="text-[var(--portal-color-text-secondary)]">
                         Page {page} of {data.pagination.totalPages}
                     </span>
                     {page < data.pagination.totalPages && (
                         <a
                             href={`/blog?page=${page + 1}${params.category ? `&category=${params.category}` : ''}`}
-                            className="rounded-lg border border-[var(--portal-color-border)] px-4 py-2 text-sm transition-colors hover:border-[var(--portal-color-primary)]"
+                            className="rounded-full border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] transition-colors hover:border-[var(--portal-color-primary)] hover:text-[var(--portal-color-primary)]"
+                            style={{ padding: '.4rem 1rem', fontSize: '.82rem' }}
                         >
                             Next →
                         </a>

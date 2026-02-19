@@ -71,9 +71,11 @@ export interface ThemeConfig {
     surface: string;
     text: string;
     textSecondary: string;
+    textTertiary?: string;
     border: string;
     error: string;
     success: string;
+    surfaceAlt?: string;
   };
   typography: {
     fontFamily: string;

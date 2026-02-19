@@ -1,82 +1,66 @@
-import siteConfig from '@/site.config';
-
-export const metadata = {
-    title: `About — ${siteConfig.site.title}`,
-    description: siteConfig.about?.bio ?? siteConfig.site.description,
-};
+'use client';
 
 export default function AboutPage() {
-    const about = siteConfig.about ?? {};
-    const { name, bio, avatar, skills, socialLinks } = about as {
-        name?: string;
-        bio?: string;
-        avatar?: string;
-        skills?: string[];
-        socialLinks?: { label: string; href: string; icon?: string }[];
-    };
-
     return (
-        <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-            {/* Hero */}
-            <section className="mb-12 flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
-                {avatar && (
-                    <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full border-4 border-[var(--portal-color-primary)]">
-                        <img
-                            src={avatar}
-                            alt={name ?? siteConfig.site.title}
-                            className="h-full w-full object-cover"
-                        />
-                    </div>
-                )}
-                <div>
-                    <h1 className="text-3xl font-bold text-[var(--portal-color-text)]">
-                        {name ?? siteConfig.site.title}
-                    </h1>
-                    {bio && (
-                        <p className="mt-2 leading-relaxed text-[var(--portal-color-text-secondary)]">
-                            {bio}
+        <div className="flex w-full flex-col items-center">
+            <section className="mx-auto w-full max-w-[1200px] px-8" style={{ padding: '8rem 2rem 5rem' }}>
+                {/* Section Header */}
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.8rem', marginBottom: '3rem' }}>
+                    <span style={{ width: '28px', height: '2px', background: 'var(--portal-color-primary)', flexShrink: 0 }}></span>
+                    <span style={{ fontFamily: 'var(--portal-font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--portal-color-primary)', fontWeight: 500 }}>About Me</span>
+                    <h1 style={{ fontSize: '1.6rem', fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--portal-color-text)' }}>The Developer</h1>
+                </div>
+
+                <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+                    {/* Intro Text */}
+                    <div className="space-y-6 text-[1.05rem] leading-relaxed text-[var(--portal-color-text-secondary)]">
+                        <p>
+                            Hello! I'm Rick, a Full-Stack Engineer who loves building tools that make development easier and more enjoyable.
                         </p>
-                    )}
+                        <p>
+                            With a background in computer science and years of experience in the JavaScript ecosystem, I focus on creating performant, accessible, and beautiful web applications.
+                        </p>
+                        <p>
+                            When I'm not coding, you can find me exploring new technologies, contributing to open source, or sharing my knowledge through writing.
+                        </p>
+
+                        <div className="pt-4 flex gap-4">
+                            <a href="https://github.com" target="_blank" rel="noreferrer" className="text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors">
+                                GitHub
+                            </a>
+                            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors">
+                                Twitter
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Experience Card */}
+                    <div style={{
+                        background: 'var(--portal-color-surface)',
+                        border: '1px solid var(--portal-color-border)',
+                        borderRadius: '16px',
+                        padding: '2rem',
+                        boxShadow: 'var(--portal-shadow)'
+                    }}>
+                        <h3 className="mb-6 text-lg font-bold text-[var(--portal-color-text)]">Experience</h3>
+                        <div className="space-y-0">
+                            {[
+                                { role: 'Senior Developer', company: 'Tech Corp', period: '2023 — Present' },
+                                { role: 'Full Stack Engineer', company: 'Startup Inc', period: '2020 — 2023' },
+                                { role: 'Frontend Developer', company: 'Web Studio', period: '2018 — 2020' },
+                            ].map((job, i) => (
+                                <div key={i} className="flex items-baseline justify-between border-b border-[var(--portal-color-border-soft)] py-4 last:border-0 last:pb-0 first:pt-0">
+                                    <div>
+                                        <div className="font-semibold text-[var(--portal-color-text)]">{job.role}</div>
+                                        <div className="text-sm text-[var(--portal-color-text-secondary)]">{job.company}</div>
+                                    </div>
+                                    <div className="font-mono text-xs text-[var(--portal-color-text-tertiary)]">{job.period}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </section>
-
-            {/* Social Links */}
-            {socialLinks && socialLinks.length > 0 && (
-                <section className="mb-12">
-                    <h2 className="mb-4 text-xl font-semibold text-[var(--portal-color-text)]">Social</h2>
-                    <div className="flex flex-wrap gap-3">
-                        {socialLinks.map((link) => (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-4 py-2 text-sm transition-colors hover:border-[var(--portal-color-primary)] hover:text-[var(--portal-color-primary)]"
-                            >
-                                {link.icon && <span>{link.icon}</span>}
-                                {link.label}
-                            </a>
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {/* Skills */}
-            {skills && skills.length > 0 && (
-                <section>
-                    <h2 className="mb-4 text-xl font-semibold text-[var(--portal-color-text)]">Skills</h2>
-                    <div className="flex flex-wrap gap-2">
-                        {skills.map((skill) => (
-                            <span
-                                key={skill}
-                                className="rounded-full bg-[var(--portal-color-primary)] px-3 py-1 text-xs font-medium text-white transition-transform hover:scale-105"
-                            >
-                                {skill}
-                            </span>
-                        ))}
-                    </div>
-                </section>
-            )}
         </div>
     );
 }

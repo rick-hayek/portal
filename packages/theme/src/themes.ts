@@ -3,30 +3,32 @@ import type { ThemeConfig } from '@portal/shared';
 export const themes: Record<string, ThemeConfig> = {
   'minimal-light': {
     id: 'minimal-light',
-    name: 'Minimal Light',
+    name: 'Clean Portal',
     mode: 'light',
     colors: {
-      primary: '#1a1a2e',
-      secondary: '#16213e',
-      accent: '#e94560',
-      background: '#fafafa',
-      surface: '#ffffff',
-      text: '#1a1a2e',
-      textSecondary: '#6b7280',
-      border: '#e5e7eb',
+      primary: '#6b8ec9', // Soft Blue
+      secondary: '#5a7db8', // Darker Blue
+      accent: '#10b981', // Green for success/terminal
+      background: '#f8f9fb', // Off-white
+      surface: '#ffffff', // Pure white
+      text: '#111827', // Gray 900
+      textSecondary: '#4b5563', // Gray 600
+      textTertiary: '#9ca3af', // Gray 400
+      border: '#f0f1f3', // Lighter Gray
+      surfaceAlt: '#f1f3f7', // Light Gray Surface
       error: '#ef4444',
-      success: '#22c55e',
+      success: '#10b981',
     },
     typography: {
-      fontFamily: '"Source Serif 4", Georgia, serif',
-      headingFont: '"Source Serif 4", Georgia, serif',
-      monoFont: '"JetBrains Mono", monospace',
+      fontFamily: 'var(--font-sora), system-ui, sans-serif',
+      headingFont: 'var(--font-sora), system-ui, sans-serif',
+      monoFont: 'var(--font-mono), monospace',
       scale: 1,
     },
-    spacing: { unit: 4, radius: '0.5rem' },
+    spacing: { unit: 4, radius: '0.75rem' },
     effects: {
-      shadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-      blur: '8px',
+      shadow: '0 4px 16px rgba(0,0,0,0.05)',
+      blur: '12px',
       transition: '0.2s ease',
     },
   },

@@ -24,9 +24,9 @@ export default function SiteLayout({
             defaultTheme={siteConfig.theme.default}
             availableThemes={siteConfig.theme.available}
         >
-            <div className="flex min-h-screen flex-col">
+            <div className="flex min-h-screen w-full flex-col">
                 <Header siteTitle={siteConfig.site.title} navItems={navItems} />
-                <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
+                <main className="flex-1 w-full pt-14">
                     {children}
                 </main>
                 <Footer siteTitle={siteConfig.site.title} />
