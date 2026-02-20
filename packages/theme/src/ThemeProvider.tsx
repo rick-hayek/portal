@@ -63,6 +63,7 @@ function applyThemeToDOM(theme: ThemeConfig): void {
 
     // Derived / convenience color tokens
     const primary = (theme.colors as any).primary as string | undefined;
+    const background = (theme.colors as any).background as string | undefined;
     const border = (theme.colors as any).border as string | undefined;
 
     function hexToRgba(hex?: string, alpha = 1) {
@@ -90,6 +91,11 @@ function applyThemeToDOM(theme: ThemeConfig): void {
     // surface-alt: fallback to surface
     const surfaceAlt = (theme.colors as any).surfaceAlt ?? theme.colors.surface;
     if (surfaceAlt) root.style.setProperty('--portal-color-surface-alt', surfaceAlt);
+
+    // background-glass: translucent variant of background for glass headers
+    // opacity 0.72 matches the original hardcoded style
+    const backgroundGlass = (theme.colors as any).backgroundGlass ?? hexToRgba(background, 0.72);
+    if (backgroundGlass) root.style.setProperty('--portal-color-background-glass', backgroundGlass);
 
     // Typography
     root.style.setProperty('--portal-font-family', theme.typography.fontFamily);

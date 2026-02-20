@@ -10,8 +10,8 @@ const siteConfig = defineConfig({
     preset: 'tech-blog',
     theme: {
         default: 'minimal-light',
-        available: ['minimal-light'],
-        allowUserSwitch: false,
+        available: ['minimal-light', 'dark-neon', 'cyberpunk', 'nature-green', 'retro-brown'],
+        allowUserSwitch: true,
     },
     about: {
         name: 'Rick',

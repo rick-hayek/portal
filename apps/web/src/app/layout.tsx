@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Sora, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { TRPCReactProvider } from '../lib/api/client';
+import { ThemeProvider } from '@portal/theme';
 
 const sora = Sora({
   subsets: ['latin'],
@@ -31,7 +32,11 @@ export default function RootLayout({
       <body
         className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}
       >
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <ThemeProvider defaultTheme="minimal-light">
+            {children}
+          </ThemeProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { UserMenu } from '../auth/UserMenu';
 import { SearchDialog } from '../search/SearchDialog';
+import { ThemeSwitcher } from './ThemeSwitcher';
 import type { NavItem } from '@portal/shared';
 
 interface HeaderProps {
@@ -15,7 +16,7 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-[var(--portal-color-border)] flex justify-center"
-            style={{ padding: '0 32px', background: 'rgba(248,249,251,.72)', backdropFilter: 'blur(20px) saturate(1.4)', WebkitBackdropFilter: 'blur(20px) saturate(1.4)' }}
+            style={{ padding: '0 32px', background: 'var(--portal-color-background-glass)', backdropFilter: 'blur(20px) saturate(1.4)', WebkitBackdropFilter: 'blur(20px) saturate(1.4)' }}
         >
             <div className="mx-auto flex h-full w-full items-center justify-between px-8">
                 {/* Logo */}
@@ -49,6 +50,7 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                 {/* Right side */}
                 <div className="hidden items-center gap-3 md:flex">
                     <SearchDialog />
+                    <ThemeSwitcher />
                     <UserMenu />
                 </div>
 
@@ -83,6 +85,7 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                     </nav>
                     <div className="mt-3 border-t border-[var(--portal-color-border)] pt-3 flex items-center gap-3 px-3">
                         <SearchDialog />
+                        <ThemeSwitcher />
                         <UserMenu />
                     </div>
                 </div>
