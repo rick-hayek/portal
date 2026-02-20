@@ -24,15 +24,18 @@
     "@trpc/server": "^11.10.0",
     "bcryptjs": "^3.0.3",
     "feed": "^5.2.0",
+    "lucide-react": "^0.575.0",
     "next": "16.1.6",
     "next-auth": "5.0.0-beta.30",
     "next-mdx-remote": "^6.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-photo-album": "^3.5.1",
     "rehype-highlight": "^7.0.2",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
-    "superjson": "^2.2.6"
+    "superjson": "^2.2.6",
+    "yet-another-react-lightbox": "^3.29.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

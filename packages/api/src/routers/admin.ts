@@ -246,6 +246,67 @@ export const adminRouter = router({
             ctx.prisma.project.delete({ where: { id: input.id } }),
         ),
 
+    // ── Links CRUD ─────────────────────────────────
+
+    /** List all links (admin) */
+    linkList: adminProcedure.query(({ ctx }) =>
+        ctx.prisma.link.findMany({
+            orderBy: [{ category: 'asc' }, { sortOrder: 'asc' }],
+        }),
+    ),
+
+    /** Create link */
+    linkCreate: adminProcedure
+        .input(
+            z.object({
+                name: z.string().min(1).max(200),
+                url: z.string().url(),
+                avatar: z.string().url().optional().or(z.literal('')),
+                description: z.string().optional().or(z.literal('')),
+                category: z.string().default('default'),
+                isAlive: z.boolean().default(true),
+                sortOrder: z.number().int().default(0),
+            }),
+        )
+        .mutation(({ ctx, input }) => ctx.prisma.link.create({
+            data: {
+                ...input,
+                avatar: input.avatar || null,
+                description: input.description || null,
+            }
+        })),
+
+    /** Update link */
+    linkUpdate: adminProcedure
+        .input(
+            z.object({
+                id: z.string(),
+                name: z.string().min(1).max(200).optional(),
+                url: z.string().url().optional(),
+                avatar: z.string().url().nullable().optional().or(z.literal('')),
+                description: z.string().nullable().optional().or(z.literal('')),
+                category: z.string().optional(),
+                isAlive: z.boolean().optional(),
+                sortOrder: z.number().int().optional(),
+            }),
+        )
+        .mutation(({ ctx, input }) => {
+            const { id, ...data } = input;
+            return ctx.prisma.link.update({
+                where: { id },
+                data: {
+                    ...data,
+                    avatar: data.avatar === '' ? null : data.avatar,
+                    description: data.description === '' ? null : data.description,
+                }
+            });
+        }),
+
+    /** Delete link */
+    linkDelete: adminProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(({ ctx, input }) => ctx.prisma.link.delete({ where: { id: input.id } })),
+
     // ── Site Settings ──────────────────────────────────
 
     /** Get a site config value */

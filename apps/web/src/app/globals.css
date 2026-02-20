@@ -248,3 +248,31 @@ textarea {
 .input-base:hover {
   border-color: var(--portal-color-primary, #6b8ec9);
 }
+
+/* ──────────────────────────────────────────────
+   Print Styles for Resume Export
+   ────────────────────────────────────────────── */
+@media print {
+  /* Hide site layout components */
+  header, footer, nav, .print-hidden {
+    display: none !important;
+  }
+  
+  /* Reset background and text color for printing */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Ensure clean breaks */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Avoid breaking inside sections */
+  section, .timeline-item {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

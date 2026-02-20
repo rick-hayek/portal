@@ -24,3 +24,6 @@ export {
   getNavItems,
   clearRegistry,
 } from './moduleRegistry';
+export * from './defaultModules';
+export * from './resume';
+
