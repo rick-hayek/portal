@@ -17,9 +17,32 @@ const plexMono = IBM_Plex_Mono({
   display: 'swap',
 });
 
+import siteConfig from '../site.config';
+
 export const metadata: Metadata = {
-  title: 'Portal',
-  description: 'A modern full-stack web application starter',
+  title: {
+    default: siteConfig.site.title,
+    template: `%s | ${siteConfig.site.title}`,
+  },
+  description: siteConfig.site.description,
+  metadataBase: new URL(siteConfig.site.url),
+  openGraph: {
+    title: siteConfig.site.title,
+    description: siteConfig.site.description,
+    url: siteConfig.site.url,
+    siteName: siteConfig.site.title,
+    locale: siteConfig.site.locale,
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.site.title,
+    description: siteConfig.site.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

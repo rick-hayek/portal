@@ -1,4 +1,13 @@
-import type { PostWithRelations } from '@portal/api';
+import type { Prisma } from '@portal/db';
+
+type PostWithRelations = Prisma.PostGetPayload<{
+    include: {
+        category: true;
+        tags: {
+            include: { tag: true };
+        };
+    };
+}>;
 
 export function PostCard({ post }: { post: PostWithRelations }) {
     return (

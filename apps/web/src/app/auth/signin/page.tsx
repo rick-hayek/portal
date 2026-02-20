@@ -4,7 +4,9 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function SignInPage() {
+import { Suspense } from 'react';
+
+function SignInContent() {
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get('callbackUrl') ?? '/';
     const [email, setEmail] = useState('');
@@ -142,4 +144,11 @@ export default function SignInPage() {
         </div>
     );
 }
-// Rebuild trigger 2
+
+export default function SignInPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[var(--portal-color-background)]" />}>
+            <SignInContent />
+        </Suspense>
+    );
+}

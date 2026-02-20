@@ -21,7 +21,7 @@ export function SearchDialog() {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [mounted, setMounted] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
-    const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         setMounted(true);
