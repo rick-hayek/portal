@@ -1,24 +1,15 @@
-import { auth } from '@/auth';
-import { NextResponse } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
 
-export default auth((req) => {
-    const { pathname } = req.nextUrl;
-
-    // Protect admin routes — require authenticated admin
-    if (pathname.startsWith('/admin')) {
-        if (!req.auth) {
-            const signInUrl = new URL('/auth/signin', req.nextUrl.origin);
-            signInUrl.searchParams.set('callbackUrl', pathname);
-            return NextResponse.redirect(signInUrl);
-        }
-        if (req.auth.user.role !== 'admin') {
-            return NextResponse.redirect(new URL('/', req.nextUrl.origin));
-        }
-    }
-
-    return NextResponse.next();
-});
+export default createMiddleware(routing);
 
 export const config = {
-    matcher: ['/admin/:path*'],
+    // Match only internationalized pathnames
+    matcher: [
+        '/',
+        '/(zh|en)/:path*',
+        // Enable redirects that add missing locales
+        // (e.g. `/pathnames` -> `/en/pathnames`)
+        '/((?!api|_next|_vercel|.*\\..*).*)'
+    ]
 };

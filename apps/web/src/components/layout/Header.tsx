@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { UserMenu } from '../auth/UserMenu';
 import { SearchDialog } from '../search/SearchDialog';
 import { ThemeSwitcher } from './ThemeSwitcher';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import type { NavItem } from '@portal/shared';
 
 interface HeaderProps {
@@ -13,6 +16,7 @@ interface HeaderProps {
 
 export function Header({ siteTitle, navItems }: HeaderProps) {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const t = useTranslations('Navigation');
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-[var(--portal-color-border)] flex justify-center"
@@ -20,7 +24,7 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
         >
             <div className="mx-auto flex h-full w-full items-center justify-between px-8">
                 {/* Logo */}
-                <a href="/" className="flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline"
+                <Link href="/" className="flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline"
                     style={{ fontSize: '1.1rem', letterSpacing: '-.03em' }}
                 >
                     <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white"
@@ -31,25 +35,30 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                         </svg>
                     </span>
                     Portal<span className="text-[var(--portal-color-primary)]">.</span>
-                </a>
+                </Link>
 
                 {/* Desktop Nav Links */}
                 <nav className="hidden items-center gap-8 md:flex">
-                    {navItems.map((item) => (
-                        <a
-                            key={item.href}
-                            href={item.href}
-                            className="font-[500] text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)]"
-                            style={{ fontSize: '.82rem', letterSpacing: '-.01em' }}
-                        >
-                            {item.label}
-                        </a>
-                    ))}
+                    {navItems.map((item) => {
+                        const labelKey = item.label.toLowerCase() as any;
+                        const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href as any}
+                                className="font-[500] text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)]"
+                                style={{ fontSize: '.82rem', letterSpacing: '-.01em' }}
+                            >
+                                {translatedLabel}
+                            </Link>
+                        );
+                    })}
                 </nav>
 
                 {/* Right side */}
                 <div className="hidden items-center gap-3 md:flex">
                     <SearchDialog />
+                    <LanguageSwitcher />
                     <ThemeSwitcher />
                     <UserMenu />
                 </div>
@@ -72,19 +81,24 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
             {mobileOpen && (
                 <div className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-4 shadow-lg md:hidden">
                     <nav className="flex flex-col gap-1">
-                        {navItems.map((item) => (
-                            <a
-                                key={item.href}
-                                href={item.href}
-                                className="rounded-md px-3 py-2 text-sm font-[500] text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-primary)]"
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                {item.label}
-                            </a>
-                        ))}
+                        {navItems.map((item) => {
+                            const labelKey = item.label.toLowerCase() as any;
+                            const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href as any}
+                                    className="rounded-md px-3 py-2 text-sm font-[500] text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-primary)]"
+                                    onClick={() => setMobileOpen(false)}
+                                >
+                                    {translatedLabel}
+                                </Link>
+                            );
+                        })}
                     </nav>
                     <div className="mt-3 border-t border-[var(--portal-color-border)] pt-3 flex items-center gap-3 px-3">
                         <SearchDialog />
+                        <LanguageSwitcher />
                         <ThemeSwitcher />
                         <UserMenu />
                     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/routing';
 
 /** Fires a page view tracking request on each navigation */
 export function PageViewTracker() {

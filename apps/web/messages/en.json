@@ -1,0 +1,157 @@
+{
+    "Navigation": {
+        "home": "Home",
+        "blog": "Blog",
+        "portfolio": "Portfolio",
+        "resume": "Resume",
+        "gallery": "Gallery",
+        "guestbook": "Guestbook",
+        "links": "Links",
+        "about": "About",
+        "tools": "Tools"
+    },
+    "Index": {
+        "badge": "Full-Stack Developer",
+        "title1": "Building the",
+        "title2": "Modern Web",
+        "description": "Focused on TypeScript & Next.js ecosystem. I write clean code, share learnings, and build tools that developers love.",
+        "exploreBlog": "Explore Blog",
+        "viewProjects": "View Projects",
+        "latestPosts": "Latest Posts",
+        "blogTitle": "Blog",
+        "selectedWork": "Selected Work",
+        "projectsTitle": "Projects",
+        "viewAll": "View all",
+        "community": "Community",
+        "guestbookTitle": "Guestbook"
+    },
+    "Blog": {
+        "title": "Blog",
+        "latestPosts": "Latest Posts",
+        "all": "All",
+        "noPosts": "No posts found.",
+        "previous": "← Previous",
+        "pageOffset": "Page {page} of {totalPages}",
+        "next": "Next →"
+    },
+    "Portfolio": {
+        "title": "Portfolio",
+        "selectedWork": "Selected Work",
+        "all": "All",
+        "noProjects": "No projects yet.",
+        "featured": "Featured"
+    },
+    "Resume": {
+        "contact": "Contact",
+        "skills": "Skills",
+        "profile": "Profile",
+        "experience": "Experience",
+        "education": "Education",
+        "printPdf": "Print to PDF"
+    },
+    "Guestbook": {
+        "community": "Community",
+        "title": "Guestbook",
+        "namePlaceholder": "Your name",
+        "messagePlaceholder": "Write a message…",
+        "sending": "Sending…",
+        "send": "Send ✉️",
+        "loading": "Loading…",
+        "noMessages": "No messages yet. Be the first! 🎉",
+        "stats": {
+            "posts": "Posts",
+            "projects": "Projects",
+            "pageViews": "Page Views",
+            "guestbook": "Guestbook"
+        }
+    },
+    "Links": {
+        "title": "Bookmarks & Friends",
+        "description": "A collection of tools I use, people I admire, and websites that inspire me.",
+        "loading": "Loading Links...",
+        "noLinks": "No links found",
+        "noLinksDesc": "Looks like the collection is empty for now.",
+        "categories": {
+            "friend": "Friends",
+            "tool": "Tools & Utilities",
+            "inspiration": "Inspirations",
+            "other": "Other Links"
+        }
+    },
+    "Tools": {
+        "title": "Developer Tools",
+        "description": "A collection of handy utilities for everyday development tasks. Running entirely in your browser.",
+        "jsonFormatter": {
+            "name": "JSON Formatter",
+            "desc": "Format, validate and prettify JSON data with syntax highlighting."
+        },
+        "base64": {
+            "name": "Base64 Encoder / Decoder",
+            "desc": "Encode to or decode from Base64 format instantly."
+        },
+        "jwt": {
+            "name": "JWT Decoder",
+            "desc": "Decode and inspect JSON Web Tokens inline securely."
+        }
+    },
+    "About": {
+        "title": "The Developer",
+        "subtitle": "About Me",
+        "intro1": "Hello! I'm Rick, a Full-Stack Engineer who loves building tools that make development easier and more enjoyable.",
+        "intro2": "With a background in computer science and years of experience in the JavaScript ecosystem, I focus on creating performant, accessible, and beautiful web applications.",
+        "intro3": "When I'm not coding, you can find me exploring new technologies, contributing to open source, or sharing my knowledge through writing.",
+        "experience": "Experience",
+        "jobs": {
+            "senior": "Senior Developer",
+            "stack": "Full Stack Engineer",
+            "frontend": "Frontend Developer",
+            "present": "Present"
+        }
+    },
+    "Gallery": {
+        "title": "Gallery",
+        "loading": "Loading beautiful moments...",
+        "noPhotos": "No photos found.",
+        "description": "A collection of moments captured in time.",
+        "imageAlt": "Gallery image"
+    },
+    "ToolsBase64": {
+        "title": "Base64 Encoder & Decoder",
+        "description": "Convert text to Base64 format or decode Base64 back to text instantly.",
+        "input": "Input text to encode or decode",
+        "inputPlaceholder": "Enter plain text to encode, or Base64 string to decode...",
+        "encode": "Encode",
+        "decode": "Decode",
+        "output": "Result",
+        "outputEmpty": "Output will appear here...",
+        "error": "Error decoding Base64 string",
+        "copy": "Copy to clipboard",
+        "copied": "Copied!"
+    },
+    "ToolsJson": {
+        "title": "JSON Formatter",
+        "description": "Format, validate, and beautify your JSON data with syntax highlighting.",
+        "input": "Input JSON",
+        "inputPlaceholder": "Paste your messy JSON here...",
+        "format": "Format",
+        "minify": "Minify",
+        "output": "Result",
+        "outputEmpty": "Formatted JSON will appear here...",
+        "error": "Invalid JSON",
+        "copy": "Copy to clipboard",
+        "copied": "Copied!"
+    },
+    "ToolsJwt": {
+        "title": "JWT Decoder",
+        "description": "Decode and analyze JSON Web Tokens securely in your browser. No data is sent to the server.",
+        "input": "Encoded JWT",
+        "inputPlaceholder": "Paste your JWT here (e.g. eyJhbGciOiJIUzI1NiIsInR5cCI...)",
+        "header": "Header (Algorithm & Type)",
+        "payload": "Payload (Data/Claims)",
+        "signature": "Signature",
+        "outputEmpty": "Decoded data will appear here...",
+        "error": "Invalid JWT format",
+        "copy": "Copy to clipboard",
+        "copied": "Copied!"
+    }
+}
