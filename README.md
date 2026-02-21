@@ -26,7 +26,7 @@ A modern, full-stack personal portal and portfolio built with Next.js 16, tRPC, 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/portal.git
+git clone https://github.com/rick-hayek/portal.git
 cd portal
 ```
 
