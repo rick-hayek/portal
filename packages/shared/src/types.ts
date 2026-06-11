@@ -17,6 +17,17 @@ export interface SiteConfig {
     enabled: boolean;
     basePath: string;
   };
+  about?: {
+    name?: string;
+    bio?: string;
+    avatar?: string;
+    skills?: string[];
+    socialLinks?: {
+      label: string;
+      href: string;
+      icon?: string;
+    }[];
+  };
 }
 
 export interface ModuleConfig {

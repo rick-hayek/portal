@@ -129,7 +129,15 @@ export default function ReferencesAdminPage() {
   const copyEmbedCode = (refSlug: string, id: string) => {
     const embedCode = `<iframe src="/api/references/${refSlug}" width="100%" height="700" frameborder="0"></iframe>`;
     navigator.clipboard.writeText(embedCode).then(() => {
-      setCopiedId(id);
+      setCopiedId(`${id}-embed`);
+      setTimeout(() => setCopiedId(''), 2000);
+    });
+  };
+
+  const copyLinkCode = (refSlug: string, refTitle: string, id: string) => {
+    const linkCode = `**<a href="/api/references/${refSlug}" target="_blank" rel="noopener noreferrer">👉 点击此处在新页面中打开${refTitle}</a>**`;
+    navigator.clipboard.writeText(linkCode).then(() => {
+      setCopiedId(`${id}-link`);
       setTimeout(() => setCopiedId(''), 2000);
     });
   };
@@ -198,7 +206,13 @@ export default function ReferencesAdminPage() {
                             onClick={() => copyEmbedCode(ref.slug, ref.id)}
                             className="text-[var(--portal-color-primary)] hover:underline font-semibold"
                           >
-                            {copiedId === ref.id ? 'Copied! ✅' : 'Copy Embed'}
+                            {copiedId === `${ref.id}-embed` ? 'Copied! ✅' : 'Copy Embed'}
+                          </button>
+                          <button
+                            onClick={() => copyLinkCode(ref.slug, ref.title, ref.id)}
+                            className="text-[var(--portal-color-primary)] hover:underline font-semibold"
+                          >
+                            {copiedId === `${ref.id}-link` ? 'Copied! ✅' : 'Copy Link'}
                           </button>
                           <a
                             href={`/api/references/${ref.slug}`}
@@ -257,7 +271,7 @@ export default function ReferencesAdminPage() {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-                placeholder="OAuth PKCE Animation"
+                placeholder="Reference Page Title"
               />
             </div>
 
@@ -272,7 +286,7 @@ export default function ReferencesAdminPage() {
                 onChange={(e) => setSlug(e.target.value)}
                 required
                 className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none font-mono"
-                placeholder="oauth-pkce-animation"
+                placeholder="reference-page-slug"
               />
             </div>
 

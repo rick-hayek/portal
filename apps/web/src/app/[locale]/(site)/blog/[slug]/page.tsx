@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm';
 import { CommentSection } from '@/components/blog/CommentSection';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
+import { setRequestLocale } from 'next-intl/server';
 
 export const revalidate = 3600; // revalidate at most every hour (ISR)
 
@@ -35,8 +36,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+
+  // Set request locale for static/ISR rendering in next-intl
+  setRequestLocale(locale);
+
   const trpc = await getTRPCServer();
   const post = await trpc.post.bySlug({ slug });
   if (!post) notFound();

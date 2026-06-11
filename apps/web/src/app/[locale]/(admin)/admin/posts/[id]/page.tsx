@@ -3,6 +3,7 @@
 import { useEffect, useState, startTransition } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
+import { marked } from 'marked';
 
 interface Category {
   id: string;
@@ -29,6 +30,8 @@ export default function EditPostPage() {
   const [showNewCatForm, setShowNewCatForm] = useState(false);
   const [newCatName, setNewCatName] = useState('');
   const [creatingCat, setCreatingCat] = useState(false);
+
+  const [tab, setTab] = useState<'edit' | 'preview'>('edit');
 
   const handleCreateCategory = async () => {
     if (!newCatName.trim()) return;
@@ -270,19 +273,55 @@ export default function EditPostPage() {
           />
         </div>
 
-        {/* Content (Markdown Editor) */}
+        {/* Content (Markdown Editor with Preview Tab) */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
-            Content (Markdown)
-          </label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-            rows={20}
-            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-4 py-3 font-mono text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-            placeholder="Write your article in Markdown…"
-          />
+          <div className="mb-2 flex items-center justify-between">
+            <label className="text-sm font-medium text-[var(--portal-color-text)]">
+              Content (Markdown)
+            </label>
+            <div className="flex rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] p-0.5 text-xs font-medium">
+              <button
+                type="button"
+                onClick={() => setTab('edit')}
+                className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
+                  tab === 'edit'
+                    ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
+                    : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
+                }`}
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => setTab('preview')}
+                className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
+                  tab === 'preview'
+                    ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
+                    : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
+                }`}
+              >
+                Preview
+              </button>
+            </div>
+          </div>
+
+          {tab === 'edit' ? (
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              required
+              rows={20}
+              className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-4 py-3 font-mono text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+              placeholder="Write your article in Markdown…"
+            />
+          ) : (
+            <div className="w-full min-h-[440px] max-h-[600px] overflow-y-auto rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-5">
+              <div
+                className="prose prose-portal max-w-none"
+                dangerouslySetInnerHTML={{ __html: marked.parse(content) }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Actions */}

@@ -70,6 +70,26 @@ export default function AdminSettingsPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Settings</h1>
 
+      <div className="rounded-xl border border-yellow-200 bg-yellow-50/50 p-4 text-sm text-yellow-800 dark:border-yellow-900/30 dark:bg-yellow-900/20 dark:text-yellow-400">
+        <p className="font-semibold mb-1">⚠️ Notice / 注意</p>
+        <p className="leading-relaxed">
+          The settings saved here are stored in the database but are currently not applied to the
+          public website. To change site metadata (title, description, etc.), please edit the
+          configuration file at{' '}
+          <code className="rounded bg-yellow-100/80 px-1 py-0.5 font-mono text-xs dark:bg-yellow-900/40 text-yellow-900 dark:text-yellow-300">
+            apps/web/src/site.config.ts
+          </code>{' '}
+          instead.
+        </p>
+        <p className="mt-2 leading-relaxed">
+          此处的配置保存在数据库中，但目前前台未对接数据库配置。若要修改网站标题、描述等配置，请直接编辑项目中的静态配置文件{' '}
+          <code className="rounded bg-yellow-100/80 px-1 py-0.5 font-mono text-xs dark:bg-yellow-900/40 text-yellow-900 dark:text-yellow-300">
+            apps/web/src/site.config.ts
+          </code>
+          。
+        </p>
+      </div>
+
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (

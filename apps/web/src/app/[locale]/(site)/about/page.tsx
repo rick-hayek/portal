@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import siteConfig from '@/site.config';
 
 export default function AboutPage() {
   const t = useTranslations('About');
@@ -51,22 +52,17 @@ export default function AboutPage() {
             <p>{t('intro3')}</p>
 
             <div className="pt-4 flex gap-4">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors"
-              >
-                GitHub
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors"
-              >
-                Twitter
-              </a>
+              {(siteConfig.about?.socialLinks ?? []).map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel="noreferrer"
+                  className="text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
             </div>
           </div>
 

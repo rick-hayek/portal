@@ -2,7 +2,7 @@ import { defineConfig } from '@portal/config';
 
 const siteConfig = defineConfig({
   site: {
-    title: 'Portal',
+    title: 'My Portal',
     description: 'A modular personal website platform',
     url: 'https://portal.dev',
     locale: 'en-US',
@@ -30,9 +30,23 @@ const siteConfig = defineConfig({
       'Git',
     ],
     socialLinks: [
-      { label: 'GitHub', href: 'https://github.com', icon: '🐙' },
-      { label: 'Twitter', href: 'https://twitter.com', icon: '🐦' },
-      { label: 'Email', href: 'mailto:admin@portal.dev', icon: '📧' },
+      {
+        label: 'GitHub',
+        href: process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/aaa',
+        icon: '🐙',
+      },
+      {
+        label: 'Twitter',
+        href: process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com',
+        icon: '🐦',
+      },
+      {
+        label: 'Email',
+        href: process.env.NEXT_PUBLIC_EMAIL
+          ? `mailto:${process.env.NEXT_PUBLIC_EMAIL}`
+          : 'mailto:[EMAIL_ADDRESS]',
+        icon: '📧',
+      },
     ],
   },
 });

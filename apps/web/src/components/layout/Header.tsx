@@ -3,7 +3,7 @@
 import type { NavItem } from '@portal/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { Link } from '@/i18n/routing';
+import { Link, usePathname } from '@/i18n/routing';
 import { UserMenu } from '../auth/UserMenu';
 import { SearchDialog } from '../search/SearchDialog';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -19,6 +19,7 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const t = useTranslations('Navigation');
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   const isAdmin = session?.user?.role === 'admin';
   const displayNavItems = isAdmin ? [...navItems, { href: '/admin', label: 'Admin' }] : navItems;
@@ -54,11 +55,20 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
           {displayNavItems.map((item) => {
             const labelKey = item.label.toLowerCase() as any;
             const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
+            const isActive =
+              item.href === '/'
+                ? pathname === '/'
+                : pathname === item.href || pathname.startsWith(item.href + '/');
+
             return (
               <Link
                 key={item.href}
                 href={item.href as any}
-                className="font-medium text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)] text-[0.82rem] tracking-tight"
+                className={`transition-colors text-[0.82rem] tracking-tight ${
+                  isActive
+                    ? 'font-semibold text-[var(--portal-color-primary)]'
+                    : 'font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]'
+                }`}
               >
                 {translatedLabel}
               </Link>
@@ -110,11 +120,20 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
             {displayNavItems.map((item) => {
               const labelKey = item.label.toLowerCase() as any;
               const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
+              const isActive =
+                item.href === '/'
+                  ? pathname === '/'
+                  : pathname === item.href || pathname.startsWith(item.href + '/');
+
               return (
                 <Link
                   key={item.href}
                   href={item.href as any}
-                  className="rounded-md px-3 py-2 text-sm font-[500] text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-primary)]"
+                  className={`rounded-md px-3 py-2 text-sm transition-colors ${
+                    isActive
+                      ? 'bg-[var(--portal-color-background)] text-[var(--portal-color-primary)] font-semibold'
+                      : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-primary)] font-[500]'
+                  }`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {translatedLabel}
