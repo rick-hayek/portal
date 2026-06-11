@@ -6,12 +6,18 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   // Resolve pnpm workspace + subpath exports for Turbopack
   serverExternalPackages: ['@trpc/server'],
-  transpilePackages: ['@portal/api', '@portal/config', '@portal/db', '@portal/shared', '@portal/theme'],
+  transpilePackages: [
+    '@portal/api',
+    '@portal/config',
+    '@portal/db',
+    '@portal/shared',
+    '@portal/theme',
+  ],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'api.dicebear.com' },
-      { protocol: 'https', hostname: 'picsum.photos' }
+      { protocol: 'https', hostname: 'picsum.photos' },
     ],
   },
 };

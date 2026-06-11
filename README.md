@@ -50,6 +50,11 @@ Ensure you set the `DATABASE_URL` to your local or remote PostgreSQL instance.
 
 ### 4. Database Setup
 
+Launch database server:
+```bash
+docker compose up -d
+```
+
 Run Prisma migrations to initialize the database schema:
 
 ```bash

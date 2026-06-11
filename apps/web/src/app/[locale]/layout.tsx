@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
-import { Sora, IBM_Plex_Mono } from 'next/font/google';
+import { IBM_Plex_Mono, Sora } from 'next/font/google';
 import '../globals.css';
-import { TRPCReactProvider } from '../../lib/api/client';
 import { ThemeProvider } from '@portal/theme';
-import siteConfig from '../../site.config';
+import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { routing } from '../../i18n/routing';
+import { TRPCReactProvider } from '../../lib/api/client';
+import siteConfig from '../../site.config';
 
 const sora = Sora({
   subsets: ['latin'],
@@ -65,14 +65,10 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body
-        className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}
-      >
+      <body className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <TRPCReactProvider>
-            <ThemeProvider defaultTheme="minimal-light">
-              {children}
-            </ThemeProvider>
+            <ThemeProvider defaultTheme="minimal-light">{children}</ThemeProvider>
           </TRPCReactProvider>
         </NextIntlClientProvider>
       </body>

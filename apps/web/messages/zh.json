@@ -1,157 +1,157 @@
 {
-    "Navigation": {
-        "home": "首页",
-        "blog": "博客",
-        "portfolio": "作品集",
-        "resume": "简历",
-        "gallery": "图库",
-        "guestbook": "留言板",
-        "links": "友链",
-        "about": "关于",
-        "tools": "工具"
-    },
-    "Index": {
-        "badge": "全栈开发者",
-        "title1": "构建",
-        "title2": "现代 Web",
-        "description": "专注于 TypeScript 和 Next.js 生态。我致力于编写整洁的代码，分享学习经验，并构建让开发者喜爱的工具。",
-        "exploreBlog": "探索博客",
-        "viewProjects": "查看项目",
-        "latestPosts": "最新文章",
-        "blogTitle": "博客",
-        "selectedWork": "精选作品",
-        "projectsTitle": "项目",
-        "viewAll": "查看全部",
-        "community": "社区互动",
-        "guestbookTitle": "留言板"
-    },
-    "Blog": {
-        "title": "博客",
-        "latestPosts": "最新文章",
-        "all": "全部",
-        "noPosts": "空空如也。",
-        "previous": "← 上一页",
-        "pageOffset": "第 {page} 页，共 {totalPages} 页",
-        "next": "下一页 →"
-    },
-    "Portfolio": {
-        "title": "作品集",
-        "selectedWork": "精选作品",
-        "all": "全部",
-        "noProjects": "暂无项目。",
-        "featured": "精选"
-    },
-    "Resume": {
-        "contact": "联系方式",
-        "skills": "专业技能",
-        "profile": "个人简介",
-        "experience": "工作经历",
-        "education": "教育经历",
-        "printPdf": "存为 PDF 打印"
-    },
-    "Guestbook": {
-        "community": "社区互动",
-        "title": "留言板",
-        "namePlaceholder": "你的昵称",
-        "messagePlaceholder": "写下你的留言…",
-        "sending": "发送中…",
-        "send": "发送 ✉️",
-        "loading": "加载中…",
-        "noMessages": "暂无留言，快来抢沙发！🎉",
-        "stats": {
-            "posts": "文章数",
-            "projects": "项目数",
-            "pageViews": "访问量",
-            "guestbook": "留言数"
-        }
-    },
-    "Links": {
-        "title": "书签与友链",
-        "description": "收集我常用的工具、欣赏的人以及给我带来灵感的网站。",
-        "loading": "加载链接中...",
-        "noLinks": "暂无链接",
-        "noLinksDesc": "看起来收藏夹暂时是空的。",
-        "categories": {
-            "friend": "友情链接",
-            "tool": "工具与效率",
-            "inspiration": "灵感发现",
-            "other": "其他链接"
-        }
-    },
-    "Tools": {
-        "title": "开发者工具",
-        "description": "日常开发便捷小工具集合。完全在浏览器端运行。",
-        "jsonFormatter": {
-            "name": "JSON 格式化",
-            "desc": "带语法高亮的 JSON 数据格式化、校验与美化工具。"
-        },
-        "base64": {
-            "name": "Base64 编解码",
-            "desc": "快速进行 Base64 格式的编码与解码。"
-        },
-        "jwt": {
-            "name": "JWT 解析",
-            "desc": "安全地在本地解析并查看 JSON Web Tokens 内容。"
-        }
-    },
-    "About": {
-        "title": "关于开发者",
-        "subtitle": "关于我",
-        "intro1": "你好！我是 Rick，一名全栈工程师，热爱构建能让开发变得更轻松愉悦的工具。",
-        "intro2": "拥有计算机科学背景以及在 JavaScript 生态多年的深耕经验，我专注于打造高性能、高可用且设计精美的 Web 应用。",
-        "intro3": "不在写代码的时候，我通常在探索新技术、为开源社区做贡献，或是通过写作分享我的所见所学。",
-        "experience": "工作经历",
-        "jobs": {
-            "senior": "高级开发工程师",
-            "stack": "全栈工程师",
-            "frontend": "前端开发工程师",
-            "present": "至今"
-        }
-    },
-    "Gallery": {
-        "title": "图库",
-        "loading": "正在加载美好瞬间...",
-        "noPhotos": "暂无照片。",
-        "description": "光与影的时间胶囊。",
-        "imageAlt": "图库照片"
-    },
-    "ToolsBase64": {
-        "title": "Base64 编码与解码",
-        "description": "快速将文本转换为 Base64 格式，或将 Base64 解码回明文。",
-        "input": "输入要编码或解码的文本",
-        "inputPlaceholder": "在此输入明文进行编码，或输入 Base64 字符串进行解码...",
-        "encode": "编码",
-        "decode": "解码",
-        "output": "结果",
-        "outputEmpty": "输出结果将显示在这里...",
-        "error": "解析 Base64 字符串失败",
-        "copy": "复制到剪贴板",
-        "copied": "已复制！"
-    },
-    "ToolsJson": {
-        "title": "JSON 格式化工具",
-        "description": "格式化、校验并美化您的 JSON 数据，支持语法高亮提取。",
-        "input": "输入 JSON",
-        "inputPlaceholder": "在此粘贴格式混乱的 JSON...",
-        "format": "格式化",
-        "minify": "压缩",
-        "output": "结果",
-        "outputEmpty": "格式化后的 JSON 将显示在这里...",
-        "error": "无效的 JSON 格式",
-        "copy": "复制到剪贴板",
-        "copied": "已复制！"
-    },
-    "ToolsJwt": {
-        "title": "JWT 解析工具",
-        "description": "在浏览器中安全地解析并分析 JSON Web Token 数据，不会发送任何数据到服务器。",
-        "input": "已编码的 JWT",
-        "inputPlaceholder": "在此粘贴你的 JWT（例如 eyJhbGciOiJIUzI1NiIsInR5cCI...）",
-        "header": "头部区 Header (Algorithm & Type)",
-        "payload": "载荷区 Payload (Data/Claims)",
-        "signature": "签名区 Signature",
-        "outputEmpty": "解析后的数据将显示在这里...",
-        "error": "无效的 JWT 格式",
-        "copy": "复制到剪贴板",
-        "copied": "已复制！"
+  "Navigation": {
+    "home": "首页",
+    "blog": "博客",
+    "portfolio": "作品集",
+    "resume": "简历",
+    "gallery": "图库",
+    "guestbook": "留言板",
+    "links": "友链",
+    "about": "关于",
+    "tools": "工具"
+  },
+  "Index": {
+    "badge": "全栈开发者",
+    "title1": "构建",
+    "title2": "现代 Web",
+    "description": "专注于 TypeScript 和 Next.js 生态。我致力于编写整洁的代码，分享学习经验，并构建让开发者喜爱的工具。",
+    "exploreBlog": "探索博客",
+    "viewProjects": "查看项目",
+    "latestPosts": "最新文章",
+    "blogTitle": "博客",
+    "selectedWork": "精选作品",
+    "projectsTitle": "项目",
+    "viewAll": "查看全部",
+    "community": "社区互动",
+    "guestbookTitle": "留言板"
+  },
+  "Blog": {
+    "title": "博客",
+    "latestPosts": "最新文章",
+    "all": "全部",
+    "noPosts": "空空如也。",
+    "previous": "← 上一页",
+    "pageOffset": "第 {page} 页，共 {totalPages} 页",
+    "next": "下一页 →"
+  },
+  "Portfolio": {
+    "title": "作品集",
+    "selectedWork": "精选作品",
+    "all": "全部",
+    "noProjects": "暂无项目。",
+    "featured": "精选"
+  },
+  "Resume": {
+    "contact": "联系方式",
+    "skills": "专业技能",
+    "profile": "个人简介",
+    "experience": "工作经历",
+    "education": "教育经历",
+    "printPdf": "存为 PDF 打印"
+  },
+  "Guestbook": {
+    "community": "社区互动",
+    "title": "留言板",
+    "namePlaceholder": "你的昵称",
+    "messagePlaceholder": "写下你的留言…",
+    "sending": "发送中…",
+    "send": "发送 ✉️",
+    "loading": "加载中…",
+    "noMessages": "暂无留言，快来抢沙发！🎉",
+    "stats": {
+      "posts": "文章数",
+      "projects": "项目数",
+      "pageViews": "访问量",
+      "guestbook": "留言数"
     }
+  },
+  "Links": {
+    "title": "书签与友链",
+    "description": "收集我常用的工具、欣赏的人以及给我带来灵感的网站。",
+    "loading": "加载链接中...",
+    "noLinks": "暂无链接",
+    "noLinksDesc": "看起来收藏夹暂时是空的。",
+    "categories": {
+      "friend": "友情链接",
+      "tool": "工具与效率",
+      "inspiration": "灵感发现",
+      "other": "其他链接"
+    }
+  },
+  "Tools": {
+    "title": "开发者工具",
+    "description": "日常开发便捷小工具集合。完全在浏览器端运行。",
+    "jsonFormatter": {
+      "name": "JSON 格式化",
+      "desc": "带语法高亮的 JSON 数据格式化、校验与美化工具。"
+    },
+    "base64": {
+      "name": "Base64 编解码",
+      "desc": "快速进行 Base64 格式的编码与解码。"
+    },
+    "jwt": {
+      "name": "JWT 解析",
+      "desc": "安全地在本地解析并查看 JSON Web Tokens 内容。"
+    }
+  },
+  "About": {
+    "title": "关于开发者",
+    "subtitle": "关于我",
+    "intro1": "你好！我是 Rick，一名全栈工程师，热爱构建能让开发变得更轻松愉悦的工具。",
+    "intro2": "拥有计算机科学背景以及在 JavaScript 生态多年的深耕经验，我专注于打造高性能、高可用且设计精美的 Web 应用。",
+    "intro3": "不在写代码的时候，我通常在探索新技术、为开源社区做贡献，或是通过写作分享我的所见所学。",
+    "experience": "工作经历",
+    "jobs": {
+      "senior": "高级开发工程师",
+      "stack": "全栈工程师",
+      "frontend": "前端开发工程师",
+      "present": "至今"
+    }
+  },
+  "Gallery": {
+    "title": "图库",
+    "loading": "正在加载美好瞬间...",
+    "noPhotos": "暂无照片。",
+    "description": "光与影的时间胶囊。",
+    "imageAlt": "图库照片"
+  },
+  "ToolsBase64": {
+    "title": "Base64 编码与解码",
+    "description": "快速将文本转换为 Base64 格式，或将 Base64 解码回明文。",
+    "input": "输入要编码或解码的文本",
+    "inputPlaceholder": "在此输入明文进行编码，或输入 Base64 字符串进行解码...",
+    "encode": "编码",
+    "decode": "解码",
+    "output": "结果",
+    "outputEmpty": "输出结果将显示在这里...",
+    "error": "解析 Base64 字符串失败",
+    "copy": "复制到剪贴板",
+    "copied": "已复制！"
+  },
+  "ToolsJson": {
+    "title": "JSON 格式化工具",
+    "description": "格式化、校验并美化您的 JSON 数据，支持语法高亮提取。",
+    "input": "输入 JSON",
+    "inputPlaceholder": "在此粘贴格式混乱的 JSON...",
+    "format": "格式化",
+    "minify": "压缩",
+    "output": "结果",
+    "outputEmpty": "格式化后的 JSON 将显示在这里...",
+    "error": "无效的 JSON 格式",
+    "copy": "复制到剪贴板",
+    "copied": "已复制！"
+  },
+  "ToolsJwt": {
+    "title": "JWT 解析工具",
+    "description": "在浏览器中安全地解析并分析 JSON Web Token 数据，不会发送任何数据到服务器。",
+    "input": "已编码的 JWT",
+    "inputPlaceholder": "在此粘贴你的 JWT（例如 eyJhbGciOiJIUzI1NiIsInR5cCI...）",
+    "header": "头部区 Header (Algorithm & Type)",
+    "payload": "载荷区 Payload (Data/Claims)",
+    "signature": "签名区 Signature",
+    "outputEmpty": "解析后的数据将显示在这里...",
+    "error": "无效的 JWT 格式",
+    "copy": "复制到剪贴板",
+    "copied": "已复制！"
+  }
 }

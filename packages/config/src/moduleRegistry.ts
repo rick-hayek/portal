@@ -1,4 +1,4 @@
-import type { SiteModule, SiteConfig, NavItem } from '@portal/shared';
+import type { NavItem, SiteConfig, SiteModule } from '@portal/shared';
 
 // ──────────────────────────────────────────────
 // Module Registry — central place to track registered modules
@@ -8,17 +8,17 @@ const registry = new Map<string, SiteModule>();
 
 /** Register a module definition */
 export function registerModule(module: SiteModule): void {
-    registry.set(module.id, module);
+  registry.set(module.id, module);
 }
 
 /** Get a registered module by id */
 export function getModule(id: string): SiteModule | undefined {
-    return registry.get(id);
+  return registry.get(id);
 }
 
 /** Get all registered modules */
 export function getAllModules(): SiteModule[] {
-    return Array.from(registry.values());
+  return Array.from(registry.values());
 }
 
 /**
@@ -27,10 +27,10 @@ export function getAllModules(): SiteModule[] {
  * AND the module has been registered.
  */
 export function getEnabledModules(config: SiteConfig): SiteModule[] {
-    return getAllModules().filter((mod) => {
-        const modConfig = config.modules[mod.id];
-        return modConfig?.enabled === true;
-    });
+  return getAllModules().filter((mod) => {
+    const modConfig = config.modules[mod.id];
+    return modConfig?.enabled === true;
+  });
 }
 
 /**
@@ -38,19 +38,19 @@ export function getEnabledModules(config: SiteConfig): SiteModule[] {
  * Merges module.navItems, sorted by order (ascending).
  */
 export function getNavItems(config: SiteConfig): NavItem[] {
-    const enabled = getEnabledModules(config);
-    const items: NavItem[] = [];
+  const enabled = getEnabledModules(config);
+  const items: NavItem[] = [];
 
-    for (const mod of enabled) {
-        if (mod.navItems) {
-            items.push(...mod.navItems);
-        }
+  for (const mod of enabled) {
+    if (mod.navItems) {
+      items.push(...mod.navItems);
     }
+  }
 
-    return items.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
+  return items.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
 }
 
 /** Clear the entire registry (useful for tests) */
 export function clearRegistry(): void {
-    registry.clear();
+  registry.clear();
 }

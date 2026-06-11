@@ -1,14 +1,11 @@
-import { router, publicProcedure } from '../trpc';
+import { publicProcedure, router } from '../trpc';
 
 export const linkRouter = router({
-    /** List active links for public display */
-    list: publicProcedure.query(async ({ ctx }) => {
-        return ctx.prisma.link.findMany({
-            where: { isAlive: true },
-            orderBy: [
-                { category: 'asc' },
-                { sortOrder: 'asc' },
-            ],
-        });
-    }),
+  /** List active links for public display */
+  list: publicProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.link.findMany({
+      where: { isAlive: true },
+      orderBy: [{ category: 'asc' }, { sortOrder: 'asc' }],
+    });
+  }),
 });

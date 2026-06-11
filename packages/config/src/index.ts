@@ -1,6 +1,6 @@
 import type { SiteConfig } from '@portal/shared';
-import { siteConfigSchema, type SiteConfigInput } from './schema';
 import { applyPreset } from './presets';
+import { type SiteConfigInput, siteConfigSchema } from './schema';
 
 /**
  * Define and validate a site configuration.
@@ -14,16 +14,15 @@ export function defineConfig(config: SiteConfigInput): SiteConfig {
 
 // Re-exports
 export type { SiteConfig };
-export { siteConfigSchema, type SiteConfigInput, type SiteConfigParsed } from './schema';
-export { applyPreset, getPresetModules, type PresetName } from './presets';
+export * from './defaultModules';
 export {
-  registerModule,
-  getModule,
+  clearRegistry,
   getAllModules,
   getEnabledModules,
+  getModule,
   getNavItems,
-  clearRegistry,
+  registerModule,
 } from './moduleRegistry';
-export * from './defaultModules';
+export { applyPreset, getPresetModules, type PresetName } from './presets';
 export * from './resume';
-
+export { type SiteConfigInput, type SiteConfigParsed, siteConfigSchema } from './schema';
