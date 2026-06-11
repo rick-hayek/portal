@@ -4,11 +4,11 @@ import { cache } from 'react';
 
 /**
  * Direct server-side tRPC caller.
- * Used in Next.js Server Components to bypass HTTP/network overhead
- * and query the database directly.
+ * Set `useAuth: true` only when calling protected procedures (e.g. in admin pages).
+ * For public pages, leave it as `false` to avoid Next-Auth cookie/session verification overhead.
  */
-export const getTRPCServer = cache(async () => {
-  const session = await auth();
+export const getTRPCServer = cache(async (useAuth = false) => {
+  const session = useAuth ? await auth() : null;
   const ctx = await createContext({ session });
   return appRouter.createCaller(ctx);
 });
