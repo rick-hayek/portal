@@ -4,12 +4,13 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import { CommentSection } from '@/components/blog/CommentSection';
-import { trpc } from '@/lib/trpc-client';
+import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await trpc.post.bySlug.query({ slug });
+  const trpc = await getTRPCServer();
+  const post = await trpc.post.bySlug({ slug });
   if (!post) return { title: 'Not Found' };
   return {
     title: `${post.title} — ${siteConfig.site.title}`,
@@ -19,7 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await trpc.post.bySlug.query({ slug });
+  const trpc = await getTRPCServer();
+  const post = await trpc.post.bySlug({ slug });
   if (!post) notFound();
 
   return (

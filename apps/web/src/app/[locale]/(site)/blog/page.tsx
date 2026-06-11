@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { PostCard } from '@/components/blog/PostCard';
-import { trpc } from '@/lib/trpc-client';
+import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
@@ -23,14 +23,16 @@ export default async function BlogPage({
   const page = Number(sParams.page) || 1;
   const t = await getTranslations({ locale: params.locale, namespace: 'Blog' });
 
-  const data = await trpc.post.list.query({
+  const trpc = await getTRPCServer();
+
+  const data = await trpc.post.list({
     page,
     limit: 10,
     categorySlug: sParams.category,
     tagSlug: sParams.tag,
   });
 
-  const categories = await trpc.category.list.query();
+  const categories = await trpc.category.list();
 
   return (
     <div style={{ padding: '5rem 2rem', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
