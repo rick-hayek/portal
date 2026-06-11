@@ -1,24 +1,28 @@
-import { router } from './trpc';
-import { postRouter } from './routers/post';
+import { adminRouter } from './routers/admin';
+import { analyticsRouter } from './routers/analytics';
 import { categoryRouter } from './routers/category';
 import { commentRouter } from './routers/comment';
+import { galleryRouter } from './routers/gallery';
 import { guestbookRouter } from './routers/guestbook';
-import { searchRouter } from './routers/search';
-import { adminRouter } from './routers/admin';
+import { linkRouter } from './routers/link'; // Added import for linkRouter
 import { portfolioRouter } from './routers/portfolio';
-import { analyticsRouter } from './routers/analytics';
+import { postRouter } from './routers/post';
+import { searchRouter } from './routers/search';
+import { router } from './trpc';
 
 export { createContext } from './trpc';
 
 export const appRouter = router({
-    post: postRouter,
-    category: categoryRouter,
-    comment: commentRouter,
-    guestbook: guestbookRouter,
-    search: searchRouter,
-    admin: adminRouter,
-    portfolio: portfolioRouter,
-    analytics: analyticsRouter,
+  post: postRouter,
+  category: categoryRouter,
+  comment: commentRouter,
+  guestbook: guestbookRouter,
+  search: searchRouter,
+  admin: adminRouter,
+  portfolio: portfolioRouter,
+  analytics: analyticsRouter,
+  gallery: galleryRouter,
+  link: linkRouter, // Registered linkRouter
 });
 
 export type AppRouter = typeof appRouter;
