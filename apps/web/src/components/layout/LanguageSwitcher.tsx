@@ -16,8 +16,9 @@ export function LanguageSwitcher() {
   return (
     <button
       onClick={toggleLocale}
-      className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] transition-colors hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-text)]"
+      className="flex h-11 w-11 md:h-9 md:w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] transition-colors hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-text)]"
       title={`Switch to ${locale === 'en' ? 'Chinese' : 'English'}`}
+      aria-label={`Switch to ${locale === 'en' ? 'Chinese' : 'English'}`}
     >
       <span className="font-mono text-xs font-bold uppercase">{locale}</span>
     </button>

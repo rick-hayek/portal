@@ -8,7 +8,8 @@
     "guestbook": "Guestbook",
     "links": "Links",
     "about": "About",
-    "tools": "Tools"
+    "tools": "Tools",
+    "admin": "Admin"
   },
   "Index": {
     "badge": "Full-Stack Developer",
@@ -58,6 +59,9 @@
     "send": "Send ✉️",
     "loading": "Loading…",
     "noMessages": "No messages yet. Be the first! 🎉",
+    "signInToLeave": "Please sign in to leave a message.",
+    "signInButton": "Sign in to leave a message",
+    "postingAs": "Posting as {name}",
     "stats": {
       "posts": "Posts",
       "projects": "Projects",

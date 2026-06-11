@@ -144,7 +144,7 @@ export default function ResumePage() {
           <div className="print:hidden pt-8 border-t border-[var(--portal-color-border)] flex justify-end">
             <button
               onClick={() => window.print()}
-              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-primary)] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-[var(--portal-color-primary)]/90 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--portal-color-primary)] focus:ring-offset-2"
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-primary)] px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-[rgba(107,142,201,0.9)] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--portal-color-primary)] focus:ring-offset-2"
             >
               <svg
                 className="w-4 h-4"

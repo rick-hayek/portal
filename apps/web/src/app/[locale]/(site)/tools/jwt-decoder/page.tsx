@@ -99,7 +99,7 @@ export default function JwtDecoderPage() {
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(249,115,22,0.1)] text-orange-500">
             <Shield className="h-6 w-6" />
           </div>
         </div>
@@ -140,7 +140,7 @@ export default function JwtDecoderPage() {
             )}
           </div>
           {error && (
-            <div className="border-t border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-600 dark:text-red-400">
+            <div className="border-t border-[rgba(239,68,68,0.2)] bg-[rgba(239,68,68,0.05)] px-4 py-3 text-xs text-red-600 dark:text-red-400">
               {error}
             </div>
           )}
@@ -157,7 +157,7 @@ export default function JwtDecoderPage() {
                 disabled={!decoded}
                 className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium transition-all ${
                   copiedSection === 'header'
-                    ? 'bg-green-500/20 text-green-400'
+                    ? 'bg-[rgba(16,185,129,0.2)] text-green-400'
                     : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50'
                 }`}
               >
@@ -188,7 +188,7 @@ export default function JwtDecoderPage() {
                 disabled={!decoded}
                 className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium transition-all ${
                   copiedSection === 'payload'
-                    ? 'bg-green-500/20 text-green-400'
+                    ? 'bg-[rgba(16,185,129,0.2)] text-green-400'
                     : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50'
                 }`}
               >
@@ -217,7 +217,7 @@ export default function JwtDecoderPage() {
                 disabled={!decoded}
                 className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium transition-all ${
                   copiedSection === 'signature'
-                    ? 'bg-green-500/20 text-green-400'
+                    ? 'bg-[rgba(16,185,129,0.2)] text-green-400'
                     : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white disabled:opacity-50'
                 }`}
               >

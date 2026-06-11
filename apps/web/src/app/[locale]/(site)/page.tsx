@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
 import { prisma } from '@portal/db';
+import Image from 'next/image';
 
 export default async function HomePage({
   params,
@@ -34,42 +35,24 @@ export default async function HomePage({
     <div className="flex w-full flex-col">
       {/* HERO SECTION */}
       <section
-        className="flex min-h-screen w-full items-center justify-center"
-        style={{ padding: '8rem 2rem 4rem' }}
+        className="flex min-h-screen w-full items-center justify-center pt-32 pb-16 px-8"
       >
         <div
-          className="mx-auto w-full max-w-[1200px]"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '4rem',
-            alignItems: 'center',
-          }}
+          className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
         >
           {/* Hero Text */}
           <div>
             {/* Badge */}
             <div
-              className="mb-8 inline-flex items-center gap-2"
-              style={{
-                padding: '0.3rem 0.8rem',
-                borderRadius: '100px',
-                background: 'rgba(107, 142, 201, 0.08)',
-                border: '1px solid rgba(107, 142, 201, 0.15)',
-                fontSize: '0.72rem',
-                fontWeight: 600,
-                color: 'var(--portal-color-primary, #6b8ec9)',
-                letterSpacing: '0.02em',
-              }}
+              className="mb-8 inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-[var(--portal-color-primary-soft)] border text-[0.72rem] font-semibold text-[var(--portal-color-primary)] tracking-wide"
+              style={{ borderColor: 'rgba(107, 142, 201, 0.15)' }}
             >
-              <span className="relative flex h-1.5 w-1.5">
+              <span className="relative flex h-1.5 w-1.5 shrink-0">
                 <span
-                  className="absolute inline-flex h-full w-full animate-ping rounded-full"
-                  style={{ background: '#10b981', opacity: 0.75 }}
+                  className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75"
                 ></span>
                 <span
-                  className="relative inline-flex h-1.5 w-1.5 rounded-full"
-                  style={{ background: '#10b981' }}
+                  className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"
                 ></span>
               </span>
               {t('badge')}
@@ -77,47 +60,25 @@ export default async function HomePage({
 
             {/* Title */}
             <h1
-              style={{
-                fontSize: 'clamp(2.8rem, 5vw, 4.5rem)',
-                fontWeight: 800,
-                lineHeight: 1.05,
-                letterSpacing: '-0.04em',
-                marginBottom: '1.5rem',
-              }}
+              className="text-[clamp(2.8rem,5vw,4.5rem)] font-extrabold leading-[1.05] tracking-tighter mb-6 text-[var(--portal-color-text)]"
             >
               {t('title1')}
               <br />
-              <span style={{ color: 'var(--portal-color-primary, #6b8ec9)' }}>{t('title2')}</span>
+              <span className="text-[var(--portal-color-primary)]">{t('title2')}</span>
             </h1>
 
             {/* Description */}
             <p
-              style={{
-                fontSize: '1.05rem',
-                lineHeight: 1.75,
-                maxWidth: '440px',
-                marginBottom: '2.5rem',
-                borderLeft: '2px solid rgba(107, 142, 201, 0.25)',
-                paddingLeft: '1.2rem',
-                color: 'var(--portal-color-text-secondary, #4b5563)',
-              }}
+              className="text-[1.05rem] leading-[1.75] max-w-[440px] mb-10 border-l-2 border-[rgba(107,142,201,0.25)] pl-[1.2rem] text-[var(--portal-color-text-secondary)]"
             >
               {t('description')}
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex items-center gap-3" style={{ marginBottom: '2.5rem' }}>
+            <div className="flex items-center gap-3 mb-10">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-1.5 text-white no-underline transition-all hover:-translate-y-0.5"
-                style={{
-                  padding: '0.75rem 1.8rem',
-                  borderRadius: '100px',
-                  background: 'var(--portal-color-primary, #6b8ec9)',
-                  fontWeight: 600,
-                  fontSize: '0.88rem',
-                  boxShadow: '0 2px 12px rgba(107, 142, 201, 0.2)',
-                }}
+                className="inline-flex items-center gap-1.5 text-white no-underline transition-all duration-300 hover:-translate-y-0.5 py-3 px-7 rounded-full bg-[var(--portal-color-primary)] font-semibold text-[0.88rem] shadow-[0_2px_12px_rgba(107,142,201,0.2)] hover:shadow-[0_4px_16px_rgba(107,142,201,0.35)]"
               >
                 {t('exploreBlog')}
                 <svg
@@ -132,16 +93,7 @@ export default async function HomePage({
               </Link>
               <Link
                 href="/portfolio"
-                className="inline-flex items-center gap-1.5 no-underline transition-all"
-                style={{
-                  padding: '0.75rem 1.8rem',
-                  borderRadius: '100px',
-                  background: 'transparent',
-                  color: 'var(--portal-color-text, #111827)',
-                  fontWeight: 500,
-                  fontSize: '0.88rem',
-                  border: '1.5px solid var(--portal-color-border, #e5e7eb)',
-                }}
+                className="inline-flex items-center gap-1.5 no-underline transition-all duration-300 py-3 px-7 rounded-full bg-transparent text-[var(--portal-color-text)] font-medium text-[0.88rem] border-[1.5px] border-compat hover:bg-[var(--portal-color-surface-alt)] hover:-translate-y-0.5"
               >
                 {t('viewProjects')}
               </Link>
@@ -149,12 +101,7 @@ export default async function HomePage({
 
             {/* Tags */}
             <div
-              className="flex gap-4"
-              style={{
-                fontSize: '0.78rem',
-                fontWeight: 500,
-                color: 'var(--portal-color-text-secondary, #4b5563)',
-              }}
+              className="flex gap-4 text-[0.78rem] font-medium text-[var(--portal-color-text-secondary)]"
             >
               <span className="flex items-center gap-1.5">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
@@ -163,7 +110,7 @@ export default async function HomePage({
                 Next.js
               </span>
               <span className="flex items-center gap-1.5">
-                <span style={{ fontWeight: 'bold' }}>TS</span>
+                <span className="font-bold">TS</span>
                 TypeScript
               </span>
               <span className="flex items-center gap-1.5">
@@ -183,112 +130,67 @@ export default async function HomePage({
           {/* Code Terminal Card */}
           <div className="hidden lg:block">
             <div
-              style={{
-                border: '1px solid var(--portal-color-border, #e5e7eb)',
-                background: 'var(--portal-color-surface, #ffffff)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
-                borderRadius: '16px',
-                overflow: 'hidden',
-              }}
+              className="border border-compat bg-[var(--portal-color-surface)] shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-2xl overflow-hidden"
             >
               {/* Terminal Header */}
               <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '0.7rem 1rem',
-                  borderBottom: '1px solid var(--portal-color-border-soft, #f0f1f3)',
-                  background: 'var(--portal-color-surface-alt, #f1f3f7)',
-                }}
+                className="flex items-center justify-between py-3 px-4 border-b border-compat-soft bg-[var(--portal-color-surface-alt)]"
               >
-                <div style={{ display: 'flex', gap: '6px' }}>
+                <div className="flex gap-1.5">
                   <div
-                    style={{
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      background: '#ef4444aa',
-                    }}
+                    className="w-2.5 h-2.5 rounded-full bg-[rgba(239,68,68,0.7)]"
                   ></div>
                   <div
-                    style={{
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      background: '#f59e0baa',
-                    }}
+                    className="w-2.5 h-2.5 rounded-full bg-[rgba(245,158,11,0.7)]"
                   ></div>
                   <div
-                    style={{
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      background: '#10b981aa',
-                    }}
+                    className="w-2.5 h-2.5 rounded-full bg-[rgba(16,185,129,0.7)]"
                   ></div>
                 </div>
                 <span
-                  style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: '0.65rem',
-                    color: 'var(--portal-color-text-secondary, #9ca3af)',
-                  }}
+                  className="font-mono text-[0.65rem] text-[var(--portal-color-text-secondary)]"
                 >
                   portal — zsh
                 </span>
-                <div style={{ width: '32px' }}></div>
+                <div className="w-8"></div>
               </div>
 
               {/* Terminal Body */}
               <div
-                style={{
-                  padding: '1.5rem',
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: '0.82rem',
-                  lineHeight: 1.8,
-                  color: 'var(--portal-color-text-secondary, #4b5563)',
-                }}
+                className="p-6 font-mono text-[0.82rem] leading-[1.8] text-[var(--portal-color-text-secondary)]"
               >
-                <div style={{ opacity: 0.5 }}>// Initializing Portal</div>
+                <div className="opacity-50">// Initializing Portal</div>
                 <div>
-                  <span style={{ color: '#7c3aed' }}>const</span>
-                  <span style={{ color: 'var(--portal-color-primary, #6b8ec9)' }}> developer</span>{' '}
+                  <span className="text-violet-500">const</span>
+                  <span className="text-[var(--portal-color-primary)]"> developer</span>{' '}
                   = {'{ '}
                 </div>
-                <div style={{ paddingLeft: '1.5rem' }}>
-                  <span style={{ color: 'var(--portal-color-primary, #6b8ec9)' }}>name:</span>{' '}
-                  <span style={{ color: '#059669' }}>'Rick'</span>,
+                <div className="pl-6">
+                  <span className="text-[var(--portal-color-primary)]">name:</span>{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'Rick'</span>,
                 </div>
-                <div style={{ paddingLeft: '1.5rem' }}>
-                  <span style={{ color: 'var(--portal-color-primary, #6b8ec9)' }}>role:</span>{' '}
-                  <span style={{ color: '#059669' }}>'Full-Stack Engineer'</span>,
+                <div className="pl-6">
+                  <span className="text-[var(--portal-color-primary)]">role:</span>{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'Full-Stack Engineer'</span>,
                 </div>
-                <div style={{ paddingLeft: '1.5rem' }}>
-                  <span style={{ color: 'var(--portal-color-primary, #6b8ec9)' }}>stack:</span> [
-                  <span style={{ color: '#059669' }}>'Next.js'</span>,{' '}
-                  <span style={{ color: '#059669' }}>'TypeScript'</span>,{' '}
-                  <span style={{ color: '#059669' }}>'Prisma'</span>],
+                <div className="pl-6">
+                  <span className="text-[var(--portal-color-primary)]">stack:</span> [
+                  <span className="text-emerald-600 dark:text-emerald-400">'Next.js'</span>,{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'TypeScript'</span>,{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'Prisma'</span>],
                 </div>
-                <div style={{ paddingLeft: '1.5rem' }}>
-                  <span style={{ color: 'var(--portal-color-primary, #6b8ec9)' }}>status:</span>{' '}
-                  <span style={{ color: '#059669' }}>'Building'</span>
+                <div className="pl-6">
+                  <span className="text-[var(--portal-color-primary)]">status:</span>{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'Building'</span>
                 </div>
                 <div>{'}; '}</div>
                 <div
-                  style={{
-                    marginTop: '1rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    color: 'var(--portal-color-text-secondary, #4b5563)',
-                  }}
+                  className="mt-4 flex items-center gap-2 text-[var(--portal-color-text-secondary)]"
                 >
-                  <span style={{ color: '#10b981' }}>➜</span>
-                  <span style={{ color: 'var(--portal-color-text, #111827)' }}>pnpm dev</span>
+                  <span className="text-emerald-500">➜</span>
+                  <span className="text-[var(--portal-color-text)]">pnpm dev</span>
                   <span
-                    className="inline-block h-4 w-0.5 animate-pulse"
-                    style={{ background: 'var(--portal-color-primary, #6b8ec9)' }}
+                    className="inline-block h-4 w-0.5 animate-pulse bg-[var(--portal-color-primary)]"
                   ></span>
                 </div>
               </div>
@@ -299,51 +201,24 @@ export default async function HomePage({
 
       {/* BLOG SECTION */}
       <div
-        style={{
-          width: '100%',
-          borderTop: '1px solid var(--portal-color-border-soft, #f0f1f3)',
-          borderBottom: '1px solid var(--portal-color-border-soft, #f0f1f3)',
-          background: 'var(--portal-color-surface, #ffffff)',
-        }}
+        className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)]"
       >
         <section
-          style={{ padding: '5rem 2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}
+          className="py-20 px-8 max-w-[1200px] mx-auto w-full"
         >
           <div
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: '0.8rem',
-              marginBottom: '2.5rem',
-            }}
+            className="flex items-baseline gap-3 mb-10"
           >
             <span
-              style={{
-                width: '28px',
-                height: '2px',
-                background: 'var(--portal-color-primary, #6b8ec9)',
-                flexShrink: 0,
-              }}
+              className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"
             ></span>
             <span
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '0.7rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: 'var(--portal-color-primary, #6b8ec9)',
-                fontWeight: 500,
-              }}
+              className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium"
             >
               {t('latestPosts')}
             </span>
             <h2
-              style={{
-                fontSize: '1.6rem',
-                fontWeight: 700,
-                letterSpacing: '-0.03em',
-                color: 'var(--portal-color-text, #111827)',
-              }}
+              className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]"
             >
               {t('blogTitle')}
             </h2>
@@ -355,25 +230,10 @@ export default async function HomePage({
                 <Link
                   key={post.id}
                   href={`/blog/${post.slug}`}
-                  className="group text-inherit no-underline transition-all hover:bg-[var(--portal-color-primary)]/5 hover:border-transparent hover:pl-6"
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '80px 1fr auto',
-                    gap: '1.5rem',
-                    alignItems: 'baseline',
-                    padding: '1.2rem 1rem',
-                    borderBottom: '1px solid var(--portal-color-border-soft, #f0f1f3)',
-                    cursor: 'pointer',
-                    borderRadius: '12px',
-                  }}
+                  className="group text-inherit no-underline transition-all duration-300 ease-out hover:bg-[var(--portal-color-primary-soft)] hover:border-transparent hover:pl-6 grid grid-cols-[80px_1fr_auto] gap-6 items-baseline py-5 px-4 border-b border-compat-soft cursor-pointer rounded-xl hover:shadow-[0_4px_20px_rgba(107,142,201,0.05)]"
                 >
                   <span
-                    style={{
-                      whiteSpace: 'nowrap',
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: '0.72rem',
-                      color: 'var(--portal-color-text-secondary, #9ca3af)',
-                    }}
+                    className="whitespace-nowrap font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)]"
                   >
                     {post.publishedAt
                       ? new Date(post.publishedAt).toLocaleDateString(locale, {
@@ -385,55 +245,26 @@ export default async function HomePage({
                   <div>
                     {post.category && (
                       <span
-                        style={{
-                          display: 'inline-block',
-                          fontSize: '0.6rem',
-                          fontWeight: 600,
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
-                          color: 'var(--portal-color-primary, #6b8ec9)',
-                          padding: '0.1rem 0.5rem',
-                          background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.08))',
-                          borderRadius: '6px',
-                          marginBottom: '0.3rem',
-                        }}
+                        className="inline-block text-[0.6rem] font-semibold tracking-widest uppercase text-[var(--portal-color-primary)] py-0.5 px-2 bg-[var(--portal-color-primary-soft)] rounded-[6px] mb-1.5"
                       >
                         {post.category.name}
                       </span>
                     )}
                     <div
-                      style={{
-                        fontSize: '1rem',
-                        fontWeight: 600,
-                        lineHeight: 1.4,
-                        letterSpacing: '-0.02em',
-                        color: 'var(--portal-color-text, #111827)',
-                        marginBottom: '0.2rem',
-                      }}
+                      className="text-base font-semibold leading-normal tracking-tight text-[var(--portal-color-text)] mb-1 group-hover:text-[var(--portal-color-primary)] transition-colors duration-300"
                     >
                       {post.title}
                     </div>
                     {post.excerpt && (
                       <div
-                        style={{
-                          fontSize: '0.82rem',
-                          lineHeight: 1.6,
-                          color: 'var(--portal-color-text-secondary, #4b5563)',
-                        }}
+                        className="text-[0.82rem] leading-relaxed text-[var(--portal-color-text-secondary)]"
                       >
                         {post.excerpt}
                       </div>
                     )}
                   </div>
                   <span
-                    style={{
-                      fontSize: '18px',
-                      color: 'var(--portal-color-primary, #6b8ec9)',
-                      opacity: 0,
-                      transform: 'translateX(-8px)',
-                      transition: 'all 0.25s',
-                    }}
-                    className="group-hover:opacity-100 group-hover:translate-x-0"
+                    className="text-[18px] text-[var(--portal-color-primary)] opacity-0 -translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0"
                   >
                     →
                   </span>
@@ -450,140 +281,74 @@ export default async function HomePage({
 
       {/* PORTFOLIO SECTION */}
       <section
-        style={{ padding: '5rem 2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}
+        className="py-20 px-8 max-w-[1200px] mx-auto w-full"
       >
         <div
-          style={{
-            display: 'flex',
-            alignItems: 'baseline',
-            justifyContent: 'space-between',
-            marginBottom: '2.5rem',
-          }}
+          className="flex items-baseline justify-between mb-10"
         >
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.8rem' }}>
+          <div className="flex items-baseline gap-3">
             <span
-              style={{
-                width: '28px',
-                height: '2px',
-                background: 'var(--portal-color-primary, #6b8ec9)',
-                flexShrink: 0,
-              }}
+              className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"
             ></span>
             <span
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '0.7rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: 'var(--portal-color-primary, #6b8ec9)',
-                fontWeight: 500,
-              }}
+              className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium"
             >
               {t('selectedWork')}
             </span>
             <h2
-              style={{
-                fontSize: '1.6rem',
-                fontWeight: 700,
-                letterSpacing: '-0.03em',
-                color: 'var(--portal-color-text, #111827)',
-              }}
+              className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]"
             >
               {t('projectsTitle')}
             </h2>
           </div>
           <Link
             href="/portfolio"
-            className="group flex items-center gap-1.5 no-underline transition-colors"
-            style={{
-              fontSize: '0.82rem',
-              fontWeight: 500,
-              color: 'var(--portal-color-text-secondary, #4b5563)',
-            }}
+            className="group flex items-center gap-1.5 no-underline transition-colors text-[0.82rem] font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]"
           >
-            {t('viewAll')} <span className="transition-transform group-hover:translate-x-1">→</span>
+            {t('viewAll')} <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </Link>
         </div>
 
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-            gap: '1.2rem',
-          }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {projects.length > 0 ? (
             projects.map((project) => (
               <Link
                 key={project.id}
                 href={`/portfolio/${project.slug}`}
-                className="group cursor-pointer overflow-hidden border border-[var(--portal-color-border)] no-underline transition-all duration-300 hover:-translate-y-1 hover:border-[var(--portal-color-primary)]"
-                style={{
-                  borderRadius: '16px',
-                  background: 'var(--portal-color-background, #f8f9fb)',
-                }}
+                className="group cursor-pointer overflow-hidden border border-compat-soft hover-border-compat-primary no-underline transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_12px_30px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_12px_30px_rgba(0,0,0,0.2)] rounded-2xl bg-[var(--portal-color-surface)]"
               >
                 <div
-                  style={{
-                    height: '180px',
-                    position: 'relative',
-                    background:
-                      'linear-gradient(135deg, var(--portal-color-surface-alt, #f1f3f7), rgba(107, 142, 201, 0.06))',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '3rem',
-                  }}
+                  className="h-[180px] relative bg-gradient-to-br from-[var(--portal-color-surface-alt)] to-[rgba(107,142,201,0.05)] flex items-center justify-center text-[3rem]"
                 >
                   {project.coverImage ? (
-                    <img
+                    <Image
                       src={project.coverImage}
                       alt={project.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
                     '🚀'
                   )}
                   {project.featured && (
                     <span
-                      style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '10px',
-                        padding: '0.2rem 0.6rem',
-                        borderRadius: '100px',
-                        background: 'var(--portal-color-primary, #6b8ec9)',
-                        color: '#fff',
-                        fontSize: '0.58rem',
-                        fontWeight: 700,
-                        letterSpacing: '0.05em',
-                        textTransform: 'uppercase',
-                      }}
+                      className="absolute top-2.5 left-2.5 py-1 px-2.5 rounded-full bg-[var(--portal-color-primary)] text-white text-[0.58rem] font-bold tracking-wider uppercase shadow-sm"
                     >
                       Featured
                     </span>
                   )}
                 </div>
-                <div style={{ padding: '1.3rem' }}>
+                <div className="p-5">
                   <div
-                    className="text-[var(--portal-color-text)] group-hover:text-[var(--portal-color-primary)] transition-colors"
-                    style={{
-                      fontSize: '1rem',
-                      fontWeight: 700,
-                      marginBottom: '0.3rem',
-                      letterSpacing: '-0.02em',
-                    }}
+                    className="text-base font-bold text-[var(--portal-color-text)] group-hover:text-[var(--portal-color-primary)] transition-colors duration-300 mb-1 tracking-tight"
                   >
                     {project.title}
                   </div>
                   <div
-                    style={{
-                      fontSize: '0.82rem',
-                      color: 'var(--portal-color-text-secondary, #4b5563)',
-                      lineHeight: 1.6,
-                      marginBottom: '0.8rem',
-                    }}
-                    className="line-clamp-2"
+                    className="text-[0.82rem] text-[var(--portal-color-text-secondary)] leading-relaxed mb-4 line-clamp-2"
                   >
                     {project.description}
                   </div>
@@ -592,15 +357,7 @@ export default async function HomePage({
                       {project.techStack.map((tag) => (
                         <span
                           key={tag}
-                          style={{
-                            fontFamily: "'IBM Plex Mono', monospace",
-                            fontSize: '0.6rem',
-                            padding: '0.2rem 0.5rem',
-                            borderRadius: '6px',
-                            background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.08))',
-                            color: 'var(--portal-color-primary, #6b8ec9)',
-                            fontWeight: 500,
-                          }}
+                          className="font-mono text-[0.6rem] py-1 px-2 rounded-[6px] bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] font-medium"
                         >
                           {tag}
                         </span>
@@ -620,122 +377,59 @@ export default async function HomePage({
 
       {/* GUESTBOOK SECTION */}
       <div
-        style={{
-          width: '100%',
-          borderTop: '1px solid var(--portal-color-border-soft, #f0f1f3)',
-          borderBottom: '1px solid var(--portal-color-border-soft, #f0f1f3)',
-          background: 'var(--portal-color-surface, #ffffff)',
-        }}
+        className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)]"
       >
         <section
-          style={{ padding: '5rem 2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}
+          className="py-20 px-8 max-w-[1200px] mx-auto w-full"
         >
           <div
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: '0.8rem',
-              marginBottom: '2.5rem',
-            }}
+            className="flex items-baseline gap-3 mb-10"
           >
             <span
-              style={{
-                width: '28px',
-                height: '2px',
-                background: 'var(--portal-color-primary, #6b8ec9)',
-                flexShrink: 0,
-              }}
+              className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"
             ></span>
             <span
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '0.7rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: 'var(--portal-color-primary, #6b8ec9)',
-                fontWeight: 500,
-              }}
+              className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium"
             >
               {t('community')}
             </span>
             <h2
-              style={{
-                fontSize: '1.6rem',
-                fontWeight: 700,
-                letterSpacing: '-0.03em',
-                color: 'var(--portal-color-text, #111827)',
-              }}
+              className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]"
             >
               {t('guestbookTitle')}
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {guestbookEntries.length > 0 ? (
               guestbookEntries.map((entry) => (
                 <div
                   key={entry.id}
-                  className="transition-all hover:border-[var(--portal-color-primary)] hover:shadow-[0_4px_16px_rgba(0,0,0,.06)]"
-                  style={{
-                    padding: '1.2rem',
-                    borderRadius: '12px',
-                    background: 'var(--portal-color-surface, #ffffff)',
-                    border: '1px solid var(--portal-color-border, #e5e7eb)',
-                  }}
+                  className="p-5 rounded-xl bg-[var(--portal-color-background)] border border-compat-soft hover-border-compat-primary transition-all duration-300 ease-out hover:shadow-[0_8px_24px_rgba(0,0,0,0.03)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)]"
                 >
                   <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.6rem',
-                      marginBottom: '0.5rem',
-                    }}
+                    className="flex items-center gap-2.5 mb-2"
                   >
                     {entry.avatar ? (
                       <img
                         src={entry.avatar}
                         alt={entry.authorName}
-                        style={{
-                          width: '28px',
-                          height: '28px',
-                          borderRadius: '50%',
-                          objectFit: 'cover',
-                        }}
+                        className="w-7 h-7 rounded-full object-cover"
                       />
                     ) : (
                       <div
-                        style={{
-                          width: '28px',
-                          height: '28px',
-                          borderRadius: '50%',
-                          background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.1))',
-                          color: 'var(--portal-color-primary, #6b8ec9)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.65rem',
-                          fontWeight: 700,
-                        }}
+                        className="w-7 h-7 rounded-full bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] flex items-center justify-center text-[0.65rem] font-bold"
                       >
                         {entry.authorName.slice(0, 2).toUpperCase()}
                       </div>
                     )}
                     <span
-                      style={{
-                        fontSize: '0.78rem',
-                        fontWeight: 600,
-                        color: 'var(--portal-color-text, #111827)',
-                      }}
+                      className="text-[0.78rem] font-semibold text-[var(--portal-color-text)]"
                     >
                       {entry.authorName}
                     </span>
                     <span
-                      style={{
-                        marginLeft: 'auto',
-                        fontSize: '0.6rem',
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        color: 'var(--portal-color-text-secondary, #9ca3af)',
-                      }}
+                      className="ml-auto text-[0.6rem] font-mono text-[var(--portal-color-text-tertiary)]"
                     >
                       {new Date(entry.createdAt).toLocaleDateString(locale, {
                         month: 'short',
@@ -744,11 +438,7 @@ export default async function HomePage({
                     </span>
                   </div>
                   <div
-                    style={{
-                      fontSize: '0.82rem',
-                      lineHeight: 1.6,
-                      color: 'var(--portal-color-text-secondary, #4b5563)',
-                    }}
+                    className="text-[0.82rem] leading-relaxed text-[var(--portal-color-text-secondary)]"
                   >
                     {entry.content}
                   </div>
@@ -763,15 +453,7 @@ export default async function HomePage({
 
           {/* Stats Row */}
           <div
-            style={{
-              marginTop: '2rem',
-              paddingTop: '2rem',
-              borderTop: '1px solid var(--portal-color-border-soft, #f0f1f3)',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
-              gap: '2rem',
-              justifyItems: 'center',
-            }}
+            className="mt-8 pt-8 border-t border-compat-soft grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center"
           >
             {[
               { num: String(postCount), label: tGuestbook('stats.posts') },
@@ -779,27 +461,14 @@ export default async function HomePage({
               { num: viewCount >= 1000 ? `${(viewCount / 1000).toFixed(1)}K` : String(viewCount), label: tGuestbook('stats.pageViews') },
               { num: String(guestbookCount), label: tGuestbook('stats.guestbook') },
             ].map((stat, i) => (
-              <div key={i} style={{ textAlign: 'center' }}>
+              <div key={i} className="text-center">
                 <div
-                  style={{
-                    fontSize: '2rem',
-                    fontWeight: 800,
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1,
-                    color: 'var(--portal-color-text, #111827)',
-                  }}
+                  className="text-3xl font-extrabold tracking-tighter leading-none text-[var(--portal-color-text)]"
                 >
                   {stat.num}
                 </div>
                 <div
-                  style={{
-                    marginTop: '0.2rem',
-                    fontSize: '0.72rem',
-                    fontWeight: 500,
-                    letterSpacing: '0.04em',
-                    textTransform: 'uppercase',
-                    color: 'var(--portal-color-text-secondary, #9ca3af)',
-                  }}
+                  className="mt-1 text-[0.72rem] font-medium tracking-wider uppercase text-[var(--portal-color-text-secondary)]"
                 >
                   {stat.label}
                 </div>

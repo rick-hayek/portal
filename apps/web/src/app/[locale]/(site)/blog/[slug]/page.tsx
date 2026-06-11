@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
@@ -6,6 +7,22 @@ import remarkGfm from 'remark-gfm';
 import { CommentSection } from '@/components/blog/CommentSection';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
+
+export const revalidate = 3600; // revalidate at most every hour (ISR)
+
+export async function generateStaticParams() {
+  const trpc = await getTRPCServer();
+  // Pre-render the first 50 posts
+  const data = await trpc.post.list({ page: 1, limit: 50 });
+  const locales = ['en', 'zh'];
+
+  return locales.flatMap((locale) =>
+    data.posts.map((post) => ({
+      locale,
+      slug: post.slug,
+    }))
+  );
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -55,10 +72,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* Author */}
         <div className="flex items-center gap-3">
           {post.author.image && (
-            <img
+            <Image
               src={post.author.image}
               alt={post.author.name ?? ''}
-              className="h-10 w-10 rounded-full"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full object-cover"
             />
           )}
           <span className="text-sm text-[var(--portal-color-text-secondary)]">

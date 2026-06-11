@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Project {
   id: string;
@@ -50,7 +51,7 @@ export default function PortfolioPage() {
   }, [activeTech]);
 
   return (
-    <div className="border-t border-b border-[var(--portal-color-border-soft)] bg-[var(--portal-color-surface)]">
+    <div className="border-t border-b border-compat-soft bg-[var(--portal-color-surface)]">
       <div style={{ padding: '5rem 2rem', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
         {/* Section header */}
         <div className="flex items-baseline" style={{ gap: '.8rem', marginBottom: '2.5rem' }}>
@@ -84,7 +85,7 @@ export default function PortfolioPage() {
               className={`rounded-full transition-colors ${
                 !activeTech
                   ? 'bg-[var(--portal-color-primary)] text-white'
-                  : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
+                  : 'border border-compat text-[var(--portal-color-text-secondary)] hover-border-compat-primary'
               }`}
               style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
             >
@@ -97,7 +98,7 @@ export default function PortfolioPage() {
                 className={`rounded-full transition-colors ${
                   activeTech === tech
                     ? 'bg-[var(--portal-color-primary)] text-white'
-                    : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
+                    : 'border border-compat text-[var(--portal-color-text-secondary)] hover-border-compat-primary'
                 }`}
                 style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
               >
@@ -116,7 +117,7 @@ export default function PortfolioPage() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="animate-pulse border border-[var(--portal-color-border)]"
+                className="animate-pulse border border-compat"
                 style={{
                   height: 320,
                   borderRadius: 16,
@@ -138,7 +139,7 @@ export default function PortfolioPage() {
               <a
                 key={project.id}
                 href={`/portfolio/${project.slug}`}
-                className="group cursor-pointer overflow-hidden border border-[var(--portal-color-border)] no-underline transition-all duration-300 hover:-translate-y-1 hover:border-[var(--portal-color-primary)]"
+                className="group cursor-pointer overflow-hidden border border-compat hover-border-compat-primary no-underline transition-all duration-300 hover:-translate-y-1"
                 style={{ background: 'var(--portal-color-background)', borderRadius: 16 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,.08)')
@@ -156,10 +157,12 @@ export default function PortfolioPage() {
                   }}
                 >
                   {project.coverImage ? (
-                    <img
+                    <Image
                       src={project.coverImage}
                       alt={project.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
                     '🚀'

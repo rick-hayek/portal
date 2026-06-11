@@ -42,7 +42,7 @@ function SignInContent() {
       <div className="relative w-full max-w-[320px] space-y-6">
         <div className="flex flex-col items-center text-center">
           {/* Logo */}
-          <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--portal-color-primary)] text-white shadow-lg shadow-[var(--portal-color-primary)]/20">
+          <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--portal-color-primary)] text-white shadow-lg shadow-[rgba(107,142,201,0.2)]">
             <svg
               className="h-6 w-6"
               fill="none"
@@ -95,7 +95,7 @@ function SignInContent() {
 
           <form onSubmit={handleCredentials} className="space-y-4">
             {error && (
-              <div className="rounded-xl bg-red-50 p-3 text-center text-sm font-medium text-red-600 dark:bg-red-900/20 dark:text-red-400">
+              <div className="rounded-xl bg-red-50 p-3 text-center text-sm font-medium text-red-600 dark:bg-[rgba(127,29,29,0.2)] dark:text-red-400">
                 {error}
               </div>
             )}
@@ -135,7 +135,7 @@ function SignInContent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center rounded-full bg-[var(--portal-color-text)] h-11 text-[0.9rem] font-bold text-white shadow-lg shadow-[var(--portal-color-text)]/20 transition-all hover:opacity-90 hover:translate-y-[-1px] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex w-full items-center justify-center rounded-full bg-[var(--portal-color-text)] h-11 text-[0.9rem] font-bold text-white shadow-lg shadow-[rgba(17,24,39,0.2)] transition-all hover:opacity-90 hover:translate-y-[-1px] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">

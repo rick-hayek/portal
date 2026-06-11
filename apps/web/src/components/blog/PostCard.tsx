@@ -13,7 +13,7 @@ export function PostCard({ post }: { post: PostWithRelations }) {
   return (
     <a
       href={`/blog/${post.slug}`}
-      className="group grid items-baseline text-inherit no-underline transition-all hover:bg-[var(--portal-color-primary)]/5 hover:border-transparent"
+      className="group grid items-baseline text-inherit no-underline transition-all hover:bg-[rgba(107,142,201,0.05)] hover:border-transparent"
       style={{
         gridTemplateColumns: '80px 1fr auto',
         gap: '1.5rem',
@@ -71,7 +71,7 @@ export function PostCard({ post }: { post: PostWithRelations }) {
             {post.tags.map(({ tag }) => (
               <span
                 key={tag.id}
-                className="border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)]"
+                className="border border-compat text-[var(--portal-color-text-secondary)]"
                 style={{ fontSize: '.6rem', padding: '.1rem .35rem', borderRadius: 4 }}
               >
                 #{tag.name}

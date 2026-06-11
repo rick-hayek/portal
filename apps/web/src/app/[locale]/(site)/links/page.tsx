@@ -52,7 +52,7 @@ export default function LinksPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-16">
       <header className="space-y-4 text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--portal-color-primary)]/10 text-[var(--portal-color-primary)]">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(107,142,201,0.1)] text-[var(--portal-color-primary)]">
           <Link2 className="h-8 w-8" />
         </div>
         <h1 className="text-4xl font-extrabold tracking-tight text-[var(--portal-color-text)] md:text-5xl">
@@ -66,11 +66,11 @@ export default function LinksPage() {
       {Object.entries(groupedLinks).map(([category, items]) => (
         <section key={category} className="space-y-8">
           <h2 className="text-2xl font-bold tracking-tight text-[var(--portal-color-text)] flex items-center gap-3">
-            <span className="flex-1 border-b border-[var(--portal-color-border)] content-['']"></span>
+            <span className="flex-1 border-b border-compat content-['']"></span>
             <span className="px-4 text-[var(--portal-color-text-secondary)] uppercase tracking-wider text-sm font-semibold">
               {categoryTitles[category] || category}
             </span>
-            <span className="flex-1 border-b border-[var(--portal-color-border)] content-['']"></span>
+            <span className="flex-1 border-b border-compat content-['']"></span>
           </h2>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -80,10 +80,10 @@ export default function LinksPage() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex flex-col gap-4 rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 transition-all hover:-translate-y-1 hover:border-[var(--portal-color-primary)] hover:shadow-lg hover:shadow-[var(--portal-color-primary)]/5"
+                className="group relative flex flex-col gap-4 rounded-2xl border border-compat hover-border-compat-primary bg-[var(--portal-color-surface)] p-6 transition-all hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(107,142,201,0.05)]"
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--portal-color-bg)] ring-1 ring-[var(--portal-color-border)] transition-transform group-hover:scale-110">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--portal-color-bg)] border border-compat transition-transform group-hover:scale-110">
                     {link.avatar ? (
                       <Image
                         src={link.avatar}
@@ -118,7 +118,7 @@ export default function LinksPage() {
       ))}
 
       {links?.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[var(--portal-color-border)] p-12 text-center">
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-compat p-12 text-center">
           <Link2 className="mb-4 h-12 w-12 text-[var(--portal-color-text-tertiary)]" />
           <h3 className="mb-2 text-lg font-medium text-[var(--portal-color-text)]">
             {t('noLinks')}

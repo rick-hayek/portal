@@ -8,6 +8,7 @@ import { UserMenu } from '../auth/UserMenu';
 import { SearchDialog } from '../search/SearchDialog';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeSwitcher } from './ThemeSwitcher';
+import { useSession } from 'next-auth/react';
 
 interface HeaderProps {
   siteTitle: string;
@@ -17,27 +18,25 @@ interface HeaderProps {
 export function Header({ siteTitle, navItems }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const t = useTranslations('Navigation');
+  const { data: session } = useSession();
+  
+  const isAdmin = session?.user?.role === 'admin';
+  const displayNavItems = isAdmin
+    ? [...navItems, { href: '/admin', label: 'Admin' }]
+    : navItems;
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-[var(--portal-color-border)] flex justify-center"
-      style={{
-        padding: '0 32px',
-        background: 'var(--portal-color-background-glass)',
-        backdropFilter: 'blur(20px) saturate(1.4)',
-        WebkitBackdropFilter: 'blur(20px) saturate(1.4)',
-      }}
+      className="fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-compat flex justify-center px-8 bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150"
     >
       <div className="mx-auto flex h-full w-full items-center justify-between px-8">
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline"
-          style={{ fontSize: '1.1rem', letterSpacing: '-.03em' }}
+          className="flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline text-[1.1rem] tracking-tight"
         >
           <span
-            className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white"
-            style={{ fontSize: 14 }}
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]"
           >
             <svg
               className="h-3.5 w-3.5"
@@ -58,15 +57,14 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
 
         {/* Desktop Nav Links */}
         <nav className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => {
+          {displayNavItems.map((item) => {
             const labelKey = item.label.toLowerCase() as any;
             const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
             return (
               <Link
                 key={item.href}
                 href={item.href as any}
-                className="font-[500] text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)]"
-                style={{ fontSize: '.82rem', letterSpacing: '-.01em' }}
+                className="font-medium text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)] text-[0.82rem] tracking-tight"
               >
                 {translatedLabel}
               </Link>
@@ -86,6 +84,7 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
         <button
           className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-expanded={mobileOpen}
         >
           <span className="sr-only">Toggle menu</span>
           {mobileOpen ? (
@@ -114,7 +113,7 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
       {mobileOpen && (
         <div className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-4 shadow-lg md:hidden">
           <nav className="flex flex-col gap-1">
-            {navItems.map((item) => {
+            {displayNavItems.map((item) => {
               const labelKey = item.label.toLowerCase() as any;
               const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
               return (

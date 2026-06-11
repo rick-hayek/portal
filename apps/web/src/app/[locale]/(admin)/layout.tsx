@@ -3,6 +3,9 @@
 import { UserMenu } from '@/components/auth/UserMenu';
 import { Link, usePathname } from '@/i18n/routing';
 
+import { useSession } from 'next-auth/react';
+import { notFound } from 'next/navigation';
+
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
   { href: '/admin/posts', label: 'Posts', icon: '📝' },
@@ -15,6 +18,20 @@ const navItems = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+
+  if (status === 'loading') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[var(--portal-color-background)]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--portal-color-primary)] border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!session || session.user.role !== 'admin') {
+    notFound();
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen bg-[var(--portal-color-background)]">

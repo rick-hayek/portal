@@ -82,6 +82,14 @@ textarea {
     border-color var(--portal-transition, 0.2s ease);
 }
 
+/* ──────────────────────────────────────────────
+   Accessibility Focus Ring
+   ────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--portal-color-primary, #6b8ec9);
+  outline-offset: 2px;
+}
+
 /* Selection color */
 ::selection {
   background: var(--portal-color-primary, #1a1a2e);
@@ -274,5 +282,23 @@ textarea {
   section, .timeline-item {
     page-break-inside: avoid;
     break-inside: avoid;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   Safari border color compatibility overrides
+   ────────────────────────────────────────────── */
+.border-compat {
+  border-color: var(--portal-color-border, #f0f1f3) !important;
+}
+.border-compat-soft {
+  border-color: var(--portal-color-border-soft, #f0f1f3) !important;
+}
+.hover-border-compat-primary {
+  transition: border-color var(--portal-transition, 0.2s ease);
+}
+@media (hover: hover) {
+  .hover-border-compat-primary:hover {
+    border-color: var(--portal-color-primary, #6b8ec9) !important;
   }
 }

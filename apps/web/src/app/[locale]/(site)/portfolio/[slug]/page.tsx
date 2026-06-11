@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Project {
   id: string;
@@ -70,10 +71,12 @@ export default function ProjectDetailPage() {
 
       {/* Cover */}
       {project.coverImage && (
-        <img
+        <Image
           src={project.coverImage}
           alt={project.title}
-          className="mt-6 w-full rounded-xl border border-[var(--portal-color-border)] object-cover"
+          width={800}
+          height={450}
+          className="mt-6 w-full rounded-xl border border-compat object-cover"
         />
       )}
 
@@ -118,7 +121,7 @@ export default function ProjectDetailPage() {
             href={project.repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg border border-[var(--portal-color-border)] px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
+            className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
           >
             Source Code
           </a>

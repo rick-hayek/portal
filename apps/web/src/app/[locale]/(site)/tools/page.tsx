@@ -14,7 +14,7 @@ export default function ToolsPage() {
       icon: <FileJson className="h-6 w-6" />,
       href: '/tools/json-formatter',
       color: 'text-blue-500',
-      bg: 'bg-blue-500/10',
+      bg: 'bg-[rgba(59,130,246,0.1)]',
     },
     {
       id: 'base64',
@@ -23,7 +23,7 @@ export default function ToolsPage() {
       icon: <Hash className="h-6 w-6" />,
       href: '/tools/base64',
       color: 'text-purple-500',
-      bg: 'bg-purple-500/10',
+      bg: 'bg-[rgba(168,85,247,0.1)]',
     },
     {
       id: 'jwt-decoder',
@@ -32,14 +32,14 @@ export default function ToolsPage() {
       icon: <Shield className="h-6 w-6" />,
       href: '/tools/jwt-decoder',
       color: 'text-orange-500',
-      bg: 'bg-orange-500/10',
+      bg: 'bg-[rgba(249,115,22,0.1)]',
     },
   ];
 
   return (
     <div className="mx-auto max-w-5xl space-y-16">
       <header className="space-y-4 text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--portal-color-primary)]/10 text-[var(--portal-color-primary)]">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(107,142,201,0.1)] text-[var(--portal-color-primary)]">
           <Settings2 className="h-8 w-8" />
         </div>
         <h1 className="text-4xl font-extrabold tracking-tight text-[var(--portal-color-text)] md:text-5xl">
@@ -55,7 +55,7 @@ export default function ToolsPage() {
           <Link
             key={tool.id}
             href={tool.href}
-            className="group relative flex flex-col gap-4 rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 transition-all hover:-translate-y-1 hover:border-[var(--portal-color-primary)] hover:shadow-lg hover:shadow-[var(--portal-color-primary)]/5"
+            className="group relative flex flex-col gap-4 rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 transition-all hover:-translate-y-1 hover:border-[var(--portal-color-primary)] hover:shadow-lg hover:shadow-[0_8px_30px_rgba(107,142,201,0.05)]"
           >
             <div
               className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${tool.bg} ${tool.color} transition-transform group-hover:scale-110`}

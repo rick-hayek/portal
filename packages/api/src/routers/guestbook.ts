@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { publicProcedure, router } from '../trpc';
+import { publicProcedure, protectedProcedure, router } from '../trpc';
 
 export const guestbookRouter = router({
   /** List guestbook entries (paginated, newest first) */
@@ -32,20 +32,18 @@ export const guestbookRouter = router({
     }),
 
   /** Submit a new guestbook entry */
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
-        authorName: z.string().min(1).max(100),
         content: z.string().min(1).max(500),
-        avatar: z.string().url().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.guestbookEntry.create({
         data: {
-          authorName: input.authorName,
+          authorName: ctx.user.name ?? 'Anonymous',
           content: input.content,
-          avatar: input.avatar,
+          avatar: ctx.user.image ?? null,
         },
       });
     }),

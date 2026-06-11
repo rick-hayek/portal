@@ -97,10 +97,9 @@ export function SearchDialog() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-full border border-[var(--portal-color-border)]
-                   bg-[var(--portal-color-surface)] text-[var(--portal-color-text-tertiary)]
-                   transition-colors hover:border-[var(--portal-color-primary)] hover:text-[var(--portal-color-text)]"
-        style={{ padding: '.35rem .85rem', fontSize: '.78rem' }}
+        className="flex items-center gap-2 rounded-full border border-compat
+                   bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] transition-colors hover-border-compat-primary hover:text-[var(--portal-color-text)]
+                   py-2 px-4 md:py-1.5 md:px-3.5 text-[0.78rem]"
         aria-label="Search"
       >
         <svg
@@ -118,8 +117,7 @@ export function SearchDialog() {
         </svg>
         <span className="hidden sm:inline">Search</span>
         <kbd
-          className="hidden rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] px-1.5 py-0.5 text-[var(--portal-color-text-tertiary)] sm:inline"
-          style={{ fontSize: '.65rem' }}
+          className="hidden rounded border border-compat bg-[var(--portal-color-surface-alt)] px-1.5 py-0.5 text-[rgba(75,85,99,0.7)] sm:inline text-[0.65rem]"
         >
           ⌘K
         </kbd>
@@ -199,9 +197,9 @@ export function SearchDialog() {
                     >
                       <div
                         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${
-                          i === selectedIndex
-                            ? 'border-[var(--portal-color-primary)]/20 bg-[var(--portal-color-surface)] text-[var(--portal-color-primary)]'
-                            : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-tertiary)]'
+                           i === selectedIndex
+                            ? 'border-[rgba(107,142,201,0.2)] bg-[var(--portal-color-surface)] text-[var(--portal-color-primary)]'
+                            : 'border-compat bg-[var(--portal-color-surface)] text-[var(--portal-color-text-tertiary)]'
                         }`}
                       >
                         <svg

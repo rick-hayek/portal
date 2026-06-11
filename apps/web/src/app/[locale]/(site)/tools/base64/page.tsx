@@ -70,7 +70,7 @@ export default function Base64Page() {
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(168,85,247,0.1)] text-purple-500">
             <Hash className="h-6 w-6" />
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function Base64Page() {
             spellCheck={false}
           />
           {error && (
-            <div className="border-t border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-600 dark:text-red-400">
+            <div className="border-t border-[rgba(239,68,68,0.2)] bg-[rgba(239,68,68,0.05)] px-4 py-3 text-xs text-red-600 dark:text-red-400">
               {error}
             </div>
           )}
@@ -153,7 +153,7 @@ export default function Base64Page() {
               disabled={!output}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
                 copied
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                  ? 'bg-green-100 text-green-700 dark:bg-[rgba(20,83,45,0.3)] dark:text-green-400'
                   : 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] ring-1 ring-[var(--portal-color-border)] hover:bg-[var(--portal-color-bg)] disabled:opacity-50'
               }`}
             >

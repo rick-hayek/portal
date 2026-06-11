@@ -8,7 +8,8 @@
     "guestbook": "留言板",
     "links": "友链",
     "about": "关于",
-    "tools": "工具"
+    "tools": "工具",
+    "admin": "管理"
   },
   "Index": {
     "badge": "全栈开发者",
@@ -58,6 +59,9 @@
     "send": "发送 ✉️",
     "loading": "加载中…",
     "noMessages": "暂无留言，快来抢沙发！🎉",
+    "signInToLeave": "请登录后发表留言。",
+    "signInButton": "登录以发表留言",
+    "postingAs": "当前以 {name} 身份发布",
     "stats": {
       "posts": "文章数",
       "projects": "项目数",

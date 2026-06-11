@@ -1,6 +1,7 @@
 'use client';
 
 import { signIn, signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 export function UserMenu() {
   const { data: session, status } = useSession();
@@ -24,10 +25,12 @@ export function UserMenu() {
   return (
     <div className="relative flex items-center gap-2">
       {session.user.image ? (
-        <img
+        <Image
           src={session.user.image}
           alt={session.user.name ?? 'User'}
-          className="h-8 w-8 rounded-full border border-[var(--portal-color-border)]"
+          width={32}
+          height={32}
+          className="h-8 w-8 rounded-full border border-compat object-cover"
         />
       ) : (
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--portal-color-primary)] text-sm font-bold text-white">
@@ -38,6 +41,7 @@ export function UserMenu() {
         onClick={() => signOut()}
         className="text-xs text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)]"
         title="Sign out"
+        aria-label="Sign out"
       >
         ✕
       </button>
