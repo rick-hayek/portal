@@ -16,6 +16,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "clean": "turbo clean && rm -rf node_modules",
+    "postinstall": "pnpm db:generate",
     "db:generate": "pnpm --filter @portal/db generate",
     "db:migrate": "pnpm --filter @portal/db migrate:dev",
     "db:migrate:dev": "pnpm --filter @portal/db migrate:dev",
