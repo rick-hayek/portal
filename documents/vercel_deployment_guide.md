@@ -160,3 +160,9 @@ DATABASE_URL="你的生产环境数据库连接串" pnpm db:seed
   * `REDIS_URL` 属于预留字段，当前项目并无 Redis 强依赖逻辑；
   * `MEILISEARCH_URL` 已在检索路由中加入了 `try...catch` 降级容错机制。如果线上未配置 Meilisearch 服务，搜索会安全地自动降级，不会导致整个部署崩溃。
 
+### 7. 线上点击页面（如博客）报错 `Application error: a server-side exception has occurred`
+* **原因**：博客页等路由使用了 Next.js Server Component（服务端组件），在服务端渲染（SSR）时会通过 tRPC 客户端获取数据。若 `getBaseUrl()` 仅配置为 `localhost:3000`，Vercel 容器在服务端请求自己时会由于无法连接本地 `localhost` 而导致 `ECONNREFUSED`（连接拒绝）错误。
+* **解决**：在 `trpc-client.ts` 和 `api/client.tsx` 中，使用 `process.env.VERCEL_URL` 动态判断当前线上域名。项目中的 `getBaseUrl` 已经升级并解决此问题：
+  ```typescript
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  ```
