@@ -1,10 +1,35 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
+import { getTRPCServer } from '@/lib/trpc-server';
+import { prisma } from '@portal/db';
 
-export default function HomePage() {
-  const t = useTranslations('Index');
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Index' });
+  const tGuestbook = await getTranslations({ locale, namespace: 'Guestbook' });
+
+  const trpc = await getTRPCServer();
+
+  // Fetch real data from DB via tRPC direct caller and Prisma
+  const postsData = await trpc.post.list({ page: 1, limit: 3, status: 'published' });
+  const posts = postsData.posts;
+
+  const projects = await trpc.portfolio.list({ featured: true });
+
+  const guestbookData = await trpc.guestbook.list({ page: 1, limit: 4 });
+  const guestbookEntries = guestbookData.entries;
+
+  const [postCount, projectCount, viewCount, guestbookCount] = await Promise.all([
+    prisma.post.count({ where: { status: 'published' } }),
+    prisma.project.count(),
+    prisma.pageView.count(),
+    prisma.guestbookEntry.count(),
+  ]);
+
   return (
     <div className="flex w-full flex-col">
       {/* HERO SECTION */}
@@ -325,110 +350,105 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col">
-            {[
-              {
-                date: 'Feb 10',
-                cat: '随笔',
-                title: '写代码的一些感悟',
-                desc: '编程多年后的一些思考：关于简洁、可读性和工程实践。',
-              },
-              {
-                date: 'Feb 07',
-                cat: '生活',
-                title: '我的开发环境搭建',
-                desc: '分享我的 macOS 开发环境配置，包括编辑器、终端、工具链。',
-              },
-              {
-                date: 'Feb 04',
-                cat: '技术',
-                title: 'React Server Components 实践指南',
-                desc: '从概念到实战，全面掌握 RSC 的核心用法与最佳实践。',
-              },
-            ].map((post, i) => (
-              <Link
-                key={i}
-                href={`/blog/post-${i}`}
-                className="group text-inherit no-underline transition-all hover:bg-[var(--portal-color-primary)]/5 hover:border-transparent hover:pl-6"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '80px 1fr auto',
-                  gap: '1.5rem',
-                  alignItems: 'baseline',
-                  padding: '1.2rem 1rem',
-                  borderBottom: '1px solid var(--portal-color-border-soft, #f0f1f3)',
-                  cursor: 'pointer',
-                  borderRadius: '12px',
-                }}
-              >
-                <span
+            {posts.length > 0 ? (
+              posts.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  className="group text-inherit no-underline transition-all hover:bg-[var(--portal-color-primary)]/5 hover:border-transparent hover:pl-6"
                   style={{
-                    whiteSpace: 'nowrap',
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: '0.72rem',
-                    color: 'var(--portal-color-text-secondary, #9ca3af)',
+                    display: 'grid',
+                    gridTemplateColumns: '80px 1fr auto',
+                    gap: '1.5rem',
+                    alignItems: 'baseline',
+                    padding: '1.2rem 1rem',
+                    borderBottom: '1px solid var(--portal-color-border-soft, #f0f1f3)',
+                    cursor: 'pointer',
+                    borderRadius: '12px',
                   }}
                 >
-                  {post.date}
-                </span>
-                <div>
                   <span
                     style={{
-                      display: 'inline-block',
-                      fontSize: '0.6rem',
-                      fontWeight: 600,
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
-                      color: 'var(--portal-color-primary, #6b8ec9)',
-                      padding: '0.1rem 0.5rem',
-                      background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.08))',
-                      borderRadius: '6px',
-                      marginBottom: '0.3rem',
+                      whiteSpace: 'nowrap',
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: '0.72rem',
+                      color: 'var(--portal-color-text-secondary, #9ca3af)',
                     }}
                   >
-                    {post.cat}
+                    {post.publishedAt
+                      ? new Date(post.publishedAt).toLocaleDateString(locale, {
+                          month: 'short',
+                          day: 'numeric',
+                        })
+                      : '—'}
                   </span>
-                  <div
-                    style={{
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      lineHeight: 1.4,
-                      letterSpacing: '-0.02em',
-                      color: 'var(--portal-color-text, #111827)',
-                      marginBottom: '0.2rem',
-                    }}
-                  >
-                    {post.title}
+                  <div>
+                    {post.category && (
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          fontSize: '0.6rem',
+                          fontWeight: 600,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          color: 'var(--portal-color-primary, #6b8ec9)',
+                          padding: '0.1rem 0.5rem',
+                          background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.08))',
+                          borderRadius: '6px',
+                          marginBottom: '0.3rem',
+                        }}
+                      >
+                        {post.category.name}
+                      </span>
+                    )}
+                    <div
+                      style={{
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        lineHeight: 1.4,
+                        letterSpacing: '-0.02em',
+                        color: 'var(--portal-color-text, #111827)',
+                        marginBottom: '0.2rem',
+                      }}
+                    >
+                      {post.title}
+                    </div>
+                    {post.excerpt && (
+                      <div
+                        style={{
+                          fontSize: '0.82rem',
+                          lineHeight: 1.6,
+                          color: 'var(--portal-color-text-secondary, #4b5563)',
+                        }}
+                      >
+                        {post.excerpt}
+                      </div>
+                    )}
                   </div>
-                  <div
+                  <span
                     style={{
-                      fontSize: '0.82rem',
-                      lineHeight: 1.6,
-                      color: 'var(--portal-color-text-secondary, #4b5563)',
+                      fontSize: '18px',
+                      color: 'var(--portal-color-primary, #6b8ec9)',
+                      opacity: 0,
+                      transform: 'translateX(-8px)',
+                      transition: 'all 0.25s',
                     }}
+                    className="group-hover:opacity-100 group-hover:translate-x-0"
                   >
-                    {post.desc}
-                  </div>
-                </div>
-                <span
-                  style={{
-                    fontSize: '18px',
-                    color: 'var(--portal-color-primary, #6b8ec9)',
-                    opacity: 0,
-                    transform: 'translateX(-8px)',
-                    transition: 'all 0.25s',
-                  }}
-                  className="group-hover:opacity-100 group-hover:translate-x-0"
-                >
-                  →
-                </span>
-              </Link>
-            ))}
+                    →
+                  </span>
+                </Link>
+              ))
+            ) : (
+              <p className="py-12 text-center text-[var(--portal-color-text-secondary)]">
+                No articles published yet.
+              </p>
+            )}
           </div>
         </section>
       </div>
 
       {/* PORTFOLIO SECTION */}
-
       <section
         style={{ padding: '5rem 2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}
       >
@@ -492,114 +512,109 @@ export default function HomePage() {
             gap: '1.2rem',
           }}
         >
-          {[
-            {
-              name: 'Portal',
-              desc: '全栈个人网站引擎，支持多主题切换与模块化架构。',
-              icon: '🚀',
-              tags: ['Next.js', 'TypeScript', 'tRPC', 'Prisma'],
-              featured: true,
-            },
-            {
-              name: 'Chat App',
-              desc: '实时聊天应用，基于 WebSocket 毫秒级消息推送。',
-              icon: '💬',
-              tags: ['React', 'Node.js', 'WebSocket', 'Redis'],
-              featured: true,
-            },
-            {
-              name: 'CLI Toolkit',
-              desc: '命令行工具集：批处理、JSON 解析、代码统计。',
-              icon: '⚡',
-              tags: ['Rust', 'CLI', 'Cross-platform'],
-              featured: false,
-            },
-          ].map((project, i) => (
-            <div
-              key={i}
-              className="group cursor-pointer overflow-hidden transition-all duration-300 hover:-translate-y-1"
-              style={{
-                border: '1px solid var(--portal-color-border, #e5e7eb)',
-                borderRadius: '16px',
-                background: 'var(--portal-color-background, #f8f9fb)',
-              }}
-            >
-              <div
+          {projects.length > 0 ? (
+            projects.map((project) => (
+              <Link
+                key={project.id}
+                href={`/portfolio/${project.slug}`}
+                className="group cursor-pointer overflow-hidden border border-[var(--portal-color-border)] no-underline transition-all duration-300 hover:-translate-y-1 hover:border-[var(--portal-color-primary)]"
                 style={{
-                  height: '180px',
-                  position: 'relative',
-                  background:
-                    'linear-gradient(135deg, var(--portal-color-surface-alt, #f1f3f7), rgba(107, 142, 201, 0.06))',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '3rem',
+                  borderRadius: '16px',
+                  background: 'var(--portal-color-background, #f8f9fb)',
                 }}
               >
-                {project.icon}
-                {project.featured && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '10px',
-                      left: '10px',
-                      padding: '0.2rem 0.6rem',
-                      borderRadius: '100px',
-                      background: 'var(--portal-color-primary, #6b8ec9)',
-                      color: '#fff',
-                      fontSize: '0.58rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.05em',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    Featured
-                  </span>
-                )}
-              </div>
-              <div style={{ padding: '1.3rem' }}>
                 <div
                   style={{
-                    fontSize: '1rem',
-                    fontWeight: 700,
-                    marginBottom: '0.3rem',
-                    letterSpacing: '-0.02em',
-                    color: 'var(--portal-color-text, #111827)',
+                    height: '180px',
+                    position: 'relative',
+                    background:
+                      'linear-gradient(135deg, var(--portal-color-surface-alt, #f1f3f7), rgba(107, 142, 201, 0.06))',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '3rem',
                   }}
                 >
-                  {project.name}
-                </div>
-                <div
-                  style={{
-                    fontSize: '0.82rem',
-                    color: 'var(--portal-color-text-secondary, #4b5563)',
-                    lineHeight: 1.6,
-                    marginBottom: '0.8rem',
-                  }}
-                >
-                  {project.desc}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tags.map((tag) => (
+                  {project.coverImage ? (
+                    <img
+                      src={project.coverImage}
+                      alt={project.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    '🚀'
+                  )}
+                  {project.featured && (
                     <span
-                      key={tag}
                       style={{
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontSize: '0.6rem',
-                        padding: '0.2rem 0.5rem',
-                        borderRadius: '6px',
-                        background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.08))',
-                        color: 'var(--portal-color-primary, #6b8ec9)',
-                        fontWeight: 500,
+                        position: 'absolute',
+                        top: '10px',
+                        left: '10px',
+                        padding: '0.2rem 0.6rem',
+                        borderRadius: '100px',
+                        background: 'var(--portal-color-primary, #6b8ec9)',
+                        color: '#fff',
+                        fontSize: '0.58rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase',
                       }}
                     >
-                      {tag}
+                      Featured
                     </span>
-                  ))}
+                  )}
                 </div>
-              </div>
-            </div>
-          ))}
+                <div style={{ padding: '1.3rem' }}>
+                  <div
+                    className="text-[var(--portal-color-text)] group-hover:text-[var(--portal-color-primary)] transition-colors"
+                    style={{
+                      fontSize: '1rem',
+                      fontWeight: 700,
+                      marginBottom: '0.3rem',
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    {project.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.82rem',
+                      color: 'var(--portal-color-text-secondary, #4b5563)',
+                      lineHeight: 1.6,
+                      marginBottom: '0.8rem',
+                    }}
+                    className="line-clamp-2"
+                  >
+                    {project.description}
+                  </div>
+                  {project.techStack.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.techStack.map((tag) => (
+                        <span
+                          key={tag}
+                          style={{
+                            fontFamily: "'IBM Plex Mono', monospace",
+                            fontSize: '0.6rem',
+                            padding: '0.2rem 0.5rem',
+                            borderRadius: '6px',
+                            background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.08))',
+                            color: 'var(--portal-color-primary, #6b8ec9)',
+                            fontWeight: 500,
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            ))
+          ) : (
+            <p className="col-span-full py-12 text-center text-[var(--portal-color-text-secondary)]">
+              No showcase projects available yet.
+            </p>
+          )}
         </div>
       </section>
 
@@ -656,97 +671,94 @@ export default function HomePage() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            {[
-              {
-                avatar: 'JL',
-                name: 'John Lee',
-                time: '2d ago',
-                msg: 'Great blog! Learned a lot about RSC patterns from your posts. Keep it up! 🙌',
-              },
-              {
-                avatar: 'AW',
-                name: 'Alice Wang',
-                time: '5d ago',
-                msg: 'Portal 这个项目太酷了，架构设计很用心，期待更多分享！',
-              },
-              {
-                avatar: 'TK',
-                name: 'Tom Kim',
-                time: '1w ago',
-                msg: 'The tRPC integration is beautifully done. Thanks for the open source work! 🎉',
-              },
-              {
-                avatar: 'LS',
-                name: 'Lisa Sun',
-                time: '1w ago',
-                msg: '刚好在学 Next.js，你的文章对我帮助很大，谢谢！',
-              },
-            ].map((msg, i) => (
-              <div
-                key={i}
-                className="transition-all hover:border-[var(--portal-color-primary)] hover:shadow-[0_4px_16px_rgba(0,0,0,.06)]"
-                style={{
-                  padding: '1.2rem',
-                  borderRadius: '12px',
-                  background: 'var(--portal-color-surface, #ffffff)',
-                  border: '1px solid var(--portal-color-border, #e5e7eb)',
-                }}
-              >
+            {guestbookEntries.length > 0 ? (
+              guestbookEntries.map((entry) => (
                 <div
+                  key={entry.id}
+                  className="transition-all hover:border-[var(--portal-color-primary)] hover:shadow-[0_4px_16px_rgba(0,0,0,.06)]"
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.6rem',
-                    marginBottom: '0.5rem',
+                    padding: '1.2rem',
+                    borderRadius: '12px',
+                    background: 'var(--portal-color-surface, #ffffff)',
+                    border: '1px solid var(--portal-color-border, #e5e7eb)',
                   }}
                 >
                   <div
                     style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '50%',
-                      background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.1))',
-                      color: 'var(--portal-color-primary, #6b8ec9)',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.65rem',
-                      fontWeight: 700,
+                      gap: '0.6rem',
+                      marginBottom: '0.5rem',
                     }}
                   >
-                    {msg.avatar}
+                    {entry.avatar ? (
+                      <img
+                        src={entry.avatar}
+                        alt={entry.authorName}
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          background: 'var(--portal-color-primary-soft, rgba(107, 142, 201, 0.1))',
+                          color: 'var(--portal-color-primary, #6b8ec9)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.65rem',
+                          fontWeight: 700,
+                        }}
+                      >
+                        {entry.authorName.slice(0, 2).toUpperCase()}
+                      </div>
+                    )}
+                    <span
+                      style={{
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        color: 'var(--portal-color-text, #111827)',
+                      }}
+                    >
+                      {entry.authorName}
+                    </span>
+                    <span
+                      style={{
+                        marginLeft: 'auto',
+                        fontSize: '0.6rem',
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        color: 'var(--portal-color-text-secondary, #9ca3af)',
+                      }}
+                    >
+                      {new Date(entry.createdAt).toLocaleDateString(locale, {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </span>
                   </div>
-                  <span
+                  <div
                     style={{
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
-                      color: 'var(--portal-color-text, #111827)',
+                      fontSize: '0.82rem',
+                      lineHeight: 1.6,
+                      color: 'var(--portal-color-text-secondary, #4b5563)',
                     }}
                   >
-                    {msg.name}
-                  </span>
-                  <span
-                    style={{
-                      marginLeft: 'auto',
-                      fontSize: '0.6rem',
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      color: 'var(--portal-color-text-secondary, #9ca3af)',
-                    }}
-                  >
-                    {msg.time}
-                  </span>
+                    {entry.content}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    fontSize: '0.82rem',
-                    lineHeight: 1.6,
-                    color: 'var(--portal-color-text-secondary, #4b5563)',
-                  }}
-                >
-                  {msg.msg}
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="col-span-full py-12 text-center text-[var(--portal-color-text-secondary)]">
+                No guestbook messages yet.
+              </p>
+            )}
           </div>
 
           {/* Stats Row */}
@@ -762,10 +774,10 @@ export default function HomePage() {
             }}
           >
             {[
-              { num: '42', label: 'Posts' },
-              { num: '12', label: 'Projects' },
-              { num: '3.2K', label: 'Page Views' },
-              { num: '86', label: 'Guestbook' },
+              { num: String(postCount), label: tGuestbook('stats.posts') },
+              { num: String(projectCount), label: tGuestbook('stats.projects') },
+              { num: viewCount >= 1000 ? `${(viewCount / 1000).toFixed(1)}K` : String(viewCount), label: tGuestbook('stats.pageViews') },
+              { num: String(guestbookCount), label: tGuestbook('stats.guestbook') },
             ].map((stat, i) => (
               <div key={i} style={{ textAlign: 'center' }}>
                 <div

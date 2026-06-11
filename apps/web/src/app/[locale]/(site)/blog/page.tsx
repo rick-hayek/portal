@@ -4,7 +4,8 @@ import { PostCard } from '@/components/blog/PostCard';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
 
-export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Blog' });
   return {
     title: `${t('title')} — ${siteConfig.site.title}`,
@@ -17,11 +18,12 @@ export default async function BlogPage({
   params,
 }: {
   searchParams: Promise<{ page?: string; category?: string; tag?: string }>;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   const sParams = await searchParams;
+  const { locale } = await params;
   const page = Number(sParams.page) || 1;
-  const t = await getTranslations({ locale: params.locale, namespace: 'Blog' });
+  const t = await getTranslations({ locale, namespace: 'Blog' });
 
   const trpc = await getTRPCServer();
 
