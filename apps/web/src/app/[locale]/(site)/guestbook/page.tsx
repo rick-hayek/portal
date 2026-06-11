@@ -106,7 +106,8 @@ export default function GuestbookPage() {
             borderRadius: 12,
             marginBottom: '2.5rem',
             gap: '1rem',
-            background: 'linear-gradient(180deg, var(--portal-color-surface) 0%, rgba(107,142,201,0.02) 100%)',
+            background:
+              'linear-gradient(180deg, var(--portal-color-surface) 0%, rgba(107,142,201,0.02) 100%)',
           }}
         >
           <div

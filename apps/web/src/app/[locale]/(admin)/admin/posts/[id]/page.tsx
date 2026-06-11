@@ -1,15 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from '@/i18n/routing';
+import { useEffect, useState, startTransition } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { Link } from '@/i18n/routing';
 
 interface Category {
   id: string;
   name: string;
 }
 
-export default function NewPostPage() {
+export default function EditPostPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
+
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [excerpt, setExcerpt] = useState('');
@@ -17,33 +21,14 @@ export default function NewPostPage() {
   const [categoryId, setCategoryId] = useState('');
   const [status, setStatus] = useState<'draft' | 'published'>('draft');
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   const [showNewCatForm, setShowNewCatForm] = useState(false);
   const [newCatName, setNewCatName] = useState('');
   const [creatingCat, setCreatingCat] = useState(false);
-
-  // Auto-generate slug from title
-  useEffect(() => {
-    setSlug(
-      title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, ''),
-    );
-  }, [title]);
-
-  // Load categories
-  useEffect(() => {
-    fetch(
-      '/api/trpc/category.list?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: null } })),
-    )
-      .then((r) => r.json())
-      .then((data) => setCategories(data[0]?.result?.data?.json ?? []))
-      .catch(() => {});
-  }, []);
 
   const handleCreateCategory = async () => {
     if (!newCatName.trim()) return;
@@ -79,33 +64,78 @@ export default function NewPostPage() {
     }
   };
 
+  // Load categories and post data
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Load categories
+        const catRes = await fetch(
+          '/api/trpc/category.list?batch=1&input=' +
+            encodeURIComponent(JSON.stringify({ '0': { json: null } })),
+        );
+        const catData = await catRes.json();
+        setCategories(catData[0]?.result?.data?.json ?? []);
+
+        // Load post
+        const postRes = await fetch(
+          '/api/trpc/admin.postGet?batch=1&input=' +
+            encodeURIComponent(JSON.stringify({ '0': { json: { id } } })),
+        );
+        const postData = await postRes.json();
+        const post = postData[0]?.result?.data?.json;
+
+        if (post) {
+          setTitle(post.title);
+          setSlug(post.slug);
+          setExcerpt(post.excerpt ?? '');
+          setContent(post.content);
+          setCategoryId(post.categoryId ?? '');
+          setStatus(post.status as 'draft' | 'published');
+        } else {
+          setError('Post not found');
+        }
+      } catch {
+        setError('Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (id) {
+      loadData();
+    }
+  }, [id]);
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setError('');
     setSaving(true);
 
     try {
-      const res = await fetch('/api/trpc/admin.postCreate?batch=1', {
+      const res = await fetch('/api/trpc/admin.postUpdate?batch=1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           '0': {
             json: {
+              id,
               title,
               slug,
               content,
               excerpt: excerpt || undefined,
               status,
-              categoryId: categoryId || undefined,
+              categoryId: categoryId || null,
             },
           },
         }),
       });
       const data = await res.json();
       if (data[0]?.error) {
-        setError(data[0].error.message ?? 'Failed to create post');
+        setError(data[0].error.message ?? 'Failed to update post');
       } else {
-        router.push('/admin/posts');
+        startTransition(() => {
+          router.push('/admin/posts');
+        });
       }
     } catch {
       setError('Network error');
@@ -113,9 +143,19 @@ export default function NewPostPage() {
     setSaving(false);
   }
 
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--portal-color-primary)] border-t-transparent" />
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">New Post</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Edit Post</h1>
+      </div>
 
       <form onSubmit={handleSave} className="space-y-5">
         {error && (
@@ -252,15 +292,14 @@ export default function NewPostPage() {
             disabled={saving}
             className="rounded-lg bg-[var(--portal-color-primary)] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {saving ? 'Saving…' : status === 'published' ? 'Publish' : 'Save Draft'}
+            {saving ? 'Saving…' : 'Save Changes'}
           </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="rounded-lg border border-[var(--portal-color-border)] px-5 py-2.5 text-sm text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)]"
+          <Link
+            href="/admin/posts"
+            className="rounded-lg border border-[var(--portal-color-border)] px-5 py-2.5 text-sm text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] flex items-center justify-center"
           >
             Cancel
-          </button>
+          </Link>
         </div>
       </form>
     </div>

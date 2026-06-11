@@ -116,9 +116,7 @@ export function SearchDialog() {
           />
         </svg>
         <span className="hidden sm:inline">Search</span>
-        <kbd
-          className="hidden rounded border border-compat bg-[var(--portal-color-surface-alt)] px-1.5 py-0.5 text-[rgba(75,85,99,0.7)] sm:inline text-[0.65rem]"
-        >
+        <kbd className="hidden rounded border border-compat bg-[var(--portal-color-surface-alt)] px-1.5 py-0.5 text-[rgba(75,85,99,0.7)] sm:inline text-[0.65rem]">
           ⌘K
         </kbd>
       </button>
@@ -197,7 +195,7 @@ export function SearchDialog() {
                     >
                       <div
                         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${
-                           i === selectedIndex
+                          i === selectedIndex
                             ? 'border-[rgba(107,142,201,0.2)] bg-[var(--portal-color-surface)] text-[var(--portal-color-primary)]'
                             : 'border-compat bg-[var(--portal-color-surface)] text-[var(--portal-color-text-tertiary)]'
                         }`}

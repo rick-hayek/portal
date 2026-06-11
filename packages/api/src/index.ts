@@ -8,6 +8,7 @@ import { linkRouter } from './routers/link'; // Added import for linkRouter
 import { portfolioRouter } from './routers/portfolio';
 import { postRouter } from './routers/post';
 import { searchRouter } from './routers/search';
+import { referenceRouter } from './routers/reference';
 import { router } from './trpc';
 
 export { createContext } from './trpc';
@@ -23,6 +24,7 @@ export const appRouter = router({
   analytics: analyticsRouter,
   gallery: galleryRouter,
   link: linkRouter, // Registered linkRouter
+  reference: referenceRouter,
 });
 
 export type AppRouter = typeof appRouter;

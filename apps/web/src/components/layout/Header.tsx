@@ -19,25 +19,19 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const t = useTranslations('Navigation');
   const { data: session } = useSession();
-  
+
   const isAdmin = session?.user?.role === 'admin';
-  const displayNavItems = isAdmin
-    ? [...navItems, { href: '/admin', label: 'Admin' }]
-    : navItems;
+  const displayNavItems = isAdmin ? [...navItems, { href: '/admin', label: 'Admin' }] : navItems;
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-compat flex justify-center px-8 bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150"
-    >
+    <header className="fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-compat flex justify-center px-8 bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex h-full w-full items-center justify-between px-8">
         {/* Logo */}
         <Link
           href="/"
           className="flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline text-[1.1rem] tracking-tight"
         >
-          <span
-            className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]"
-          >
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]">
             <svg
               className="h-3.5 w-3.5"
               fill="none"

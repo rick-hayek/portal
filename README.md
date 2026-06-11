@@ -75,7 +75,18 @@ Start the Turborepo development server across all packages:
 pnpm dev
 ```
 
-The application will be available at `http://localhost:3000`.
+- The main application will be available at `http://localhost:3000`.
+- The **Admin Dashboard** is accessible at `/admin` (e.g. `http://localhost:3000/admin`). Only authenticated users with the `admin` role can access it.
+
+### 6. Database Studio & Administration
+
+To open the visual database editor (Prisma Studio) to manage users, roles (e.g. setting yourself to `admin`), and content records directly:
+
+```bash
+pnpm --filter @portal/db studio
+```
+
+This will start a web client at `http://localhost:5555`.
 
 ## Project Structure
 
@@ -87,11 +98,28 @@ This is a Turborepo monorepo.
 - `packages/theme`: Design system and theme configurations.
 - `packages/config`: Shared site configurations and utilities.
 - `packages/shared`: Shared TypeScript types and constants.
-
 ## Deployment
 
 The project is optimized for deployment on Vercel. Ensure you configure all relevant environment variables in your Vercel project settings.
 
+### Database Migrations (Production)
+
+When deploying updates that involve database schema changes, you must apply the migrations to your production database.
+
+#### Option 1: Manual Migration
+Run the following command locally with your production database URL set as the `DATABASE_URL` environment variable:
+```bash
+DATABASE_URL="your-production-database-url" pnpm --filter @portal/db migrate:deploy
+```
+
+#### Option 2: Automatic Vercel Build Step (Recommended)
+Configure the **Build Command** in your Vercel project settings to run migrations automatically before every build:
+```bash
+pnpm --filter @portal/db migrate:deploy && turbo build
+```
+This ensures the database schema is always updated before building and serving the new version.
+
 ## License
 
 MIT
+

@@ -50,3 +50,5 @@ meili-data/
 # Misc
 *.tgz
 *.log
+
+blogs/*

@@ -193,3 +193,14 @@ model SiteConfig {
 
   @@index([key])
 }
+
+// ============ References ============
+
+model Reference {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  htmlCode  String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

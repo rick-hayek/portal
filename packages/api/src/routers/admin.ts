@@ -25,7 +25,7 @@ export const adminRouter = router({
 
   /** Recent comments (for dashboard) */
   recentComments: adminProcedure
-    .input(z.object({ limit: z.number().int().min(1).max(20).default(5) }).optional())
+    .input(z.object({ limit: z.number().int().min(1).max(100).default(5) }).optional())
     .query(({ ctx, input }) =>
       ctx.prisma.comment.findMany({
         take: input?.limit ?? 5,
@@ -36,7 +36,7 @@ export const adminRouter = router({
 
   /** Recent guestbook (for dashboard) */
   recentGuestbook: adminProcedure
-    .input(z.object({ limit: z.number().int().min(1).max(20).default(5) }).optional())
+    .input(z.object({ limit: z.number().int().min(1).max(100).default(5) }).optional())
     .query(({ ctx, input }) =>
       ctx.prisma.guestbookEntry.findMany({
         take: input?.limit ?? 5,
@@ -118,6 +118,18 @@ export const adminRouter = router({
       });
       return post;
     }),
+
+  /** Get post by ID */
+  postGet: adminProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const post = await ctx.prisma.post.findUnique({
+      where: { id: input.id },
+      include: {
+        category: true,
+        tags: { include: { tag: true } },
+      },
+    });
+    return post;
+  }),
 
   /** Update post */
   postUpdate: adminProcedure
@@ -330,4 +342,18 @@ export const adminRouter = router({
   configList: adminProcedure.query(({ ctx }) =>
     ctx.prisma.siteConfig.findMany({ orderBy: { key: 'asc' } }),
   ),
+
+  /** Create category */
+  categoryCreate: adminProcedure
+    .input(
+      z.object({
+        name: z.string().min(1).max(50),
+        slug: z.string().min(1).max(50),
+      }),
+    )
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.category.create({
+        data: input,
+      }),
+    ),
 });
