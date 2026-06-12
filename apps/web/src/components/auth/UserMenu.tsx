@@ -39,11 +39,11 @@ export function UserMenu() {
       )}
       <button
         onClick={() => signOut()}
-        className="text-xs text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)]"
+        className="text-xs text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)] cursor-pointer font-medium"
         title="Sign out"
         aria-label="Sign out"
       >
-        ✕
+        Sign Out
       </button>
     </div>
   );

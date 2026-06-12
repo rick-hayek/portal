@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation';
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
   { href: '/admin/posts', label: 'Posts', icon: '📝' },
+  { href: '/admin/categories', label: 'Categories', icon: '📁' },
   { href: '/admin/portfolio', label: 'Portfolio', icon: '🚀' },
   { href: '/admin/comments', label: 'Comments', icon: '💬' },
   { href: '/admin/guestbook', label: 'Guestbook', icon: '📒' },

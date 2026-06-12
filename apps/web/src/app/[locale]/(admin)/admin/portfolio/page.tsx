@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from '@/i18n/routing';
 
 interface Project {
   id: string;
@@ -61,12 +62,12 @@ export default function AdminPortfolioPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Portfolio</h1>
-        <a
+        <Link
           href="/admin/portfolio/new"
           className="rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
         >
           + New Project
-        </a>
+        </Link>
       </div>
 
       <div className="space-y-3">
@@ -114,6 +115,12 @@ export default function AdminPortfolioPage() {
                 >
                   {p.featured ? '★' : '☆'}
                 </button>
+                <Link
+                  href={`/admin/portfolio/${p.id}`}
+                  className="text-xs text-[var(--portal-color-text-secondary)] hover:underline"
+                >
+                  Edit
+                </Link>
                 <a
                   href={`/portfolio/${p.slug}`}
                   target="_blank"

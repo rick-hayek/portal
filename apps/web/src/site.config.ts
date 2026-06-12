@@ -32,7 +32,7 @@ const siteConfig = defineConfig({
     socialLinks: [
       {
         label: 'GitHub',
-        href: process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/aaa',
+        href: process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/',
         icon: '🐙',
       },
       {

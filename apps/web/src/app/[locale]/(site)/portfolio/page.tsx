@@ -29,7 +29,7 @@ export default function PortfolioPage() {
         '/api/trpc/portfolio.list?batch=1&input=' +
           encodeURIComponent(
             JSON.stringify({
-              '0': { json: activeTech ? { tech: activeTech } : null },
+              '0': { json: activeTech ? { tech: activeTech } : {} },
             }),
           ),
       ).then((r) => r.json()),

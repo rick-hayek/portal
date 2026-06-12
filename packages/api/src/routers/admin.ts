@@ -214,6 +214,11 @@ export const adminRouter = router({
     }),
   ),
 
+  /** Get project by ID */
+  projectGet: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => ctx.prisma.project.findUnique({ where: { id: input.id } })),
+
   /** Create project */
   projectCreate: adminProcedure
     .input(
@@ -354,6 +359,36 @@ export const adminRouter = router({
     .mutation(({ ctx, input }) =>
       ctx.prisma.category.create({
         data: input,
+      }),
+    ),
+
+  /** Update category */
+  categoryUpdate: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().min(1).max(50).optional(),
+        slug: z.string().min(1).max(50).optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      const { id, ...data } = input;
+      return ctx.prisma.category.update({
+        where: { id },
+        data,
+      });
+    }),
+
+  /** Delete category */
+  categoryDelete: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.category.delete({
+        where: { id: input.id },
       }),
     ),
 });
