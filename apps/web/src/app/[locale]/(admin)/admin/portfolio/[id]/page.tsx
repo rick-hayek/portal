@@ -20,6 +20,7 @@ export default function EditProjectPage() {
   const [sortOrder, setSortOrder] = useState(0);
   const [privacyPolicy, setPrivacyPolicy] = useState('');
   const [termsOfService, setTermsOfService] = useState('');
+  const [logo, setLogo] = useState('');
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -48,6 +49,7 @@ export default function EditProjectPage() {
           setSortOrder(project.sortOrder ?? 0);
           setPrivacyPolicy(project.privacyPolicy ?? '');
           setTermsOfService(project.termsOfService ?? '');
+          setLogo(project.logo ?? '');
         } else {
           setError('Project not found');
         }
@@ -89,6 +91,7 @@ export default function EditProjectPage() {
               sortOrder,
               privacyPolicy: privacyPolicy || null,
               termsOfService: termsOfService || null,
+              logo: logo || null,
             },
           },
         }),
@@ -240,6 +243,19 @@ export default function EditProjectPage() {
               Featured project
             </label>
           </div>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+            Logo (SVG Code or Image URL, optional)
+          </label>
+          <textarea
+            value={logo}
+            onChange={(e) => setLogo(e.target.value)}
+            rows={2}
+            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            placeholder="<svg... or https://... or /logo.png"
+          />
         </div>
 
         <div>

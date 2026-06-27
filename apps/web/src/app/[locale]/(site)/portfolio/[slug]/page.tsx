@@ -17,6 +17,7 @@ interface Project {
   createdAt: string;
   privacyPolicy?: string | null;
   termsOfService?: string | null;
+  logo?: string | null;
 }
 
 export default function ProjectDetailPage() {
@@ -69,7 +70,21 @@ export default function ProjectDetailPage() {
         ← Portfolio
       </a>
 
-      <h1 className="mt-4 text-3xl font-bold text-[var(--portal-color-text)]">{project.title}</h1>
+      <div className="mt-4 flex items-center gap-3">
+        {project.logo && (
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg">
+            {project.logo.includes('<svg') ? (
+              <div
+                className="h-full w-full [&_svg]:h-full [&_svg]:w-full"
+                dangerouslySetInnerHTML={{ __html: project.logo }}
+              />
+            ) : (
+              <img src={project.logo} alt="" className="h-full w-full object-contain" />
+            )}
+          </div>
+        )}
+        <h1 className="text-3xl font-bold text-[var(--portal-color-text)]">{project.title}</h1>
+      </div>
 
       {/* Cover */}
       {project.coverImage && (

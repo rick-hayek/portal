@@ -234,6 +234,7 @@ export const adminRouter = router({
         featured: z.boolean().default(false),
         privacyPolicy: z.string().optional(),
         termsOfService: z.string().optional(),
+        logo: z.string().optional(),
       }),
     )
     .mutation(({ ctx, input }) => ctx.prisma.project.create({ data: input })),
@@ -254,6 +255,7 @@ export const adminRouter = router({
         featured: z.boolean().optional(),
         privacyPolicy: z.string().nullable().optional(),
         termsOfService: z.string().nullable().optional(),
+        logo: z.string().nullable().optional(),
       }),
     )
     .mutation(({ ctx, input }) => {

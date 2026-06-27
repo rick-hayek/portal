@@ -14,6 +14,7 @@ export default function NewProjectPage() {
   const [techStack, setTechStack] = useState('');
   const [privacyPolicy, setPrivacyPolicy] = useState('');
   const [termsOfService, setTermsOfService] = useState('');
+  const [logo, setLogo] = useState('');
   const [featured, setFeatured] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -51,6 +52,7 @@ export default function NewProjectPage() {
               featured,
               privacyPolicy: privacyPolicy || undefined,
               termsOfService: termsOfService || undefined,
+              logo: logo || undefined,
             },
           },
         }),
@@ -168,6 +170,20 @@ export default function NewProjectPage() {
             />
           </div>
         </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+            Logo (SVG Code or Image URL, optional)
+          </label>
+          <textarea
+            value={logo}
+            onChange={(e) => setLogo(e.target.value)}
+            rows={2}
+            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            placeholder="<svg... or https://... or /logo.png"
+          />
+        </div>
+
         <div>
           <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
             Privacy Policy (Markdown, optional)

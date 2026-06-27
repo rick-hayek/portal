@@ -14,6 +14,7 @@ interface Project {
   repoUrl: string | null;
   techStack: string[];
   featured: boolean;
+  logo?: string | null;
 }
 
 export default function PortfolioPage() {
@@ -189,7 +190,7 @@ export default function PortfolioPage() {
                 {/* Info */}
                 <div style={{ padding: '1.3rem' }}>
                   <div
-                    className="text-[var(--portal-color-text)] group-hover:text-[var(--portal-color-primary)] transition-colors"
+                    className="text-[var(--portal-color-text)] group-hover:text-[var(--portal-color-primary)] transition-colors flex items-center gap-2"
                     style={{
                       fontSize: '1rem',
                       fontWeight: 700,
@@ -197,7 +198,19 @@ export default function PortfolioPage() {
                       letterSpacing: '-.02em',
                     }}
                   >
-                    {project.title}
+                    {project.logo && (
+                      <div className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded">
+                        {project.logo.includes('<svg') ? (
+                          <div
+                            className="h-full w-full [&_svg]:h-full [&_svg]:w-full"
+                            dangerouslySetInnerHTML={{ __html: project.logo }}
+                          />
+                        ) : (
+                          <img src={project.logo} alt="" className="h-full w-full object-contain" />
+                        )}
+                      </div>
+                    )}
+                    <span>{project.title}</span>
                   </div>
                   <div
                     className="line-clamp-2 text-[var(--portal-color-text-secondary)]"
