@@ -1,0 +1,91 @@
+import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
+import { getTRPCServer } from '@/lib/trpc-server';
+import siteConfig from '@/site.config';
+
+export const revalidate = 3600; // ISR validation every hour
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string; docType: string }>;
+}) {
+  const { slug, docType } = await params;
+  if (docType !== 'Privacy_Policy' && docType !== 'Terms_of_Service') {
+    return { title: 'Not Found' };
+  }
+
+  const trpc = await getTRPCServer();
+  const project = await trpc.portfolio.bySlug({ slug });
+  if (!project) return { title: 'Not Found' };
+
+  const docTitle = docType === 'Privacy_Policy' ? 'Privacy Policy' : 'Terms of Service';
+  return {
+    title: `${docTitle} - ${project.title} — ${siteConfig.site.title}`,
+  };
+}
+
+export default async function ProjectDocPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string; docType: string }>;
+}) {
+  const { locale, slug, docType } = await params;
+
+  if (docType !== 'Privacy_Policy' && docType !== 'Terms_of_Service') {
+    notFound();
+  }
+
+  // Set request locale for static/ISR rendering in next-intl
+  setRequestLocale(locale);
+
+  const trpc = await getTRPCServer();
+  const project = await trpc.portfolio.bySlug({ slug });
+  if (!project) {
+    notFound();
+  }
+
+  const content = docType === 'Privacy_Policy' ? project.privacyPolicy : project.termsOfService;
+  if (!content) {
+    notFound();
+  }
+
+  const docTitle = docType === 'Privacy_Policy' ? 'Privacy Policy' : 'Terms of Service';
+
+  return (
+    <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+      {/* Header */}
+      <header className="mb-8">
+        <a
+          href={`/portfolio/${project.slug}`}
+          className="text-sm text-[var(--portal-color-primary)] hover:underline"
+        >
+          ← Back to {project.title}
+        </a>
+        <h1 className="mt-4 text-3xl font-bold leading-tight text-[var(--portal-color-text)] sm:text-4xl">
+          {docTitle}
+        </h1>
+        <p className="mt-2 text-sm text-[var(--portal-color-text-secondary)]">
+          For project: <span className="font-semibold">{project.title}</span>
+        </p>
+      </header>
+
+      {/* Markdown Content */}
+      <div className="prose prose-portal max-w-none">
+        <MDXRemote
+          source={content}
+          options={{
+            mdxOptions: {
+              remarkPlugins: [remarkGfm],
+              rehypePlugins: [rehypeHighlight, rehypeSlug],
+            },
+          }}
+        />
+      </div>
+    </article>
+  );
+}

@@ -21,7 +21,6 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
       { protocol: 'https', hostname: 'rick-hayek.github.io' },
       { protocol: 'https', hostname: 'github.com' },
-
     ],
   },
 };

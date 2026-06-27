@@ -1,9 +1,9 @@
 'use client';
 
+import Image from 'next/image';
+import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { useSession, signIn } from 'next-auth/react';
-import Image from 'next/image';
 
 interface GuestbookEntry {
   id: string;

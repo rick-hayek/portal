@@ -1,8 +1,8 @@
+import { prisma } from '@portal/db';
+import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
-import { prisma } from '@portal/db';
-import Image from 'next/image';
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

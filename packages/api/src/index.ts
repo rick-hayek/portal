@@ -7,8 +7,8 @@ import { guestbookRouter } from './routers/guestbook';
 import { linkRouter } from './routers/link'; // Added import for linkRouter
 import { portfolioRouter } from './routers/portfolio';
 import { postRouter } from './routers/post';
-import { searchRouter } from './routers/search';
 import { referenceRouter } from './routers/reference';
+import { searchRouter } from './routers/search';
 import { router } from './trpc';
 
 export { createContext } from './trpc';

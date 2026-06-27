@@ -128,9 +128,11 @@ model Project {
   repoUrl     String?
   techStack   String[] @default([])
   sortOrder   Int      @default(0)
-  featured    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  featured       Boolean  @default(false)
+  privacyPolicy  String?
+  termsOfService String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 // ============ Media ============

@@ -12,6 +12,8 @@ export default function NewProjectPage() {
   const [liveUrl, setLiveUrl] = useState('');
   const [repoUrl, setRepoUrl] = useState('');
   const [techStack, setTechStack] = useState('');
+  const [privacyPolicy, setPrivacyPolicy] = useState('');
+  const [termsOfService, setTermsOfService] = useState('');
   const [featured, setFeatured] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -47,6 +49,8 @@ export default function NewProjectPage() {
                 .map((s) => s.trim())
                 .filter(Boolean),
               featured,
+              privacyPolicy: privacyPolicy || undefined,
+              termsOfService: termsOfService || undefined,
             },
           },
         }),
@@ -163,6 +167,31 @@ export default function NewProjectPage() {
               className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
             />
           </div>
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+            Privacy Policy (Markdown, optional)
+          </label>
+          <textarea
+            value={privacyPolicy}
+            onChange={(e) => setPrivacyPolicy(e.target.value)}
+            rows={5}
+            placeholder="# Privacy Policy..."
+            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+            Terms of Service (Markdown, optional)
+          </label>
+          <textarea
+            value={termsOfService}
+            onChange={(e) => setTermsOfService(e.target.value)}
+            rows={5}
+            placeholder="# Terms of Service..."
+            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+          />
         </div>
 
         <label className="flex items-center gap-2 text-sm text-[var(--portal-color-text)]">

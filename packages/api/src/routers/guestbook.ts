@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { publicProcedure, protectedProcedure, router } from '../trpc';
+import { protectedProcedure, publicProcedure, router } from '../trpc';
 
 export const guestbookRouter = router({
   /** List guestbook entries (paginated, newest first) */

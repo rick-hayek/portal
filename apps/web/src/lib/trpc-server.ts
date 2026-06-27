@@ -1,6 +1,6 @@
 import { appRouter, createContext } from '@portal/api';
-import { auth } from '@/auth';
 import { cache } from 'react';
+import { auth } from '@/auth';
 
 /**
  * Direct server-side tRPC caller.

@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, startTransition } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { Link } from '@/i18n/routing';
 import { marked } from 'marked';
+import { useParams, useRouter } from 'next/navigation';
+import { startTransition, useEffect, useState } from 'react';
+import { Link } from '@/i18n/routing';
 
 interface Category {
   id: string;

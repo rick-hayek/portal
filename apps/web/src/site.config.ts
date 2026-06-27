@@ -2,7 +2,7 @@ import { defineConfig } from '@portal/config';
 
 const siteConfig = defineConfig({
   site: {
-    title: 'My Portal',
+    title: 'Voocii',
     description: 'A modular personal website platform',
     url: 'https://portal.dev',
     locale: 'en-US',

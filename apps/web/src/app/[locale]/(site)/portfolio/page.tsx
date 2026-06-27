@@ -1,8 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 
 interface Project {
   id: string;

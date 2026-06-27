@@ -1,7 +1,7 @@
 'use client';
 
-import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 export function UserMenu() {
   const { data: session, status } = useSession();

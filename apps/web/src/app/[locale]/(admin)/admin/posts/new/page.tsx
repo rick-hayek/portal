@@ -1,8 +1,8 @@
 'use client';
 
+import { marked } from 'marked';
 import { useEffect, useState } from 'react';
 import { useRouter } from '@/i18n/routing';
-import { marked } from 'marked';
 
 interface Category {
   id: string;

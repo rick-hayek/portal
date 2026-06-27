@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState, startTransition } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { startTransition, useEffect, useState } from 'react';
 import { Link } from '@/i18n/routing';
 
 export default function EditProjectPage() {
@@ -18,6 +18,8 @@ export default function EditProjectPage() {
   const [techStack, setTechStack] = useState('');
   const [featured, setFeatured] = useState(false);
   const [sortOrder, setSortOrder] = useState(0);
+  const [privacyPolicy, setPrivacyPolicy] = useState('');
+  const [termsOfService, setTermsOfService] = useState('');
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -44,6 +46,8 @@ export default function EditProjectPage() {
           setTechStack(project.techStack.join(', '));
           setFeatured(project.featured);
           setSortOrder(project.sortOrder ?? 0);
+          setPrivacyPolicy(project.privacyPolicy ?? '');
+          setTermsOfService(project.termsOfService ?? '');
         } else {
           setError('Project not found');
         }
@@ -83,6 +87,8 @@ export default function EditProjectPage() {
                 .filter(Boolean),
               featured,
               sortOrder,
+              privacyPolicy: privacyPolicy || null,
+              termsOfService: termsOfService || null,
             },
           },
         }),
@@ -234,6 +240,32 @@ export default function EditProjectPage() {
               Featured project
             </label>
           </div>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+            Privacy Policy (Markdown, optional)
+          </label>
+          <textarea
+            value={privacyPolicy}
+            onChange={(e) => setPrivacyPolicy(e.target.value)}
+            rows={5}
+            placeholder="# Privacy Policy..."
+            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+            Terms of Service (Markdown, optional)
+          </label>
+          <textarea
+            value={termsOfService}
+            onChange={(e) => setTermsOfService(e.target.value)}
+            rows={5}
+            placeholder="# Terms of Service..."
+            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+          />
         </div>
 
         <div className="flex gap-3">

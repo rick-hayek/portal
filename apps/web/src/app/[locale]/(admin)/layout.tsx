@@ -1,10 +1,9 @@
 'use client';
 
+import { notFound } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { UserMenu } from '@/components/auth/UserMenu';
 import { Link, usePathname } from '@/i18n/routing';
-
-import { useSession } from 'next-auth/react';
-import { notFound } from 'next/navigation';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },

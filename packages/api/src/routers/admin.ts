@@ -232,6 +232,8 @@ export const adminRouter = router({
         techStack: z.array(z.string()).default([]),
         sortOrder: z.number().int().default(0),
         featured: z.boolean().default(false),
+        privacyPolicy: z.string().optional(),
+        termsOfService: z.string().optional(),
       }),
     )
     .mutation(({ ctx, input }) => ctx.prisma.project.create({ data: input })),
@@ -250,6 +252,8 @@ export const adminRouter = router({
         techStack: z.array(z.string()).optional(),
         sortOrder: z.number().int().optional(),
         featured: z.boolean().optional(),
+        privacyPolicy: z.string().nullable().optional(),
+        termsOfService: z.string().nullable().optional(),
       }),
     )
     .mutation(({ ctx, input }) => {

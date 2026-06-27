@@ -1,6 +1,7 @@
 'use client';
 
 import type { NavItem } from '@portal/shared';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
@@ -8,7 +9,6 @@ import { UserMenu } from '../auth/UserMenu';
 import { SearchDialog } from '../search/SearchDialog';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeSwitcher } from './ThemeSwitcher';
-import { useSession } from 'next-auth/react';
 
 interface HeaderProps {
   siteTitle: string;
@@ -47,7 +47,8 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
               />
             </svg>
           </span>
-          Portal<span className="text-[var(--portal-color-primary)]">.</span>
+          {siteTitle}
+          <span className="text-[var(--portal-color-primary)]">.</span>
         </Link>
 
         {/* Desktop Nav Links */}

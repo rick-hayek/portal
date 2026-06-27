@@ -1,8 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 
 interface Project {
   id: string;
@@ -15,6 +15,8 @@ interface Project {
   techStack: string[];
   featured: boolean;
   createdAt: string;
+  privacyPolicy?: string | null;
+  termsOfService?: string | null;
 }
 
 export default function ProjectDetailPage() {
@@ -124,6 +126,22 @@ export default function ProjectDetailPage() {
             className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
           >
             Source Code
+          </a>
+        )}
+        {project.privacyPolicy && (
+          <a
+            href={`/portfolio/${project.slug}/Privacy_Policy`}
+            className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
+          >
+            Privacy Policy
+          </a>
+        )}
+        {project.termsOfService && (
+          <a
+            href={`/portfolio/${project.slug}/Terms_of_Service`}
+            className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
+          >
+            Terms of Service
           </a>
         )}
       </div>

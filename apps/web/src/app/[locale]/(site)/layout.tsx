@@ -13,9 +13,10 @@ registerDefaultModules();
 const navItems: NavItem[] = [
   { label: 'Home', href: '/', icon: '🏠', order: 0 },
   ...getNavItems(siteConfig),
-].filter(item => 
-  // 暂时隐藏，之后需要恢复：Resume, Gallery, Guestbook, Links, About
-  !['Resume', 'Gallery', 'Guestbook', 'Links', 'About'].includes(item.label)
+].filter(
+  (item) =>
+    // 暂时隐藏，之后需要恢复：Resume, Gallery, Guestbook, Links, About
+    !['Resume', 'Gallery', 'Guestbook', 'Links', 'About'].includes(item.label),
 );
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {

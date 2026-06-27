@@ -1,5 +1,6 @@
-import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
@@ -7,7 +8,6 @@ import remarkGfm from 'remark-gfm';
 import { CommentSection } from '@/components/blog/CommentSection';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
-import { setRequestLocale } from 'next-intl/server';
 
 export const revalidate = 3600; // revalidate at most every hour (ISR)
 
