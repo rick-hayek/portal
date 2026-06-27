@@ -49,7 +49,10 @@ export default async function ProjectDocPage({
     notFound();
   }
 
-  const content = docType === 'Privacy_Policy' ? project.privacyPolicy : project.termsOfService;
+  const baseContent = docType === 'Privacy_Policy' ? project.privacyPolicy : project.termsOfService;
+  const enContent =
+    docType === 'Privacy_Policy' ? project.privacyPolicyEn : project.termsOfServiceEn;
+  const content = locale === 'en' && enContent ? enContent : baseContent;
   if (!content) {
     notFound();
   }

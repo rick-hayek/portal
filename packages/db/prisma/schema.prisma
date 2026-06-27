@@ -122,18 +122,22 @@ model Project {
   id          String   @id @default(cuid())
   title       String
   slug        String   @unique
-  description String
-  coverImage  String?
+  description   String
+  descriptionEn String?
+  coverImage    String?
   liveUrl     String?
   repoUrl     String?
   techStack   String[] @default([])
   sortOrder   Int      @default(0)
-  featured       Boolean  @default(false)
-  privacyPolicy  String?
-  termsOfService String?
-  logo           String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  featured         Boolean  @default(false)
+  privacyPolicy    String?
+  privacyPolicyEn  String?
+  termsOfService   String?
+  termsOfServiceEn String?
+  logo             String?
+  downloadLinks    Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 // ============ Media ============

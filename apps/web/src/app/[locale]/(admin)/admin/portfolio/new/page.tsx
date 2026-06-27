@@ -13,8 +13,17 @@ export default function NewProjectPage() {
   const [repoUrl, setRepoUrl] = useState('');
   const [techStack, setTechStack] = useState('');
   const [privacyPolicy, setPrivacyPolicy] = useState('');
+  const [privacyPolicyEn, setPrivacyPolicyEn] = useState('');
   const [termsOfService, setTermsOfService] = useState('');
+  const [termsOfServiceEn, setTermsOfServiceEn] = useState('');
   const [logo, setLogo] = useState('');
+  const [descriptionEn, setDescriptionEn] = useState('');
+  const [descTab, setDescTab] = useState<'zh' | 'en'>('zh');
+  const [privacyTab, setPrivacyTab] = useState<'zh' | 'en'>('zh');
+  const [termsTab, setTermsTab] = useState<'zh' | 'en'>('zh');
+  const [downloadLinks, setDownloadLinks] = useState<{ platform: string; url: string }[]>([]);
+  const [newPlatform, setNewPlatform] = useState('appstore');
+  const [newUrl, setNewUrl] = useState('');
   const [featured, setFeatured] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -27,6 +36,16 @@ export default function NewProjectPage() {
         .replace(/^-|-$/g, ''),
     );
   }, [title]);
+
+  const handleAddLink = () => {
+    if (!newUrl) return;
+    setDownloadLinks([...downloadLinks, { platform: newPlatform, url: newUrl }]);
+    setNewUrl('');
+  };
+
+  const handleDeleteLink = (index: number) => {
+    setDownloadLinks(downloadLinks.filter((_, i) => i !== index));
+  };
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -42,6 +61,7 @@ export default function NewProjectPage() {
               title,
               slug,
               description,
+              descriptionEn: descriptionEn || undefined,
               coverImage: coverImage || undefined,
               liveUrl: liveUrl || undefined,
               repoUrl: repoUrl || undefined,
@@ -51,8 +71,11 @@ export default function NewProjectPage() {
                 .filter(Boolean),
               featured,
               privacyPolicy: privacyPolicy || undefined,
+              privacyPolicyEn: privacyPolicyEn || undefined,
               termsOfService: termsOfService || undefined,
+              termsOfServiceEn: termsOfServiceEn || undefined,
               logo: logo || undefined,
+              downloadLinks: downloadLinks.length > 0 ? downloadLinks : undefined,
             },
           },
         }),
@@ -107,16 +130,53 @@ export default function NewProjectPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
-            Description
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            rows={5}
-            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-          />
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-sm font-medium text-[var(--portal-color-text)]">
+              Description (Markdown)
+            </label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setDescTab('zh')}
+                className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                  descTab === 'zh'
+                    ? 'bg-[var(--portal-color-primary)] text-white font-medium'
+                    : 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] border border-compat'
+                }`}
+              >
+                中文
+              </button>
+              <button
+                type="button"
+                onClick={() => setDescTab('en')}
+                className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                  descTab === 'en'
+                    ? 'bg-[var(--portal-color-primary)] text-white font-medium'
+                    : 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] border border-compat'
+                }`}
+              >
+                English
+              </button>
+            </div>
+          </div>
+          {descTab === 'zh' ? (
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              rows={5}
+              placeholder="中文描述..."
+              className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          ) : (
+            <textarea
+              value={descriptionEn}
+              onChange={(e) => setDescriptionEn(e.target.value)}
+              rows={5}
+              placeholder="English description..."
+              className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          )}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -185,29 +245,161 @@ export default function NewProjectPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
-            Privacy Policy (Markdown, optional)
+          <label className="mb-2 block text-sm font-medium text-[var(--portal-color-text)]">
+            App Download Links
           </label>
-          <textarea
-            value={privacyPolicy}
-            onChange={(e) => setPrivacyPolicy(e.target.value)}
-            rows={5}
-            placeholder="# Privacy Policy..."
-            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-          />
+          {downloadLinks.length > 0 && (
+            <div className="mb-3 space-y-2">
+              {downloadLinks.map((link, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-1.5 text-sm"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="rounded bg-[var(--portal-color-primary)] px-2 py-0.5 text-xs text-white uppercase font-semibold">
+                      {link.platform}
+                    </span>
+                    <span className="text-[var(--portal-color-text)] truncate max-w-md font-mono text-xs">
+                      {link.url}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteLink(idx)}
+                    className="text-xs text-red-500 hover:text-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="flex gap-2">
+            <select
+              value={newPlatform}
+              onChange={(e) => setNewPlatform(e.target.value)}
+              className="rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            >
+              <option value="appstore">App Store</option>
+              <option value="playstore">Google Play</option>
+              <option value="windows">Windows</option>
+              <option value="macos">macOS</option>
+              <option value="linux">Linux</option>
+              <option value="apk">APK</option>
+            </select>
+            <input
+              type="text"
+              value={newUrl}
+              onChange={(e) => setNewUrl(e.target.value)}
+              placeholder="Download URL (e.g. https://...)"
+              className="flex-1 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={handleAddLink}
+              className="rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+            >
+              + Add
+            </button>
+          </div>
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
-            Terms of Service (Markdown, optional)
-          </label>
-          <textarea
-            value={termsOfService}
-            onChange={(e) => setTermsOfService(e.target.value)}
-            rows={5}
-            placeholder="# Terms of Service..."
-            className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-          />
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-sm font-medium text-[var(--portal-color-text)]">
+              Privacy Policy (Markdown, optional)
+            </label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setPrivacyTab('zh')}
+                className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                  privacyTab === 'zh'
+                    ? 'bg-[var(--portal-color-primary)] text-white font-medium'
+                    : 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] border border-compat'
+                }`}
+              >
+                中文
+              </button>
+              <button
+                type="button"
+                onClick={() => setPrivacyTab('en')}
+                className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                  privacyTab === 'en'
+                    ? 'bg-[var(--portal-color-primary)] text-white font-medium'
+                    : 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] border border-compat'
+                }`}
+              >
+                English
+              </button>
+            </div>
+          </div>
+          {privacyTab === 'zh' ? (
+            <textarea
+              value={privacyPolicy}
+              onChange={(e) => setPrivacyPolicy(e.target.value)}
+              rows={5}
+              placeholder="中文隐私政策..."
+              className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          ) : (
+            <textarea
+              value={privacyPolicyEn}
+              onChange={(e) => setPrivacyPolicyEn(e.target.value)}
+              rows={5}
+              placeholder="English Privacy Policy..."
+              className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          )}
+        </div>
+
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-sm font-medium text-[var(--portal-color-text)]">
+              Terms of Service (Markdown, optional)
+            </label>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setTermsTab('zh')}
+                className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                  termsTab === 'zh'
+                    ? 'bg-[var(--portal-color-primary)] text-white font-medium'
+                    : 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] border border-compat'
+                }`}
+              >
+                中文
+              </button>
+              <button
+                type="button"
+                onClick={() => setTermsTab('en')}
+                className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                  termsTab === 'en'
+                    ? 'bg-[var(--portal-color-primary)] text-white font-medium'
+                    : 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] border border-compat'
+                }`}
+              >
+                English
+              </button>
+            </div>
+          </div>
+          {termsTab === 'zh' ? (
+            <textarea
+              value={termsOfService}
+              onChange={(e) => setTermsOfService(e.target.value)}
+              rows={5}
+              placeholder="中文服务条款..."
+              className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          ) : (
+            <textarea
+              value={termsOfServiceEn}
+              onChange={(e) => setTermsOfServiceEn(e.target.value)}
+              rows={5}
+              placeholder="English Terms of Service..."
+              className="w-full resize-y rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          )}
         </div>
 
         <label className="flex items-center gap-2 text-sm text-[var(--portal-color-text)]">

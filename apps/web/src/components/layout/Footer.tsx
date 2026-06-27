@@ -13,14 +13,15 @@ export function Footer({ siteTitle }: FooterProps) {
         </p>
         <div className="flex gap-6">
           <a
-            href="#"
+            target="blank"
+            href={`${process.env.NEXT_PUBLIC_GITHUB_URL}`}
             className="text-[0.75rem] font-medium text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)]"
           >
             GitHub
           </a>
           {/* <a href="#" className="text-[0.75rem] font-medium text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)]">Twitter</a> */}
           <a
-            href="#"
+            href={`mailto:${process.env.NEXT_PUBLIC_EMAIL}`}
             className="text-[0.75rem] font-medium text-[var(--portal-color-text-secondary)] transition-colors hover:text-[var(--portal-color-primary)]"
           >
             Email

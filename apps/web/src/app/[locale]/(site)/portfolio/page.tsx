@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 interface Project {
@@ -9,16 +9,19 @@ interface Project {
   title: string;
   slug: string;
   description: string;
+  descriptionEn?: string | null;
   coverImage: string | null;
   liveUrl: string | null;
   repoUrl: string | null;
   techStack: string[];
   featured: boolean;
   logo?: string | null;
+  downloadLinks?: any;
 }
 
 export default function PortfolioPage() {
   const t = useTranslations('Portfolio');
+  const locale = useLocale();
   const [projects, setProjects] = useState<Project[]>([]);
   const [techStacks, setTechStacks] = useState<string[]>([]);
   const [activeTech, setActiveTech] = useState<string | null>(null);
@@ -185,6 +188,71 @@ export default function PortfolioPage() {
                       {t('featured')}
                     </span>
                   )}
+                  {project.downloadLinks &&
+                    (() => {
+                      try {
+                        const links =
+                          typeof project.downloadLinks === 'string'
+                            ? JSON.parse(project.downloadLinks)
+                            : project.downloadLinks;
+                        if (!Array.isArray(links) || links.length === 0) return null;
+                        const platforms = new Set(links.map((l) => l.platform));
+                        return (
+                          <div className="absolute flex gap-1" style={{ top: 10, right: 10 }}>
+                            {platforms.has('appstore') && (
+                              <span
+                                title="App Store"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-[10px] text-white"
+                              >
+                                🍎
+                              </span>
+                            )}
+                            {platforms.has('playstore') && (
+                              <span
+                                title="Google Play"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-[10px] text-white"
+                              >
+                                🤖
+                              </span>
+                            )}
+                            {platforms.has('macos') && (
+                              <span
+                                title="macOS"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-[10px] text-white"
+                              >
+                                💻
+                              </span>
+                            )}
+                            {platforms.has('windows') && (
+                              <span
+                                title="Windows"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-[10px] text-white"
+                              >
+                                🪟
+                              </span>
+                            )}
+                            {platforms.has('linux') && (
+                              <span
+                                title="Linux"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-[10px] text-white"
+                              >
+                                🐧
+                              </span>
+                            )}
+                            {platforms.has('apk') && (
+                              <span
+                                title="APK"
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-[7px] font-bold text-white leading-none"
+                              >
+                                APK
+                              </span>
+                            )}
+                          </div>
+                        );
+                      } catch {
+                        return null;
+                      }
+                    })()}
                 </div>
 
                 {/* Info */}
@@ -216,7 +284,9 @@ export default function PortfolioPage() {
                     className="line-clamp-2 text-[var(--portal-color-text-secondary)]"
                     style={{ fontSize: '.82rem', lineHeight: 1.6, marginBottom: '.8rem' }}
                   >
-                    {project.description}
+                    {locale === 'en' && project.descriptionEn
+                      ? project.descriptionEn
+                      : project.description}
                   </div>
                   {project.techStack.length > 0 && (
                     <div className="flex flex-wrap font-mono" style={{ gap: '.3rem' }}>
