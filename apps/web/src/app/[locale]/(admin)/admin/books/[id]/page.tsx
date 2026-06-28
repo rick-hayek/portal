@@ -22,8 +22,28 @@ export default function AdminEditBookPage({ params }: PageProps) {
   const [publisher, setPublisher] = useState('');
   const [translator, setTranslator] = useState('');
   const [isbn, setIsbn] = useState('');
+  const [publishYear, setPublishYear] = useState('');
+  const [originalBookId, setOriginalBookId] = useState('');
+  const [allBooks, setAllBooks] = useState<{ id: string; title: string; author: string }[]>([]);
   const [description, setDescription] = useState('');
   const [review, setReview] = useState('');
+
+  // Fetch all books for the original book dropdown selection
+  useEffect(() => {
+    async function loadBooksList() {
+      try {
+        const res = await fetch('/api/trpc/admin.bookList?batch=1');
+        const data = await res.json();
+        const list = data[0]?.result?.data?.json;
+        if (Array.isArray(list)) {
+          setAllBooks(list);
+        }
+      } catch (e) {
+        console.error('Failed to load books list', e);
+      }
+    }
+    loadBooksList();
+  }, []);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -44,6 +64,8 @@ export default function AdminEditBookPage({ params }: PageProps) {
         setPublisher(book.publisher ?? '');
         setTranslator(book.translator ?? '');
         setIsbn(book.isbn ?? '');
+        setPublishYear(book.publishYear ?? '');
+        setOriginalBookId(book.originalBookId ?? '');
         setDescription(book.description ?? '');
         setReview(book.review ?? '');
         if (book.coverImage) {
@@ -116,6 +138,8 @@ export default function AdminEditBookPage({ params }: PageProps) {
               publisher: publisher.trim() || null,
               translator: translator.trim() || null,
               isbn: isbn.trim() || null,
+              publishYear: publishYear.trim() || null,
+              originalBookId: originalBookId || null,
               description: description.trim() || null,
               review: review.trim() || null,
             },
@@ -296,6 +320,46 @@ export default function AdminEditBookPage({ params }: PageProps) {
               placeholder="e.g. 978-0132350884"
               className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
             />
+          </div>
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-3">
+          <div>
+            <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+              {t('fields.publishYear')} ({t('optional')})
+            </label>
+            <input
+              type="text"
+              value={publishYear}
+              onChange={(e) => setPublishYear(e.target.value)}
+              placeholder="e.g. 1943"
+              className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+              {t('fields.originalBook')} ({t('optional')})
+            </label>
+            <select
+              value={originalBookId}
+              onChange={(e) => setOriginalBookId(e.target.value)}
+              className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none h-[38px] appearance-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 0.75rem center',
+                backgroundSize: '1rem',
+              }}
+            >
+              <option value="">— {t('optional')} —</option>
+              {allBooks
+                .filter((b) => b.id !== id) // Filter out the book itself to prevent self-reference
+                .map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.title} ({b.author})
+                  </option>
+                ))}
+            </select>
           </div>
         </div>
 

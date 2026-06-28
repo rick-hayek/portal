@@ -177,6 +177,15 @@ textarea {
   overflow-x: auto;
   margin: 1.5em 0;
   font-size: 0.875em;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.prose-portal pre code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
 .prose-portal :not(pre)>code {

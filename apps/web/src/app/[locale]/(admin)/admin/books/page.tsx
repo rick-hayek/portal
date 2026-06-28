@@ -141,7 +141,15 @@ export default function AdminBooksPage() {
                       {book.publisher ?? '—'}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-3">
+                      <div className="flex items-center justify-end gap-3">
+                        <Link
+                          href={`/books/${book.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-green-600 hover:underline dark:text-green-400"
+                        >
+                          View
+                        </Link>
                         <Link
                           href={`/admin/books/${book.id}`}
                           className="text-sm font-medium text-[var(--portal-color-primary)] hover:underline"

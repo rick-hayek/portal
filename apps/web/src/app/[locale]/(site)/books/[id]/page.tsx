@@ -16,6 +16,12 @@ interface Book {
   publisher: string | null;
   translator: string | null;
   isbn: string | null;
+  publishYear: string | null;
+  originalBook: {
+    id: string;
+    title: string;
+    author: string;
+  } | null;
   description: string | null;
   review: string | null;
 }
@@ -169,24 +175,55 @@ export default function BookDetailPage() {
         {/* Right Side: Metadata and Review Content */}
         <div className="space-y-8">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[var(--portal-color-text)] mb-4 leading-tight">
+            <h1 className="text-3xl font-extrabold tracking-tight text-[var(--portal-color-text)] mb-2 leading-tight">
               {book.title}
             </h1>
+            {book.originalBook && (
+              <p className="text-sm font-[500] italic text-[var(--portal-color-text-secondary)] mb-4 tracking-wide">
+                <Link
+                  href={`/books/${book.originalBook.id}`}
+                  className="text-[var(--portal-color-primary)] hover:underline"
+                >
+                  {book.originalBook.title} by {book.originalBook.author}
+                </Link>
+              </p>
+            )}
 
             {/* Meta details list */}
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[var(--portal-color-text-secondary)]">
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs md:text-sm text-[var(--portal-color-text-secondary)]">
               <div>
                 <span className="font-semibold text-[var(--portal-color-text)]">
                   {t('fields.author')}:
                 </span>{' '}
                 {book.author}
               </div>
+              {book.originalBook && (
+                <div>
+                  <span className="font-semibold text-[var(--portal-color-text)]">
+                    {t('fields.originalBook')}:
+                  </span>{' '}
+                  <Link
+                    href={`/books/${book.originalBook.id}`}
+                    className="text-[var(--portal-color-primary)] hover:underline italic font-medium"
+                  >
+                    {book.originalBook.title}
+                  </Link>
+                </div>
+              )}
               {book.publisher && (
                 <div>
                   <span className="font-semibold text-[var(--portal-color-text)]">
                     {t('fields.publisher')}:
                   </span>{' '}
                   {book.publisher}
+                </div>
+              )}
+              {book.publishYear && (
+                <div>
+                  <span className="font-semibold text-[var(--portal-color-text)]">
+                    {t('fields.publishYear')}:
+                  </span>{' '}
+                  {book.publishYear}
                 </div>
               )}
               {book.translator && (

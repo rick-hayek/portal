@@ -17,6 +17,13 @@ export const bookRouter = router({
         where: { id: input.id },
         include: {
           likes: true,
+          originalBook: {
+            select: {
+              id: true,
+              title: true,
+              author: true,
+            },
+          },
         },
       });
       if (!book) return null;

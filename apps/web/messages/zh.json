@@ -173,9 +173,11 @@
       "author": "作者",
       "publisher": "出版社",
       "translator": "译者",
-      "isbn": "ISBN/书号",
-      "description": "内容简介",
-      "review": "我的书评"
+      "isbn": "ISBN",
+      "publishYear": "出版年份",
+      "originalBook": "原作",
+      "description": "简介",
+      "review": "书评 / 随感"
     },
     "noBooks": "暂无推荐书籍",
     "reactions": {

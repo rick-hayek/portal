@@ -221,14 +221,19 @@ model Book {
   coverImageURL  String?
   coverImage     String?  @db.Text
   author         String
-  publisher      String?
-  translator     String?
-  isbn           String?
-  description    String?  @db.Text
-  review         String?  @db.Text
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  likes          BookLike[]
+  publisher          String?
+  translator         String?
+  isbn               String?
+  publishYear        String?
+  description        String?  @db.Text
+  review             String?  @db.Text
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  likes              BookLike[]
+
+  originalBookId     String?
+  originalBook       Book?      @relation("BookTranslations", fields: [originalBookId], references: [id])
+  translations       Book[]     @relation("BookTranslations")
 }
 
 // ============ Book Likes & Dislikes ============
