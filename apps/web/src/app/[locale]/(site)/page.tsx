@@ -30,7 +30,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <div className="flex w-full flex-col">
       {/* HERO SECTION */}
-      <section className="flex min-h-screen w-full items-center justify-center pt-32 pb-16 px-8">
+      <section className="flex min-h-[70vh] sm:min-h-screen w-full items-center justify-center pt-20 pb-12 sm:pt-32 sm:pb-16 px-8">
         <div className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Hero Text */}
           <div>
@@ -106,6 +106,22 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </svg>
                 tRPC
               </span>
+              <span className="flex items-center gap-1.5">
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 3L2 20h20L12 3z M12 3v17 M2 20l10-8 10 8"
+                  />
+                </svg>
+                Prisma
+              </span>
             </div>
           </div>
 
@@ -120,21 +136,21 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <div className="w-2.5 h-2.5 rounded-full bg-[rgba(16,185,129,0.7)]"></div>
                 </div>
                 <span className="font-mono text-[0.65rem] text-[var(--portal-color-text-secondary)]">
-                  portal — zsh
+                  my-personal-portal — zsh
                 </span>
                 <div className="w-8"></div>
               </div>
 
               {/* Terminal Body */}
               <div className="p-6 font-mono text-[0.82rem] leading-[1.8] text-[var(--portal-color-text-secondary)]">
-                <div className="opacity-50">// Initializing Portal</div>
+                <div className="opacity-50">// Initializing Project</div>
                 <div>
                   <span className="text-violet-500">const</span>
                   <span className="text-[var(--portal-color-primary)]"> developer</span> = {'{ '}
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">name:</span>{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Rick'</span>,
+                  <span className="text-emerald-600 dark:text-emerald-400">'Rick Huang'</span>,
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">role:</span>{' '}
@@ -145,9 +161,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">stack:</span> [
-                  <span className="text-emerald-600 dark:text-emerald-400">'Next.js'</span>,{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'.NETCore'</span>,{' '}
                   <span className="text-emerald-600 dark:text-emerald-400">'TypeScript'</span>,{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Prisma'</span>],
+                  <span className="text-emerald-600 dark:text-emerald-400">'Vue'</span>,{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'Python'</span>,{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'Agentic AI'</span>],
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">status:</span>{' '}

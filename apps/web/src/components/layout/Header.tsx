@@ -78,45 +78,47 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
         </nav>
 
         {/* Right side */}
-        <div className="hidden items-center gap-3 md:flex">
-          <SearchDialog />
-          <LanguageSwitcher />
-          <ThemeSwitcher />
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="hidden items-center gap-3 md:flex">
+            <SearchDialog />
+            <LanguageSwitcher />
+            <ThemeSwitcher />
+          </div>
           <UserMenu />
-        </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] md:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-expanded={mobileOpen}
-        >
-          <span className="sr-only">Toggle menu</span>
-          {mobileOpen ? (
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          )}
-        </button>
+          {/* Mobile Menu Toggle */}
+          <button
+            className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] md:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-expanded={mobileOpen}
+          >
+            <span className="sr-only">Toggle menu</span>
+            {mobileOpen ? (
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Nav - drops below header */}
       {mobileOpen && (
-        <div className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-4 shadow-lg md:hidden">
+        <div className="absolute top-14 left-0 right-0 border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-4 shadow-lg md:hidden">
           <nav className="flex flex-col gap-1">
             {displayNavItems.map((item) => {
               const labelKey = item.label.toLowerCase() as any;
@@ -146,7 +148,6 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
             <SearchDialog />
             <LanguageSwitcher />
             <ThemeSwitcher />
-            <UserMenu />
           </div>
         </div>
       )}

@@ -9,13 +9,17 @@
     "links": "Links",
     "about": "About",
     "tools": "Tools",
-    "admin": "Admin"
+    "books": "Books",
+    "admin": "Admin",
+    "profile": "Profile",
+    "signOut": "Sign Out",
+    "signIn": "Sign In"
   },
   "Index": {
     "badge": "Full-Stack Developer",
-    "title1": "Building the",
-    "title2": "Modern Web",
-    "description": "Focused on TypeScript & Next.js ecosystem. I write clean code, share learnings, and build tools that developers love.",
+    "title1": "Reflections on",
+    "title2": "Life & Work",
+    "description": "A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.",
     "exploreBlog": "Explore Blog",
     "viewProjects": "View Projects",
     "latestPosts": "Latest Posts",
@@ -157,5 +161,55 @@
     "error": "Invalid JWT format",
     "copy": "Copy to clipboard",
     "copied": "Copied!"
+  },
+  "Books": {
+    "title": "Recommended Books",
+    "meta": "Books I have read, reflections, and technical recommendations.",
+    "optional": "optional",
+    "fields": {
+      "title": "Book Title",
+      "coverImageURL": "Cover Image URL",
+      "coverImage": "Upload Cover Image (Max 500KB)",
+      "author": "Author",
+      "publisher": "Publisher",
+      "translator": "Translator",
+      "isbn": "ISBN",
+      "description": "Description",
+      "review": "Book Review / Thoughts"
+    },
+    "noBooks": "No recommended books yet",
+    "reactions": {
+      "loginRequired": "Log in to like or dislike",
+      "like": "Useful",
+      "dislike": "Mediocre"
+    }
+  },
+  "Profile": {
+    "title": "Profile & Account Settings",
+    "subtitle": "Manage your personal account info and modify your password.",
+    "accountInfo": "Account Info",
+    "changePassword": "Change Password",
+    "setPassword": "Set Local Password",
+    "setPasswordDesc": "You are currently signed in via GitHub. Setting a local password allows you to log in directly using your email and password.",
+    "fields": {
+      "name": "Name",
+      "email": "Email Address",
+      "role": "Account Role",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password"
+    },
+    "placeholders": {
+      "currentPassword": "Enter your current password",
+      "newPassword": "Enter new password (min 6 chars)",
+      "confirmPassword": "Confirm your new password"
+    },
+    "submit": "Update Password",
+    "loading": "Saving...",
+    "success": "Password changed successfully!",
+    "validation": {
+      "mismatch": "Passwords do not match!",
+      "minLength": "Password must be at least 6 characters long!"
+    }
   }
 }

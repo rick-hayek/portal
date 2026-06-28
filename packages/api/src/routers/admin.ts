@@ -276,6 +276,89 @@ export const adminRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => ctx.prisma.project.delete({ where: { id: input.id } })),
 
+  // ── Books CRUD ─────────────────────────────────
+
+  /** List all books (admin) */
+  bookList: adminProcedure.query(({ ctx }) =>
+    ctx.prisma.book.findMany({
+      orderBy: { createdAt: 'desc' },
+    }),
+  ),
+
+  /** Get book by ID */
+  bookGet: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => ctx.prisma.book.findUnique({ where: { id: input.id } })),
+
+  /** Create book */
+  bookCreate: adminProcedure
+    .input(
+      z.object({
+        title: z.string().min(1),
+        coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
+        coverImage: z.string().nullable().optional().or(z.literal('')),
+        author: z.string().min(1),
+        publisher: z.string().nullable().optional().or(z.literal('')),
+        translator: z.string().nullable().optional().or(z.literal('')),
+        isbn: z.string().nullable().optional().or(z.literal('')),
+        description: z.string().nullable().optional().or(z.literal('')),
+        review: z.string().nullable().optional().or(z.literal('')),
+      }),
+    )
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.book.create({
+        data: {
+          title: input.title,
+          coverImageURL: input.coverImageURL || null,
+          coverImage: input.coverImage || null,
+          author: input.author,
+          publisher: input.publisher || null,
+          translator: input.translator || null,
+          isbn: input.isbn || null,
+          description: input.description || null,
+          review: input.review || null,
+        },
+      }),
+    ),
+
+  /** Update book */
+  bookUpdate: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().min(1).optional(),
+        coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
+        coverImage: z.string().nullable().optional().or(z.literal('')),
+        author: z.string().min(1).optional(),
+        publisher: z.string().nullable().optional().or(z.literal('')),
+        translator: z.string().nullable().optional().or(z.literal('')),
+        isbn: z.string().nullable().optional().or(z.literal('')),
+        description: z.string().nullable().optional().or(z.literal('')),
+        review: z.string().nullable().optional().or(z.literal('')),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      const { id, ...data } = input;
+      return ctx.prisma.book.update({
+        where: { id },
+        data: {
+          ...data,
+          coverImageURL: data.coverImageURL || null,
+          coverImage: data.coverImage || null,
+          publisher: data.publisher || null,
+          translator: data.translator || null,
+          isbn: data.isbn || null,
+          description: data.description || null,
+          review: data.review || null,
+        },
+      });
+    }),
+
+  /** Delete book */
+  bookDelete: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ ctx, input }) => ctx.prisma.book.delete({ where: { id: input.id } })),
+
   // ── Links CRUD ─────────────────────────────────
 
   /** List all links (admin) */

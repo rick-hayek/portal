@@ -141,6 +141,9 @@ importers:
       '@trpc/server':
         specifier: ^11.10.0
         version: 11.10.0(typescript@5.9.3)
+      bcryptjs:
+        specifier: ^3.0.3
+        version: 3.0.3
       meilisearch:
         specifier: ^0.55.0
         version: 0.55.0
@@ -150,6 +153,13 @@ importers:
       zod:
         specifier: ^4.3.6
         version: 4.3.6
+    devDependencies:
+      '@types/bcryptjs':
+        specifier: ^3.0.0
+        version: 3.0.0
+      '@types/node':
+        specifier: ^20
+        version: 20.19.33
 
   packages/config:
     dependencies:

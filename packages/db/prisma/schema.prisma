@@ -23,6 +23,7 @@ model User {
   posts    Post[]
   sessions Session[]
   accounts Account[]
+  bookLikes BookLike[]
 }
 
 model Account {
@@ -210,4 +211,39 @@ model Reference {
   htmlCode  String   @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// ============ Books ============
+
+model Book {
+  id             String   @id @default(cuid())
+  title          String
+  coverImageURL  String?
+  coverImage     String?  @db.Text
+  author         String
+  publisher      String?
+  translator     String?
+  isbn           String?
+  description    String?  @db.Text
+  review         String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  likes          BookLike[]
+}
+
+// ============ Book Likes & Dislikes ============
+
+model BookLike {
+  id        String   @id @default(cuid())
+  bookId    String
+  userId    String
+  type      String   // "LIKE" or "DISLIKE"
+  createdAt DateTime @default(now())
+
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([bookId, userId])
+  @@index([bookId])
+  @@index([userId])
 }

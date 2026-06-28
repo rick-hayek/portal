@@ -19,6 +19,7 @@ async function main() {
   await prisma.session.deleteMany();
   await prisma.account.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.book.deleteMany();
 
   // ── Admin User ──────────────────────────────────────
   const passwordHash = await bcrypt.hash('admin123', 12);
@@ -328,6 +329,37 @@ const elapsedMs = Date.now() - startTime;
     ],
   });
   console.log('  ✓ Portfolio projects: 3');
+
+  // ── Sample Books ─────────────────────────────────────
+  await prisma.book.createMany({
+    data: [
+      {
+        title: 'Clean Code: A Handbook of Agile Software Craftsmanship',
+        coverImageURL:
+          'https://images-na.ssl-images-amazon.com/images/I/41xShTxONQL._SX376_BO1,204,203,200_.jpg',
+        author: 'Robert C. Martin',
+        publisher: 'Prentice Hall',
+        isbn: '978-0132350884',
+        description:
+          "Even bad code can function. But if code isn't clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. But it doesn't have to be that way.",
+        review:
+          'A must-read for every professional developer. It sets the foundational principles of writing clean, maintainable, and readable code. The examples are excellent and remain highly relevant.',
+      },
+      {
+        title: 'Designing Data-Intensive Applications',
+        coverImageURL:
+          'https://images-na.ssl-images-amazon.com/images/I/51gP9mXxp5L._SX379_BO1,204,203,200_.jpg',
+        author: 'Martin Kleppmann',
+        publisher: "O'Reilly Media",
+        isbn: '978-1449373320',
+        description:
+          'Data is at the center of many challenges in system design today. Difficult issues need to be figured out, such as scalability, consistency, reliability, efficiency, and maintainability.',
+        review:
+          'This is the absolute gold standard for understanding database internals, replication, partitioning, and modern system architectures. Highly recommended for senior engineers designing distributed systems.',
+      },
+    ],
+  });
+  console.log('  ✓ Sample Books: 2');
 
   // ── Sample Page Views ────────────────────────────────
   const paths = [
