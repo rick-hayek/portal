@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ensurePostsIndex, indexPost, meili, POSTS_INDEX, removePostFromIndex } from '../search';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
 
 export const adminRouter = router({
@@ -116,6 +117,16 @@ export const adminRouter = router({
         },
         include: { category: true },
       });
+
+      if (post.status === 'published') {
+        try {
+          await ensurePostsIndex();
+          await indexPost(post);
+        } catch (e) {
+          console.error('Failed to index post in MeiliSearch:', e);
+        }
+      }
+
       return post;
     }),
 
@@ -164,17 +175,39 @@ export const adminRouter = router({
         });
       }
 
-      return ctx.prisma.post.update({
+      const updatedPost = await ctx.prisma.post.update({
         where: { id },
         data,
         include: { category: true },
       });
+
+      // Sync to MeiliSearch
+      try {
+        await ensurePostsIndex();
+        if (updatedPost.status === 'published') {
+          await indexPost(updatedPost);
+        } else {
+          await removePostFromIndex(updatedPost.id);
+        }
+      } catch (e) {
+        console.error('Failed to sync post in MeiliSearch:', e);
+      }
+
+      return updatedPost;
     }),
 
   /** Delete post */
   postDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.post.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.delete({ where: { id: input.id } });
+      try {
+        await removePostFromIndex(input.id);
+      } catch (e) {
+        console.error('Failed to remove post from MeiliSearch:', e);
+      }
+      return post;
+    }),
 
   // ── Comment Moderation ─────────────────────────────
 
@@ -294,7 +327,10 @@ export const adminRouter = router({
   bookCreate: adminProcedure
     .input(
       z.object({
-        slug: z.string().min(1).regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores'),
+        slug: z
+          .string()
+          .min(1)
+          .regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores'),
         title: z.string().min(1),
         coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
         coverImage: z.string().nullable().optional().or(z.literal('')),
@@ -332,7 +368,11 @@ export const adminRouter = router({
     .input(
       z.object({
         id: z.string(),
-        slug: z.string().min(1).regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores').optional(),
+        slug: z
+          .string()
+          .min(1)
+          .regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores')
+          .optional(),
         title: z.string().min(1).optional(),
         coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
         coverImage: z.string().nullable().optional().or(z.literal('')),
@@ -500,4 +540,34 @@ export const adminRouter = router({
         where: { id: input.id },
       }),
     ),
+
+  /** Sync all posts to MeiliSearch index */
+  searchSync: adminProcedure.mutation(async ({ ctx }) => {
+    const posts = await ctx.prisma.post.findMany({
+      where: { status: 'published' },
+      include: { category: true },
+    });
+    try {
+      await ensurePostsIndex();
+      await meili.index(POSTS_INDEX).deleteAllDocuments();
+      if (posts.length > 0) {
+        await meili.index(POSTS_INDEX).addDocuments(
+          posts.map((post) => ({
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            excerpt: post.excerpt ?? '',
+            content: post.content,
+            status: post.status,
+            categoryName: post.category?.name ?? '',
+            categorySlug: post.category?.slug ?? '',
+            publishedAt: post.publishedAt?.toISOString() ?? null,
+          })),
+        );
+      }
+      return { success: true, count: posts.length };
+    } catch (e: any) {
+      throw new Error(`MeiliSearch sync failed: ${e?.message ?? e}`);
+    }
+  }),
 });

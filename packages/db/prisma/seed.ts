@@ -382,6 +382,92 @@ const elapsedMs = Date.now() - startTime;
   await prisma.pageView.createMany({ data: pvData });
   console.log('  ✓ Page views: 50');
 
+  // ── Sync to MeiliSearch ──────────────────────────────
+  try {
+    const meiliUrl = process.env.MEILISEARCH_URL || 'http://localhost:7700';
+    const meiliKey = process.env.MEILISEARCH_KEY || 'portal_meili_dev_key';
+
+    console.log('\n🔄 Syncing posts to MeiliSearch...');
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${meiliKey}`,
+    };
+
+    // Check health
+    const healthRes = await fetch(`${meiliUrl}/health`);
+    if (healthRes.ok) {
+      // Create/Get index
+      await fetch(`${meiliUrl}/indexes/posts`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ primaryKey: 'id' }),
+      });
+
+      // Update settings
+      await fetch(`${meiliUrl}/indexes/posts/settings`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({
+          searchableAttributes: ['title', 'excerpt', 'content', 'categoryName'],
+          filterableAttributes: ['status', 'categorySlug'],
+          sortableAttributes: ['publishedAt', 'title'],
+          displayedAttributes: [
+            'id',
+            'title',
+            'slug',
+            'excerpt',
+            'categoryName',
+            'categorySlug',
+            'publishedAt',
+          ],
+        }),
+      });
+
+      // Fetch posts from database to index
+      const dbPosts = await prisma.post.findMany({
+        where: { status: 'published' },
+        include: { category: true },
+      });
+
+      const docs = dbPosts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt ?? '',
+        content: post.content,
+        status: post.status,
+        categoryName: post.category?.name ?? '',
+        categorySlug: post.category?.slug ?? '',
+        publishedAt: post.publishedAt?.toISOString() ?? null,
+      }));
+
+      if (docs.length > 0) {
+        // Clear old indexing
+        await fetch(`${meiliUrl}/indexes/posts/documents`, {
+          method: 'DELETE',
+          headers,
+        });
+
+        // Push new indexing
+        const indexRes = await fetch(`${meiliUrl}/indexes/posts/documents`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(docs),
+        });
+
+        if (indexRes.ok) {
+          console.log(`  ✓ Synced ${docs.length} posts to MeiliSearch`);
+        } else {
+          console.log('  × Failed to upload documents to MeiliSearch');
+        }
+      }
+    } else {
+      console.log('  × MeiliSearch is not healthy, skipping sync');
+    }
+  } catch (err: any) {
+    console.warn('  ⚠️ MeiliSearch sync skipped:', err.message || err);
+  }
+
   console.log('\n✅ Seed complete!');
 }
 
