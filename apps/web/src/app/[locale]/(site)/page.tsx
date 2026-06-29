@@ -165,7 +165,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <span className="text-emerald-600 dark:text-emerald-400">'TypeScript'</span>,{' '}
                   <span className="text-emerald-600 dark:text-emerald-400">'Vue'</span>,{' '}
                   <span className="text-emerald-600 dark:text-emerald-400">'Python'</span>,{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Agentic AI'</span>],
+                  <span className="text-emerald-600 dark:text-emerald-400">'AI Agent'</span>],
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">status:</span>{' '}
@@ -207,9 +207,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <span className="whitespace-nowrap font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)]">
                     {post.publishedAt
                       ? new Date(post.publishedAt).toLocaleDateString(locale, {
-                          month: 'short',
-                          day: 'numeric',
-                        })
+                        month: 'short',
+                        day: 'numeric',
+                      })
                       : '—'}
                   </span>
                   <div>
