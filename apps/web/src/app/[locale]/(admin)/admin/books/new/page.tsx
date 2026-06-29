@@ -10,6 +10,7 @@ export default function AdminNewBookPage() {
   const [isPending, startTransition] = useTransition();
 
   const [title, setTitle] = useState('');
+  const [slug, setSlug] = useState('');
   const [author, setAuthor] = useState('');
   const [coverSource, setCoverSource] = useState<'url' | 'upload'>('url');
   const [coverImageURL, setCoverImageURL] = useState('');
@@ -60,8 +61,8 @@ export default function AdminNewBookPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!title.trim() || !author.trim()) {
-      setError('Title and Author are required.');
+    if (!title.trim() || !author.trim() || !slug.trim()) {
+      setError('Title, Author, and URL Slug are required.');
       return;
     }
     if (coverSource === 'url' && coverImageURL.trim() && !coverImageURL.startsWith('http')) {
@@ -82,6 +83,7 @@ export default function AdminNewBookPage() {
         body: JSON.stringify({
           '0': {
             json: {
+              slug: slug.trim().toLowerCase(),
               title: title.trim(),
               author: author.trim(),
               coverImageURL: coverSource === 'url' && coverImageURL ? coverImageURL.trim() : null,
@@ -134,7 +136,7 @@ export default function AdminNewBookPage() {
       {error && <div className="rounded-lg bg-red-500/10 p-4 text-sm text-red-500">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-3">
           <div>
             <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
               Book Title *
@@ -143,7 +145,16 @@ export default function AdminNewBookPage() {
               type="text"
               required
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setSlug(
+                  e.target.value
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/(^-|-$)/g, ''),
+                );
+              }}
               placeholder="e.g. Clean Code"
               className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
             />
@@ -158,6 +169,19 @@ export default function AdminNewBookPage() {
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
               placeholder="e.g. Robert C. Martin"
+              className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+              URL Slug *
+            </label>
+            <input
+              type="text"
+              required
+              value={slug}
+              onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))}
+              placeholder="e.g. clean-code"
               className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
             />
           </div>

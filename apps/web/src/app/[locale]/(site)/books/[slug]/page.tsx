@@ -9,6 +9,7 @@ import { Link } from '@/i18n/routing';
 
 interface Book {
   id: string;
+  slug: string;
   title: string;
   coverImageURL: string | null;
   coverImage: string | null;
@@ -19,6 +20,7 @@ interface Book {
   publishYear: string | null;
   originalBook: {
     id: string;
+    slug: string;
     title: string;
     author: string;
   } | null;
@@ -28,7 +30,7 @@ interface Book {
 
 export default function BookDetailPage() {
   const params = useParams();
-  const id = params.id as string;
+  const slug = params.slug as string;
   const t = useTranslations('Books');
 
   const [book, setBook] = useState<Book | null>(null);
@@ -44,7 +46,7 @@ export default function BookDetailPage() {
     try {
       const res = await fetch(
         '/api/trpc/book.get?batch=1&input=' +
-          encodeURIComponent(JSON.stringify({ '0': { json: { id } } })),
+          encodeURIComponent(JSON.stringify({ '0': { json: { slug } } })),
       );
       const data = await res.json();
       const bookData = data[0]?.result?.data?.json;
@@ -59,13 +61,13 @@ export default function BookDetailPage() {
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [slug]);
 
   useEffect(() => {
-    if (id) {
+    if (slug) {
       loadBook();
     }
-  }, [id, loadBook]);
+  }, [slug, loadBook]);
 
   async function handleReact(type: 'LIKE' | 'DISLIKE') {
     if (status !== 'authenticated') return;
@@ -92,7 +94,7 @@ export default function BookDetailPage() {
         body: JSON.stringify({
           '0': {
             json: {
-              bookId: id,
+              bookId: book?.id,
               type: newReaction,
             },
           },
@@ -181,7 +183,7 @@ export default function BookDetailPage() {
             {book.originalBook && (
               <p className="text-sm font-[500] italic text-[var(--portal-color-text-secondary)] mb-4 tracking-wide">
                 <Link
-                  href={`/books/${book.originalBook.id}`}
+                  href={`/books/${book.originalBook.slug}`}
                   className="text-[var(--portal-color-primary)] hover:underline"
                 >
                   {book.originalBook.title} by {book.originalBook.author}
@@ -203,7 +205,7 @@ export default function BookDetailPage() {
                     {t('fields.originalBook')}:
                   </span>{' '}
                   <Link
-                    href={`/books/${book.originalBook.id}`}
+                    href={`/books/${book.originalBook.slug}`}
                     className="text-[var(--portal-color-primary)] hover:underline italic font-medium"
                   >
                     {book.originalBook.title}

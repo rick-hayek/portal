@@ -9,17 +9,18 @@ export const bookRouter = router({
     });
   }),
 
-  /** Get a single book by ID with likes counts & user reaction state */
+  /** Get a single book by SLUG with likes counts & user reaction state */
   get: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ slug: z.string() }))
     .query(async ({ ctx, input }) => {
       const book = await ctx.prisma.book.findUnique({
-        where: { id: input.id },
+        where: { slug: input.slug },
         include: {
           likes: true,
           originalBook: {
             select: {
               id: true,
+              slug: true,
               title: true,
               author: true,
             },

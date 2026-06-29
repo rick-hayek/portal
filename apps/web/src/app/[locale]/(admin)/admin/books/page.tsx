@@ -6,6 +6,7 @@ import { Link, useRouter } from '@/i18n/routing';
 
 interface Book {
   id: string;
+  slug: string;
   title: string;
   coverImageURL: string | null;
   coverImage: string | null;
@@ -143,7 +144,7 @@ export default function AdminBooksPage() {
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-3">
                         <Link
-                          href={`/books/${book.id}`}
+                          href={`/books/${book.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-sm font-medium text-green-600 hover:underline dark:text-green-400"

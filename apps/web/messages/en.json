@@ -163,7 +163,8 @@
     "copied": "Copied!"
   },
   "Books": {
-    "title": "Recommended Books",
+    "title": "Books",
+    "recommendedBooks": "Recommended Books",
     "meta": "Books I have read, reflections, and technical recommendations.",
     "optional": "optional",
     "fields": {

@@ -6,6 +6,7 @@ import { Link } from '@/i18n/routing';
 
 interface Book {
   id: string;
+  slug: string;
   title: string;
   coverImageURL: string | null;
   coverImage: string | null;
@@ -44,19 +45,31 @@ export default function PublicBooksPage({ params }: PageProps) {
   }, [loadBooks]);
 
   return (
-    <div className="mx-auto max-w-[1200px] px-8 py-16">
-      {/* Header */}
-      <div className="mb-12 text-center">
-        <div className="mb-3 inline-block rounded-full bg-[var(--portal-color-primary-soft)] px-3.5 py-1 text-[0.72rem] font-semibold text-[var(--portal-color-primary)] uppercase tracking-wider">
-          📚 {t('title')}
+    <div className="border-t border-b border-compat-soft bg-[var(--portal-color-surface)]">
+      <div style={{ padding: '5rem 2rem', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+        {/* Section header */}
+        <div className="flex items-baseline" style={{ gap: '.8rem', marginBottom: '2.5rem' }}>
+          <span
+            style={{
+              width: 28,
+              height: 2,
+              background: 'var(--portal-color-primary)',
+              flexShrink: 0,
+            }}
+          />
+          <span
+            className="font-mono uppercase text-[var(--portal-color-primary)]"
+            style={{ fontSize: '.7rem', fontWeight: 500, letterSpacing: '.1em' }}
+          >
+            {t('recommendedBooks')}
+          </span>
+          <h1
+            className="text-[var(--portal-color-text)]"
+            style={{ fontSize: '1.6rem', fontWeight: 700, letterSpacing: '-.03em' }}
+          >
+            {t('title')}
+          </h1>
         </div>
-        <h1 className="text-4xl font-extrabold tracking-tight text-[var(--portal-color-text)] mb-3">
-          {t('title')}
-        </h1>
-        <p className="mx-auto max-w-2xl text-[0.95rem] leading-[1.6] text-[var(--portal-color-text-secondary)]">
-          {t('meta')}
-        </p>
-      </div>
 
       {loading ? (
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -81,7 +94,7 @@ export default function PublicBooksPage({ params }: PageProps) {
             return (
               <Link
                 key={book.id}
-                href={`/books/${book.id}`}
+                href={`/books/${book.slug}`}
                 className="group flex flex-col no-underline"
               >
                 {/* Book Cover Container */}
@@ -118,6 +131,7 @@ export default function PublicBooksPage({ params }: PageProps) {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 }

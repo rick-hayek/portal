@@ -334,6 +334,7 @@ const elapsedMs = Date.now() - startTime;
   await prisma.book.createMany({
     data: [
       {
+        slug: 'clean-code',
         title: 'Clean Code: A Handbook of Agile Software Craftsmanship',
         coverImageURL:
           'https://images-na.ssl-images-amazon.com/images/I/41xShTxONQL._SX376_BO1,204,203,200_.jpg',
@@ -346,6 +347,7 @@ const elapsedMs = Date.now() - startTime;
           'A must-read for every professional developer. It sets the foundational principles of writing clean, maintainable, and readable code. The examples are excellent and remain highly relevant.',
       },
       {
+        slug: 'ddia',
         title: 'Designing Data-Intensive Applications',
         coverImageURL:
           'https://images-na.ssl-images-amazon.com/images/I/51gP9mXxp5L._SX379_BO1,204,203,200_.jpg',

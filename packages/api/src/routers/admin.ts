@@ -294,6 +294,7 @@ export const adminRouter = router({
   bookCreate: adminProcedure
     .input(
       z.object({
+        slug: z.string().min(1).regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores'),
         title: z.string().min(1),
         coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
         coverImage: z.string().nullable().optional().or(z.literal('')),
@@ -310,6 +311,7 @@ export const adminRouter = router({
     .mutation(({ ctx, input }) =>
       ctx.prisma.book.create({
         data: {
+          slug: input.slug.toLowerCase().trim(),
           title: input.title,
           coverImageURL: input.coverImageURL || null,
           coverImage: input.coverImage || null,
@@ -330,6 +332,7 @@ export const adminRouter = router({
     .input(
       z.object({
         id: z.string(),
+        slug: z.string().min(1).regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores').optional(),
         title: z.string().min(1).optional(),
         coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
         coverImage: z.string().nullable().optional().or(z.literal('')),
@@ -349,6 +352,7 @@ export const adminRouter = router({
         where: { id },
         data: {
           ...data,
+          slug: data.slug ? data.slug.toLowerCase().trim() : undefined,
           coverImageURL: data.coverImageURL || null,
           coverImage: data.coverImage || null,
           publisher: data.publisher || null,
