@@ -46,7 +46,7 @@ export default function PublicBooksPage({ params }: PageProps) {
 
   return (
     <div className="border-t border-b border-compat-soft bg-[var(--portal-color-surface)]">
-      <div style={{ padding: '5rem 2rem', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      <div className="pt-8 md:pt-24 pb-12 md:pb-20 px-4 md:px-8 max-w-[1200px] mx-auto w-full">
         {/* Section header */}
         <div className="flex items-baseline" style={{ gap: '.8rem', marginBottom: '2.5rem' }}>
           <span
@@ -72,12 +72,14 @@ export default function PublicBooksPage({ params }: PageProps) {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 sm:gap-x-8 sm:gap-y-12">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="animate-pulse space-y-4">
-                <div className="aspect-[3/4] w-full rounded-xl bg-[var(--portal-color-surface-alt)]" />
-                <div className="h-4 w-3/4 rounded bg-[var(--portal-color-surface-alt)]" />
-                <div className="h-3 w-1/2 rounded bg-[var(--portal-color-surface-alt)]" />
+              <div key={i} className="animate-pulse flex flex-row sm:flex-col gap-4 sm:gap-0 items-start">
+                <div className="aspect-[3/4] w-20 sm:w-full rounded-xl bg-[var(--portal-color-surface-alt)] mb-0 sm:mb-4 shrink-0" />
+                <div className="flex-1 space-y-2 py-1 w-full">
+                  <div className="h-4 w-3/4 rounded bg-[var(--portal-color-surface-alt)]" />
+                  <div className="h-3 w-1/2 rounded bg-[var(--portal-color-surface-alt)]" />
+                </div>
               </div>
             ))}
           </div>
@@ -90,17 +92,17 @@ export default function PublicBooksPage({ params }: PageProps) {
             <p className="text-[var(--portal-color-text-secondary)] font-medium">{t('noBooks')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 sm:gap-x-8 sm:gap-y-12">
             {books.map((book) => {
               const coverSrc = book.coverImage ?? book.coverImageURL ?? '';
               return (
                 <Link
                   key={book.id}
                   href={`/books/${book.slug}`}
-                  className="group flex flex-col no-underline"
+                  className="group flex flex-row sm:flex-col gap-4 sm:gap-0 no-underline items-start"
                 >
                   {/* Book Cover Container */}
-                  <div className="relative mb-4 aspect-[3/4] w-full overflow-hidden rounded-xl bg-[var(--portal-color-surface-alt)] shadow-[0_8px_20px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:-translate-y-2 group-hover:rotate-1 group-hover:shadow-[0_16px_30px_rgba(0,0,0,0.22)] border border-[var(--portal-color-border)]/50">
+                  <div className="relative mb-0 sm:mb-4 aspect-[3/4] w-20 sm:w-full shrink-0 overflow-hidden rounded-xl bg-[var(--portal-color-surface-alt)] shadow-[0_8px_20px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:-translate-y-2 group-hover:rotate-1 group-hover:shadow-[0_16px_30px_rgba(0,0,0,0.22)] border border-[var(--portal-color-border)]/50">
                     {coverSrc ? (
                       <img
                         src={coverSrc}
@@ -120,7 +122,7 @@ export default function PublicBooksPage({ params }: PageProps) {
                   </div>
 
                   {/* Info */}
-                  <div className="space-y-1 pl-1">
+                  <div className="space-y-1.5 pl-1 flex-1 py-1">
                     <h3 className="line-clamp-2 text-sm font-bold tracking-tight text-[var(--portal-color-text)] transition-colors group-hover:text-[var(--portal-color-primary)]">
                       {book.title}
                     </h3>

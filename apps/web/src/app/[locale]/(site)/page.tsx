@@ -215,33 +215,40 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <Link
                     key={post.id}
                     href={`/blog/${post.slug}`}
-                    className="group text-inherit no-underline transition-all duration-300 ease-out hover:bg-[var(--portal-color-primary-soft)] hover:border-transparent hover:pl-6 grid grid-cols-[96px_1fr_auto] gap-6 items-baseline py-5 px-4 border-b border-compat-soft cursor-pointer rounded-xl hover:shadow-[0_4px_20px_rgba(107,142,201,0.05)]"
+                    className="group text-inherit no-underline transition-all duration-300 ease-out hover:bg-[var(--portal-color-primary-soft)] hover:border-transparent md:hover:pl-6 grid grid-cols-1 md:grid-cols-[96px_1fr_auto] gap-2 md:gap-6 items-baseline py-5 px-4 border-b border-compat-soft cursor-pointer rounded-xl hover:shadow-[0_4px_20px_rgba(107,142,201,0.05)]"
                   >
-                    <span className="whitespace-nowrap font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)]">
+                    {/* Desktop Date */}
+                    <span className="hidden md:inline whitespace-nowrap font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)]">
                       {formattedDate}
                     </span>
-                  <div>
-                    {post.category && (
-                      <span className="inline-block text-[0.6rem] font-semibold tracking-widest uppercase text-[var(--portal-color-primary)] py-0.5 px-2 bg-[var(--portal-color-primary-soft)] rounded-[6px] mb-1.5">
-                        {post.category.name}
-                      </span>
-                    )}
-                    <div className="text-base font-semibold leading-normal tracking-tight text-[var(--portal-color-text)] mb-1 group-hover:text-[var(--portal-color-primary)] transition-colors duration-300">
-                      {post.title}
-                    </div>
-                    {post.excerpt && (
-                      <div className="text-[0.82rem] leading-relaxed text-[var(--portal-color-text-secondary)]">
-                        {post.excerpt}
+                    <div className="w-full">
+                      <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                        {/* Mobile Date */}
+                        <span className="font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)] md:hidden">
+                          {formattedDate}
+                        </span>
+                        {post.category && (
+                          <span className="inline-block text-[0.6rem] font-semibold tracking-widest uppercase text-[var(--portal-color-primary)] py-0.5 px-2 bg-[var(--portal-color-primary-soft)] rounded-[6px]">
+                            {post.category.name}
+                          </span>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <span className="text-[18px] text-[var(--portal-color-primary)] opacity-0 -translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0">
-                    →
-                  </span>
-                </Link>
-              );
-            })
-          ) : (
+                      <div className="text-base font-semibold leading-normal tracking-tight text-[var(--portal-color-text)] mb-1 group-hover:text-[var(--portal-color-primary)] transition-colors duration-300">
+                        {post.title}
+                      </div>
+                      {post.excerpt && (
+                        <div className="text-[0.82rem] leading-relaxed text-[var(--portal-color-text-secondary)]">
+                          {post.excerpt}
+                        </div>
+                      )}
+                    </div>
+                    <span className="hidden md:inline text-[18px] text-[var(--portal-color-primary)] opacity-0 -translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0">
+                      →
+                    </span>
+                  </Link>
+                );
+              })
+            ) : (
               <p className="py-12 text-center text-[var(--portal-color-text-secondary)]">
                 No articles published yet.
               </p>

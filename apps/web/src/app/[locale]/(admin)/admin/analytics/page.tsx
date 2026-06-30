@@ -96,21 +96,23 @@ export default function AdminAnalyticsPage() {
             No data in range
           </p>
         ) : (
-          <div className="flex items-end gap-1" style={{ height: 160 }}>
-            {data.viewsByDay.map((d) => (
-              <div key={d.date} className="group relative flex-1" style={{ height: '100%' }}>
-                <div
-                  className="absolute bottom-0 w-full rounded-t bg-[var(--portal-color-primary)] transition-all group-hover:opacity-80"
-                  style={{
-                    height: `${(d.views / maxViews) * 100}%`,
-                    minHeight: d.views > 0 ? 4 : 0,
-                  }}
-                />
-                <div className="absolute -top-6 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-[var(--portal-color-text)] px-1.5 py-0.5 text-xs text-[var(--portal-color-background)] group-hover:block">
-                  {d.views} views
+          <div className="w-full overflow-x-auto pb-2 scrollbar-none" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className="flex items-end gap-0.5 md:gap-1 min-w-[400px] md:min-w-0" style={{ height: 160 }}>
+              {data.viewsByDay.map((d) => (
+                <div key={d.date} className="group relative flex-1" style={{ height: '100%' }}>
+                  <div
+                    className="absolute bottom-0 w-full rounded-t bg-[var(--portal-color-primary)] transition-all group-hover:opacity-80"
+                    style={{
+                      height: `${(d.views / maxViews) * 100}%`,
+                      minHeight: d.views > 0 ? 4 : 0,
+                    }}
+                  />
+                  <div className="absolute -top-6 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-[var(--portal-color-text)] px-1.5 py-0.5 text-xs text-[var(--portal-color-background)] group-hover:block">
+                    {d.views} views
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </div>

@@ -31,19 +31,19 @@ export default function PortfolioPage() {
     Promise.all([
       fetch(
         '/api/trpc/portfolio.list?batch=1&input=' +
-          encodeURIComponent(
-            JSON.stringify({
-              '0': { json: activeTech ? { tech: activeTech } : {} },
-            }),
-          ),
+        encodeURIComponent(
+          JSON.stringify({
+            '0': { json: activeTech ? { tech: activeTech } : {} },
+          }),
+        ),
       ).then((r) => r.json()),
       fetch(
         '/api/trpc/portfolio.techStacks?batch=1&input=' +
-          encodeURIComponent(
-            JSON.stringify({
-              '0': { json: null },
-            }),
-          ),
+        encodeURIComponent(
+          JSON.stringify({
+            '0': { json: null },
+          }),
+        ),
       ).then((r) => r.json()),
     ])
       .then(([projectsData, techData]) => {
@@ -56,7 +56,7 @@ export default function PortfolioPage() {
 
   return (
     <div className="border-t border-b border-compat-soft bg-[var(--portal-color-surface)]">
-      <div style={{ padding: '5rem 2rem', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      <div className="pt-8 md:pt-24 pb-12 md:pb-20 px-4 md:px-8 max-w-[1200px] mx-auto w-full">
         {/* Section header */}
         <div className="flex items-baseline" style={{ gap: '.8rem', marginBottom: '2.5rem' }}>
           <span
@@ -83,14 +83,20 @@ export default function PortfolioPage() {
 
         {/* Tech filter */}
         {techStacks.length > 0 && (
-          <div className="mb-8 flex flex-wrap gap-2">
+          <div
+            className="mb-8 flex flex-nowrap overflow-x-auto md:flex-wrap md:overflow-visible pb-2 md:pb-0 gap-2 scrollbar-none"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              msOverflowStyle: 'none',
+              scrollbarWidth: 'none',
+            }}
+          >
             <button
               onClick={() => setActiveTech(null)}
-              className={`rounded-full transition-colors ${
-                !activeTech
+              className={`rounded-full shrink-0 transition-colors ${!activeTech
                   ? 'bg-[var(--portal-color-primary)] text-white'
                   : 'border border-compat text-[var(--portal-color-text-secondary)] hover-border-compat-primary'
-              }`}
+                }`}
               style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
             >
               {t('all')}
@@ -99,11 +105,10 @@ export default function PortfolioPage() {
               <button
                 key={tech}
                 onClick={() => setActiveTech(tech)}
-                className={`rounded-full transition-colors ${
-                  activeTech === tech
+                className={`rounded-full shrink-0 transition-colors ${activeTech === tech
                     ? 'bg-[var(--portal-color-primary)] text-white'
                     : 'border border-compat text-[var(--portal-color-text-secondary)] hover-border-compat-primary'
-                }`}
+                  }`}
                 style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
               >
                 {tech}

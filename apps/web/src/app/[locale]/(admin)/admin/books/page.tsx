@@ -113,17 +113,17 @@ export default function AdminBooksPage() {
             <table className="w-full border-collapse text-left text-sm text-[var(--portal-color-text)]">
               <thead>
                 <tr className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] font-medium text-[var(--portal-color-text-secondary)]">
-                  <th className="px-6 py-4">Cover</th>
+                  <th className="hidden md:table-cell px-6 py-4">Cover</th>
                   <th className="px-6 py-4">Title</th>
-                  <th className="px-6 py-4">Author</th>
-                  <th className="px-6 py-4">Publisher</th>
+                  <th className="hidden md:table-cell px-6 py-4">Author</th>
+                  <th className="hidden md:table-cell px-6 py-4">Publisher</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--portal-color-border)]">
                 {books.map((book) => (
                   <tr key={book.id} className="hover:bg-[var(--portal-color-surface-alt)]/50">
-                    <td className="px-6 py-4">
+                    <td className="hidden md:table-cell px-6 py-4">
                       {book.coverImage || book.coverImageURL ? (
                         <img
                           src={book.coverImage ?? book.coverImageURL ?? ''}
@@ -137,8 +137,8 @@ export default function AdminBooksPage() {
                       )}
                     </td>
                     <td className="px-6 py-4 font-medium">{book.title}</td>
-                    <td className="px-6 py-4">{book.author}</td>
-                    <td className="px-6 py-4 text-[var(--portal-color-text-secondary)]">
+                    <td className="hidden md:table-cell px-6 py-4">{book.author}</td>
+                    <td className="hidden md:table-cell px-6 py-4 text-[var(--portal-color-text-secondary)]">
                       {book.publisher ?? '—'}
                     </td>
                     <td className="px-6 py-4 text-right">

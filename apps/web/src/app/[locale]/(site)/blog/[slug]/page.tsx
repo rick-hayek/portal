@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { Link } from '@/i18n/routing';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
@@ -51,8 +52,27 @@ export default async function BlogPostPage({
   const post = await trpc.post.bySlug({ slug });
   if (!post) notFound();
 
+  const t = await getTranslations({ locale, namespace: 'Navigation' });
+
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+      {/* Back Button */}
+      <Link
+        href="/blog"
+        className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)] transition-colors no-underline"
+      >
+        <svg
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        {t('blog')}
+      </Link>
+
       {/* Header */}
       <header className="mb-8">
         <div className="mb-3 flex items-center gap-3 text-sm text-[var(--portal-color-text-secondary)]">

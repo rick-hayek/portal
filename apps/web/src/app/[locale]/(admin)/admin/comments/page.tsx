@@ -83,9 +83,9 @@ export default function CommentsPage() {
               key={c.id}
               className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-4"
             >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 text-sm">
+              <div className="space-y-3">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 text-sm">
                     <span className="font-medium text-[var(--portal-color-text)]">
                       {c.authorName}
                     </span>
@@ -106,16 +106,17 @@ export default function CommentsPage() {
                       {c.status}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-[var(--portal-color-text)]">{c.content}</p>
-                  <p className="mt-1 text-xs text-[var(--portal-color-text-secondary)]">
+                  <p className="mt-2 text-sm text-[var(--portal-color-text)] whitespace-pre-wrap">{c.content}</p>
+                  <p className="mt-2 text-xs text-[var(--portal-color-text-secondary)]">
                     on <em>{c.post.title}</em> · {new Date(c.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="flex shrink-0 gap-1.5">
+
+                <div className="flex flex-wrap gap-2 pt-2 border-t border-[var(--portal-color-border)]/40">
                   {c.status !== 'approved' && (
                     <button
                       onClick={() => handleModerate(c.id, 'approved')}
-                      className="rounded-md border border-green-300 px-2 py-1 text-xs text-green-600 hover:bg-green-50 dark:border-green-700 dark:text-green-400 dark:hover:bg-green-900/20"
+                      className="rounded-md border border-green-300 px-2.5 py-1 text-xs font-medium text-green-600 hover:bg-green-50 dark:border-green-700 dark:text-green-400 dark:hover:bg-green-900/20"
                     >
                       Approve
                     </button>
@@ -123,14 +124,14 @@ export default function CommentsPage() {
                   {c.status !== 'spam' && (
                     <button
                       onClick={() => handleModerate(c.id, 'spam')}
-                      className="rounded-md border border-yellow-300 px-2 py-1 text-xs text-yellow-600 hover:bg-yellow-50 dark:border-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/20"
+                      className="rounded-md border border-yellow-300 px-2.5 py-1 text-xs font-medium text-yellow-600 hover:bg-yellow-50 dark:border-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/20"
                     >
                       Spam
                     </button>
                   )}
                   <button
                     onClick={() => handleDelete(c.id)}
-                    className="rounded-md border border-red-300 px-2 py-1 text-xs text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
+                    className="rounded-md border border-red-300 px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
                   >
                     Delete
                   </button>

@@ -108,16 +108,16 @@ export default function PostsPage() {
               <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
                 Title
               </th>
-              <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
+              <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
                 Category
               </th>
-              <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
+              <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
                 Status
               </th>
-              <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
+              <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
                 Comments
               </th>
-              <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
+              <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
                 Updated
               </th>
               <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
@@ -157,10 +157,10 @@ export default function PostsPage() {
                       {post.title}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-[var(--portal-color-text-secondary)]">
+                  <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)]">
                     {post.category?.name ?? '—'}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="hidden md:table-cell px-4 py-3">
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs ${
                         post.status === 'published'
@@ -171,10 +171,10 @@ export default function PostsPage() {
                       {post.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-[var(--portal-color-text-secondary)]">
+                  <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)]">
                     {post._count.comments}
                   </td>
-                  <td className="px-4 py-3 text-[var(--portal-color-text-secondary)]">
+                  <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)]">
                     {new Date(post.updatedAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
