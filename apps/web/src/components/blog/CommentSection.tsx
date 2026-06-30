@@ -1,5 +1,7 @@
 'use client';
 
+import { signIn, useSession } from 'next-auth/react';
+import { useLocale } from 'next-intl';
 import { useState } from 'react';
 
 interface Comment {
@@ -35,28 +37,32 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
 }
 
 export function CommentSection({ postId, comments = [] }: { postId: string; comments: Comment[] }) {
-  const [name, setName] = useState('');
+  const { data: session, status: sessionStatus } = useSession();
+  const locale = useLocale();
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !content.trim()) return;
+    if (!content.trim()) return;
     setSubmitting(true);
     try {
-      await fetch('/api/trpc/comment.create', {
+      const res = await fetch('/api/trpc/comment.create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          json: { postId, authorName: name.trim(), content: content.trim() },
+          json: { postId, content: content.trim() },
         }),
       });
-      setSubmitted(true);
-      setName('');
-      setContent('');
+      if (res.ok) {
+        setSubmitted(true);
+        setContent('');
+      } else {
+        alert(locale === 'zh' ? '提交评论失败，请重试。' : 'Failed to submit comment, please try again.');
+      }
     } catch {
-      // silently fail for now
+      alert(locale === 'zh' ? '提交评论失败，请重试。' : 'Failed to submit comment, please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -81,27 +87,69 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
         </p>
       )}
 
-      {/* Comment Form */}
-      {submitted ? (
+      {/* Comment Form or Sign In Prompt */}
+      {sessionStatus === 'loading' ? (
+        <div className="h-32 animate-pulse rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]" />
+      ) : !session ? (
+        <div
+          className="flex flex-col items-center justify-center text-center transition-all border border-compat bg-[var(--portal-color-surface)]"
+          style={{
+            padding: '2.5rem 1.5rem',
+            borderRadius: 12,
+            marginBottom: '2.5rem',
+            gap: '1rem',
+            background:
+              'linear-gradient(180deg, var(--portal-color-surface) 0%, rgba(107,142,201,0.02) 100%)',
+          }}
+        >
+          <div
+            className="flex items-center justify-center rounded-full bg-[rgba(107,142,201,0.1)] text-[var(--portal-color-primary)]"
+            style={{ width: 48, height: 48, marginBottom: '.2rem' }}
+          >
+            <span style={{ fontSize: '1.2rem' }}>💬</span>
+          </div>
+          <p
+            className="text-[var(--portal-color-text)]"
+            style={{ fontSize: '.9rem', fontStyle: 'normal' }}
+          >
+            {locale === 'zh' ? '请登录后发表评论。' : 'Please sign in to leave a comment.'}
+          </p>
+          <button
+            onClick={() => signIn()}
+            className="text-white transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+            style={{
+              background: 'var(--portal-color-primary)',
+              borderRadius: 100,
+              padding: '.5rem 1.8rem',
+              fontSize: '.82rem',
+              fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(107,142,201,0.2)',
+            }}
+          >
+            {locale === 'zh' ? '登录以发表评论' : 'Sign in to comment'}
+          </button>
+        </div>
+      ) : submitted ? (
         <div className="rounded-lg border border-[var(--portal-color-success)] bg-[var(--portal-color-surface)] p-4 text-center text-sm text-[var(--portal-color-success)]">
-          ✅ Comment submitted! It will appear after review.
+          ✅ {locale === 'zh' ? '评论已提交！审核后将会显示。' : 'Comment submitted! It will appear after review.'}
         </div>
       ) : (
         <form
           onSubmit={handleSubmit}
           className="space-y-4 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6"
         >
-          <h3 className="text-lg font-semibold text-[var(--portal-color-text)]">Leave a comment</h3>
-          <input
-            type="text"
-            placeholder="Your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-4 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-          />
+          <h3 className="text-lg font-semibold text-[var(--portal-color-text)]">
+            {locale === 'zh' ? '发表评论' : 'Leave a comment'}
+          </h3>
+          <p className="text-xs text-[var(--portal-color-text-secondary)]">
+            {locale === 'zh'
+              ? `当前以 ${session.user?.name || session.user?.email} 身份评论`
+              : `Posting as ${session.user?.name || session.user?.email}`}
+          </p>
           <textarea
-            placeholder="Write your comment…"
+            placeholder={locale === 'zh' ? '写下你的评论…' : 'Write your comment…'}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required
@@ -113,7 +161,13 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
             disabled={submitting}
             className="rounded-lg bg-[var(--portal-color-primary)] px-6 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {submitting ? 'Submitting…' : 'Submit'}
+            {submitting
+              ? locale === 'zh'
+                ? '提交中…'
+                : 'Submitting…'
+              : locale === 'zh'
+                ? '提交'
+                : 'Submit'}
           </button>
         </form>
       )}
