@@ -6,6 +6,7 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import { CommentSection } from '@/components/blog/CommentSection';
+import { AdSense } from '@/components/blog/AdSense';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
 
@@ -114,6 +115,9 @@ export default async function BlogPostPage({
       <div className="prose prose-portal max-w-none">
         <MDXRemote
           source={post.content}
+          components={{
+            AdSense,
+          }}
           options={{
             mdxOptions: {
               remarkPlugins: [remarkGfm],
