@@ -25,6 +25,7 @@ async function main() {
   const passwordHash = await bcrypt.hash('admin123', 12);
   const admin = await prisma.user.create({
     data: {
+      id: 'clk123456000008l28z3z3z3z', // Fixed CUID to prevent session orphaning after re-seeding
       email: 'admin@portal.dev',
       name: 'Rick',
       role: 'admin',

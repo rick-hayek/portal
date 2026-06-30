@@ -1,4 +1,5 @@
 import type { Prisma } from '@portal/db';
+import { useLocale } from 'next-intl';
 
 type PostWithRelations = Prisma.PostGetPayload<{
   include: {
@@ -10,12 +11,26 @@ type PostWithRelations = Prisma.PostGetPayload<{
 }>;
 
 export function PostCard({ post }: { post: PostWithRelations }) {
+  const locale = useLocale();
+
+  const formattedDate = post.publishedAt
+    ? (() => {
+        const date = new Date(post.publishedAt);
+        const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+        return date.toLocaleDateString(locale, {
+          year: isCurrentYear ? undefined : 'numeric',
+          month: 'short',
+          day: 'numeric',
+        });
+      })()
+    : '—';
+
   return (
     <a
       href={`/blog/${post.slug}`}
       className="group grid items-baseline text-inherit no-underline transition-all hover:bg-[rgba(107,142,201,0.05)] hover:border-transparent"
       style={{
-        gridTemplateColumns: '80px 1fr auto',
+        gridTemplateColumns: '96px 1fr auto',
         gap: '1.5rem',
         padding: '1.2rem 1rem',
         borderBottom: '1px solid var(--portal-color-border-soft)',
@@ -27,12 +42,7 @@ export function PostCard({ post }: { post: PostWithRelations }) {
         className="font-mono text-[var(--portal-color-text-secondary)]"
         style={{ fontSize: '.72rem', whiteSpace: 'nowrap' }}
       >
-        {post.publishedAt
-          ? new Date(post.publishedAt).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-            })
-          : '—'}
+        {formattedDate}
       </span>
 
       {/* Content */}

@@ -198,20 +198,28 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
           <div className="flex flex-col">
             {posts.length > 0 ? (
-              posts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.slug}`}
-                  className="group text-inherit no-underline transition-all duration-300 ease-out hover:bg-[var(--portal-color-primary-soft)] hover:border-transparent hover:pl-6 grid grid-cols-[80px_1fr_auto] gap-6 items-baseline py-5 px-4 border-b border-compat-soft cursor-pointer rounded-xl hover:shadow-[0_4px_20px_rgba(107,142,201,0.05)]"
-                >
-                  <span className="whitespace-nowrap font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)]">
-                    {post.publishedAt
-                      ? new Date(post.publishedAt).toLocaleDateString(locale, {
+              posts.map((post) => {
+                const formattedDate = post.publishedAt
+                  ? (() => {
+                      const date = new Date(post.publishedAt);
+                      const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+                      return date.toLocaleDateString(locale, {
+                        year: isCurrentYear ? undefined : 'numeric',
                         month: 'short',
                         day: 'numeric',
-                      })
-                      : '—'}
-                  </span>
+                      });
+                    })()
+                  : '—';
+
+                return (
+                  <Link
+                    key={post.id}
+                    href={`/blog/${post.slug}`}
+                    className="group text-inherit no-underline transition-all duration-300 ease-out hover:bg-[var(--portal-color-primary-soft)] hover:border-transparent hover:pl-6 grid grid-cols-[96px_1fr_auto] gap-6 items-baseline py-5 px-4 border-b border-compat-soft cursor-pointer rounded-xl hover:shadow-[0_4px_20px_rgba(107,142,201,0.05)]"
+                  >
+                    <span className="whitespace-nowrap font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)]">
+                      {formattedDate}
+                    </span>
                   <div>
                     {post.category && (
                       <span className="inline-block text-[0.6rem] font-semibold tracking-widest uppercase text-[var(--portal-color-primary)] py-0.5 px-2 bg-[var(--portal-color-primary-soft)] rounded-[6px] mb-1.5">
@@ -231,8 +239,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                     →
                   </span>
                 </Link>
-              ))
-            ) : (
+              );
+            })
+          ) : (
               <p className="py-12 text-center text-[var(--portal-color-text-secondary)]">
                 No articles published yet.
               </p>
