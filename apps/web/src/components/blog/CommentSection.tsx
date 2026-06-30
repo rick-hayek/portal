@@ -12,12 +12,58 @@ interface Comment {
   replies?: Comment[];
 }
 
-function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number }) {
+function CommentItem({
+  comment,
+  postId,
+  session,
+  locale,
+  depth = 0,
+}: {
+  comment: Comment;
+  postId: string;
+  session: any;
+  locale: string;
+  depth?: number;
+}) {
+  const [showReplyForm, setShowReplyForm] = useState(false);
+  const [replyContent, setReplyContent] = useState('');
+  const [replySubmitting, setReplySubmitting] = useState(false);
+  const [replySubmitted, setReplySubmitted] = useState(false);
+
+  const handleReplySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!replyContent.trim()) return;
+    setReplySubmitting(true);
+    try {
+      const res = await fetch('/api/trpc/comment.create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          json: { postId, content: replyContent.trim(), parentId: comment.id },
+        }),
+      });
+      if (res.ok) {
+        setReplySubmitted(true);
+        setReplyContent('');
+        setTimeout(() => {
+          setShowReplyForm(false);
+          setReplySubmitted(false);
+        }, 3000);
+      } else {
+        alert(locale === 'zh' ? '提交回复失败，请重试。' : 'Failed to submit reply, please try again.');
+      }
+    } catch {
+      alert(locale === 'zh' ? '提交回复失败，请重试。' : 'Failed to submit reply, please try again.');
+    } finally {
+      setReplySubmitting(false);
+    }
+  };
+
   return (
     <div
-      className={`${depth > 0 ? 'ml-6 border-l-2 border-[var(--portal-color-border)] pl-4' : ''}`}
+      className={`${depth > 0 ? 'ml-4 sm:ml-6 border-l-2 border-[var(--portal-color-border)] pl-3 sm:pl-4' : ''}`}
     >
-      <div className="mb-4 rounded-lg bg-[var(--portal-color-surface)] p-4">
+      <div className="mb-4 rounded-lg bg-[var(--portal-color-surface)] p-4 shadow-sm border border-[var(--portal-color-border-soft)]">
         <div className="mb-2 flex items-center gap-2">
           <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--portal-color-primary)] text-sm font-bold text-white">
             {comment.authorName[0]?.toUpperCase()}
@@ -28,9 +74,85 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
           </time>
         </div>
         <p className="text-sm leading-relaxed text-[var(--portal-color-text)]">{comment.content}</p>
+        
+        {/* Reply button */}
+        {session && (
+          <div className="mt-2 flex justify-end">
+            <button
+              onClick={() => setShowReplyForm(!showReplyForm)}
+              className="flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:underline"
+            >
+              <span>💬</span> {locale === 'zh' ? '回复' : 'Reply'}
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Reply input form */}
+      {showReplyForm && session && (
+        <div className="ml-4 sm:ml-6 mb-4 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-4">
+          {replySubmitted ? (
+            <div className="text-xs text-[var(--portal-color-success)] text-center font-medium py-1">
+              ✅ {locale === 'zh' ? '回复已提交！审核后将会显示。' : 'Reply submitted! It will appear after review.'}
+            </div>
+          ) : (
+            <form onSubmit={handleReplySubmit} className="space-y-3">
+              <div className="flex items-center justify-between text-xs text-[var(--portal-color-text-secondary)]">
+                <span className="font-medium">
+                  {locale === 'zh' ? `回复 @${comment.authorName}` : `Replying to @${comment.authorName}`}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowReplyForm(false)}
+                  className="hover:underline text-red-500 font-medium"
+                >
+                  {locale === 'zh' ? '取消' : 'Cancel'}
+                </button>
+              </div>
+              <textarea
+                placeholder={locale === 'zh' ? '写下你的回复…' : 'Write your reply…'}
+                value={replyContent}
+                onChange={(e) => setReplyContent(e.target.value)}
+                required
+                rows={2}
+                className="w-full resize-none rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+              />
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowReplyForm(false)}
+                  className="rounded-lg border border-[var(--portal-color-border)] px-3 py-1 text-xs text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)]"
+                >
+                  {locale === 'zh' ? '取消' : 'Cancel'}
+                </button>
+                <button
+                  type="submit"
+                  disabled={replySubmitting}
+                  className="rounded-lg bg-[var(--portal-color-primary)] px-4 py-1 text-xs font-medium text-white hover:opacity-90 disabled:opacity-50"
+                >
+                  {replySubmitting
+                    ? locale === 'zh'
+                      ? '提交中…'
+                      : 'Submitting…'
+                    : locale === 'zh'
+                      ? '回复'
+                      : 'Reply'}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      )}
+
       {comment.replies?.map((reply) => (
-        <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
+        <CommentItem
+          key={reply.id}
+          comment={reply}
+          postId={postId}
+          session={session}
+          locale={locale}
+          depth={depth + 1}
+        />
       ))}
     </div>
   );
@@ -78,7 +200,13 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
       {comments.length > 0 ? (
         <div className="mb-8 space-y-2">
           {comments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} />
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              postId={postId}
+              session={session}
+              locale={locale}
+            />
           ))}
         </div>
       ) : (
