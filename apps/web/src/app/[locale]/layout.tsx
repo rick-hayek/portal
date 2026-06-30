@@ -5,7 +5,6 @@ import { ThemeProvider } from '@portal/theme';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import Script from 'next/script';
 import { routing } from '../../i18n/routing';
 import { TRPCReactProvider } from '../../lib/api/client';
 import siteConfig from '../../site.config';
@@ -69,13 +68,14 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}>
-        <Script
+      <head>
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5960009177449604"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
+      </head>
+      <body className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <TRPCReactProvider>
             <ThemeProvider defaultTheme="minimal-light">{children}</ThemeProvider>
