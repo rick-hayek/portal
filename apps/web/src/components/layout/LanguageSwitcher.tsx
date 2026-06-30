@@ -16,11 +16,14 @@ export function LanguageSwitcher() {
   return (
     <button
       onClick={toggleLocale}
-      className="flex h-11 w-11 md:h-9 md:w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] transition-colors hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-text)] cursor-pointer"
-      title={`Switch to ${locale === 'en' ? 'Chinese' : 'English'}`}
-      aria-label={`Switch to ${locale === 'en' ? 'Chinese' : 'English'}`}
+      className="flex h-11 w-11 md:h-9 md:w-auto md:px-3 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] transition-colors hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-text)] cursor-pointer"
+      title={`Switch to ${locale === 'en' ? '简体中文' : 'English'}`}
+      aria-label={`Switch to ${locale === 'en' ? '简体中文' : 'English'}`}
     >
-      <span className="font-mono text-xs font-bold uppercase">{locale}</span>
+      {/* Mobile view */}
+      <span className="font-mono text-xs font-bold uppercase md:hidden">{locale}</span>
+      {/* Desktop view */}
+      <span className="hidden md:inline text-xs font-bold">{locale === 'zh' ? '中文简体' : 'English'}</span>
     </button>
   );
 }

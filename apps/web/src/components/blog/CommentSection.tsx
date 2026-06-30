@@ -73,7 +73,7 @@ function CommentItem({
             {new Date(comment.createdAt).toLocaleDateString('zh-CN')}
           </time>
         </div>
-        <p className="text-sm leading-relaxed text-[var(--portal-color-text)]">{comment.content}</p>
+        <p className="text-sm leading-relaxed text-[var(--portal-color-text)] whitespace-pre-wrap" style={{ whiteSpace: 'pre-wrap' }}>{comment.content}</p>
         
         {/* Reply button */}
         {session && (
