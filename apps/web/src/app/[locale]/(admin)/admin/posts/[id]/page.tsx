@@ -217,11 +217,19 @@ export default function EditPostPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="sticky top-0 z-10 -mx-6 px-6 py-4 flex items-center justify-between border-b border-[var(--portal-color-border)] bg-[var(--portal-color-background)]/80 backdrop-blur-md">
         <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Edit Post</h1>
+        <button
+          type="submit"
+          form="edit-post-form"
+          disabled={saving}
+          className="rounded-lg bg-[var(--portal-color-primary)] px-5 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 shadow-sm cursor-pointer"
+        >
+          {saving ? 'Saving...' : 'Save Changes'}
+        </button>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-5">
+      <form id="edit-post-form" onSubmit={handleSave} className="space-y-5">
         {error && (
           <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
             {error}
