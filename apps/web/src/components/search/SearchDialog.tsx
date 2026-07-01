@@ -15,7 +15,13 @@ interface SearchHit {
   _highlight?: Record<string, string>;
 }
 
-export function SearchDialog() {
+export function SearchDialog({
+  className,
+  showLabel = false,
+}: {
+  className?: string;
+  showLabel?: boolean;
+} = {}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchHit[]>([]);
@@ -106,9 +112,10 @@ export function SearchDialog() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-full border border-compat
-                   bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] transition-colors hover-border-compat-primary hover:text-[var(--portal-color-text)]
-                   py-2 px-4 md:py-1.5 md:px-3.5 text-[0.78rem]"
+        className={
+          className ||
+          "flex items-center gap-2 rounded-full border border-compat bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] transition-colors hover-border-compat-primary hover:text-[var(--portal-color-text)] py-2 px-4 md:py-1.5 md:px-3.5 text-[0.78rem]"
+        }
         aria-label="Search"
       >
         <svg
@@ -124,10 +131,12 @@ export function SearchDialog() {
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
           />
         </svg>
-        <span className="hidden sm:inline">Search</span>
-        <kbd className="hidden rounded border border-compat bg-[var(--portal-color-surface-alt)] px-1.5 py-0.5 text-[rgba(75,85,99,0.7)] sm:inline text-[0.65rem]">
-          ⌘K
-        </kbd>
+        <span className={showLabel ? "inline" : "hidden sm:inline"}>Search</span>
+        {!className && (
+          <kbd className="hidden rounded border border-compat bg-[var(--portal-color-surface-alt)] px-1.5 py-0.5 text-[rgba(75,85,99,0.7)] sm:inline text-[0.65rem]">
+            ⌘K
+          </kbd>
+        )}
       </button>
     );
   }

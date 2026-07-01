@@ -30,7 +30,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <div className="flex w-full flex-col">
       {/* HERO SECTION */}
-      <section className="flex min-h-[70vh] sm:min-h-screen w-full items-center justify-center pt-20 pb-12 sm:pt-32 sm:pb-16 px-8">
+      <section className="flex min-h-screen w-full items-center justify-center pt-20 pb-12 sm:pt-32 sm:pb-16 px-8">
         <div className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Hero Text */}
           <div>
