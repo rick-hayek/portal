@@ -10,6 +10,6 @@ export const config = {
     '/(zh|en)/:path*',
     // Enable redirects that add missing locales
     // (e.g. `/pathnames` -> `/en/pathnames`)
-    '/((?!api|_next|_vercel|.*\\..*).*)',
+    '/((?!api|references|uploads|_next|_vercel|.*\\..*).*)',
   ],
 };

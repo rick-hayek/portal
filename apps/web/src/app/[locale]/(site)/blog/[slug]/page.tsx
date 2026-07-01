@@ -2,12 +2,13 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { Link } from '@/i18n/routing';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
-import { CommentSection } from '@/components/blog/CommentSection';
 import { AdSense } from '@/components/blog/AdSense';
+import { CommentSection } from '@/components/blog/CommentSection';
+import { CustomBlockquote } from '@/components/blog/CustomBlockquote';
+import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
 
@@ -137,6 +138,7 @@ export default async function BlogPostPage({
           source={post.content}
           components={{
             AdSense,
+            blockquote: CustomBlockquote,
           }}
           options={{
             mdxOptions: {

@@ -127,7 +127,7 @@ export default function ReferencesAdminPage() {
   };
 
   const copyEmbedCode = (refSlug: string, id: string) => {
-    const embedCode = `<iframe src="/api/references/${refSlug}" width="100%" height="700" frameborder="0"></iframe>`;
+    const embedCode = `<iframe src="/references/${refSlug}" width="100%" height="700" frameborder="0"></iframe>`;
     navigator.clipboard.writeText(embedCode).then(() => {
       setCopiedId(`${id}-embed`);
       setTimeout(() => setCopiedId(''), 2000);
@@ -135,7 +135,7 @@ export default function ReferencesAdminPage() {
   };
 
   const copyLinkCode = (refSlug: string, refTitle: string, id: string) => {
-    const linkCode = `**<a href="/api/references/${refSlug}" target="_blank" rel="noopener noreferrer">👉 点击此处在新页面中打开${refTitle}</a>**`;
+    const linkCode = `**<a href="/references/${refSlug}" target="_blank" rel="noopener noreferrer">👉 点击此处在新页面中打开${refTitle}</a>**`;
     navigator.clipboard.writeText(linkCode).then(() => {
       setCopiedId(`${id}-link`);
       setTimeout(() => setCopiedId(''), 2000);
@@ -195,7 +195,7 @@ export default function ReferencesAdminPage() {
                         {ref.title}
                       </td>
                       <td className="px-4 py-3 font-mono text-xs text-[var(--portal-color-text-secondary)]">
-                        /api/references/{ref.slug}
+                        /references/{ref.slug}
                       </td>
                       <td className="px-4 py-3 text-xs text-[var(--portal-color-text-secondary)]">
                         {new Date(ref.createdAt).toLocaleDateString()}
@@ -215,7 +215,7 @@ export default function ReferencesAdminPage() {
                             {copiedId === `${ref.id}-link` ? 'Copied! ✅' : 'Copy Link'}
                           </button>
                           <a
-                            href={`/api/references/${ref.slug}`}
+                            href={`/references/${ref.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-[var(--portal-color-text-secondary)] hover:underline"
