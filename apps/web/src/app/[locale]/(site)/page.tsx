@@ -186,14 +186,23 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* BLOG SECTION */}
       <div className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)]">
         <section className="py-20 px-8 max-w-[1200px] mx-auto w-full">
-          <div className="flex items-baseline gap-3 mb-10">
-            <span className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"></span>
-            <span className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium">
-              {t('latestPosts')}
-            </span>
-            <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
-              {t('blogTitle')}
-            </h2>
+          <div className="flex items-baseline justify-between mb-10">
+            <div className="flex items-baseline gap-3">
+              <span className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"></span>
+              <span className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium">
+                {t('latestPosts')}
+              </span>
+              <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
+                {t('blogTitle')}
+              </h2>
+            </div>
+            <Link
+              href="/blog"
+              className="group flex items-center gap-1.5 no-underline transition-colors text-[0.82rem] font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]"
+            >
+              {t('viewAll')}{' '}
+              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </Link>
           </div>
 
           <div className="flex flex-col">
