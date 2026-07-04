@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   // Resolve pnpm workspace + subpath exports for Turbopack
-  serverExternalPackages: ['@trpc/server'],
+  serverExternalPackages: ['@trpc/server', 'pg'],
   transpilePackages: [
     '@portal/api',
     '@portal/config',
