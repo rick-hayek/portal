@@ -69,8 +69,28 @@ export default function ProjectDetailPage() {
     );
   }
 
+  const projectSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: project.title,
+    description: locale === 'en' && project.descriptionEn ? project.descriptionEn : project.description,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'All',
+    screenshot: project.coverImage || undefined,
+    downloadUrl: project.liveUrl || undefined,
+    softwareVersion: '1.0.0',
+    publisher: {
+      '@type': 'Person',
+      name: 'Rick Huang',
+    },
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
       {/* Breadcrumb */}
       <a href="/portfolio" className="text-sm text-[var(--portal-color-primary)] hover:underline">
         ← Portfolio

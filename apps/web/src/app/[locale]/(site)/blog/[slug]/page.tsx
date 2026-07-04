@@ -58,8 +58,38 @@ export default async function BlogPostPage({
 
   const t = await getTranslations({ locale, namespace: 'Navigation' });
 
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt || '',
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt?.toISOString(),
+    author: {
+      '@type': 'Person',
+      name: post.author.name || 'Rick Huang',
+      image: post.author.image || '',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.site.title,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteConfig.site.url}/icon.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${siteConfig.site.url}/${locale}/blog/${post.slug}`,
+    },
+  };
+
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
+      />
       {/* Back Button */}
       <Link
         href="/blog"

@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
 import { Suspense } from 'react';
+import siteConfig from '@/site.config';
 
 export const revalidate = 60; // revalidate at most every minute (ISR)
 
@@ -15,8 +16,25 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const t = await getTranslations({ locale, namespace: 'Index' });
 
+  const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Rick Huang',
+    url: siteConfig.site.url,
+    sameAs: [
+      process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/rick-hayek',
+      process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com',
+    ],
+    jobTitle: 'Full-Stack Engineer',
+    knowsAbout: ['Next.js', 'TypeScript', 'tRPC', 'Prisma', 'Vue', 'Python', 'AI Agent'],
+  };
+
   return (
     <div className="flex w-full flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
       {/* HERO SECTION */}
       <section className="flex min-h-screen w-full items-center justify-center pt-20 pb-12 sm:pt-32 sm:pb-16 px-8">
         <div className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
