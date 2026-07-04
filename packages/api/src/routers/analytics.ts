@@ -2,22 +2,28 @@ import { z } from 'zod';
 import { adminProcedure, publicProcedure, router } from '../trpc';
 
 export const analyticsRouter = router({
-  /** Record a page view (public, fire-and-forget) */
+  /** Record page views in batches (public, fire-and-forget) */
   track: publicProcedure
     .input(
-      z.object({
-        path: z.string().min(1).max(500),
-        referrer: z.string().max(1000).optional(),
-        userAgent: z.string().max(500).optional(),
-      }),
+      z.array(
+        z.object({
+          path: z.string().min(1).max(500),
+          referrer: z.string().max(1000).optional(),
+          userAgent: z.string().max(500).optional(),
+          createdAt: z.string().optional(),
+        }),
+      ),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.pageView.create({
-        data: {
-          path: input.path,
-          referrer: input.referrer,
-          userAgent: input.userAgent,
-        },
+      if (input.length === 0) return { ok: true };
+
+      await ctx.prisma.pageView.createMany({
+        data: input.map((item) => ({
+          path: item.path,
+          referrer: item.referrer,
+          userAgent: item.userAgent,
+          createdAt: item.createdAt ? new Date(item.createdAt) : undefined,
+        })),
       });
       return { ok: true };
     }),
