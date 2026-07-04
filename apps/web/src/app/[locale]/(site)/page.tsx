@@ -254,14 +254,14 @@ async function HomeDbSections({ locale }: { locale: string }) {
               posts.map((post) => {
                 const formattedDate = post.publishedAt
                   ? (() => {
-                      const date = new Date(post.publishedAt);
-                      const isCurrentYear = date.getFullYear() === new Date().getFullYear();
-                      return date.toLocaleDateString(locale, {
-                        year: isCurrentYear ? undefined : 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      });
-                    })()
+                    const date = new Date(post.publishedAt);
+                    const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+                    return date.toLocaleDateString(locale, {
+                      year: isCurrentYear ? undefined : 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    });
+                  })()
                   : '—';
 
                 return (
@@ -396,7 +396,7 @@ async function HomeDbSections({ locale }: { locale: string }) {
               {t('community')}
             </span>
             <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
-              {t('guestbookTitle')}
+              {t('guestbookTitle')} (Unavailable)
             </h2>
           </div>
 
@@ -446,10 +446,12 @@ async function HomeDbSections({ locale }: { locale: string }) {
             {[
               { num: String(postCount), label: tGuestbook('stats.posts') },
               { num: String(projectCount), label: tGuestbook('stats.projects') },
+              /* TODO: enable page view count
               {
-                num: viewCount >= 1000 ? `${(viewCount / 1000).toFixed(1)}K` : String(viewCount),
+                num: viewCount >= 1000 ? `${(viewCount / 1000).toFixed(1)}K` : String(viewCount), 
                 label: tGuestbook('stats.pageViews'),
               },
+              */
               { num: String(guestbookCount), label: tGuestbook('stats.guestbook') },
             ].map((stat, i) => (
               <div key={i} className="text-center">
