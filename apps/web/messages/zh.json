@@ -9,13 +9,17 @@
     "links": "友链",
     "about": "关于",
     "tools": "工具",
-    "admin": "管理"
+    "books": "读书",
+    "admin": "管理",
+    "profile": "个人中心",
+    "signOut": "退出登录",
+    "signIn": "登录"
   },
   "Index": {
     "badge": "全栈开发者",
-    "title1": "构建",
-    "title2": "现代 Web",
-    "description": "专注于 TypeScript 和 Next.js 生态。我致力于编写整洁的代码，分享学习经验，并构建让开发者喜爱的工具。",
+    "title1": "生活与工作",
+    "title2": "随想随记",
+    "description": "记录和分享技术心得、生活感悟，顺便推荐个书",
     "exploreBlog": "探索博客",
     "viewProjects": "查看项目",
     "latestPosts": "最新文章",
@@ -157,5 +161,58 @@
     "error": "无效的 JWT 格式",
     "copy": "复制到剪贴板",
     "copied": "已复制！"
+  },
+  "Books": {
+    "title": "读书",
+    "recommendedBooks": "读书推荐",
+    "meta": "我阅读过的书籍、读书感悟与技术推荐。",
+    "optional": "可选",
+    "fields": {
+      "title": "书名",
+      "coverImageURL": "封面图片 URL",
+      "coverImage": "上传本地封面 (最大 500KB)",
+      "author": "作者",
+      "publisher": "出版社",
+      "translator": "译者",
+      "isbn": "ISBN",
+      "publishYear": "出版年份",
+      "originalBook": "原作",
+      "description": "简介",
+      "review": "书评 / 随感"
+    },
+    "noBooks": "暂无推荐书籍",
+    "reactions": {
+      "loginRequired": "请登录后参与点赞/踩互动",
+      "like": "觉得有用",
+      "dislike": "觉得一般"
+    }
+  },
+  "Profile": {
+    "title": "个人中心 & 账户设置",
+    "subtitle": "管理你的个人账户信息并修改登录密码。",
+    "accountInfo": "账户基本信息",
+    "changePassword": "修改登录密码",
+    "setPassword": "设置本地密码",
+    "setPasswordDesc": "你当前正在通过 GitHub 第三方登录。设置本地密码后，你即可同时使用邮箱与密码直接登录。",
+    "fields": {
+      "name": "用户昵称",
+      "email": "注册邮箱",
+      "role": "账户角色",
+      "currentPassword": "当前密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认新密码"
+    },
+    "placeholders": {
+      "currentPassword": "请输入当前正在使用的密码",
+      "newPassword": "请输入新密码 (最少 6 位)",
+      "confirmPassword": "请再次输入新密码"
+    },
+    "submit": "保存修改",
+    "loading": "保存中...",
+    "success": "密码修改成功！",
+    "validation": {
+      "mismatch": "两次输入的密码不一致！",
+      "minLength": "密码长度不能少于 6 位！"
+    }
   }
 }

@@ -127,7 +127,7 @@ export default function ReferencesAdminPage() {
   };
 
   const copyEmbedCode = (refSlug: string, id: string) => {
-    const embedCode = `<iframe src="/api/references/${refSlug}" width="100%" height="700" frameborder="0"></iframe>`;
+    const embedCode = `<iframe src="/references/${refSlug}" width="100%" height="700" frameborder="0"></iframe>`;
     navigator.clipboard.writeText(embedCode).then(() => {
       setCopiedId(`${id}-embed`);
       setTimeout(() => setCopiedId(''), 2000);
@@ -135,7 +135,7 @@ export default function ReferencesAdminPage() {
   };
 
   const copyLinkCode = (refSlug: string, refTitle: string, id: string) => {
-    const linkCode = `**<a href="/api/references/${refSlug}" target="_blank" rel="noopener noreferrer">👉 点击此处在新页面中打开${refTitle}</a>**`;
+    const linkCode = `**<a href="/references/${refSlug}" target="_blank" rel="noopener noreferrer">👉 点击此处在新页面中打开${refTitle}</a>**`;
     navigator.clipboard.writeText(linkCode).then(() => {
       setCopiedId(`${id}-link`);
       setTimeout(() => setCopiedId(''), 2000);
@@ -143,12 +143,12 @@ export default function ReferencesAdminPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full overflow-hidden">
       <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">References Management</h1>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-3 min-w-0 w-full">
         {/* Left 2 Cols - List */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-4 min-w-0">
           <div className="overflow-x-auto rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]">
             <table className="w-full text-sm">
               <thead className="bg-[var(--portal-color-surface)]">
@@ -156,10 +156,10 @@ export default function ReferencesAdminPage() {
                   <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
                     Title
                   </th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
+                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] hidden md:table-cell">
                     Slug / Path
                   </th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
+                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] hidden md:table-cell">
                     Created
                   </th>
                   <th className="px-4 py-3 text-right font-medium text-[var(--portal-color-text-secondary)]">
@@ -194,10 +194,10 @@ export default function ReferencesAdminPage() {
                       <td className="px-4 py-3 font-medium text-[var(--portal-color-text)]">
                         {ref.title}
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs text-[var(--portal-color-text-secondary)]">
-                        /api/references/{ref.slug}
+                      <td className="px-4 py-3 font-mono text-xs text-[var(--portal-color-text-secondary)] hidden md:table-cell">
+                        /references/{ref.slug}
                       </td>
-                      <td className="px-4 py-3 text-xs text-[var(--portal-color-text-secondary)]">
+                      <td className="px-4 py-3 text-xs text-[var(--portal-color-text-secondary)] hidden md:table-cell">
                         {new Date(ref.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -215,7 +215,7 @@ export default function ReferencesAdminPage() {
                             {copiedId === `${ref.id}-link` ? 'Copied! ✅' : 'Copy Link'}
                           </button>
                           <a
-                            href={`/api/references/${ref.slug}`}
+                            href={`/references/${ref.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-[var(--portal-color-text-secondary)] hover:underline"

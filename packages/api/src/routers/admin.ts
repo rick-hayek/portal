@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ensurePostsIndex, indexPost, meili, POSTS_INDEX, removePostFromIndex } from '../search';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
 
 export const adminRouter = router({
@@ -116,6 +117,16 @@ export const adminRouter = router({
         },
         include: { category: true },
       });
+
+      if (post.status === 'published') {
+        try {
+          await ensurePostsIndex();
+          await indexPost(post);
+        } catch (e) {
+          console.error('Failed to index post in MeiliSearch:', e);
+        }
+      }
+
       return post;
     }),
 
@@ -164,17 +175,39 @@ export const adminRouter = router({
         });
       }
 
-      return ctx.prisma.post.update({
+      const updatedPost = await ctx.prisma.post.update({
         where: { id },
         data,
         include: { category: true },
       });
+
+      // Sync to MeiliSearch
+      try {
+        await ensurePostsIndex();
+        if (updatedPost.status === 'published') {
+          await indexPost(updatedPost);
+        } else {
+          await removePostFromIndex(updatedPost.id);
+        }
+      } catch (e) {
+        console.error('Failed to sync post in MeiliSearch:', e);
+      }
+
+      return updatedPost;
     }),
 
   /** Delete post */
   postDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.post.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.delete({ where: { id: input.id } });
+      try {
+        await removePostFromIndex(input.id);
+      } catch (e) {
+        console.error('Failed to remove post from MeiliSearch:', e);
+      }
+      return post;
+    }),
 
   // ── Comment Moderation ─────────────────────────────
 
@@ -226,6 +259,7 @@ export const adminRouter = router({
         title: z.string().min(1).max(200),
         slug: z.string().min(1).max(200),
         description: z.string().min(1),
+        descriptionEn: z.string().optional(),
         coverImage: z.string().optional(),
         liveUrl: z.string().optional(),
         repoUrl: z.string().optional(),
@@ -233,8 +267,11 @@ export const adminRouter = router({
         sortOrder: z.number().int().default(0),
         featured: z.boolean().default(false),
         privacyPolicy: z.string().optional(),
+        privacyPolicyEn: z.string().optional(),
         termsOfService: z.string().optional(),
+        termsOfServiceEn: z.string().optional(),
         logo: z.string().optional(),
+        downloadLinks: z.any().optional(),
       }),
     )
     .mutation(({ ctx, input }) => ctx.prisma.project.create({ data: input })),
@@ -247,6 +284,7 @@ export const adminRouter = router({
         title: z.string().min(1).max(200).optional(),
         slug: z.string().min(1).max(200).optional(),
         description: z.string().min(1).optional(),
+        descriptionEn: z.string().nullable().optional(),
         coverImage: z.string().nullable().optional(),
         liveUrl: z.string().nullable().optional(),
         repoUrl: z.string().nullable().optional(),
@@ -254,8 +292,11 @@ export const adminRouter = router({
         sortOrder: z.number().int().optional(),
         featured: z.boolean().optional(),
         privacyPolicy: z.string().nullable().optional(),
+        privacyPolicyEn: z.string().nullable().optional(),
         termsOfService: z.string().nullable().optional(),
+        termsOfServiceEn: z.string().nullable().optional(),
         logo: z.string().nullable().optional(),
+        downloadLinks: z.any().optional(),
       }),
     )
     .mutation(({ ctx, input }) => {
@@ -267,6 +308,108 @@ export const adminRouter = router({
   projectDelete: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => ctx.prisma.project.delete({ where: { id: input.id } })),
+
+  // ── Books CRUD ─────────────────────────────────
+
+  /** List all books (admin) */
+  bookList: adminProcedure.query(({ ctx }) =>
+    ctx.prisma.book.findMany({
+      orderBy: { createdAt: 'desc' },
+    }),
+  ),
+
+  /** Get book by ID */
+  bookGet: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => ctx.prisma.book.findUnique({ where: { id: input.id } })),
+
+  /** Create book */
+  bookCreate: adminProcedure
+    .input(
+      z.object({
+        slug: z
+          .string()
+          .min(1)
+          .regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores'),
+        title: z.string().min(1),
+        coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
+        coverImage: z.string().nullable().optional().or(z.literal('')),
+        author: z.string().min(1),
+        publisher: z.string().nullable().optional().or(z.literal('')),
+        translator: z.string().nullable().optional().or(z.literal('')),
+        isbn: z.string().nullable().optional().or(z.literal('')),
+        publishYear: z.string().nullable().optional().or(z.literal('')),
+        originalBookId: z.string().nullable().optional().or(z.literal('')),
+        description: z.string().nullable().optional().or(z.literal('')),
+        review: z.string().nullable().optional().or(z.literal('')),
+      }),
+    )
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.book.create({
+        data: {
+          slug: input.slug.toLowerCase().trim(),
+          title: input.title,
+          coverImageURL: input.coverImageURL || null,
+          coverImage: input.coverImage || null,
+          author: input.author,
+          publisher: input.publisher || null,
+          translator: input.translator || null,
+          isbn: input.isbn || null,
+          publishYear: input.publishYear || null,
+          originalBookId: input.originalBookId || null,
+          description: input.description || null,
+          review: input.review || null,
+        },
+      }),
+    ),
+
+  /** Update book */
+  bookUpdate: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        slug: z
+          .string()
+          .min(1)
+          .regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores')
+          .optional(),
+        title: z.string().min(1).optional(),
+        coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
+        coverImage: z.string().nullable().optional().or(z.literal('')),
+        author: z.string().min(1).optional(),
+        publisher: z.string().nullable().optional().or(z.literal('')),
+        translator: z.string().nullable().optional().or(z.literal('')),
+        isbn: z.string().nullable().optional().or(z.literal('')),
+        publishYear: z.string().nullable().optional().or(z.literal('')),
+        originalBookId: z.string().nullable().optional().or(z.literal('')),
+        description: z.string().nullable().optional().or(z.literal('')),
+        review: z.string().nullable().optional().or(z.literal('')),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      const { id, ...data } = input;
+      return ctx.prisma.book.update({
+        where: { id },
+        data: {
+          ...data,
+          slug: data.slug ? data.slug.toLowerCase().trim() : undefined,
+          coverImageURL: data.coverImageURL || null,
+          coverImage: data.coverImage || null,
+          publisher: data.publisher || null,
+          translator: data.translator || null,
+          isbn: data.isbn || null,
+          publishYear: data.publishYear || null,
+          originalBookId: data.originalBookId || null,
+          description: data.description || null,
+          review: data.review || null,
+        },
+      });
+    }),
+
+  /** Delete book */
+  bookDelete: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ ctx, input }) => ctx.prisma.book.delete({ where: { id: input.id } })),
 
   // ── Links CRUD ─────────────────────────────────
 
@@ -397,4 +540,34 @@ export const adminRouter = router({
         where: { id: input.id },
       }),
     ),
+
+  /** Sync all posts to MeiliSearch index */
+  searchSync: adminProcedure.mutation(async ({ ctx }) => {
+    const posts = await ctx.prisma.post.findMany({
+      where: { status: 'published' },
+      include: { category: true },
+    });
+    try {
+      await ensurePostsIndex();
+      await meili.index(POSTS_INDEX).deleteAllDocuments();
+      if (posts.length > 0) {
+        await meili.index(POSTS_INDEX).addDocuments(
+          posts.map((post) => ({
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            excerpt: post.excerpt ?? '',
+            content: post.content,
+            status: post.status,
+            categoryName: post.category?.name ?? '',
+            categorySlug: post.category?.slug ?? '',
+            publishedAt: post.publishedAt?.toISOString() ?? null,
+          })),
+        );
+      }
+      return { success: true, count: posts.length };
+    } catch (e: any) {
+      throw new Error(`MeiliSearch sync failed: ${e?.message ?? e}`);
+    }
+  }),
 });

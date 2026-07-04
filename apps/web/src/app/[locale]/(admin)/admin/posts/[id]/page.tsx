@@ -5,6 +5,67 @@ import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useState } from 'react';
 import { Link } from '@/i18n/routing';
 
+const parseGfmAlertsInHtml = (html: string) => {
+  const blockquoteRegex = /<blockquote>([\s\S]*?)<\/blockquote>/gi;
+  const alertRegex = /^\s*<p>\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*(?:\r?\n|<br\s*\/?>)?/i;
+
+  return html.replace(blockquoteRegex, (match, content) => {
+    const alertMatch = content.match(alertRegex);
+    if (alertMatch) {
+      const type = alertMatch[1].toUpperCase();
+      const configs = {
+        NOTE: {
+          label: 'Note',
+          icon: 'ℹ️',
+          classes:
+            'border-blue-500 bg-blue-50/50 text-blue-900 dark:bg-blue-950/20 dark:text-blue-200',
+        },
+        TIP: {
+          label: 'Tip',
+          icon: '💡',
+          classes:
+            'border-green-500 bg-green-50/50 text-green-900 dark:bg-green-950/20 dark:text-green-200',
+        },
+        IMPORTANT: {
+          label: 'Important',
+          icon: '📢',
+          classes:
+            'border-purple-500 bg-purple-50/50 text-purple-900 dark:bg-purple-950/20 dark:text-purple-200',
+        },
+        WARNING: {
+          label: 'Warning',
+          icon: '⚠️',
+          classes:
+            'border-yellow-500 bg-yellow-50/50 text-yellow-900 dark:bg-yellow-950/20 dark:text-yellow-200',
+        },
+        CAUTION: {
+          label: 'Caution',
+          icon: '🚫',
+          classes: 'border-red-500 bg-red-50/50 text-red-900 dark:bg-red-950/20 dark:text-red-200',
+        },
+      };
+      const config = configs[type as keyof typeof configs];
+      if (config) {
+        let cleanedContent = content.replace(alertRegex, '<p>');
+        if (cleanedContent.startsWith('<p></p>') || cleanedContent.startsWith('<p>\n</p>')) {
+          cleanedContent = cleanedContent.replace(/^<p>\s*<\/p>\s*/, '');
+        }
+
+        return `<div class="my-6 border-l-4 p-4 rounded-r-lg ${config.classes}">
+          <div class="flex items-center gap-2 font-bold mb-2 text-sm uppercase tracking-wide select-none">
+            <span>${config.icon}</span>
+            <span>${config.label}</span>
+          </div>
+          <div class="text-sm space-y-2">
+            ${cleanedContent}
+          </div>
+        </div>`;
+      }
+    }
+    return match;
+  });
+};
+
 interface Category {
   id: string;
   name: string;
@@ -156,11 +217,19 @@ export default function EditPostPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="sticky top-0 z-10 -mx-6 px-6 py-4 flex items-center justify-between border-b border-[var(--portal-color-border)] bg-[var(--portal-color-background)]/80 backdrop-blur-md">
         <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Edit Post</h1>
+        <button
+          type="submit"
+          form="edit-post-form"
+          disabled={saving}
+          className="rounded-lg bg-[var(--portal-color-primary)] px-5 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 shadow-sm cursor-pointer"
+        >
+          {saving ? 'Saving...' : 'Save Changes'}
+        </button>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-5">
+      <form id="edit-post-form" onSubmit={handleSave} className="space-y-5">
         {error && (
           <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
             {error}
@@ -318,7 +387,9 @@ export default function EditPostPage() {
             <div className="w-full min-h-[440px] max-h-[600px] overflow-y-auto rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-5">
               <div
                 className="prose prose-portal max-w-none"
-                dangerouslySetInnerHTML={{ __html: marked.parse(content) }}
+                dangerouslySetInnerHTML={{
+                  __html: parseGfmAlertsInHtml(marked.parse(content) as string),
+                }}
               />
             </div>
           )}

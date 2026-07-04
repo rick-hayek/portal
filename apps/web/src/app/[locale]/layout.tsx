@@ -68,6 +68,13 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5960009177449604"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <TRPCReactProvider>

@@ -19,11 +19,13 @@ async function main() {
   await prisma.session.deleteMany();
   await prisma.account.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.book.deleteMany();
 
   // ── Admin User ──────────────────────────────────────
   const passwordHash = await bcrypt.hash('admin123', 12);
   const admin = await prisma.user.create({
     data: {
+      id: 'clk123456000008l28z3z3z3z', // Fixed CUID to prevent session orphaning after re-seeding
       email: 'admin@portal.dev',
       name: 'Rick',
       role: 'admin',
@@ -329,6 +331,52 @@ const elapsedMs = Date.now() - startTime;
   });
   console.log('  ✓ Portfolio projects: 3');
 
+  // ── Sample Books ─────────────────────────────────────
+  await prisma.book.createMany({
+    data: [
+      {
+        slug: 'clean-code',
+        title: 'Clean Code: A Handbook of Agile Software Craftsmanship',
+        coverImageURL:
+          'https://images-na.ssl-images-amazon.com/images/I/41xShTxONQL._SX376_BO1,204,203,200_.jpg',
+        author: 'Robert C. Martin',
+        publisher: 'Prentice Hall',
+        isbn: '978-0132350884',
+        description:
+          "Even bad code can function. But if code isn't clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. But it doesn't have to be that way.",
+        review:
+          'A must-read for every professional developer. It sets the foundational principles of writing clean, maintainable, and readable code. The examples are excellent and remain highly relevant.',
+      },
+      {
+        slug: 'ddia',
+        title: 'Designing Data-Intensive Applications',
+        coverImageURL:
+          'https://images-na.ssl-images-amazon.com/images/I/51gP9mXxp5L._SX379_BO1,204,203,200_.jpg',
+        author: 'Martin Kleppmann',
+        publisher: "O'Reilly Media",
+        isbn: '978-1449373320',
+        description:
+          'Data is at the center of many challenges in system design today. Difficult issues need to be figured out, such as scalability, consistency, reliability, efficiency, and maintainability.',
+        review:
+          'This is the absolute gold standard for understanding database internals, replication, partitioning, and modern system architectures. Highly recommended for senior engineers designing distributed systems.',
+      },
+      {
+        slug: 'free-to-choose',
+        title: '自由选择',
+        coverImageURL:
+          'https://img9.doubanio.com/view/subject/s/public/s3129915.jpg',
+        author: '[美] 米尔顿·弗里德曼 / 罗丝·弗里德曼',
+        publisher: "机械工业出版社",
+        isbn: '9787111240792',
+        description:
+          '在这本探讨经济、自由以及二者之间关系的经典著作当中，米尔顿·弗里德曼和罗斯·弗里德曼为我们揭示了，正是由于华盛顿当局制定了过多的法律法规、实施了过多的政府管制、建立了过多的行政机构、花费了过多的财政预算，才使我们的自由和财富受到了侵蚀和削弱。一旦政府以中间人的身份插手干预，良好的愿望往往会导致悲惨的结果，对此，两位作者也进行了细致的考察研究。此外，针对这些经济问题，弗里德曼夫妇还提出了积极的建议和意见，告诉我们应当如何扩展自由、增进财富。',
+        review:
+          '本书揭示了自由在经济发展中的重要性，以及政府过度干预对自由和财富的侵蚀。',
+      },
+    ],
+  });
+  console.log('  ✓ Sample Books: 2');
+
   // ── Sample Page Views ────────────────────────────────
   const paths = [
     '/',
@@ -347,6 +395,92 @@ const elapsedMs = Date.now() - startTime;
   }
   await prisma.pageView.createMany({ data: pvData });
   console.log('  ✓ Page views: 50');
+
+  // ── Sync to MeiliSearch ──────────────────────────────
+  try {
+    const meiliUrl = process.env.MEILISEARCH_URL || 'http://localhost:7700';
+    const meiliKey = process.env.MEILISEARCH_KEY || 'portal_meili_dev_key';
+
+    console.log('\n🔄 Syncing posts to MeiliSearch...');
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${meiliKey}`,
+    };
+
+    // Check health
+    const healthRes = await fetch(`${meiliUrl}/health`);
+    if (healthRes.ok) {
+      // Create/Get index
+      await fetch(`${meiliUrl}/indexes/posts`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ primaryKey: 'id' }),
+      });
+
+      // Update settings
+      await fetch(`${meiliUrl}/indexes/posts/settings`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({
+          searchableAttributes: ['title', 'excerpt', 'content', 'categoryName'],
+          filterableAttributes: ['status', 'categorySlug'],
+          sortableAttributes: ['publishedAt', 'title'],
+          displayedAttributes: [
+            'id',
+            'title',
+            'slug',
+            'excerpt',
+            'categoryName',
+            'categorySlug',
+            'publishedAt',
+          ],
+        }),
+      });
+
+      // Fetch posts from database to index
+      const dbPosts = await prisma.post.findMany({
+        where: { status: 'published' },
+        include: { category: true },
+      });
+
+      const docs = dbPosts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt ?? '',
+        content: post.content,
+        status: post.status,
+        categoryName: post.category?.name ?? '',
+        categorySlug: post.category?.slug ?? '',
+        publishedAt: post.publishedAt?.toISOString() ?? null,
+      }));
+
+      if (docs.length > 0) {
+        // Clear old indexing
+        await fetch(`${meiliUrl}/indexes/posts/documents`, {
+          method: 'DELETE',
+          headers,
+        });
+
+        // Push new indexing
+        const indexRes = await fetch(`${meiliUrl}/indexes/posts/documents`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(docs),
+        });
+
+        if (indexRes.ok) {
+          console.log(`  ✓ Synced ${docs.length} posts to MeiliSearch`);
+        } else {
+          console.log('  × Failed to upload documents to MeiliSearch');
+        }
+      }
+    } else {
+      console.log('  × MeiliSearch is not healthy, skipping sync');
+    }
+  } catch (err: any) {
+    console.warn('  ⚠️ MeiliSearch sync skipped:', err.message || err);
+  }
 
   console.log('\n✅ Seed complete!');
 }

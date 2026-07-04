@@ -20,6 +20,7 @@ const presetModules: Record<PresetName, string[]> = {
     'links',
     'about',
     'tools',
+    'books',
     'analytics',
     'search',
   ],

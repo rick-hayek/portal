@@ -30,7 +30,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <div className="flex w-full flex-col">
       {/* HERO SECTION */}
-      <section className="flex min-h-screen w-full items-center justify-center pt-32 pb-16 px-8">
+      <section className="flex min-h-screen w-full items-center justify-center pt-20 pb-12 sm:pt-32 sm:pb-16 px-8">
         <div className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Hero Text */}
           <div>
@@ -106,6 +106,22 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </svg>
                 tRPC
               </span>
+              <span className="flex items-center gap-1.5">
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 3L2 20h20L12 3z M12 3v17 M2 20l10-8 10 8"
+                  />
+                </svg>
+                Prisma
+              </span>
             </div>
           </div>
 
@@ -120,21 +136,21 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <div className="w-2.5 h-2.5 rounded-full bg-[rgba(16,185,129,0.7)]"></div>
                 </div>
                 <span className="font-mono text-[0.65rem] text-[var(--portal-color-text-secondary)]">
-                  portal — zsh
+                  my-personal-portal — zsh
                 </span>
                 <div className="w-8"></div>
               </div>
 
               {/* Terminal Body */}
               <div className="p-6 font-mono text-[0.82rem] leading-[1.8] text-[var(--portal-color-text-secondary)]">
-                <div className="opacity-50">// Initializing Portal</div>
+                <div className="opacity-50">// Initializing Project</div>
                 <div>
                   <span className="text-violet-500">const</span>
                   <span className="text-[var(--portal-color-primary)]"> developer</span> = {'{ '}
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">name:</span>{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Rick'</span>,
+                  <span className="text-emerald-600 dark:text-emerald-400">'Rick Huang'</span>,
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">role:</span>{' '}
@@ -145,9 +161,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">stack:</span> [
-                  <span className="text-emerald-600 dark:text-emerald-400">'Next.js'</span>,{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'.NETCore'</span>,{' '}
                   <span className="text-emerald-600 dark:text-emerald-400">'TypeScript'</span>,{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Prisma'</span>],
+                  <span className="text-emerald-600 dark:text-emerald-400">'Vue'</span>,{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'Python'</span>,{' '}
+                  <span className="text-emerald-600 dark:text-emerald-400">'AI Agent'</span>],
                 </div>
                 <div className="pl-6">
                   <span className="text-[var(--portal-color-primary)]">status:</span>{' '}
@@ -168,52 +186,77 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* BLOG SECTION */}
       <div className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)]">
         <section className="py-20 px-8 max-w-[1200px] mx-auto w-full">
-          <div className="flex items-baseline gap-3 mb-10">
-            <span className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"></span>
-            <span className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium">
-              {t('latestPosts')}
-            </span>
-            <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
-              {t('blogTitle')}
-            </h2>
+          <div className="flex items-baseline justify-between mb-10">
+            <div className="flex items-baseline gap-3">
+              <span className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"></span>
+              <span className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium">
+                {t('latestPosts')}
+              </span>
+              <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
+                {t('blogTitle')}
+              </h2>
+            </div>
+            <Link
+              href="/blog"
+              className="group flex items-center gap-1.5 no-underline transition-colors text-[0.82rem] font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]"
+            >
+              {t('viewAll')}{' '}
+              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </Link>
           </div>
 
           <div className="flex flex-col">
             {posts.length > 0 ? (
-              posts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.slug}`}
-                  className="group text-inherit no-underline transition-all duration-300 ease-out hover:bg-[var(--portal-color-primary-soft)] hover:border-transparent hover:pl-6 grid grid-cols-[80px_1fr_auto] gap-6 items-baseline py-5 px-4 border-b border-compat-soft cursor-pointer rounded-xl hover:shadow-[0_4px_20px_rgba(107,142,201,0.05)]"
-                >
-                  <span className="whitespace-nowrap font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)]">
-                    {post.publishedAt
-                      ? new Date(post.publishedAt).toLocaleDateString(locale, {
-                          month: 'short',
-                          day: 'numeric',
-                        })
-                      : '—'}
-                  </span>
-                  <div>
-                    {post.category && (
-                      <span className="inline-block text-[0.6rem] font-semibold tracking-widest uppercase text-[var(--portal-color-primary)] py-0.5 px-2 bg-[var(--portal-color-primary-soft)] rounded-[6px] mb-1.5">
-                        {post.category.name}
-                      </span>
-                    )}
-                    <div className="text-base font-semibold leading-normal tracking-tight text-[var(--portal-color-text)] mb-1 group-hover:text-[var(--portal-color-primary)] transition-colors duration-300">
-                      {post.title}
-                    </div>
-                    {post.excerpt && (
-                      <div className="text-[0.82rem] leading-relaxed text-[var(--portal-color-text-secondary)]">
-                        {post.excerpt}
+              posts.map((post) => {
+                const formattedDate = post.publishedAt
+                  ? (() => {
+                      const date = new Date(post.publishedAt);
+                      const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+                      return date.toLocaleDateString(locale, {
+                        year: isCurrentYear ? undefined : 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      });
+                    })()
+                  : '—';
+
+                return (
+                  <Link
+                    key={post.id}
+                    href={`/blog/${post.slug}`}
+                    className="group text-inherit no-underline transition-all duration-300 ease-out hover:bg-[var(--portal-color-primary-soft)] hover:border-transparent md:hover:pl-6 grid grid-cols-1 md:grid-cols-[96px_1fr_auto] gap-2 md:gap-6 items-baseline py-5 px-4 border-b border-compat-soft cursor-pointer rounded-xl hover:shadow-[0_4px_20px_rgba(107,142,201,0.05)]"
+                  >
+                    {/* Desktop Date */}
+                    <span className="hidden md:inline whitespace-nowrap font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)]">
+                      {formattedDate}
+                    </span>
+                    <div className="w-full">
+                      <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                        {/* Mobile Date */}
+                        <span className="font-mono text-[0.72rem] text-[var(--portal-color-text-tertiary)] md:hidden">
+                          {formattedDate}
+                        </span>
+                        {post.category && (
+                          <span className="inline-block text-[0.6rem] font-semibold tracking-widest uppercase text-[var(--portal-color-primary)] py-0.5 px-2 bg-[var(--portal-color-primary-soft)] rounded-[6px]">
+                            {post.category.name}
+                          </span>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <span className="text-[18px] text-[var(--portal-color-primary)] opacity-0 -translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0">
-                    →
-                  </span>
-                </Link>
-              ))
+                      <div className="text-base font-semibold leading-normal tracking-tight text-[var(--portal-color-text)] mb-1 group-hover:text-[var(--portal-color-primary)] transition-colors duration-300">
+                        {post.title}
+                      </div>
+                      {post.excerpt && (
+                        <div className="text-[0.82rem] leading-relaxed text-[var(--portal-color-text-secondary)]">
+                          {post.excerpt}
+                        </div>
+                      )}
+                    </div>
+                    <span className="hidden md:inline text-[18px] text-[var(--portal-color-primary)] opacity-0 -translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0">
+                      →
+                    </span>
+                  </Link>
+                );
+              })
             ) : (
               <p className="py-12 text-center text-[var(--portal-color-text-secondary)]">
                 No articles published yet.
