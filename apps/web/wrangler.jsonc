@@ -1,12 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "portal",
+  "name": "portal-web",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-01-01",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
-  "minify": true,
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
