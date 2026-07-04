@@ -1,31 +1,19 @@
 import { prisma } from '@portal/db';
 import Image from 'next/image';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
+import { Suspense } from 'react';
+
+export const revalidate = 60; // revalidate at most every minute (ISR)
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+
+  // Set request locale for static/ISR rendering in next-intl
+  setRequestLocale(locale);
+
   const t = await getTranslations({ locale, namespace: 'Index' });
-  const tGuestbook = await getTranslations({ locale, namespace: 'Guestbook' });
-
-  const trpc = await getTRPCServer();
-
-  // Fetch real data from DB via tRPC direct caller and Prisma
-  const postsData = await trpc.post.list({ page: 1, limit: 3, status: 'published' });
-  const posts = postsData.posts;
-
-  const projects = await trpc.portfolio.list({ featured: true });
-
-  const guestbookData = await trpc.guestbook.list({ page: 1, limit: 4 });
-  const guestbookEntries = guestbookData.entries;
-
-  const [postCount, projectCount, viewCount, guestbookCount] = await Promise.all([
-    prisma.post.count({ where: { status: 'published' } }),
-    prisma.project.count(),
-    prisma.pageView.count(),
-    prisma.guestbookEntry.count(),
-  ]);
 
   return (
     <div className="flex w-full flex-col">
@@ -183,6 +171,44 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </section>
 
+      {/* DB-dependent sections loaded dynamically in the background */}
+      <Suspense fallback={<HomeDbSectionsSkeleton />}>
+        <HomeDbSections locale={locale} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function HomeDbSections({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: 'Index' });
+  const tGuestbook = await getTranslations({ locale, namespace: 'Guestbook' });
+
+  const trpc = await getTRPCServer();
+
+  // Parallelize all DB/tRPC calls to optimize performance
+  const [
+    postsData,
+    projects,
+    guestbookData,
+    postCount,
+    projectCount,
+    viewCount,
+    guestbookCount,
+  ] = await Promise.all([
+    trpc.post.list({ page: 1, limit: 3, status: 'published' }),
+    trpc.portfolio.list({ featured: true }),
+    trpc.guestbook.list({ page: 1, limit: 4 }),
+    prisma.post.count({ where: { status: 'published' } }),
+    prisma.project.count(),
+    prisma.pageView.count(),
+    prisma.guestbookEntry.count(),
+  ]);
+
+  const posts = postsData.posts;
+  const guestbookEntries = guestbookData.entries;
+
+  return (
+    <>
       {/* BLOG SECTION */}
       <div className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)]">
         <section className="py-20 px-8 max-w-[1200px] mx-auto w-full">
@@ -419,6 +445,39 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             ))}
           </div>
         </section>
+      </div>
+    </>
+  );
+}
+
+function HomeDbSectionsSkeleton() {
+  return (
+    <div className="w-full animate-pulse">
+      {/* Blog Section Skeleton */}
+      <div className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)] py-20 px-8">
+        <div className="max-w-[1200px] mx-auto w-full">
+          <div className="flex items-baseline justify-between mb-10">
+            <div className="h-6 w-48 bg-gray-200 dark:bg-gray-800 rounded" />
+            <div className="h-4 w-16 bg-gray-200 dark:bg-gray-800 rounded" />
+          </div>
+          <div className="space-y-4">
+            <div className="h-24 bg-gray-100 dark:bg-gray-900 rounded-xl" />
+            <div className="h-24 bg-gray-100 dark:bg-gray-900 rounded-xl" />
+            <div className="h-24 bg-gray-100 dark:bg-gray-900 rounded-xl" />
+          </div>
+        </div>
+      </div>
+      {/* Portfolio Section Skeleton */}
+      <div className="py-20 px-8 max-w-[1200px] mx-auto w-full">
+        <div className="flex items-baseline justify-between mb-10">
+          <div className="h-6 w-48 bg-gray-200 dark:bg-gray-800 rounded" />
+          <div className="h-4 w-16 bg-gray-200 dark:bg-gray-800 rounded" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="h-64 bg-gray-100 dark:bg-gray-900 rounded-2xl" />
+          <div className="h-64 bg-gray-100 dark:bg-gray-900 rounded-2xl" />
+          <div className="h-64 bg-gray-100 dark:bg-gray-900 rounded-2xl" />
+        </div>
       </div>
     </div>
   );

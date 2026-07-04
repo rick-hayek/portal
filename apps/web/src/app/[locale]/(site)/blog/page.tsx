@@ -27,14 +27,15 @@ export default async function BlogPage({
 
   const trpc = await getTRPCServer();
 
-  const data = await trpc.post.list({
-    page,
-    limit: 10,
-    categorySlug: sParams.category,
-    tagSlug: sParams.tag,
-  });
-
-  const categories = await trpc.category.list();
+  const [data, categories] = await Promise.all([
+    trpc.post.list({
+      page,
+      limit: 10,
+      categorySlug: sParams.category,
+      tagSlug: sParams.tag,
+    }),
+    trpc.category.list(),
+  ]);
 
   return (
     <div className="pt-8 md:pt-24 pb-12 md:pb-20 px-4 md:px-8 max-w-[1200px] mx-auto w-full">
