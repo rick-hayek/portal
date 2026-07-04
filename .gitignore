@@ -12,7 +12,6 @@ out/
 # Build outputs
 dist/
 build/
-.open-next/
 
 # Environment files
 .env
