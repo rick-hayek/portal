@@ -11,7 +11,8 @@
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      "id": "de91e3ba8cb142b0b2c894a198e4ecb6"
+      "id": "de91e3ba8cb142b0b2c894a198e4ecb6",
+      "localConnectionString": "postgresql://portal:portal_dev@localhost:5432/portal"
     }
   ]
 }
