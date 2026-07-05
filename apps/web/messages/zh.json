@@ -230,6 +230,8 @@
     "noSummary": "AI 摘要即将上线...",
     "summary": "AI 摘要",
     "topics": "标签",
-    "starsThisWeek": "本周"
+    "starsThisWeek": "本周",
+    "loginToStar": "使用 GitHub 登录以 star 仓库",
+    "starFailed": "操作失败，请检查 GitHub 授权！"
   }
 }

@@ -230,6 +230,8 @@
     "noSummary": "AI summary coming soon...",
     "summary": "AI Summary",
     "topics": "Topics",
-    "starsThisWeek": "this week"
+    "starsThisWeek": "this week",
+    "loginToStar": "Log in with GitHub to star",
+    "starFailed": "Failed to star, check GitHub permissions!"
   }
 }

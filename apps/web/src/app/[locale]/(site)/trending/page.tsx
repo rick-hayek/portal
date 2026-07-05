@@ -2,6 +2,8 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
+import { useSession, signIn } from 'next-auth/react';
+import { trpc } from '@/lib/api/client';
 
 // GitHub language color mapping
 const LANG_COLORS: Record<string, string> = {
@@ -57,11 +59,81 @@ export default function TrendingPage() {
   const t = useTranslations('Trending');
   const locale = useLocale();
 
+  const { data: session } = useSession();
+  const isLoggedIn = !!session?.user;
+
   const [repos, setRepos] = useState<TrendingRepo[]>([]);
   const [weeks, setWeeks] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const [localStarredIds, setLocalStarredIds] = useState<Set<number>>(new Set());
+  const [starCountOverrides, setStarCountOverrides] = useState<Record<number, number>>({});
+
+  const { data: starredRepoIds, refetch: refetchStarred } = trpc.trending.getMyStarredRepoIds.useQuery(
+    undefined,
+    {
+      enabled: isLoggedIn,
+    }
+  );
+
+  const toggleStarMutation = trpc.trending.toggleStar.useMutation();
+
+  useEffect(() => {
+    if (starredRepoIds) {
+      setLocalStarredIds(new Set(starredRepoIds));
+    }
+  }, [starredRepoIds]);
+
+  const handleStarClick = async (repo: TrendingRepo, isStarred: boolean) => {
+    if (!isLoggedIn) {
+      signIn('github');
+      return;
+    }
+
+    const nextStarred = !isStarred;
+
+    // Optimistic UI updates
+    setLocalStarredIds((prev) => {
+      const next = new Set(prev);
+      if (nextStarred) {
+        next.add(repo.githubId);
+      } else {
+        next.delete(repo.githubId);
+      }
+      return next;
+    });
+
+    setStarCountOverrides((prev) => ({
+      ...prev,
+      [repo.githubId]: repo.stars + (nextStarred ? 1 : -1),
+    }));
+
+    try {
+      await toggleStarMutation.mutateAsync({
+        fullName: repo.fullName,
+        starred: nextStarred,
+      });
+      refetchStarred();
+    } catch {
+      // Revert optimistic updates on error
+      setLocalStarredIds((prev) => {
+        const next = new Set(prev);
+        if (!nextStarred) {
+          next.add(repo.githubId);
+        } else {
+          next.delete(repo.githubId);
+        }
+        return next;
+      });
+      setStarCountOverrides((prev) => ({
+        ...prev,
+        [repo.githubId]: repo.stars,
+      }));
+      alert(t('starFailed') || 'Failed to update GitHub star.');
+    }
+  };
 
   // Fetch available weeks
   useEffect(() => {
@@ -188,6 +260,8 @@ export default function TrendingPage() {
               const langColor = repo.language
                 ? LANG_COLORS[repo.language] ?? '#8b8b8b'
                 : undefined;
+              const isStarred = localStarredIds.has(repo.githubId);
+              const displayStars = starCountOverrides[repo.githubId] ?? repo.stars;
 
               return (
                 <div
@@ -216,14 +290,29 @@ export default function TrendingPage() {
                       </a>
                     </div>
 
-                    {/* Star badge */}
+                    {/* Star badge / button */}
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      <div className="flex items-center gap-1 text-amber-500">
-                        <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
+                      <button
+                        onClick={() => handleStarClick(repo, isStarred)}
+                        disabled={toggleStarMutation.isPending}
+                        title={isLoggedIn ? undefined : t('loginToStar')}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all text-xs font-semibold ${
+                          isStarred
+                            ? 'bg-amber-500/10 text-amber-500 border-amber-500/20 hover:bg-amber-500/20'
+                            : 'bg-transparent text-[var(--portal-color-text-secondary)] border-compat hover:border-[var(--portal-color-primary)]/40 hover:text-[var(--portal-color-text)]'
+                        } ${toggleStarMutation.isPending ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        <svg
+                          className="h-3.5 w-3.5"
+                          viewBox="0 0 16 16"
+                          fill={isStarred ? 'currentColor' : 'none'}
+                          stroke="currentColor"
+                          strokeWidth={isStarred ? '0' : '1.5'}
+                        >
                           <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z" />
                         </svg>
-                        <span className="text-sm font-semibold">{formatNumber(repo.stars)}</span>
-                      </div>
+                        <span>{formatNumber(displayStars)}</span>
+                      </button>
                       {repo.starsGrowth > 0 && (
                         <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 whitespace-nowrap">
                           +{formatNumber(repo.starsGrowth)} {t('starsThisWeek') || 'this week'}
