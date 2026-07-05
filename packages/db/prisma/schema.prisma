@@ -264,3 +264,35 @@ model BookLike {
   @@index([bookId])
   @@index([userId])
 }
+
+// ============ AI Trending ============
+
+model TrendingRepo {
+  id             String   @id @default(cuid())
+  githubId       Int                       // GitHub repo numeric ID
+  name           String                    // e.g. "codex"
+  fullName       String                    // e.g. "openai/codex"
+  url            String                    // GitHub URL
+  description    String?                   // GitHub original description
+  language       String?                   // Primary language
+  stars          Int                       // Star count at fetch time
+  forks          Int      @default(0)
+  starsGrowth    Int      @default(0)       // Stars gained this week (calculated delta)
+  repoCreatedAt  DateTime                  // When the repo was created on GitHub
+  topics         String[] @default([])     // GitHub topics array
+
+  // AI-generated bilingual summaries (filled manually via Admin)
+  summaryZh      String?  @db.Text         // 中文摘要
+  summaryEn      String?  @db.Text         // English summary
+
+  // Metadata
+  weekOf         DateTime                  // The Monday of the week this was fetched for
+  fetchedAt      DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([githubId, weekOf])
+  @@index([weekOf])
+  @@index([stars])
+  @@index([starsGrowth])
+}

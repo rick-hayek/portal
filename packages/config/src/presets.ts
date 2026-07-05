@@ -23,6 +23,7 @@ const presetModules: Record<PresetName, string[]> = {
     'books',
     'analytics',
     'search',
+    'trending',
   ],
   devtools: ['tools', 'blog', 'search', 'analytics'],
 };

@@ -73,4 +73,12 @@ export function registerDefaultModules() {
     routes: [{ path: '/tools', label: 'Tools' }],
     navItems: [{ label: 'Tools', href: '/tools', icon: '🛠️', order: 9 }],
   });
+  registerModule({
+    id: 'trending',
+    name: 'AI Trending',
+    icon: '🔥',
+    version: '1.0.0',
+    routes: [{ path: '/trending', label: 'AI Trending' }],
+    navItems: [{ label: 'Trending', href: '/trending', icon: '🔥', order: 10 }],
+  });
 }

@@ -17,6 +17,7 @@ const navItems = [
   { href: '/admin/references', label: 'References', icon: '📎' },
   { href: '/admin/attachments', label: 'Attachments', icon: '🖼️' },
   { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
+  { href: '/admin/trending', label: 'AI Trending', icon: '🔥' },
   { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
 ];
 

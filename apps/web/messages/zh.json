@@ -13,7 +13,8 @@
     "admin": "管理",
     "profile": "个人中心",
     "signOut": "退出登录",
-    "signIn": "登录"
+    "signIn": "登录",
+    "trending": "AI 热榜"
   },
   "Index": {
     "badge": "全栈开发者",
@@ -214,5 +215,21 @@
       "mismatch": "两次输入的密码不一致！",
       "minLength": "密码长度不能少于 6 位！"
     }
+  },
+  "Trending": {
+    "sectionLabel": "AI / LLM",
+    "title": "AI 热榜",
+    "subtitle": "来自 GitHub 的本周最热门 AI 与大模型开源项目",
+    "weekOf": "所属周",
+    "stars": "Stars",
+    "forks": "Forks",
+    "language": "语言",
+    "createdAt": "创建于",
+    "viewOnGithub": "在 GitHub 上查看",
+    "noData": "暂无热榜数据，请稍后再来！",
+    "noSummary": "AI 摘要即将上线...",
+    "summary": "AI 摘要",
+    "topics": "标签",
+    "starsThisWeek": "本周"
   }
 }

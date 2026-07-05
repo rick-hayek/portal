@@ -13,7 +13,8 @@
     "admin": "Admin",
     "profile": "Profile",
     "signOut": "Sign Out",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "trending": "AI Trending"
   },
   "Index": {
     "badge": "Full-Stack Developer",
@@ -214,5 +215,21 @@
       "mismatch": "Passwords do not match!",
       "minLength": "Password must be at least 6 characters long!"
     }
+  },
+  "Trending": {
+    "sectionLabel": "AI / LLM",
+    "title": "AI Trending",
+    "subtitle": "Most popular AI & LLM open-source projects this week from GitHub",
+    "weekOf": "Week of",
+    "stars": "Stars",
+    "forks": "Forks",
+    "language": "Language",
+    "createdAt": "Created",
+    "viewOnGithub": "View on GitHub",
+    "noData": "No trending data yet. Check back later!",
+    "noSummary": "AI summary coming soon...",
+    "summary": "AI Summary",
+    "topics": "Topics",
+    "starsThisWeek": "this week"
   }
 }
