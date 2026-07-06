@@ -135,12 +135,12 @@ function SignInContent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center rounded-full bg-[var(--portal-color-text)] h-11 text-[0.9rem] font-bold text-white shadow-lg shadow-[rgba(17,24,39,0.2)] transition-all hover:opacity-90 hover:translate-y-[-1px] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex w-full items-center justify-center rounded-full bg-[var(--portal-color-text)] h-11 text-[0.9rem] font-bold text-[var(--portal-color-background)] shadow-lg shadow-[rgba(17,24,39,0.2)] transition-all hover:opacity-90 hover:translate-y-[-1px] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <svg
-                      className="h-4 w-4 animate-spin text-white/80"
+                      className="h-4 w-4 animate-spin text-[var(--portal-color-background)]/80"
                       viewBox="0 0 24 24"
                       fill="none"
                     >

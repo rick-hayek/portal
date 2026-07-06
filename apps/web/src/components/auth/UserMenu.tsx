@@ -25,8 +25,9 @@ export function UserMenu() {
   if (!session) {
     return (
       <button
+        type="button"
         onClick={() => signIn()}
-        className="rounded-full bg-[var(--portal-color-text)] text-[0.78rem] font-semibold text-white transition-all hover:bg-[var(--portal-color-primary)]"
+        className="rounded-full bg-[var(--portal-color-text)] text-[0.78rem] font-semibold text-[var(--portal-color-background)] transition-all hover:bg-[var(--portal-color-primary)] hover:text-white"
         style={{ padding: '.35rem 1rem' }}
       >
         {t('signIn')}
