@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "rm -rf .next .turbo && next build && find .next -name \"*.map\" -delete",
     "start": "next start",
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",

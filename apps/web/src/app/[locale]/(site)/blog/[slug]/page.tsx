@@ -10,7 +10,6 @@ import remarkMath from 'remark-math';
 import { AdSense } from '@/components/blog/AdSense';
 import { CommentSection } from '@/components/blog/CommentSection';
 import { CustomBlockquote } from '@/components/blog/CustomBlockquote';
-import 'katex/dist/katex.min.css';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
@@ -86,6 +85,13 @@ export default async function BlogPostPage({
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+      {/* Load KaTeX stylesheet from CDN to avoid compiling local font assets */}
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css"
+        integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB"
+        crossOrigin="anonymous"
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
