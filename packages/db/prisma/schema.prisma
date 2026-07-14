@@ -219,7 +219,7 @@ model Attachment {
   id        String   @id @default(cuid())
   filename  String   @unique
   mimeType  String
-  fileData  Bytes
+  url       String   @default("") // S3/R2 Public URL
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -9,6 +9,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1086.0",
     "@portal/db": "workspace:*",
     "@portal/shared": "workspace:*",
     "@trpc/client": "^11.10.0",
