@@ -839,13 +839,18 @@ export const adminRouter = router({
     .input(
       z
         .object({
+          page: z.number().int().min(1).default(1),
+          limit: z.number().int().min(1).max(100).default(20),
           weekOf: z.string().optional(),
         })
-        .optional(),
+        .default({ page: 1, limit: 20 }),
     )
     .query(async ({ ctx, input }) => {
+      const { page, limit } = input;
+      const skip = (page - 1) * limit;
+
       let targetWeek: Date | undefined;
-      if (input?.weekOf) {
+      if (input.weekOf) {
         targetWeek = new Date(input.weekOf);
       } else {
         const latest = await ctx.prisma.trendingRepo.findFirst({
@@ -855,14 +860,28 @@ export const adminRouter = router({
         targetWeek = latest?.weekOf;
       }
 
-      if (!targetWeek) return { repos: [], weekOf: null };
+      if (!targetWeek) {
+        return { repos: [], total: 0, totalPages: 0, weekOf: null };
+      }
 
-      const repos = await ctx.prisma.trendingRepo.findMany({
-        where: { weekOf: targetWeek },
-        orderBy: { starsGrowth: 'desc' },
-      });
+      const [repos, total] = await Promise.all([
+        ctx.prisma.trendingRepo.findMany({
+          where: { weekOf: targetWeek },
+          orderBy: { starsGrowth: 'desc' },
+          skip,
+          take: limit,
+        }),
+        ctx.prisma.trendingRepo.count({
+          where: { weekOf: targetWeek },
+        }),
+      ]);
 
-      return { repos, weekOf: targetWeek.toISOString() };
+      return {
+        repos,
+        total,
+        totalPages: Math.ceil(total / limit),
+        weekOf: targetWeek.toISOString(),
+      };
     }),
 
   /** Delete a trending repo by ID */

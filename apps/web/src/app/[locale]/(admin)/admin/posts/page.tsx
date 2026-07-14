@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { Pencil, Trash2, Eye } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 
 interface Post {
@@ -178,26 +179,29 @@ export default function PostsPage() {
                     {new Date(post.updatedAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5 sm:gap-2">
                       <Link
                         href={`/admin/posts/${post.id}`}
-                        className="text-[var(--portal-color-primary)] hover:underline"
+                        className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                       >
-                        Edit
+                        <Pencil className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Edit</span>
                       </Link>
                       <a
                         href={`/blog/${post.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[var(--portal-color-text-secondary)] hover:underline"
+                        className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                       >
-                        View
+                        <Eye className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">View</span>
                       </a>
                       <button
                         onClick={() => handleDelete(post.id)}
-                        className="text-red-500 hover:underline"
+                        className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
                       >
-                        Delete
+                        <Trash2 className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Delete</span>
                       </button>
                     </div>
                   </td>

@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState, useTransition } from 'react';
+import { Pencil, Trash2, Eye } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
 
 interface Book {
@@ -142,27 +143,30 @@ export default function AdminBooksPage() {
                       {book.publisher ?? '—'}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-3">
+                      <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                         <Link
                           href={`/books/${book.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm font-medium text-green-600 hover:underline dark:text-green-400"
+                          className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                         >
-                          View
+                          <Eye className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">View</span>
                         </Link>
                         <Link
                           href={`/admin/books/${book.id}`}
-                          className="text-sm font-medium text-[var(--portal-color-primary)] hover:underline"
+                          className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                         >
-                          Edit
+                          <Pencil className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Edit</span>
                         </Link>
                         <button
                           type="button"
                           onClick={() => handleDelete(book.id)}
-                          className="text-sm font-medium text-red-500 hover:underline"
+                          className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
                         >
-                          Delete
+                          <Trash2 className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Delete</span>
                         </button>
                       </div>
                     </td>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { Pencil, Trash2, Eye, Star } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 
 interface Project {
@@ -108,32 +109,41 @@ export default function AdminPortfolioPage() {
                   ))}
                 </div>
               </div>
-              <div className="flex shrink-0 gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => toggleFeatured(p.id, p.featured)}
-                  className="text-xs text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]"
+                  className={`inline-flex items-center gap-1 text-xs px-2 py-1.5 rounded border transition-colors ${
+                    p.featured
+                      ? 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20'
+                      : 'border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)]'
+                  }`}
+                  title={p.featured ? 'Unfeature project' : 'Feature project'}
                 >
-                  {p.featured ? '★' : '☆'}
+                  <Star className="h-3.5 w-3.5" fill={p.featured ? 'currentColor' : 'none'} />
+                  <span className="hidden sm:inline">{p.featured ? 'Featured' : 'Feature'}</span>
                 </button>
                 <Link
                   href={`/admin/portfolio/${p.id}`}
-                  className="text-xs text-[var(--portal-color-text-secondary)] hover:underline"
+                  className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                 >
-                  Edit
+                  <Pencil className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Edit</span>
                 </Link>
                 <a
                   href={`/portfolio/${p.slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-[var(--portal-color-text-secondary)] hover:underline"
+                  className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                 >
-                  View
+                  <Eye className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">View</span>
                 </a>
                 <button
                   onClick={() => handleDelete(p.id)}
-                  className="text-xs text-red-500 hover:underline"
+                  className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
                 >
-                  Delete
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Delete</span>
                 </button>
               </div>
             </div>
