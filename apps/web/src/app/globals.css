@@ -196,6 +196,24 @@ textarea {
   font-size: 0.875em;
 }
 
+.prose-portal :not(pre)>code.math-inline,
+.prose-portal .math-inline {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: 1.1em !important;
+}
+
+.prose-portal :not(pre)>code.math-display,
+.prose-portal .math-display {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: 1.15em !important;
+}
+
 .prose-portal ul,
 .prose-portal ol {
   margin: 1em 0;

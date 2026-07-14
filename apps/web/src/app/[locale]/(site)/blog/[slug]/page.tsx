@@ -2,11 +2,11 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import rehypeHighlight from 'rehype-highlight';
-import rehypeKatex from 'rehype-katex';
+import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
+import { MathRenderer } from '@/components/blog/MathRenderer';
 import { AdSense } from '@/components/blog/AdSense';
 import { CommentSection } from '@/components/blog/CommentSection';
 import { CustomBlockquote } from '@/components/blog/CustomBlockquote';
@@ -85,12 +85,22 @@ export default async function BlogPostPage({
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      {/* Load KaTeX stylesheet from CDN to avoid compiling local font assets */}
+      {/* Load KaTeX stylesheet and core JS script from CDN to avoid compiling local assets */}
       <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css"
         integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB"
         crossOrigin="anonymous"
+      />
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js"
+        crossOrigin="anonymous"
+      />
+      {/* Load Highlight.js atom-one-dark stylesheet from CDN */}
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
       />
       <script
         type="application/ld+json"
@@ -182,7 +192,7 @@ export default async function BlogPostPage({
           options={{
             mdxOptions: {
               remarkPlugins: [remarkGfm, remarkMath],
-              rehypePlugins: [rehypeHighlight, rehypeSlug, rehypeKatex],
+              rehypePlugins: [rehypeCustomHighlight, rehypeSlug],
             },
           }}
         />
@@ -190,6 +200,9 @@ export default async function BlogPostPage({
 
       {/* Comments */}
       <CommentSection postId={post.id} comments={post.comments} />
+
+      {/* Client-Side LaTeX Parser trigger */}
+      <MathRenderer />
     </article>
   );
 }

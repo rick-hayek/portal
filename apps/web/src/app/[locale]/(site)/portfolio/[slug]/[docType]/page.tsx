@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import rehypeHighlight from 'rehype-highlight';
+import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import { getTRPCServer } from '@/lib/trpc-server';
@@ -61,6 +61,11 @@ export default async function ProjectDocPage({
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+      {/* Load Highlight.js atom-one-dark stylesheet from CDN */}
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+      />
       {/* Header */}
       <header className="mb-8">
         <a
@@ -84,7 +89,7 @@ export default async function ProjectDocPage({
           options={{
             mdxOptions: {
               remarkPlugins: [remarkGfm],
-              rehypePlugins: [rehypeHighlight, rehypeSlug],
+              rehypePlugins: [rehypeCustomHighlight, rehypeSlug],
             },
           }}
         />
