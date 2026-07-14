@@ -1,6 +1,7 @@
 import { appRouter, createContext } from '@portal/api';
 import { cache } from 'react';
 import { auth } from '@/auth';
+import { unstable_cache, revalidateTag, revalidatePath } from 'next/cache';
 
 /**
  * Direct server-side tRPC caller.
@@ -9,6 +10,11 @@ import { auth } from '@/auth';
  */
 export const getTRPCServer = cache(async (useAuth = false) => {
   const session = useAuth ? await auth() : null;
-  const ctx = await createContext({ session });
+  const ctx = await createContext({
+    session,
+    unstable_cache,
+    revalidateTag,
+    revalidatePath,
+  });
   return appRouter.createCaller(ctx);
 });

@@ -127,6 +127,10 @@ export const adminRouter = router({
         }
       }
 
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+      }
+
       return post;
     }),
 
@@ -193,6 +197,10 @@ export const adminRouter = router({
         console.error('Failed to sync post in MeiliSearch:', e);
       }
 
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+      }
+
       return updatedPost;
     }),
 
@@ -205,6 +213,9 @@ export const adminRouter = router({
         await removePostFromIndex(input.id);
       } catch (e) {
         console.error('Failed to remove post from MeiliSearch:', e);
+      }
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
       }
       return post;
     }),
@@ -219,24 +230,40 @@ export const adminRouter = router({
         status: z.enum(['approved', 'spam', 'pending']),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.comment.update({
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.comment.update({
         where: { id: input.id },
         data: { status: input.status },
-      }),
-    ),
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+      }
+      return comment;
+    }),
 
   /** Delete comment */
   commentDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.comment.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.comment.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+      }
+      return comment;
+    }),
 
   // ── Guestbook Moderation ───────────────────────────
 
   /** Delete guestbook entry */
   guestbookDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.guestbookEntry.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const entry = await ctx.prisma.guestbookEntry.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('guestbook');
+      }
+      return entry;
+    }),
 
   // ── Portfolio CRUD ─────────────────────────────────
 
@@ -274,7 +301,13 @@ export const adminRouter = router({
         downloadLinks: z.any().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => ctx.prisma.project.create({ data: input })),
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.prisma.project.create({ data: input });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('projects');
+      }
+      return project;
+    }),
 
   /** Update project */
   projectUpdate: adminProcedure
@@ -299,15 +332,25 @@ export const adminRouter = router({
         downloadLinks: z.any().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.project.update({ where: { id }, data });
+      const project = await ctx.prisma.project.update({ where: { id }, data });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('projects');
+      }
+      return project;
     }),
 
   /** Delete project */
   projectDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.project.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.prisma.project.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('projects');
+      }
+      return project;
+    }),
 
   // ── Books CRUD ─────────────────────────────────
 
@@ -344,8 +387,8 @@ export const adminRouter = router({
         review: z.string().nullable().optional().or(z.literal('')),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.book.create({
+    .mutation(async ({ ctx, input }) => {
+      const book = await ctx.prisma.book.create({
         data: {
           slug: input.slug.toLowerCase().trim(),
           title: input.title,
@@ -360,8 +403,12 @@ export const adminRouter = router({
           description: input.description || null,
           review: input.review || null,
         },
-      }),
-    ),
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('books');
+      }
+      return book;
+    }),
 
   /** Update book */
   bookUpdate: adminProcedure
@@ -386,9 +433,9 @@ export const adminRouter = router({
         review: z.string().nullable().optional().or(z.literal('')),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.book.update({
+      const book = await ctx.prisma.book.update({
         where: { id },
         data: {
           ...data,
@@ -404,12 +451,22 @@ export const adminRouter = router({
           review: data.review || null,
         },
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('books');
+      }
+      return book;
     }),
 
   /** Delete book */
   bookDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.book.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const book = await ctx.prisma.book.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('books');
+      }
+      return book;
+    }),
 
   // ── Links CRUD ─────────────────────────────────
 
@@ -433,15 +490,19 @@ export const adminRouter = router({
         sortOrder: z.number().int().default(0),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.link.create({
+    .mutation(async ({ ctx, input }) => {
+      const link = await ctx.prisma.link.create({
         data: {
           ...input,
           avatar: input.avatar || null,
           description: input.description || null,
         },
-      }),
-    ),
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('links');
+      }
+      return link;
+    }),
 
   /** Update link */
   linkUpdate: adminProcedure
@@ -457,9 +518,9 @@ export const adminRouter = router({
         sortOrder: z.number().int().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.link.update({
+      const link = await ctx.prisma.link.update({
         where: { id },
         data: {
           ...data,
@@ -467,12 +528,22 @@ export const adminRouter = router({
           description: data.description === '' ? null : data.description,
         },
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('links');
+      }
+      return link;
     }),
 
   /** Delete link */
   linkDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.link.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const link = await ctx.prisma.link.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('links');
+      }
+      return link;
+    }),
 
   // ── Site Settings ──────────────────────────────────
 
@@ -520,12 +591,17 @@ export const adminRouter = router({
         slug: z.string().min(1).max(50).optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.category.update({
+      const category = await ctx.prisma.category.update({
         where: { id },
         data,
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('categories');
+        ctx.revalidateTag('posts');
+      }
+      return category;
     }),
 
   /** Delete category */
@@ -535,11 +611,16 @@ export const adminRouter = router({
         id: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.category.delete({
+    .mutation(async ({ ctx, input }) => {
+      const category = await ctx.prisma.category.delete({
         where: { id: input.id },
-      }),
-    ),
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('categories');
+        ctx.revalidateTag('posts');
+      }
+      return category;
+    }),
 
   /** Sync all posts to MeiliSearch index */
   searchSync: adminProcedure.mutation(async ({ ctx }) => {
@@ -720,6 +801,9 @@ export const adminRouter = router({
         upsertCount++;
       }
 
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('trending');
+      }
       return { success: true, count: upsertCount, weekOf: monday.toISOString() };
     } catch (error: any) {
       console.error('[adminRouter.trendingFetch] Error fetching/saving trending repos:', error);
@@ -737,13 +821,17 @@ export const adminRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.trendingRepo.update({
+      const repo = await ctx.prisma.trendingRepo.update({
         where: { id: input.id },
         data: {
           summaryZh: input.summaryZh,
           summaryEn: input.summaryEn,
         },
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('trending');
+      }
+      return repo;
     }),
 
   /** List all trending repos for admin management (with pagination) */
@@ -781,8 +869,12 @@ export const adminRouter = router({
   trendingDelete: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.trendingRepo.delete({
+      const repo = await ctx.prisma.trendingRepo.delete({
         where: { id: input.id },
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('trending');
+      }
+      return repo;
     }),
 });

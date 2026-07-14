@@ -16,10 +16,16 @@ export async function createContext(opts?: {
     };
     expires: string;
   } | null;
+  revalidateTag?: (...args: any[]) => any;
+  revalidatePath?: (...args: any[]) => any;
+  unstable_cache?: (...args: any[]) => any;
 }) {
   return {
     prisma,
     session: opts?.session ?? null,
+    revalidateTag: opts?.revalidateTag,
+    revalidatePath: opts?.revalidatePath,
+    unstable_cache: opts?.unstable_cache,
   };
 }
 

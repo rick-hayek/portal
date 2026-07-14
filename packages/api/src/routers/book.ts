@@ -3,28 +3,55 @@ import { protectedProcedure, publicProcedure, router } from '../trpc';
 
 export const bookRouter = router({
   /** List all books */
-  list: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.book.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+  list: publicProcedure.query(async ({ ctx }) => {
+    const fetchList = async () => {
+      return ctx.prisma.book.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+    };
+
+    if (ctx.unstable_cache) {
+      const getCached = ctx.unstable_cache(
+        fetchList,
+        ['book-list'],
+        { tags: ['books'], revalidate: 3600 }
+      );
+      return getCached();
+    }
+    return fetchList();
   }),
 
   /** Get a single book by SLUG with likes counts & user reaction state */
   get: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
-    const book = await ctx.prisma.book.findUnique({
-      where: { slug: input.slug },
-      include: {
-        likes: true,
-        originalBook: {
-          select: {
-            id: true,
-            slug: true,
-            title: true,
-            author: true,
+    const fetchBook = async (s: string) => {
+      return ctx.prisma.book.findUnique({
+        where: { slug: s },
+        include: {
+          likes: true,
+          originalBook: {
+            select: {
+              id: true,
+              slug: true,
+              title: true,
+              author: true,
+            },
           },
         },
-      },
-    });
+      });
+    };
+
+    let book;
+    if (ctx.unstable_cache) {
+      const getCached = ctx.unstable_cache(
+        fetchBook,
+        ['book-get'],
+        { tags: ['books'], revalidate: 3600 }
+      );
+      book = (await getCached(input.slug)) as Awaited<ReturnType<typeof fetchBook>>;
+    } else {
+      book = await fetchBook(input.slug);
+    }
+
     if (!book) return null;
 
     const likesCount = book.likes.filter((l) => l.type === 'LIKE').length;
@@ -87,6 +114,10 @@ export const bookRouter = router({
             type: input.type,
           },
         });
+      }
+
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('books');
       }
 
       return { success: true };

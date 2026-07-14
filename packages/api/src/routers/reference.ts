@@ -4,16 +4,28 @@ import { adminProcedure, publicProcedure, router } from '../trpc';
 export const referenceRouter = router({
   /** List all references (metadata only, no large HTML code) */
   list: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.reference.findMany({
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      orderBy: { updatedAt: 'desc' },
-    });
+    const fetchList = async () => {
+      return ctx.prisma.reference.findMany({
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        orderBy: { updatedAt: 'desc' },
+      });
+    };
+
+    if (ctx.unstable_cache) {
+      const getCached = ctx.unstable_cache(
+        fetchList,
+        ['reference-list'],
+        { tags: ['references'], revalidate: 3600 }
+      );
+      return getCached();
+    }
+    return fetchList();
   }),
 
   /** Get reference by ID (for admin editing) */
@@ -33,9 +45,13 @@ export const referenceRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.reference.create({
+      const ref = await ctx.prisma.reference.create({
         data: input,
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('references');
+      }
+      return ref;
     }),
 
   /** Update a reference page */
@@ -50,16 +66,24 @@ export const referenceRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.reference.update({
+      const ref = await ctx.prisma.reference.update({
         where: { id },
         data,
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('references');
+      }
+      return ref;
     }),
 
   /** Delete a reference page */
   delete: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    return ctx.prisma.reference.delete({
+    const ref = await ctx.prisma.reference.delete({
       where: { id: input.id },
     });
+    if (ctx.revalidateTag) {
+      ctx.revalidateTag('references');
+    }
+    return ref;
   }),
 });

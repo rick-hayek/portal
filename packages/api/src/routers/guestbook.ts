@@ -16,18 +16,35 @@ export const guestbookRouter = router({
       const { page, limit } = input;
       const skip = (page - 1) * limit;
 
-      const [entries, total] = await Promise.all([
-        ctx.prisma.guestbookEntry.findMany({
-          skip,
-          take: limit,
-          orderBy: { createdAt: 'desc' },
-        }),
-        ctx.prisma.guestbookEntry.count(),
-      ]);
+      const fetchQuery = async () => {
+        const [entries, total] = await Promise.all([
+          ctx.prisma.guestbookEntry.findMany({
+            skip,
+            take: limit,
+            orderBy: { createdAt: 'desc' },
+          }),
+          ctx.prisma.guestbookEntry.count(),
+        ]);
+        return { entries, total };
+      };
+
+      let result;
+      if (ctx.unstable_cache) {
+        const getCached = ctx.unstable_cache(
+          async (p: number, l: number) => {
+            return fetchQuery();
+          },
+          ['guestbook-list'],
+          { tags: ['guestbook'], revalidate: 3600 }
+        );
+        result = (await getCached(page, limit)) as Awaited<ReturnType<typeof fetchQuery>>;
+      } else {
+        result = await fetchQuery();
+      }
 
       return {
-        entries,
-        pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+        entries: result.entries,
+        pagination: { page, limit, total: result.total, totalPages: Math.ceil(result.total / limit) },
       };
     }),
 
@@ -39,12 +56,18 @@ export const guestbookRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.guestbookEntry.create({
+      const entry = await ctx.prisma.guestbookEntry.create({
         data: {
           authorName: ctx.user.name ?? 'Anonymous',
           content: input.content,
           avatar: ctx.user.image ?? null,
         },
       });
+
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('guestbook');
+      }
+
+      return entry;
     }),
 });

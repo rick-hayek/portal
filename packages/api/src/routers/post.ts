@@ -25,68 +25,107 @@ export const postRouter = router({
         ...(tagSlug && { tags: { some: { tag: { slug: tagSlug } } } }),
       };
 
-      const [posts, total] = await Promise.all([
-        ctx.prisma.post.findMany({
-          where,
-          skip,
-          take: limit,
-          orderBy: { publishedAt: 'desc' },
-          include: {
-            author: { select: { id: true, name: true, image: true } },
-            category: { select: { id: true, name: true, slug: true } },
-            tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
+      const fetchQuery = async () => {
+        const [posts, total] = await Promise.all([
+          ctx.prisma.post.findMany({
+            where,
+            skip,
+            take: limit,
+            orderBy: { publishedAt: 'desc' },
+            include: {
+              author: { select: { id: true, name: true, image: true } },
+              category: { select: { id: true, name: true, slug: true } },
+              tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
+            },
+          }),
+          ctx.prisma.post.count({ where }),
+        ]);
+        return { posts, total };
+      };
+
+      let result;
+      if (ctx.unstable_cache) {
+        const getCached = ctx.unstable_cache(
+          async (p: number, l: number, cSlug?: string, tSlug?: string, st?: string) => {
+            return fetchQuery();
           },
-        }),
-        ctx.prisma.post.count({ where }),
-      ]);
+          ['post-list'],
+          { tags: ['posts'], revalidate: 3600 }
+        );
+        result = (await getCached(page, limit, categorySlug, tagSlug, status)) as Awaited<ReturnType<typeof fetchQuery>>;
+      } else {
+        result = await fetchQuery();
+      }
 
       return {
-        posts,
+        posts: result.posts,
         pagination: {
           page,
           limit,
-          total,
-          totalPages: Math.ceil(total / limit),
+          total: result.total,
+          totalPages: Math.ceil(result.total / limit),
         },
       };
     }),
 
   /** Get a single post by slug */
   bySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
-    const post = await ctx.prisma.post.findUnique({
-      where: { slug: input.slug, status: 'published' },
-      include: {
-        author: { select: { id: true, name: true, image: true } },
-        category: { select: { id: true, name: true, slug: true } },
-        tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
-        comments: {
-          where: { status: 'approved', parentId: null },
-          orderBy: { createdAt: 'desc' },
-          include: {
-            replies: {
-              where: { status: 'approved' },
-              orderBy: { createdAt: 'asc' },
+    const fetchPost = async (s: string) => {
+      return ctx.prisma.post.findUnique({
+        where: { slug: s, status: 'published' },
+        include: {
+          author: { select: { id: true, name: true, image: true } },
+          category: { select: { id: true, name: true, slug: true } },
+          tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
+          comments: {
+            where: { status: 'approved', parentId: null },
+            orderBy: { createdAt: 'desc' },
+            include: {
+              replies: {
+                where: { status: 'approved' },
+                orderBy: { createdAt: 'asc' },
+              },
             },
           },
         },
-      },
-    });
+      });
+    };
 
-    return post;
+    if (ctx.unstable_cache) {
+      const getCached = ctx.unstable_cache(
+        fetchPost,
+        ['post-by-slug'],
+        { tags: ['posts'], revalidate: 3600 }
+      );
+      return (await getCached(input.slug)) as Awaited<ReturnType<typeof fetchPost>>;
+    }
+    return fetchPost(input.slug);
   }),
 
   /** Get N most recent published posts (for homepage) */
   recent: publicProcedure
     .input(z.object({ count: z.number().int().min(1).max(20).default(5) }).default({ count: 5 }))
     .query(async ({ ctx, input }) => {
-      return ctx.prisma.post.findMany({
-        where: { status: 'published' },
-        take: input.count,
-        orderBy: { publishedAt: 'desc' },
-        include: {
-          author: { select: { id: true, name: true, image: true } },
-          category: { select: { id: true, name: true, slug: true } },
-        },
-      });
+      const fetchRecent = async (c: number) => {
+        return ctx.prisma.post.findMany({
+          where: { status: 'published' },
+          take: c,
+          orderBy: { publishedAt: 'desc' },
+          include: {
+            author: { select: { id: true, name: true, image: true } },
+            category: { select: { id: true, name: true, slug: true } },
+          },
+        });
+      };
+
+      if (ctx.unstable_cache) {
+        const getCached = ctx.unstable_cache(
+          fetchRecent,
+          ['post-recent'],
+          { tags: ['posts'], revalidate: 3600 }
+        );
+        return (await getCached(input.count)) as Awaited<ReturnType<typeof fetchRecent>>;
+      }
+      return fetchRecent(input.count);
     }),
 });
