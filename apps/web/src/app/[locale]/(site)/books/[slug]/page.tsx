@@ -1,6 +1,5 @@
 'use client';
 
-import { marked } from 'marked';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -41,6 +40,22 @@ export default function BookDetailPage() {
   const [likesCount, setLikesCount] = useState(0);
   const [dislikesCount, setDislikesCount] = useState(0);
   const [userReaction, setUserReaction] = useState<'LIKE' | 'DISLIKE' | null>(null);
+
+  const [descriptionHtml, setDescriptionHtml] = useState('');
+  const [reviewHtml, setReviewHtml] = useState('');
+
+  useEffect(() => {
+    if (book) {
+      import('marked').then(({ marked }) => {
+        if (book.description) {
+          setDescriptionHtml(marked.parse(book.description) as string);
+        }
+        if (book.review) {
+          setReviewHtml(marked.parse(book.review) as string);
+        }
+      });
+    }
+  }, [book]);
 
   const loadBook = useCallback(async () => {
     try {
@@ -328,7 +343,7 @@ export default function BookDetailPage() {
               </h2>
               <div
                 className="prose prose-portal max-w-none text-sm text-[var(--portal-color-text)] leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: marked.parse(book.description) }}
+                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
               />
             </div>
           )}
@@ -346,7 +361,7 @@ export default function BookDetailPage() {
                 </span>
                 <div
                   className="prose prose-portal max-w-none text-[var(--portal-color-text)] leading-relaxed relative z-10 font-medium italic"
-                  dangerouslySetInnerHTML={{ __html: marked.parse(book.review) }}
+                  dangerouslySetInnerHTML={{ __html: reviewHtml }}
                 />
               </div>
             </div>

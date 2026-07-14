@@ -62,8 +62,8 @@ export default async function BlogPostPage({
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.excerpt || '',
-    datePublished: post.publishedAt?.toISOString(),
-    dateModified: post.updatedAt?.toISOString(),
+    datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
+    dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
     author: {
       '@type': 'Person',
       name: post.author.name || 'Rick Huang',
@@ -125,7 +125,7 @@ export default async function BlogPostPage({
             </a>
           )}
           {post.publishedAt && (
-            <time dateTime={post.publishedAt.toISOString()}>
+            <time dateTime={new Date(post.publishedAt).toISOString()}>
               {new Date(post.publishedAt).toLocaleDateString('zh-CN', {
                 year: 'numeric',
                 month: 'long',
