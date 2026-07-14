@@ -218,7 +218,8 @@ async function HomeDbSections({ locale }: { locale: string }) {
     trpc.guestbook.list({ page: 1, limit: 4 }),
     prisma.post.count({ where: { status: 'published' } }),
     prisma.project.count(),
-    prisma.pageView.count(),
+    // prisma.pageView.count(), // Temporarily disabled for performance
+    0,
     prisma.guestbookEntry.count(),
   ]);
 
