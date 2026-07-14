@@ -1,7 +1,8 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useLocalSWR } from '@/hooks/useLocalSWR';
 
 // GitHub language color mapping
 const LANG_COLORS: Record<string, string> = {
@@ -57,52 +58,39 @@ export default function TrendingPage() {
   const t = useTranslations('Trending');
   const locale = useLocale();
 
-  const [repos, setRepos] = useState<TrendingRepo[]>([]);
-  const [weeks, setWeeks] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   // Fetch available weeks
-  useEffect(() => {
-    fetch('/api/trpc/trending.weeks?batch=1')
-      .then((r) => r.json())
-      .then((data) => {
-        const weekList: string[] = data[0]?.result?.data?.json ?? [];
-        setWeeks(weekList);
-      })
-      .catch(() => {});
-  }, []);
+  const { data: weeksData } = useLocalSWR(
+    'trending-weeks',
+    useCallback(async () => {
+      const res = await fetch('/api/trpc/trending.weeks?batch=1');
+      const data = await res.json();
+      return (data[0]?.result?.data?.json ?? []) as string[];
+    }, [])
+  );
+  const weeks = weeksData ?? [];
 
   // Fetch repos for selected week
-  const loadRepos = useCallback(
-    async (weekOf?: string) => {
-      setLoading(true);
-      setError('');
-      try {
-        const input = weekOf ? { weekOf } : {};
-        const res = await fetch(
-          '/api/trpc/trending.list?batch=1&input=' +
-            encodeURIComponent(JSON.stringify({ '0': { json: input } })),
-        );
-        const data = await res.json();
-        const result = data[0]?.result?.data?.json;
-        setRepos(result?.repos ?? []);
-        if (result?.weekOf && !selectedWeek) {
-          setSelectedWeek(result.weekOf);
-        }
-      } catch {
-        setError('Failed to load trending data');
-      } finally {
-        setLoading(false);
+  const { data: reposData, loading, error: swrError } = useLocalSWR(
+    `trending-repos-${selectedWeek || 'latest'}`,
+    useCallback(async () => {
+      const input = selectedWeek ? { weekOf: selectedWeek } : {};
+      const res = await fetch(
+        '/api/trpc/trending.list?batch=1&input=' +
+          encodeURIComponent(JSON.stringify({ '0': { json: input } })),
+      );
+      const data = await res.json();
+      const result = data[0]?.result?.data?.json;
+      if (result?.weekOf && !selectedWeek) {
+        setSelectedWeek(result.weekOf);
       }
-    },
-    [selectedWeek],
+      return (result?.repos ?? []) as TrendingRepo[];
+    }, [selectedWeek])
   );
 
-  useEffect(() => {
-    loadRepos(selectedWeek ?? undefined);
-  }, [selectedWeek, loadRepos]);
+  const repos = reposData ?? [];
+  const error = swrError ? 'Failed to load trending data' : '';
 
   return (
     <div className="border-t border-b border-compat-soft bg-[var(--portal-color-surface)]">

@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useLocalSWR } from '@/hooks/useLocalSWR';
 
 interface Project {
   id: string;
@@ -22,37 +23,43 @@ interface Project {
 export default function PortfolioPage() {
   const t = useTranslations('Portfolio');
   const locale = useLocale();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [techStacks, setTechStacks] = useState<string[]>([]);
   const [activeTech, setActiveTech] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    Promise.all([
-      fetch(
+  const { data: projectsData, loading: loadingProjects } = useLocalSWR(
+    `portfolio-projects-${activeTech || 'all'}`,
+    useCallback(async () => {
+      const res = await fetch(
         '/api/trpc/portfolio.list?batch=1&input=' +
         encodeURIComponent(
           JSON.stringify({
             '0': { json: activeTech ? { tech: activeTech } : {} },
           }),
         ),
-      ).then((r) => r.json()),
-      fetch(
+      );
+      const json = await res.json();
+      return (json[0]?.result?.data?.json ?? []) as Project[];
+    }, [activeTech])
+  );
+
+  const { data: techStacksData, loading: loadingTechs } = useLocalSWR(
+    'portfolio-tech-stacks',
+    useCallback(async () => {
+      const res = await fetch(
         '/api/trpc/portfolio.techStacks?batch=1&input=' +
         encodeURIComponent(
           JSON.stringify({
             '0': { json: null },
           }),
         ),
-      ).then((r) => r.json()),
-    ])
-      .then(([projectsData, techData]) => {
-        setProjects(projectsData[0]?.result?.data?.json ?? []);
-        setTechStacks(techData[0]?.result?.data?.json ?? []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [activeTech]);
+      );
+      const json = await res.json();
+      return (json[0]?.result?.data?.json ?? []) as string[];
+    }, [])
+  );
+
+  const projects = projectsData ?? [];
+  const techStacks = techStacksData ?? [];
+  const loading = loadingProjects || (loadingTechs && techStacks.length === 0);
 
   return (
     <div className="border-t border-b border-compat-soft bg-[var(--portal-color-surface)]">
