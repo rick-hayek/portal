@@ -1,5 +1,6 @@
 'use client';
 
+import { Eye, FileCode, Link2, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 interface Attachment {
@@ -166,133 +167,6 @@ export default function AttachmentsAdminPage() {
       <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Attachments Management</h1>
 
       <div className="grid gap-6 lg:grid-cols-3 min-w-0 w-full">
-        {/* Left 2 Columns - List */}
-        <div className="lg:col-span-2 space-y-4 min-w-0">
-          <div className="overflow-x-auto rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]">
-            <table className="w-full text-sm">
-              <thead className="bg-[var(--portal-color-surface)]">
-                <tr className="border-b border-[var(--portal-color-border)]">
-                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] w-16">
-                    Preview
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] hidden md:table-cell">
-                    Filename
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] w-28 hidden md:table-cell">
-                    Type
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] w-28 hidden md:table-cell">
-                    Created
-                  </th>
-                  <th className="px-4 py-3 text-right font-medium text-[var(--portal-color-text-secondary)] w-56">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <>
-                    <tr key="skeleton-1" className="border-b border-[var(--portal-color-border)]">
-                      <td colSpan={5} className="px-4 py-3">
-                        <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
-                      </td>
-                    </tr>
-                    <tr key="skeleton-2" className="border-b border-[var(--portal-color-border)]">
-                      <td colSpan={5} className="px-4 py-3">
-                        <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
-                      </td>
-                    </tr>
-                    <tr key="skeleton-3" className="border-b border-[var(--portal-color-border)]">
-                      <td colSpan={5} className="px-4 py-3">
-                        <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
-                      </td>
-                    </tr>
-                    <tr key="skeleton-4" className="border-b border-[var(--portal-color-border)]">
-                      <td colSpan={5} className="px-4 py-3">
-                        <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
-                      </td>
-                    </tr>
-                  </>
-                ) : attachments.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
-                    >
-                      No attachments uploaded yet.
-                    </td>
-                  </tr>
-                ) : (
-                  attachments.map((item) => (
-                    <tr
-                      key={item.id}
-                      className="border-b border-[var(--portal-color-border)] hover:bg-[var(--portal-color-background)]/30"
-                    >
-                      <td className="px-4 py-3">
-                        {item.mimeType.startsWith('image/') ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          // biome-ignore lint/performance/noImgElement: dynamic database file preview
-                          <img
-                            src={`/uploads/${item.filename}`}
-                            alt={item.filename}
-                            className="h-10 w-10 object-cover rounded-md border border-[var(--portal-color-border)]"
-                          />
-                        ) : (
-                          <div className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] text-lg">
-                            📄
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 font-medium text-[var(--portal-color-text)] truncate max-w-[200px] hidden md:table-cell">
-                        {item.filename}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-[var(--portal-color-text-secondary)] hidden md:table-cell">
-                        {item.mimeType}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-[var(--portal-color-text-secondary)] hidden md:table-cell">
-                        {new Date(item.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <div className="flex justify-end gap-3 text-xs">
-                          <button
-                            type="button"
-                            onClick={() => copyMarkdown(item.filename, item.id)}
-                            className="text-[var(--portal-color-primary)] hover:underline font-semibold"
-                          >
-                            {copiedId === `${item.id}-md` ? 'Copied! ✅' : 'Copy MD'}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => copyLink(item.filename, item.id)}
-                            className="text-[var(--portal-color-primary)] hover:underline font-semibold"
-                          >
-                            {copiedId === `${item.id}-link` ? 'Copied! ✅' : 'Copy Link'}
-                          </button>
-                          <a
-                            href={`/uploads/${item.filename}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[var(--portal-color-text-secondary)] hover:underline"
-                          >
-                            View
-                          </a>
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(item.id)}
-                            className="text-red-500 hover:underline"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         {/* Right 1 Column - Upload Form */}
         <div className="space-y-4">
           <form
@@ -364,6 +238,141 @@ export default function AttachmentsAdminPage() {
               {saving ? 'Uploading…' : 'Upload File'}
             </button>
           </form>
+        </div>
+
+        {/* Left 2 Columns - List */}
+        <div className="lg:col-span-2 space-y-4 min-w-0">
+          <div className="overflow-x-auto rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]">
+            <table className="w-full text-sm">
+              <thead className="bg-[var(--portal-color-surface)]">
+                <tr className="border-b border-[var(--portal-color-border)]">
+                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] w-16">
+                    Preview
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] hidden md:table-cell">
+                    Filename
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] w-28 hidden md:table-cell">
+                    Type
+                  </th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] w-28 hidden md:table-cell">
+                    Created
+                  </th>
+                  <th className="px-4 py-3 text-right font-medium text-[var(--portal-color-text-secondary)] w-56 whitespace-nowrap">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <>
+                    <tr key="skeleton-1" className="border-b border-[var(--portal-color-border)]">
+                      <td colSpan={5} className="px-4 py-3">
+                        <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
+                      </td>
+                    </tr>
+                    <tr key="skeleton-2" className="border-b border-[var(--portal-color-border)]">
+                      <td colSpan={5} className="px-4 py-3">
+                        <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
+                      </td>
+                    </tr>
+                    <tr key="skeleton-3" className="border-b border-[var(--portal-color-border)]">
+                      <td colSpan={5} className="px-4 py-3">
+                        <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
+                      </td>
+                    </tr>
+                    <tr key="skeleton-4" className="border-b border-[var(--portal-color-border)]">
+                      <td colSpan={5} className="px-4 py-3">
+                        <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
+                      </td>
+                    </tr>
+                  </>
+                ) : attachments.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
+                    >
+                      No attachments uploaded yet.
+                    </td>
+                  </tr>
+                ) : (
+                  attachments.map((item) => (
+                    <tr
+                      key={item.id}
+                      className="border-b border-[var(--portal-color-border)] hover:bg-[var(--portal-color-background)]/30"
+                    >
+                      <td className="px-4 py-3">
+                        {item.mimeType.startsWith('image/') ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          // biome-ignore lint/performance/noImgElement: dynamic database file preview
+                          <img
+                            src={`/uploads/${item.filename}`}
+                            alt={item.filename}
+                            className="h-10 w-10 object-cover rounded-md border border-[var(--portal-color-border)]"
+                          />
+                        ) : (
+                          <div className="flex h-10 w-10 items-center justify-center rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] text-lg">
+                            📄
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-[var(--portal-color-text)] truncate max-w-[200px] hidden md:table-cell">
+                        {item.filename}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-[var(--portal-color-text-secondary)] hidden md:table-cell">
+                        {item.mimeType}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-[var(--portal-color-text-secondary)] hidden md:table-cell">
+                        {new Date(item.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+                          <button
+                            type="button"
+                            onClick={() => copyMarkdown(item.filename, item.id)}
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                          >
+                            <FileCode className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">
+                              {copiedId === `${item.id}-md` ? 'Copied!' : 'Copy MD'}
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => copyLink(item.filename, item.id)}
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                          >
+                            <Link2 className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">
+                              {copiedId === `${item.id}-link` ? 'Copied!' : 'Copy Link'}
+                            </span>
+                          </button>
+                          <a
+                            href={`/uploads/${item.filename}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">View</span>
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(item.id)}
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">Delete</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { Check, Pencil, Trash2, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 interface Category {
@@ -172,29 +173,37 @@ export default function AdminCategoriesPage() {
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 h-fit space-y-4">
           <h2 className="text-lg font-bold text-[var(--portal-color-text)]">New Category</h2>
           <form onSubmit={handleCreate} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase">
+            <div className="flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-1">
+              <label
+                htmlFor="category-name"
+                className="w-12 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
+              >
                 Name
               </label>
               <input
+                id="category-name"
                 type="text"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 required
-                className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+                className="flex-1 md:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
                 placeholder="e.g. Technology"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase">
+            <div className="flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-1">
+              <label
+                htmlFor="category-slug"
+                className="w-12 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
+              >
                 Slug
               </label>
               <input
+                id="category-slug"
                 type="text"
                 value={newSlug}
                 onChange={(e) => setNewSlug(e.target.value)}
                 required
-                className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 font-mono text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+                className="flex-1 md:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 font-mono text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
                 placeholder="e.g. technology"
               />
             </div>
@@ -209,114 +218,130 @@ export default function AdminCategoriesPage() {
         </div>
 
         {/* Categories List */}
-        <div className="rounded-xl border border-[var(--portal-color-border)] overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-[var(--portal-color-surface)]">
-              <tr className="border-b border-[var(--portal-color-border)]">
-                <th className="px-4 py-3 text-left font-semibold text-[var(--portal-color-text-secondary)] uppercase tracking-wider text-xs">
-                  Name
-                </th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--portal-color-text-secondary)] uppercase tracking-wider text-xs">
-                  Slug
-                </th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--portal-color-text-secondary)] uppercase tracking-wider text-xs">
-                  Posts Count
-                </th>
-                <th className="px-4 py-3 text-left font-semibold text-[var(--portal-color-text-secondary)] uppercase tracking-wider text-xs">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-[var(--portal-color-surface)]">
-              {loading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <tr key={i} className="border-b border-[var(--portal-color-border)]">
-                    <td colSpan={4} className="px-4 py-4">
-                      <div className="h-5 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
-                    </td>
-                  </tr>
-                ))
-              ) : categories.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={4}
-                    className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
-                  >
-                    No categories found.
-                  </td>
+        <div className="min-w-0 overflow-hidden rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]">
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left text-sm text-[var(--portal-color-text)]">
+              <thead>
+                <tr className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] font-medium text-[var(--portal-color-text-secondary)]">
+                  <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs">
+                    Name
+                  </th>
+                  <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs">
+                    Slug
+                  </th>
+                  <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs whitespace-nowrap">
+                    <span className="hidden sm:inline">Posts Count</span>
+                    <span className="sm:hidden">Posts</span>
+                  </th>
+                  <th className="px-2 sm:px-4 py-3 text-right font-semibold uppercase tracking-wider text-xs whitespace-nowrap">
+                    Actions
+                  </th>
                 </tr>
-              ) : (
-                categories.map((cat) => (
-                  <tr
-                    key={cat.id}
-                    className="border-b border-[var(--portal-color-border)] hover:bg-[var(--portal-color-background)] transition-colors"
-                  >
-                    <td className="px-4 py-3 font-medium text-[var(--portal-color-text)]">
-                      {editingId === cat.id ? (
-                        <input
-                          type="text"
-                          value={editName}
-                          onChange={(e) => setEditName(e.target.value)}
-                          className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2 py-1 text-sm text-[var(--portal-color-text)] focus:outline-none focus:border-[var(--portal-color-primary)] w-full"
-                        />
-                      ) : (
-                        cat.name
-                      )}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-[var(--portal-color-text-secondary)] text-xs">
-                      {editingId === cat.id ? (
-                        <input
-                          type="text"
-                          value={editSlug}
-                          onChange={(e) => setEditSlug(e.target.value)}
-                          className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2 py-1 font-mono text-xs text-[var(--portal-color-text)] focus:outline-none focus:border-[var(--portal-color-primary)] w-full"
-                        />
-                      ) : (
-                        cat.slug
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-[var(--portal-color-text-secondary)]">
-                      {cat._count?.posts ?? 0}
-                    </td>
-                    <td className="px-4 py-3">
-                      {editingId === cat.id ? (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleUpdate(cat.id)}
-                            disabled={saving}
-                            className="text-xs text-[var(--portal-color-primary)] font-semibold hover:underline"
-                          >
-                            Save
-                          </button>
-                          <button
-                            onClick={() => setEditingId(null)}
-                            className="text-xs text-[var(--portal-color-text-secondary)] hover:underline"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => startEdit(cat)}
-                            className="text-xs text-[var(--portal-color-primary)] hover:underline"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(cat.id, cat.name)}
-                            className="text-xs text-red-500 hover:underline"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
+              </thead>
+              <tbody>
+                {loading ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: skeleton elements do not have a natural id
+                    <tr key={i} className="border-b border-[var(--portal-color-border)]">
+                      <td colSpan={4} className="px-2 sm:px-4 py-4">
+                        <div className="h-5 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
+                      </td>
+                    </tr>
+                  ))
+                ) : categories.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
+                    >
+                      No categories found.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  categories.map((cat) => (
+                    <tr
+                      key={cat.id}
+                      className="border-b border-[var(--portal-color-border)] hover:bg-[var(--portal-color-surface-alt)]/50 transition-colors"
+                    >
+                      <td className="px-2 sm:px-4 py-3 font-medium text-[var(--portal-color-text)]">
+                        {editingId === cat.id ? (
+                          <input
+                            type="text"
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2 py-1 text-sm text-[var(--portal-color-text)] focus:outline-none focus:border-[var(--portal-color-primary)] w-full"
+                          />
+                        ) : (
+                          <div className="max-w-[90px] sm:max-w-[200px] truncate" title={cat.name}>
+                            {cat.name}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-2 sm:px-4 py-3 font-mono text-[var(--portal-color-text-secondary)] text-xs">
+                        {editingId === cat.id ? (
+                          <input
+                            type="text"
+                            value={editSlug}
+                            onChange={(e) => setEditSlug(e.target.value)}
+                            className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2 py-1 font-mono text-xs text-[var(--portal-color-text)] focus:outline-none focus:border-[var(--portal-color-primary)] w-full"
+                          />
+                        ) : (
+                          <div className="max-w-[80px] sm:max-w-[150px] truncate" title={cat.slug}>
+                            {cat.slug}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-2 sm:px-4 py-3 text-[var(--portal-color-text-secondary)]">
+                        {cat._count?.posts ?? 0}
+                      </td>
+                      <td className="px-2 sm:px-4 py-3 text-right whitespace-nowrap">
+                        {editingId === cat.id ? (
+                          <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleUpdate(cat.id)}
+                              disabled={saving}
+                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-[var(--portal-color-primary)]/20 text-[var(--portal-color-primary)] hover:bg-[var(--portal-color-primary)]/10 transition-colors disabled:opacity-50"
+                            >
+                              <Check className="h-3.5 w-3.5" />
+                              <span className="hidden sm:inline">Save</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingId(null)}
+                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                              <span className="hidden sm:inline">Cancel</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+                            <button
+                              type="button"
+                              onClick={() => startEdit(cat)}
+                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                              <span className="hidden sm:inline">Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(cat.id, cat.name)}
+                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                              <span className="hidden sm:inline">Delete</span>
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

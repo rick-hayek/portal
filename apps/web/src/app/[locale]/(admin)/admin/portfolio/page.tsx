@@ -26,7 +26,7 @@ export default function AdminPortfolioPage() {
     try {
       const res = await fetch(
         '/api/trpc/admin.projectList?batch=1&input=' +
-          encodeURIComponent(JSON.stringify({ '0': { json: null } })),
+        encodeURIComponent(JSON.stringify({ '0': { json: null } })),
       );
       const data = await res.json();
       setProjects(data[0]?.result?.data?.json ?? []);
@@ -112,23 +112,15 @@ export default function AdminPortfolioPage() {
               <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => toggleFeatured(p.id, p.featured)}
-                  className={`inline-flex items-center gap-1 text-xs px-2 py-1.5 rounded border transition-colors ${
-                    p.featured
+                  className={`inline-flex items-center gap-1 text-xs px-2 py-1.5 rounded border transition-colors ${p.featured
                       ? 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20'
                       : 'border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)]'
-                  }`}
+                    }`}
                   title={p.featured ? 'Unfeature project' : 'Feature project'}
                 >
                   <Star className="h-3.5 w-3.5" fill={p.featured ? 'currentColor' : 'none'} />
                   <span className="hidden sm:inline">{p.featured ? 'Featured' : 'Feature'}</span>
                 </button>
-                <Link
-                  href={`/admin/portfolio/${p.id}`}
-                  className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Edit</span>
-                </Link>
                 <a
                   href={`/portfolio/${p.slug}`}
                   target="_blank"
@@ -138,6 +130,13 @@ export default function AdminPortfolioPage() {
                   <Eye className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline">View</span>
                 </a>
+                <Link
+                  href={`/admin/portfolio/${p.id}`}
+                  className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Edit</span>
+                </Link>
                 <button
                   onClick={() => handleDelete(p.id)}
                   className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"

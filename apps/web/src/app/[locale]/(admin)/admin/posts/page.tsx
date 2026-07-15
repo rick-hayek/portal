@@ -1,7 +1,7 @@
 'use client';
 
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { Pencil, Trash2, Eye } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 
 interface Post {
@@ -28,6 +28,14 @@ export default function PostsPage() {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<'all' | 'draft' | 'published'>('all');
   const [search, setSearch] = useState('');
+  const [isStatusOpen, setIsStatusOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isStatusOpen) return;
+    const closeMenu = () => setIsStatusOpen(false);
+    window.addEventListener('click', closeMenu);
+    return () => window.removeEventListener('click', closeMenu);
+  }, [isStatusOpen]);
 
   const loadPosts = useCallback(async () => {
     setLoading(true);
@@ -87,18 +95,75 @@ export default function PostsPage() {
           }}
           className="rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
         />
-        <select
-          value={status}
-          onChange={(e) => {
-            setStatus(e.target.value as typeof status);
-            setPage(1);
-          }}
-          className="rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)]"
-        >
-          <option value="all">All Status</option>
-          <option value="published">Published</option>
-          <option value="draft">Draft</option>
-        </select>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsStatusOpen(!isStatusOpen);
+            }}
+            className="flex items-center justify-between gap-2 cursor-pointer rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--portal-color-primary)]"
+            aria-label="Filter by status"
+          >
+            <span className="font-[500]">
+              {
+                {
+                  all: 'All Status',
+                  published: 'Published',
+                  draft: 'Draft',
+                }[status]
+              }
+            </span>
+            <svg
+              className={`h-3 w-3 text-[var(--portal-color-text-secondary)] transition-transform duration-200 ${
+                isStatusOpen ? 'rotate-180' : ''
+              }`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              aria-hidden="true"
+            >
+              <title>Dropdown arrow</title>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {isStatusOpen && (
+            <div className="absolute right-0 top-full z-50 mt-1.5 w-36 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]/95 backdrop-blur-md py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150">
+              {(['all', 'published', 'draft'] as const).map((opt) => {
+                const label = {
+                  all: 'All Status',
+                  published: 'Published',
+                  draft: 'Draft',
+                }[opt];
+                const isActive = status === opt;
+
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => {
+                      setStatus(opt);
+                      setPage(1);
+                      setIsStatusOpen(false);
+                    }}
+                    className={`flex w-full items-center px-3 py-2 text-xs text-left cursor-pointer transition-colors ${
+                      isActive
+                        ? 'bg-[var(--portal-color-surface-alt)] font-semibold text-[var(--portal-color-primary)]'
+                        : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)]'
+                    }`}
+                  >
+                    <span className="w-5 text-center shrink-0 mr-1 text-[10px] font-bold">
+                      {isActive && '✓'}
+                    </span>
+                    <span className="truncate">{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Table */}
@@ -129,6 +194,7 @@ export default function PostsPage() {
           <tbody>
             {loading ? (
               Array.from({ length: 5 }).map((_, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items do not have custom id
                 <tr key={i} className="border-b border-[var(--portal-color-border)]">
                   <td colSpan={6} className="px-4 py-3">
                     <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
@@ -180,13 +246,6 @@ export default function PostsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1.5 sm:gap-2">
-                      <Link
-                        href={`/admin/posts/${post.id}`}
-                        className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                        <span className="hidden sm:inline">Edit</span>
-                      </Link>
                       <a
                         href={`/blog/${post.slug}`}
                         target="_blank"
@@ -196,7 +255,15 @@ export default function PostsPage() {
                         <Eye className="h-3.5 w-3.5" />
                         <span className="hidden sm:inline">View</span>
                       </a>
+                      <Link
+                        href={`/admin/posts/${post.id}`}
+                        className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Edit</span>
+                      </Link>
                       <button
+                        type="button"
                         onClick={() => handleDelete(post.id)}
                         className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
                       >
@@ -220,6 +287,7 @@ export default function PostsPage() {
           </p>
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
               className="rounded-lg border border-[var(--portal-color-border)] px-3 py-1.5 text-sm disabled:opacity-50"
@@ -227,6 +295,7 @@ export default function PostsPage() {
               ← Prev
             </button>
             <button
+              type="button"
               onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
               disabled={page >= data.totalPages}
               className="rounded-lg border border-[var(--portal-color-border)] px-3 py-1.5 text-sm disabled:opacity-50"

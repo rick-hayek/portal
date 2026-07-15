@@ -1,7 +1,7 @@
 'use client';
 
+import { Code, Copy, ExternalLink, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from '@/i18n/routing';
 
 interface Reference {
   id: string;
@@ -39,7 +39,7 @@ export default function ReferencesAdminPage() {
     try {
       const res = await fetch(
         '/api/trpc/reference.list?batch=1&input=' +
-          encodeURIComponent(JSON.stringify({ '0': { json: null } })),
+        encodeURIComponent(JSON.stringify({ '0': { json: null } })),
       );
       const data = await res.json();
       setReferences(data[0]?.result?.data?.json ?? []);
@@ -147,6 +147,100 @@ export default function ReferencesAdminPage() {
       <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">References Management</h1>
 
       <div className="grid gap-6 lg:grid-cols-3 min-w-0 w-full">
+        {/* Right 1 Col - Upload Form */}
+        <div className="space-y-4">
+          <form
+            onSubmit={handleCreate}
+            className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 space-y-4"
+          >
+            <h2 className="text-md font-bold text-[var(--portal-color-text)]">
+              Upload Reference Page
+            </h2>
+
+            {error && (
+              <p className="rounded-lg bg-red-50 p-2.5 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                {error}
+              </p>
+            )}
+
+            {success && (
+              <p className="rounded-lg bg-green-50 p-2.5 text-xs text-green-600 dark:bg-green-900/20 dark:text-green-400">
+                {success}
+              </p>
+            )}
+
+            {/* Title */}
+            <div className="flex flex-row lg:flex-col items-center lg:items-start gap-3 lg:gap-1">
+              <label
+                htmlFor="ref-title"
+                className="w-12 lg:w-full text-xs font-semibold text-[var(--portal-color-text)] uppercase shrink-0"
+              >
+                Title
+              </label>
+              <input
+                id="ref-title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                className="flex-1 lg:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+                placeholder="Reference Page Title"
+              />
+            </div>
+
+            {/* Slug */}
+            <div className="flex flex-row lg:flex-col items-center lg:items-start gap-3 lg:gap-1">
+              <label
+                htmlFor="ref-slug"
+                className="w-12 lg:w-full text-xs font-semibold text-[var(--portal-color-text)] uppercase shrink-0"
+              >
+                Slug
+              </label>
+              <input
+                id="ref-slug"
+                type="text"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                required
+                className="flex-1 lg:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none font-mono"
+                placeholder="reference-page-slug"
+              />
+            </div>
+
+            {/* HTML Upload */}
+            <div>
+              <label
+                htmlFor="html-file-input"
+                className="mb-1 block text-xs font-semibold text-[var(--portal-color-text)]"
+              >
+                HTML File (.html)
+              </label>
+              <div className="relative flex flex-col items-center justify-center rounded-lg border border-dashed border-[var(--portal-color-border)] bg-[var(--portal-color-background)] p-4 text-center">
+                <input
+                  type="file"
+                  id="html-file-input"
+                  accept=".html"
+                  onChange={handleFileUpload}
+                  required
+                  className="absolute inset-0 cursor-pointer opacity-0"
+                />
+                <span className="text-xl">📄</span>
+                <span className="mt-1 text-xs text-[var(--portal-color-text-secondary)]">
+                  {fileName ? fileName : 'Click or drag file to upload'}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={saving || !htmlCode}
+              className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            >
+              {saving ? 'Uploading…' : 'Publish Reference'}
+            </button>
+          </form>
+        </div>
+
         {/* Left 2 Cols - List */}
         <div className="lg:col-span-2 space-y-4 min-w-0">
           <div className="overflow-x-auto rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]">
@@ -157,12 +251,12 @@ export default function ReferencesAdminPage() {
                     Title
                   </th>
                   <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] hidden md:table-cell">
-                    Slug / Path
+                    Slug
                   </th>
                   <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] hidden md:table-cell">
                     Created
                   </th>
-                  <th className="px-4 py-3 text-right font-medium text-[var(--portal-color-text-secondary)]">
+                  <th className="px-4 py-3 text-right font-medium text-[var(--portal-color-text-secondary)] whitespace-nowrap">
                     Actions
                   </th>
                 </tr>
@@ -170,6 +264,7 @@ export default function ReferencesAdminPage() {
               <tbody>
                 {loading ? (
                   Array.from({ length: 4 }).map((_, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items do not have custom id
                     <tr key={i} className="border-b border-[var(--portal-color-border)]">
                       <td colSpan={4} className="px-4 py-3">
                         <div className="h-4 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
@@ -200,33 +295,44 @@ export default function ReferencesAdminPage() {
                       <td className="px-4 py-3 text-xs text-[var(--portal-color-text-secondary)] hidden md:table-cell">
                         {new Date(ref.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="px-4 py-3 text-right">
-                        <div className="flex justify-end gap-3 text-xs">
+                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                           <button
+                            type="button"
                             onClick={() => copyEmbedCode(ref.slug, ref.id)}
-                            className="text-[var(--portal-color-primary)] hover:underline font-semibold"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
                           >
-                            {copiedId === `${ref.id}-embed` ? 'Copied! ✅' : 'Copy Embed'}
+                            <Code className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">
+                              {copiedId === `${ref.id}-embed` ? 'Copied!' : 'Copy Embed'}
+                            </span>
                           </button>
                           <button
+                            type="button"
                             onClick={() => copyLinkCode(ref.slug, ref.title, ref.id)}
-                            className="text-[var(--portal-color-primary)] hover:underline font-semibold"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
                           >
-                            {copiedId === `${ref.id}-link` ? 'Copied! ✅' : 'Copy Link'}
+                            <Copy className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">
+                              {copiedId === `${ref.id}-link` ? 'Copied!' : 'Copy Link'}
+                            </span>
                           </button>
                           <a
                             href={`/references/${ref.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[var(--portal-color-text-secondary)] hover:underline"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                           >
-                            Open Link
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">Open Link</span>
                           </a>
                           <button
+                            type="button"
                             onClick={() => handleDelete(ref.id)}
-                            className="text-red-500 hover:underline"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
                           >
-                            Delete
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">Delete</span>
                           </button>
                         </div>
                       </td>
@@ -236,89 +342,6 @@ export default function ReferencesAdminPage() {
               </tbody>
             </table>
           </div>
-        </div>
-
-        {/* Right 1 Col - Upload Form */}
-        <div className="space-y-4">
-          <form
-            onSubmit={handleCreate}
-            className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 space-y-4"
-          >
-            <h2 className="text-md font-bold text-[var(--portal-color-text)]">
-              Upload Reference Page
-            </h2>
-
-            {error && (
-              <p className="rounded-lg bg-red-50 p-2.5 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
-                {error}
-              </p>
-            )}
-
-            {success && (
-              <p className="rounded-lg bg-green-50 p-2.5 text-xs text-green-600 dark:bg-green-900/20 dark:text-green-400">
-                {success}
-              </p>
-            )}
-
-            {/* Title */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-[var(--portal-color-text)]">
-                Title
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-                placeholder="Reference Page Title"
-              />
-            </div>
-
-            {/* Slug */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-[var(--portal-color-text)]">
-                Slug / Path URL
-              </label>
-              <input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                required
-                className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none font-mono"
-                placeholder="reference-page-slug"
-              />
-            </div>
-
-            {/* HTML Upload */}
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-[var(--portal-color-text)]">
-                HTML File (.html)
-              </label>
-              <div className="relative flex flex-col items-center justify-center rounded-lg border border-dashed border-[var(--portal-color-border)] bg-[var(--portal-color-background)] p-4 text-center">
-                <input
-                  type="file"
-                  id="html-file-input"
-                  accept=".html"
-                  onChange={handleFileUpload}
-                  required
-                  className="absolute inset-0 cursor-pointer opacity-0"
-                />
-                <span className="text-xl">📄</span>
-                <span className="mt-1 text-xs text-[var(--portal-color-text-secondary)]">
-                  {fileName ? fileName : 'Click or drag file to upload'}
-                </span>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={saving || !htmlCode}
-              className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-            >
-              {saving ? 'Uploading…' : 'Publish Reference'}
-            </button>
-          </form>
         </div>
       </div>
     </div>
