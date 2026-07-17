@@ -4,9 +4,9 @@ import { prisma } from '@portal/db';
 import { TRPCError } from '@trpc/server';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // Helper to find category by ID or slug
@@ -19,6 +19,7 @@ async function findCategoryByIdOrSlug(idOrSlug: string) {
 }
 
 export async function PUT(req: Request, { params }: RouteParams) {
+  const { id } = await params;
   const authResult = await authenticateRequest(req);
   if (!authResult) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -27,7 +28,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
   const { caller } = authResult;
 
   try {
-    const category = await findCategoryByIdOrSlug(params.id);
+    const category = await findCategoryByIdOrSlug(id);
     if (!category) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
@@ -43,7 +44,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
 
     return NextResponse.json({ success: true, data: updatedCategory });
   } catch (error: any) {
-    console.error(`REST PUT /categories/${params.id} error:`, error);
+    console.error(`REST PUT /categories/${id} error:`, error);
     if (error instanceof TRPCError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
@@ -52,6 +53,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
 }
 
 export async function DELETE(req: Request, { params }: RouteParams) {
+  const { id } = await params;
   const authResult = await authenticateRequest(req);
   if (!authResult) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -60,7 +62,7 @@ export async function DELETE(req: Request, { params }: RouteParams) {
   const { caller } = authResult;
 
   try {
-    const category = await findCategoryByIdOrSlug(params.id);
+    const category = await findCategoryByIdOrSlug(id);
     if (!category) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
@@ -71,7 +73,7 @@ export async function DELETE(req: Request, { params }: RouteParams) {
 
     return NextResponse.json({ success: true, data: deletedCategory });
   } catch (error: any) {
-    console.error(`REST DELETE /categories/${params.id} error:`, error);
+    console.error(`REST DELETE /categories/${id} error:`, error);
     if (error instanceof TRPCError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }

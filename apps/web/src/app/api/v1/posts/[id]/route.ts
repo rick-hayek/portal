@@ -4,9 +4,9 @@ import { prisma } from '@portal/db';
 import { TRPCError } from '@trpc/server';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // Helper to find post by ID or slug
@@ -24,8 +24,9 @@ async function findPostByIdOrSlug(idOrSlug: string) {
 }
 
 export async function GET(req: Request, { params }: RouteParams) {
+  const { id } = await params;
   try {
-    const post = await findPostByIdOrSlug(params.id);
+    const post = await findPostByIdOrSlug(id);
 
     if (!post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
@@ -41,12 +42,13 @@ export async function GET(req: Request, { params }: RouteParams) {
 
     return NextResponse.json(post);
   } catch (error: any) {
-    console.error(`REST GET /posts/${params.id} error:`, error);
+    console.error(`REST GET /posts/${id} error:`, error);
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function PUT(req: Request, { params }: RouteParams) {
+  const { id } = await params;
   const authResult = await authenticateRequest(req);
   if (!authResult) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -55,7 +57,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
   const { caller } = authResult;
 
   try {
-    const post = await findPostByIdOrSlug(params.id);
+    const post = await findPostByIdOrSlug(id);
     if (!post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
@@ -76,7 +78,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
 
     return NextResponse.json({ success: true, data: updatedPost });
   } catch (error: any) {
-    console.error(`REST PUT /posts/${params.id} error:`, error);
+    console.error(`REST PUT /posts/${id} error:`, error);
     if (error instanceof TRPCError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
@@ -85,6 +87,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
 }
 
 export async function DELETE(req: Request, { params }: RouteParams) {
+  const { id } = await params;
   const authResult = await authenticateRequest(req);
   if (!authResult) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -93,7 +96,7 @@ export async function DELETE(req: Request, { params }: RouteParams) {
   const { caller } = authResult;
 
   try {
-    const post = await findPostByIdOrSlug(params.id);
+    const post = await findPostByIdOrSlug(id);
     if (!post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
@@ -104,7 +107,7 @@ export async function DELETE(req: Request, { params }: RouteParams) {
 
     return NextResponse.json({ success: true, data: deletedPost });
   } catch (error: any) {
-    console.error(`REST DELETE /posts/${params.id} error:`, error);
+    console.error(`REST DELETE /posts/${id} error:`, error);
     if (error instanceof TRPCError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
