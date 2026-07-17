@@ -15,7 +15,7 @@ import { attachmentRouter } from './routers/attachment';
 import { trendingRouter } from './routers/trending';
 import { router } from './trpc';
 
-export { createContext } from './trpc';
+export { createContext, createCallerFactory } from './trpc';
 
 export const appRouter = router({
   post: postRouter,
