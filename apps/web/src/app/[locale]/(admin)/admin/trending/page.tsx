@@ -25,6 +25,7 @@ export default function AdminTrendingPage() {
   const [repos, setRepos] = useState<TrendingRepo[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetching, setFetching] = useState(false);
+  const [refreshingCache, setRefreshingCache] = useState(false);
   const [fetchResult, setFetchResult] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editZh, setEditZh] = useState('');
@@ -87,6 +88,30 @@ export default function AdminTrendingPage() {
       setFetchResult(`❌ Error: ${e?.message ?? 'Unknown error'}`);
     } finally {
       setFetching(false);
+    }
+  };
+
+  const handleRefreshCache = async () => {
+    setRefreshingCache(true);
+    setFetchResult('');
+    try {
+      const res = await fetch('/api/trpc/admin.trendingCacheRefresh?batch=1', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ '0': { json: {} } }),
+      });
+      const data = await res.json();
+      const result = data[0]?.result?.data?.json;
+      if (result?.success) {
+        setFetchResult('✅ Server cache refreshed successfully');
+        loadRepos();
+      } else {
+        setFetchResult('❌ Cache refresh failed');
+      }
+    } catch (e: any) {
+      setFetchResult(`❌ Error: ${e?.message ?? 'Unknown error'}`);
+    } finally {
+      setRefreshingCache(false);
     }
   };
 
@@ -158,14 +183,24 @@ export default function AdminTrendingPage() {
             Fetch trending AI/LLM repos from GitHub and manage AI summaries.
           </p>
         </div>
-        <button
-          onClick={handleFetch}
-          disabled={fetching}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--portal-color-primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
-          <RefreshCw className={`h-4 w-4 ${fetching ? 'animate-spin' : ''}`} />
-          {fetching ? 'Fetching...' : 'Fetch from GitHub'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRefreshCache}
+            disabled={refreshingCache || fetching}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] text-sm font-medium hover:bg-[var(--portal-color-bg)]/50 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`h-4 w-4 ${refreshingCache ? 'animate-spin' : ''}`} />
+            {refreshingCache ? 'Refreshing...' : 'Refresh Cache'}
+          </button>
+          <button
+            onClick={handleFetch}
+            disabled={fetching || refreshingCache}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--portal-color-primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            <RefreshCw className={`h-4 w-4 ${fetching ? 'animate-spin' : ''}`} />
+            {fetching ? 'Fetching...' : 'Fetch from GitHub'}
+          </button>
+        </div>
       </div>
 
       {fetchResult && (

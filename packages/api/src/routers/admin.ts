@@ -807,7 +807,8 @@ export const adminRouter = router({
           // Fallback: estimate growth based on total stars divided by age in days times 7
           const createdDate = new Date(repo.created_at);
           const daysOld = Math.max(1, Math.round((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)));
-          growth = Math.round((repo.stargazers_count / daysOld) * 7);
+          const weekDays = daysOld > 7 ? 7 : daysOld;
+          growth = Math.round((repo.stargazers_count / daysOld) * weekDays);
         }
 
         growth = Math.max(0, growth);
@@ -939,4 +940,14 @@ export const adminRouter = router({
       }
       return repo;
     }),
+
+  /** Invalidate server cache for trending repos */
+  trendingCacheRefresh: adminProcedure.mutation(async ({ ctx }) => {
+    if (ctx.revalidateTag) {
+      ctx.revalidateTag('trending');
+      return { success: true };
+    }
+    return { success: false, message: 'Revalidation function not available' };
+  }),
 });
+

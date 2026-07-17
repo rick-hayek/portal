@@ -116,7 +116,7 @@ def main():
     date_str = half_year_ago.strftime('%Y-%m-%d')
     
     search_terms1 = 'ai OR llm OR "large language model" OR "generative ai" OR "generative-ai"'
-    search_terms2 = '"ai agent" OR "ai-agent" OR "agentic ai" OR "agentic-ai"'
+    search_terms2 = '"ai agent" OR "ai-agent" OR "agentic ai" OR "agentic-ai" OR "agent harness"'
     
     headers = {
         "Accept": "application/vnd.github+json",
@@ -189,7 +189,10 @@ def main():
                 growth = stars - last_week_row[0]
             else:
                 days_old = max(1, (datetime.datetime.now(datetime.timezone.utc) - created_at).days)
-                growth = round((stars / days_old) * 7)
+                week_days = 7
+                if days_old < 7:
+                    week_days = days_old
+                growth = round((stars / days_old) * week_days)
             growth = max(0, growth)
             
             # 2. Manage summaries: check if we already have summaries this week
