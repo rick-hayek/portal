@@ -732,6 +732,23 @@ export const adminRouter = router({
         '"ai-agent"',
         '"agentic ai"',
         '"agentic-ai"',
+        '"agent harness"'
+      ].join(' OR ');
+
+      const searchTerms3 = [
+        '"openai"',
+        '"anthropic"',
+        '"gemini"',
+        '"grok"',
+        '"llama"'
+      ].join(' OR ');
+
+      const searchTerms4 = [
+        '"claude"',
+        '"qwen"',
+        '"deepseek"',
+        '"agentic"',
+        '"glm"'
       ].join(' OR ');
 
       const headers: Record<string, string> = {
@@ -769,14 +786,16 @@ export const adminRouter = router({
         return data.items ?? [];
       };
 
-      const [repos1, repos2] = await Promise.all([
+      const [repos1, repos2, repos3, repos4] = await Promise.all([
         fetchRepos(searchTerms1),
         fetchRepos(searchTerms2),
+        fetchRepos(searchTerms3),
+        fetchRepos(searchTerms4),
       ]);
 
       // Merge and deduplicate by GitHub ID
       const mergedMap = new Map<number, GithubRepo>();
-      for (const r of [...repos1, ...repos2]) {
+      for (const r of [...repos1, ...repos2, ...repos3, ...repos4]) {
         mergedMap.set(r.id, r);
       }
 

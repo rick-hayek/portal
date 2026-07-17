@@ -117,7 +117,9 @@ def main():
     
     search_terms1 = 'ai OR llm OR "large language model" OR "generative ai" OR "generative-ai"'
     search_terms2 = '"ai agent" OR "ai-agent" OR "agentic ai" OR "agentic-ai" OR "agent harness"'
-    
+    search_terms3 = '"openai" OR "anthropic" OR "gemini" OR "grok" OR "llama"'
+    search_terms4 = '"claude" OR "qwen" OR "deepseek" OR "agentic" OR "glm"'
+
     headers = {
         "Accept": "application/vnd.github+json",
         "User-Agent": "Portal-Trending-Bot"
@@ -138,13 +140,15 @@ def main():
     try:
         repos1 = fetch_repos(search_terms1)
         repos2 = fetch_repos(search_terms2)
+        repos3 = fetch_repos(search_terms3)
+        repos4 = fetch_repos(search_terms4)
     except Exception as e:
         print(f"GitHub fetch failed: {e}")
         sys.exit(1)
         
     # Merge and deduplicate by GitHub ID
     merged = {}
-    for r in repos1 + repos2:
+    for r in repos1 + repos2 + repos3 + repos4:
         merged[r["id"]] = r
         
     # Sort by stargazers desc and slice top 100
