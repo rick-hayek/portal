@@ -17,6 +17,12 @@ export function useLocalSWR<T>(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   
+  // Keep track of the active cacheKey to prevent race conditions from slower, out-of-order fetches
+  const currentKeyRef = useRef(cacheKey);
+  useEffect(() => {
+    currentKeyRef.current = cacheKey;
+  }, [cacheKey]);
+
   // Keep the latest fetcher reference to avoid unnecessary re-creation of callbacks
   const fetcherRef = useRef(fetcher);
   useEffect(() => {
@@ -27,6 +33,11 @@ export function useLocalSWR<T>(
     try {
       const freshData = await fetcherRef.current();
       
+      // If the cacheKey has changed since this fetch started, discard the result
+      if (cacheKey !== currentKeyRef.current) {
+        return;
+      }
+
       setData((prevData) => {
         const freshStr = JSON.stringify(freshData);
         const prevStr = JSON.stringify(prevData);
@@ -42,10 +53,15 @@ export function useLocalSWR<T>(
       });
       setError(null);
     } catch (err: any) {
+      if (cacheKey !== currentKeyRef.current) {
+        return;
+      }
       console.error(`SWR fetch error for key "${cacheKey}":`, err);
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
-      setLoading(false);
+      if (cacheKey === currentKeyRef.current) {
+        setLoading(false);
+      }
     }
   }, [cacheKey]);
 
