@@ -232,6 +232,10 @@
     "topics": "标签",
     "starsThisWeek": "本周",
     "loginToStar": "使用 GitHub 登录以 star 仓库",
-    "starFailed": "操作失败，请检查 GitHub 授权！"
+    "starFailed": "操作失败，请检查 GitHub 授权！",
+    "summarizeBtn": "AI 摘要",
+    "summarizeTitle": "本周 AI 热门开源趋势",
+    "saveImage": "保存图片",
+    "saving": "保存中..."
   }
 }

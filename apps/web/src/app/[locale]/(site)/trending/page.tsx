@@ -1,8 +1,11 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useLocalSWR } from '@/hooks/useLocalSWR';
+import { useSession } from 'next-auth/react';
+import { Sparkles, Download, X, Flame, Star } from 'lucide-react';
+import { toPng } from 'html-to-image';
 
 // GitHub language color mapping
 const LANG_COLORS: Record<string, string> = {
@@ -58,8 +61,37 @@ export default function TrendingPage() {
   const t = useTranslations('Trending');
   const locale = useLocale();
 
+  const { data: session } = useSession();
+  const [isSummarizeOpen, setIsSummarizeOpen] = useState(false);
+  const [savingImage, setSavingImage] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
   const [isWeekOpen, setIsWeekOpen] = useState(false);
+
+  const handleSaveImage = async () => {
+    if (!cardRef.current) return;
+    setSavingImage(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        backgroundColor: '#0b0f19',
+        pixelRatio: 2,
+      });
+
+      const link = document.createElement('a');
+      link.download = `Weekly_AI_Trending_${selectedWeek || 'latest'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (e) {
+      console.error('Failed to generate image:', e);
+      alert('Failed to save image. Please try again.');
+    } finally {
+      setSavingImage(false);
+    }
+  };
 
   useEffect(() => {
     if (!isWeekOpen) return;
@@ -90,7 +122,7 @@ export default function TrendingPage() {
       const input = selectedWeek ? { weekOf: selectedWeek } : {};
       const res = await fetch(
         '/api/trpc/trending.list?batch=1&input=' +
-          encodeURIComponent(JSON.stringify({ '0': { json: input } })),
+        encodeURIComponent(JSON.stringify({ '0': { json: input } })),
       );
       const data = await res.json();
       const result = data[0]?.result?.data?.json;
@@ -136,68 +168,78 @@ export default function TrendingPage() {
           <p className="text-sm text-[var(--portal-color-text-secondary)] max-w-lg">
             {t('subtitle')}
           </p>
-          {weeks.length > 0 && (
-            <div className="relative">
+          <div className="flex items-center gap-2">
+            {session && (
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsWeekOpen(!isWeekOpen);
-                }}
-                className="flex items-center justify-between gap-2 cursor-pointer text-sm px-3 py-1.5 rounded-lg border border-compat bg-[var(--portal-color-background)] text-[var(--portal-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--portal-color-primary)]/30"
-                aria-label="Select week"
+                onClick={() => setIsSummarizeOpen(true)}
+                className="flex items-center gap-1.5 cursor-pointer text-xs px-3 py-1.5 rounded-lg bg-[var(--portal-color-primary)] text-white font-medium hover:opacity-90 transition-opacity"
               >
-                <span className="font-[500]">
-                  {selectedWeek
-                    ? `${t('weekOf')} ${formatDate(selectedWeek, locale)}`
-                    : 'Select Week'}
-                </span>
-                <svg
-                  className={`h-3.5 w-3.5 text-[var(--portal-color-text-secondary)] transition-transform duration-200 ${
-                    isWeekOpen ? 'rotate-180' : ''
-                  }`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  aria-hidden="true"
-                >
-                  <title>Dropdown arrow</title>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
+                <Sparkles className="h-3.5 w-3.5" />
+                {t('summarizeBtn')}
               </button>
+            )}
+            {weeks.length > 0 && (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsWeekOpen(!isWeekOpen);
+                  }}
+                  className="flex items-center justify-between gap-2 cursor-pointer text-sm px-3 py-1.5 rounded-lg border border-compat bg-[var(--portal-color-background)] text-[var(--portal-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--portal-color-primary)]/30"
+                  aria-label="Select week"
+                >
+                  <span className="font-[500]">
+                    {selectedWeek
+                      ? `${t('weekOf')} ${formatDate(selectedWeek, locale)}`
+                      : 'Select Week'}
+                  </span>
+                  <svg
+                    className={`h-3.5 w-3.5 text-[var(--portal-color-text-secondary)] transition-transform duration-200 ${isWeekOpen ? 'rotate-180' : ''
+                      }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  >
+                    <title>Dropdown arrow</title>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-              {isWeekOpen && (
-                <div className="absolute right-0 top-full z-50 mt-1.5 w-52 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]/95 backdrop-blur-md py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150">
-                  {weeks.map((w) => {
-                    const label = `${t('weekOf')} ${formatDate(w, locale)}`;
-                    const isActive = selectedWeek === w;
+                {isWeekOpen && (
+                  <div className="absolute right-0 top-full z-50 mt-1.5 w-52 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]/95 backdrop-blur-md py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150">
+                    {weeks.map((w) => {
+                      const label = `${t('weekOf')} ${formatDate(w, locale)}`;
+                      const isActive = selectedWeek === w;
 
-                    return (
-                      <button
-                        key={w}
-                        type="button"
-                        onClick={() => {
-                          setSelectedWeek(w);
-                          setIsWeekOpen(false);
-                        }}
-                        className={`flex w-full items-center px-3 py-2 text-xs text-left cursor-pointer transition-colors ${
-                          isActive
-                            ? 'bg-[var(--portal-color-surface-alt)] font-semibold text-[var(--portal-color-primary)]'
-                            : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)]'
-                        }`}
-                      >
-                        <span className="w-5 text-center shrink-0 mr-1 text-[10px] font-bold">
-                          {isActive && '✓'}
-                        </span>
-                        <span className="truncate">{label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
+                      return (
+                        <button
+                          key={w}
+                          type="button"
+                          onClick={() => {
+                            setSelectedWeek(w);
+                            setIsWeekOpen(false);
+                          }}
+                          className={`flex w-full items-center px-3 py-2 text-xs text-left cursor-pointer transition-colors ${isActive
+                              ? 'bg-[var(--portal-color-surface-alt)] font-semibold text-[var(--portal-color-primary)]'
+                              : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)]'
+                            }`}
+                        >
+                          <span className="w-5 text-center shrink-0 mr-1 text-[10px] font-bold">
+                            {isActive && '✓'}
+                          </span>
+                          <span className="truncate">{label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Content */}
@@ -366,6 +408,122 @@ export default function TrendingPage() {
           </div>
         )}
       </div>
+
+      {/* Summarize Modal */}
+      {isSummarizeOpen && (
+        <div
+          onClick={() => setIsSummarizeOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto"
+        >
+          {/* Centering wrapper that allows vertical scrolling if viewport is too short */}
+          <div className="my-auto flex flex-col items-center py-4">
+            {/* Card Content wrapper to capture (strictly 350x620) */}
+            <div
+              ref={cardRef}
+              onClick={(e) => e.stopPropagation()}
+              className="w-[350px] h-[620px] rounded-2xl bg-gradient-to-br from-[#0b0f19] via-[#0f172a] to-[#1e293b] text-white pt-[18px] pb-[12px] px-5 flex flex-col justify-between relative overflow-hidden shadow-2xl shrink-0 border border-white/10"
+              style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+            >
+              {/* Background glows */}
+              <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[80px] pointer-events-none" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-500/10 blur-[80px] pointer-events-none" />
+
+              {/* Card Header */}
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-1.5">
+                    <Flame className="h-4 w-4 text-amber-500 fill-amber-500 animate-pulse" />
+                    <span className="font-mono text-[9px] uppercase tracking-wider text-amber-400 font-bold">AI Trending Repo</span>
+                  </div>
+                  <span className="text-[9px] text-white/30 font-mono">Voocii Portal</span>
+                </div>
+                <h2 className="text-lg font-bold tracking-tight text-white mb-0.5">{t('summarizeTitle')}</h2>
+                <p className="text-[9px] text-white/50 font-mono">
+                  Week of {formatDate(selectedWeek || new Date().toISOString(), locale)}
+                </p>
+                <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-1.5" />
+              </div>
+
+              {/* Card Body - Top 10 repos (very compact) */}
+              <div className="flex-1 flex flex-col justify-between gap-1 mt-1.5 mb-2 overflow-hidden relative z-10">
+                {repos.slice(0, 10).map((repo, idx) => (
+                  <div
+                    key={repo.id}
+                    className="flex items-center justify-between py-1 px-2.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      {/* Rank Badge */}
+                      <span className={`flex items-center justify-center w-5 h-5 rounded-full font-mono text-[10px] font-black shrink-0 ${idx === 0 ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-slate-900' :
+                          idx === 1 ? 'bg-gradient-to-br from-slate-200 to-slate-400 text-slate-900' :
+                            idx === 2 ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white' :
+                              'bg-white/10 text-white/70'
+                        }`}>
+                        {idx + 1}
+                      </span>
+
+                      {/* Name & Language */}
+                      <div className="min-w-0 leading-tight">
+                        <p className="font-bold text-xs text-white truncate">{repo.name}</p>
+                        {repo.language && (
+                          <span className="text-[8px] text-white/40 block mt-0.5 leading-none">{repo.language}</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Stars Growth */}
+                    <div className="text-right shrink-0 leading-tight">
+                      <div className="flex items-center justify-end gap-0.5 text-[10px] font-bold text-white">
+                        <Star className="h-3 w-3 text-amber-500 fill-amber-500 shrink-0" />
+                        <span>{formatNumber(repo.stars)}</span>
+                      </div>
+                      {repo.starsGrowth > 0 && (
+                        <p className="text-[9px] text-emerald-400 font-bold leading-none mt-0.5">
+                          +{formatNumber(repo.starsGrowth)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Card Footer */}
+              <div className="relative z-10 mt-auto pt-2 border-t border-white/10 flex items-center justify-between text-[8px] text-white/40">
+                <div className="space-y-0.5">
+                  <p className="font-semibold text-white/70 leading-none">Voocii Portal</p>
+                  <p className="leading-none">AI-driven personal platform</p>
+                </div>
+                <div className="text-right font-mono space-y-0.5">
+                  <p className="leading-none">Generated by AI Agent</p>
+                  <p className="leading-none">Explore more at voocii.com</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action buttons (Not captured in image) */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="mt-4 flex items-center gap-3"
+            >
+              <button
+                type="button"
+                onClick={handleSaveImage}
+                disabled={savingImage}
+                className="flex items-center gap-1.5 px-5 py-2 rounded-full bg-white text-slate-900 font-semibold text-xs shadow-lg hover:bg-white/90 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+              >
+                <Download className="h-3.5 w-3.5" />
+                {savingImage ? t('saving') : t('saveImage')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsSummarizeOpen(false)}
+                className="flex items-center justify-center h-8.5 w-8.5 rounded-full bg-white/10 text-white backdrop-blur-md hover:bg-white/20 active:scale-95 transition-all cursor-pointer border border-white/10"
+              >
+                <X className="h-4.5 w-4.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

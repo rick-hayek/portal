@@ -232,6 +232,10 @@
     "topics": "Topics",
     "starsThisWeek": "this week",
     "loginToStar": "Log in with GitHub to star",
-    "starFailed": "Failed to star, check GitHub permissions!"
+    "starFailed": "Failed to star, check GitHub permissions!",
+    "summarizeBtn": "Summarize",
+    "summarizeTitle": "Weekly AI Trending",
+    "saveImage": "Save Image",
+    "saving": "Saving..."
   }
 }
