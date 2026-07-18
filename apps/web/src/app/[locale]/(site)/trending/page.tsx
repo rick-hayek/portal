@@ -445,15 +445,15 @@ export default function TrendingPage() {
               </div>
 
               {/* Card Body - Top 10 repos (very compact) */}
-              <div className="flex-1 flex flex-col justify-between gap-1 mt-1.5 mb-2 overflow-hidden relative z-10">
+              <div className="flex-1 flex flex-col justify-center gap-[6px] mt-1.5 mb-2 overflow-hidden relative z-10">
                 {repos.slice(0, 10).map((repo, idx) => (
                   <div
                     key={repo.id}
-                    className="flex items-center justify-between py-1 px-2.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md"
+                    className="flex items-center justify-between py-1.5 px-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       {/* Rank Badge */}
-                      <span className={`flex items-center justify-center w-5 h-5 rounded-full font-mono text-[10px] font-black shrink-0 ${idx === 0 ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-slate-900' :
+                      <span className={`flex items-center justify-center w-[22px] h-[22px] rounded-full font-mono text-[11px] font-black shrink-0 ${idx === 0 ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-slate-900' :
                           idx === 1 ? 'bg-gradient-to-br from-slate-200 to-slate-400 text-slate-900' :
                             idx === 2 ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white' :
                               'bg-white/10 text-white/70'
@@ -463,17 +463,17 @@ export default function TrendingPage() {
 
                       {/* Name & Language */}
                       <div className="min-w-0 leading-tight">
-                        <p className="font-bold text-xs text-white truncate">{repo.name}</p>
+                        <p className="font-bold text-[13px] text-white truncate">{repo.name}</p>
                         {repo.language && (
-                          <span className="text-[8px] text-white/40 block mt-0.5 leading-none">{repo.language}</span>
+                          <span className="text-[9px] text-white/40 block mt-0.5 leading-none">{repo.language}</span>
                         )}
                       </div>
                     </div>
 
                     {/* Stars Growth */}
                     <div className="text-right shrink-0 leading-tight">
-                      <div className="flex items-center justify-end gap-0.5 text-[10px] font-bold text-white">
-                        <Star className="h-3 w-3 text-amber-500 fill-amber-500 shrink-0" />
+                      <div className="flex items-center justify-end gap-0.5 text-[11px] font-bold text-white">
+                        <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 shrink-0" />
                         <span>{formatNumber(repo.stars)}</span>
                       </div>
                       {repo.starsGrowth > 0 && (
