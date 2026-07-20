@@ -2,6 +2,7 @@
 
 import { trpc } from '@/lib/api/client';
 import { defaultAboutConfig } from '@portal/config';
+import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { Plus, Trash2, User, Save, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +18,12 @@ interface SocialLinkItem {
   icon?: string;
   displayMode?: 'icon' | 'text' | 'both';
 }
+
+const displayModeOptions: DropdownOption<'both' | 'icon' | 'text'>[] = [
+  { value: 'both', label: 'Both (Icon & Text)' },
+  { value: 'icon', label: 'Icon Only' },
+  { value: 'text', label: 'Text Only' },
+];
 
 export default function AdminAboutPage() {
   const { data: aboutData, isLoading, refetch } = trpc.about.getAbout.useQuery();
@@ -91,7 +98,7 @@ export default function AdminAboutPage() {
   };
 
   // Handle social link change
-  const handleSocialLinkChange = (index: number, field: keyof SocialLinkItem, value: string) => {
+  const handleSocialLinkChange = (index: number, field: keyof SocialLinkItem, value: any) => {
     const updated = [...socialLinks];
     updated[index] = { ...updated[index], [field]: value };
     setSocialLinks(updated);
@@ -111,10 +118,10 @@ export default function AdminAboutPage() {
         socialLinks: socialLinks.filter((link) => link.label.trim() && link.href.trim()),
         email: emailAddress.trim()
           ? {
-            address: emailAddress.trim(),
-            icon: emailIcon.trim() || undefined,
-            displayMode: emailDisplayMode,
-          }
+              address: emailAddress.trim(),
+              icon: emailIcon.trim() || undefined,
+              displayMode: emailDisplayMode,
+            }
           : null,
       });
 
@@ -151,10 +158,11 @@ export default function AdminAboutPage() {
 
       {feedback && (
         <div
-          className={`flex items-center gap-2 rounded-xl p-4 text-sm font-medium ${feedback.type === 'success'
-            ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/30 dark:bg-emerald-950/20 dark:text-emerald-300'
-            : 'border border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/30 dark:bg-rose-950/20 dark:text-rose-300'
-            }`}
+          className={`flex items-center gap-2 rounded-xl p-4 text-sm font-medium ${
+            feedback.type === 'success'
+              ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/30 dark:bg-emerald-950/20 dark:text-emerald-300'
+              : 'border border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/30 dark:bg-rose-950/20 dark:text-rose-300'
+          }`}
         >
           {feedback.type === 'success' ? (
             <CheckCircle2 className="h-5 w-5 shrink-0" />
@@ -223,15 +231,11 @@ export default function AdminAboutPage() {
                 <label className="block text-xs font-medium text-[var(--portal-color-text-secondary)] mb-1">
                   Display Mode
                 </label>
-                <select
+                <Dropdown
                   value={emailDisplayMode}
-                  onChange={(e) => setEmailDisplayMode(e.target.value as 'both' | 'icon' | 'text')}
-                  className="input-base"
-                >
-                  <option value="both">Both (Icon & Text)</option>
-                  <option value="icon">Icon Only</option>
-                  <option value="text">Text Only</option>
-                </select>
+                  onChange={(val) => setEmailDisplayMode(val)}
+                  options={displayModeOptions}
+                />
               </div>
             </div>
 
@@ -288,7 +292,7 @@ export default function AdminAboutPage() {
             <button
               type="button"
               onClick={handleAddExperience}
-              className="inline-flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:opacity-80 transition-opacity"
+              className="inline-flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:opacity-80 transition-opacity cursor-pointer"
             >
               <Plus className="h-4 w-4" /> Add Experience
             </button>
@@ -331,7 +335,7 @@ export default function AdminAboutPage() {
                   <button
                     type="button"
                     onClick={() => handleRemoveExperience(index)}
-                    className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors shrink-0"
+                    className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors shrink-0 cursor-pointer"
                     title="Delete"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -351,7 +355,7 @@ export default function AdminAboutPage() {
             <button
               type="button"
               onClick={handleAddSocialLink}
-              className="inline-flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:opacity-80 transition-opacity"
+              className="inline-flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:opacity-80 transition-opacity cursor-pointer"
             >
               <Plus className="h-4 w-4" /> Add Social Link
             </button>
@@ -384,20 +388,16 @@ export default function AdminAboutPage() {
                         onChange={(e) => handleSocialLinkChange(index, 'href', e.target.value)}
                         className="input-base"
                       />
-                      <select
+                      <Dropdown
                         value={link.displayMode || 'both'}
-                        onChange={(e) => handleSocialLinkChange(index, 'displayMode', e.target.value)}
-                        className="input-base text-xs"
-                      >
-                        <option value="both">Both</option>
-                        <option value="icon">Icon Only</option>
-                        <option value="text">Text Only</option>
-                      </select>
+                        onChange={(val) => handleSocialLinkChange(index, 'displayMode', val)}
+                        options={displayModeOptions}
+                      />
                     </div>
                     <button
                       type="button"
                       onClick={() => handleRemoveSocialLink(index)}
-                      className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors shrink-0"
+                      className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors shrink-0 cursor-pointer"
                       title="Delete"
                     >
                       <Trash2 className="h-4 w-4" />

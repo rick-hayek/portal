@@ -1,7 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { trpc } from '@/lib/api/client';
+import { useCallback } from 'react';
+import { useLocalSWR } from '@/hooks/useLocalSWR';
 import siteConfig from '@/site.config';
 
 interface SocialLink {
@@ -13,7 +14,18 @@ interface SocialLink {
 
 export default function AboutPage() {
   const t = useTranslations('About');
-  const { data: aboutData, isLoading } = trpc.about.getAbout.useQuery();
+
+  const { data: aboutData, loading: isLoading } = useLocalSWR(
+    'about-info',
+    useCallback(async () => {
+      const res = await fetch(
+        '/api/trpc/about.getAbout?batch=1&input=' +
+          encodeURIComponent(JSON.stringify({ '0': { json: null } })),
+      );
+      const json = await res.json();
+      return json[0]?.result?.data?.json ?? null;
+    }, []),
+  );
 
   const subtitle = aboutData?.subtitle || t('subtitle');
   const title = aboutData?.title || t('title');

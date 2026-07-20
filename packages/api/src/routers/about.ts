@@ -23,26 +23,38 @@ export interface EmailConfig {
 
 export const aboutRouter = router({
   getAbout: publicProcedure.query(async ({ ctx }) => {
-    const record = await ctx.prisma.aboutInfo.findUnique({
-      where: { id: 'default' },
-    });
+    const fetchData = async () => {
+      const record = await ctx.prisma.aboutInfo.findUnique({
+        where: { id: 'default' },
+      });
 
-    if (!record) {
-      return defaultAboutConfig;
-    }
+      if (!record) {
+        return defaultAboutConfig;
+      }
 
-    return {
-      title: record.title || defaultAboutConfig.title,
-      subtitle: record.subtitle || defaultAboutConfig.subtitle,
-      description: record.description || defaultAboutConfig.description,
-      experiences: Array.isArray(record.experiences)
-        ? (record.experiences as unknown as ExperienceItem[])
-        : defaultAboutConfig.experiences,
-      socialLinks: Array.isArray(record.socialLinks)
-        ? (record.socialLinks as unknown as SocialLinkItem[])
-        : defaultAboutConfig.socialLinks,
-      email: (record.email as unknown as EmailConfig) || defaultAboutConfig.email,
+      return {
+        title: record.title || defaultAboutConfig.title,
+        subtitle: record.subtitle || defaultAboutConfig.subtitle,
+        description: record.description || defaultAboutConfig.description,
+        experiences: Array.isArray(record.experiences)
+          ? (record.experiences as unknown as ExperienceItem[])
+          : defaultAboutConfig.experiences,
+        socialLinks: Array.isArray(record.socialLinks)
+          ? (record.socialLinks as unknown as SocialLinkItem[])
+          : defaultAboutConfig.socialLinks,
+        email: (record.email as unknown as EmailConfig) || defaultAboutConfig.email,
+      };
     };
+
+    if (ctx.unstable_cache) {
+      const getCached = ctx.unstable_cache(
+        fetchData,
+        ['about-info'],
+        { tags: ['about'], revalidate: 3600 },
+      );
+      return (await getCached()) as Awaited<ReturnType<typeof fetchData>>;
+    }
+    return fetchData();
   }),
 
   updateAbout: adminProcedure
@@ -97,6 +109,10 @@ export const aboutRouter = router({
           email: (input.email as any) ?? undefined,
         },
       });
+
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('about');
+      }
 
       return updated;
     }),

@@ -1,5 +1,6 @@
 'use client';
 
+import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { marked } from 'marked';
 import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useState } from 'react';
@@ -299,32 +300,28 @@ export default function EditPostPage() {
                 </button>
               </div>
             ) : (
-              <select
+              <Dropdown
                 value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:outline-none"
-              >
-                <option value="">No category</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setCategoryId(val)}
+                options={[
+                  { value: '', label: 'No category' },
+                  ...categories.map((c) => ({ value: c.id, label: c.name })),
+                ]}
+              />
             )}
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
               Status
             </label>
-            <select
+            <Dropdown
               value={status}
-              onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
-              className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)]"
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
+              onChange={(val) => setStatus(val as any)}
+              options={[
+                { value: 'draft', label: 'Draft' },
+                { value: 'published', label: 'Published' },
+              ]}
+            />
           </div>
         </div>
 

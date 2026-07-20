@@ -1,7 +1,15 @@
 'use client';
 
+import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { Link as LinkIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
+
+const linkCategoryOptions: DropdownOption[] = [
+  { value: 'friend', label: 'Friend' },
+  { value: 'tool', label: 'Tool' },
+  { value: 'inspiration', label: 'Inspiration' },
+  { value: 'other', label: 'Other' },
+];
 
 interface LinkEntry {
   id: string;
@@ -201,16 +209,11 @@ export default function LinksAdminPage() {
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
                 Category
               </label>
-              <select
+              <Dropdown
                 value={formData.category}
-                onChange={(e) => setFormData((p) => ({ ...p, category: e.target.value }))}
-                className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 text-sm"
-              >
-                <option value="friend">Friend</option>
-                <option value="tool">Tool</option>
-                <option value="inspiration">Inspiration</option>
-                <option value="other">Other</option>
-              </select>
+                onChange={(val) => setFormData((p) => ({ ...p, category: val }))}
+                options={linkCategoryOptions}
+              />
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">

@@ -1,6 +1,13 @@
 'use client';
 
+import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { useEffect, useState } from 'react';
+
+const analyticsDaysOptions: DropdownOption<number>[] = [
+  { value: 7, label: 'Last 7 days' },
+  { value: 30, label: 'Last 30 days' },
+  { value: 90, label: 'Last 90 days' },
+];
 
 interface AnalyticsData {
   totalViews: number;
@@ -53,15 +60,14 @@ export default function AdminAnalyticsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Analytics</h1>
-        <select
-          value={days}
-          onChange={(e) => setDays(Number(e.target.value))}
-          className="rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-1.5 text-sm text-[var(--portal-color-text)] focus:outline-none"
-        >
-          <option value={7}>Last 7 days</option>
-          <option value={30}>Last 30 days</option>
-          <option value={90}>Last 90 days</option>
-        </select>
+        <div className="w-36">
+          <Dropdown
+            value={days}
+            onChange={(val) => setDays(val)}
+            options={analyticsDaysOptions}
+            align="right"
+          />
+        </div>
       </div>
 
       {/* Stat cards */}

@@ -1,5 +1,7 @@
 'use client';
 
+import { Dropdown } from '@/components/ui/Dropdown';
+
 import { useTranslations } from 'next-intl';
 import { use, useCallback, useEffect, useState, useTransition } from 'react';
 import { Link, useRouter } from '@/i18n/routing';
@@ -368,26 +370,19 @@ export default function AdminEditBookPage({ params }: PageProps) {
             <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
               {t('fields.originalBook')} ({t('optional')})
             </label>
-            <select
+            <Dropdown
               value={originalBookId}
-              onChange={(e) => setOriginalBookId(e.target.value)}
-              className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none h-[38px] appearance-none"
-              style={{
-                backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 0.75rem center',
-                backgroundSize: '1rem',
-              }}
-            >
-              <option value="">— {t('optional')} —</option>
-              {allBooks
-                .filter((b) => b.id !== id) // Filter out the book itself to prevent self-reference
-                .map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.title} ({b.author})
-                  </option>
-                ))}
-            </select>
+              onChange={(val) => setOriginalBookId(val)}
+              options={[
+                { value: '', label: `— ${t('optional')} —` },
+                ...allBooks
+                  .filter((b) => b.id !== id)
+                  .map((b) => ({
+                    value: b.id,
+                    label: b.author ? `${b.title} (${b.author})` : b.title,
+                  })),
+              ]}
+            />
           </div>
         </div>
 
