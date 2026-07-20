@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1086.0",
+    "@portal/config": "workspace:*",
     "@portal/db": "workspace:*",
     "@portal/shared": "workspace:*",
     "@trpc/client": "^11.10.0",

@@ -215,13 +215,68 @@ textarea {
 }
 
 .prose-portal ul,
-.prose-portal ol {
-  margin: 1em 0;
-  padding-left: 1.5em;
+.prose ul {
+  list-style: disc !important;
+  list-style-type: disc !important;
+  margin: 1em 0 !important;
+  padding-left: 1.75em !important;
 }
 
-.prose-portal li {
-  margin-bottom: 0.5em;
+.prose-portal ol,
+.prose ol {
+  list-style: decimal !important;
+  list-style-type: decimal !important;
+  margin: 1em 0 !important;
+  padding-left: 1.75em !important;
+}
+
+.prose-portal li,
+.prose li {
+  display: list-item !important;
+  list-style: inherit !important;
+  list-style-type: inherit !important;
+  margin-bottom: 0.35em !important;
+}
+
+.prose-portal li::marker,
+.prose li::marker {
+  color: var(--portal-color-text-secondary, currentColor);
+}
+
+.prose-portal ul ul,
+.prose ul ul,
+.prose-portal ol ul,
+.prose ol ul {
+  list-style: circle !important;
+  list-style-type: circle !important;
+  margin: 0.35em 0 !important;
+}
+
+.prose-portal ul ul ul,
+.prose ul ul ul,
+.prose-portal ol ul ul,
+.prose ol ul ul {
+  list-style: square !important;
+  list-style-type: square !important;
+  margin: 0.35em 0 !important;
+}
+
+.prose-portal ul.contains-task-list,
+.prose ul.contains-task-list {
+  list-style: none !important;
+  list-style-type: none !important;
+  padding-left: 0.25em !important;
+}
+
+.prose-portal li.task-list-item,
+.prose li.task-list-item {
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+.prose-portal li > p,
+.prose li > p {
+  margin-bottom: 0.25em;
 }
 
 .prose-portal table {

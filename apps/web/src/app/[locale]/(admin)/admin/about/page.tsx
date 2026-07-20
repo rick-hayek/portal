@@ -1,0 +1,446 @@
+'use client';
+
+import { trpc } from '@/lib/api/client';
+import { defaultAboutConfig } from '@portal/config';
+import { Plus, Trash2, User, Save, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+interface ExperienceItem {
+  role: string;
+  company: string;
+  period: string;
+}
+
+interface SocialLinkItem {
+  label: string;
+  href: string;
+  icon?: string;
+  displayMode?: 'icon' | 'text' | 'both';
+}
+
+export default function AdminAboutPage() {
+  const { data: aboutData, isLoading, refetch } = trpc.about.getAbout.useQuery();
+  const updateMutation = trpc.about.updateAbout.useMutation();
+
+  const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  // Email state (stored in a single object/JSON field)
+  const [emailAddress, setEmailAddress] = useState('');
+  const [emailIcon, setEmailIcon] = useState('');
+  const [emailDisplayMode, setEmailDisplayMode] = useState<'icon' | 'text' | 'both'>('both');
+
+  const [experiences, setExperiences] = useState<ExperienceItem[]>([]);
+  const [socialLinks, setSocialLinks] = useState<SocialLinkItem[]>([]);
+
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  useEffect(() => {
+    if (aboutData) {
+      setTitle(aboutData.title ?? 'The Developer');
+      setSubtitle(aboutData.subtitle ?? 'ABOUT ME');
+      setDescription(aboutData.description ?? '');
+      setExperiences(aboutData.experiences ?? []);
+      setSocialLinks(aboutData.socialLinks ?? []);
+
+      // Parse Email JSON object or fallback
+      const rawEmail = aboutData.email;
+      if (typeof rawEmail === 'object' && rawEmail !== null && 'address' in rawEmail) {
+        const eObj = rawEmail as { address: string; icon?: string; displayMode?: 'icon' | 'text' | 'both' };
+        setEmailAddress(eObj.address ?? '');
+        setEmailIcon(eObj.icon ?? '');
+        setEmailDisplayMode(eObj.displayMode ?? 'both');
+      } else if (typeof rawEmail === 'string') {
+        setEmailAddress(rawEmail);
+        setEmailIcon(defaultAboutConfig.email?.icon ?? '');
+        setEmailDisplayMode('both');
+      } else {
+        setEmailAddress(defaultAboutConfig.email?.address ?? '');
+        setEmailIcon(defaultAboutConfig.email?.icon ?? '');
+        setEmailDisplayMode('both');
+      }
+    }
+  }, [aboutData]);
+
+  // Handle adding experience
+  const handleAddExperience = () => {
+    setExperiences([...experiences, { role: '', company: '', period: '' }]);
+  };
+
+  // Handle removing experience
+  const handleRemoveExperience = (index: number) => {
+    setExperiences(experiences.filter((_, i) => i !== index));
+  };
+
+  // Handle experience field change
+  const handleExperienceChange = (index: number, field: keyof ExperienceItem, value: string) => {
+    const updated = [...experiences];
+    updated[index] = { ...updated[index], [field]: value };
+    setExperiences(updated);
+  };
+
+  // Handle adding social link
+  const handleAddSocialLink = () => {
+    setSocialLinks([...socialLinks, { label: '', href: '', icon: '', displayMode: 'both' }]);
+  };
+
+  // Handle removing social link
+  const handleRemoveSocialLink = (index: number) => {
+    setSocialLinks(socialLinks.filter((_, i) => i !== index));
+  };
+
+  // Handle social link change
+  const handleSocialLinkChange = (index: number, field: keyof SocialLinkItem, value: string) => {
+    const updated = [...socialLinks];
+    updated[index] = { ...updated[index], [field]: value };
+    setSocialLinks(updated);
+  };
+
+  // Handle Save
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFeedback(null);
+
+    try {
+      await updateMutation.mutateAsync({
+        title: title.trim() || 'The Developer',
+        subtitle: subtitle.trim() || 'ABOUT ME',
+        description: description.trim(),
+        experiences: experiences.filter((exp) => exp.role.trim() || exp.company.trim()),
+        socialLinks: socialLinks.filter((link) => link.label.trim() && link.href.trim()),
+        email: emailAddress.trim()
+          ? {
+            address: emailAddress.trim(),
+            icon: emailIcon.trim() || undefined,
+            displayMode: emailDisplayMode,
+          }
+          : null,
+      });
+
+      setFeedback({ type: 'success', message: 'About page information updated successfully!' });
+      refetch();
+    } catch (err: any) {
+      setFeedback({ type: 'error', message: err?.message || 'Failed to save changes.' });
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto">
+        <div className="h-8 w-48 animate-pulse rounded-lg bg-[var(--portal-color-surface-alt)]" />
+        <div className="h-64 animate-pulse rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-[var(--portal-color-border)] pb-4">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--portal-color-text)] flex items-center gap-2">
+            <User className="h-6 w-6 text-[var(--portal-color-primary)]" />
+            About Page Settings
+          </h1>
+          <p className="text-xs text-[var(--portal-color-text-secondary)] mt-1">
+            Manage profile intro, work experiences, and social links displayed on the /about page
+          </p>
+        </div>
+      </div>
+
+      {feedback && (
+        <div
+          className={`flex items-center gap-2 rounded-xl p-4 text-sm font-medium ${feedback.type === 'success'
+            ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/30 dark:bg-emerald-950/20 dark:text-emerald-300'
+            : 'border border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/30 dark:bg-rose-950/20 dark:text-rose-300'
+            }`}
+        >
+          {feedback.type === 'success' ? (
+            <CheckCircle2 className="h-5 w-5 shrink-0" />
+          ) : (
+            <AlertCircle className="h-5 w-5 shrink-0" />
+          )}
+          {feedback.message}
+        </div>
+      )}
+
+      <form onSubmit={handleSave} className="space-y-8">
+        {/* Basic Information Section */}
+        <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 space-y-4">
+          <h2 className="text-base font-semibold text-[var(--portal-color-text)] border-b border-[var(--portal-color-border-soft)] pb-3">
+            Basic Information
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Subtitle
+              </label>
+              <input
+                type="text"
+                value={subtitle}
+                onChange={(e) => setSubtitle(e.target.value)}
+                placeholder="ABOUT ME"
+                className="input-base"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Role / Title
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="The Developer"
+                className="input-base"
+              />
+            </div>
+          </div>
+
+          {/* Email Settings */}
+          <div className="space-y-3 pt-2 border-t border-[var(--portal-color-border-soft)]">
+            <h3 className="text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase tracking-wider">
+              Email Settings
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-[var(--portal-color-text-secondary)] mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={emailAddress}
+                  onChange={(e) => setEmailAddress(e.target.value)}
+                  placeholder="your-email@example.com"
+                  className="input-base"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-[var(--portal-color-text-secondary)] mb-1">
+                  Display Mode
+                </label>
+                <select
+                  value={emailDisplayMode}
+                  onChange={(e) => setEmailDisplayMode(e.target.value as 'both' | 'icon' | 'text')}
+                  className="input-base"
+                >
+                  <option value="both">Both (Icon & Text)</option>
+                  <option value="icon">Icon Only</option>
+                  <option value="text">Text Only</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-[var(--portal-color-text-secondary)] mb-1">
+                Email SVG Icon
+              </label>
+              <div className="flex items-center gap-3">
+                {emailIcon ? (
+                  <div
+                    className="h-9 w-9 shrink-0 flex items-center justify-center rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text)]"
+                    dangerouslySetInnerHTML={{ __html: emailIcon }}
+                    title="Email SVG Preview"
+                  />
+                ) : (
+                  <div className="h-9 w-9 shrink-0 flex items-center justify-center rounded-lg border border-dashed border-[var(--portal-color-border)] text-[10px] text-[var(--portal-color-text-tertiary)] font-mono">
+                    SVG
+                  </div>
+                )}
+                <input
+                  type="text"
+                  placeholder="Email SVG Code: <svg>...</svg>"
+                  value={emailIcon}
+                  onChange={(e) => setEmailIcon(e.target.value)}
+                  className="input-base flex-1 font-mono text-xs"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+              Description
+            </label>
+            <p className="text-[11px] text-[var(--portal-color-text-tertiary)] mb-1.5">
+              Supports multiple paragraphs (separated by blank lines)
+            </p>
+            <textarea
+              rows={6}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Hello! I'm Jane Doe..."
+              className="input-base font-sans"
+            />
+          </div>
+        </div>
+
+        {/* Work Experiences Section */}
+        <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-[var(--portal-color-border-soft)] pb-3">
+            <h2 className="text-base font-semibold text-[var(--portal-color-text)]">
+              Work Experiences
+            </h2>
+            <button
+              type="button"
+              onClick={handleAddExperience}
+              className="inline-flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:opacity-80 transition-opacity"
+            >
+              <Plus className="h-4 w-4" /> Add Experience
+            </button>
+          </div>
+
+          {experiences.length === 0 ? (
+            <p className="text-xs text-[var(--portal-color-text-tertiary)] py-2">
+              No work experiences added. Click "Add Experience" to create one.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {experiences.map((exp, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 rounded-lg border border-[var(--portal-color-border-soft)] bg-[var(--portal-color-background)]"
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 min-w-0">
+                    <input
+                      type="text"
+                      placeholder="Role (e.g. Senior Developer)"
+                      value={exp.role}
+                      onChange={(e) => handleExperienceChange(index, 'role', e.target.value)}
+                      className="input-base"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Company (e.g. Tech Corp)"
+                      value={exp.company}
+                      onChange={(e) => handleExperienceChange(index, 'company', e.target.value)}
+                      className="input-base"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Period (e.g. 2023 — Present)"
+                      value={exp.period}
+                      onChange={(e) => handleExperienceChange(index, 'period', e.target.value)}
+                      className="input-base"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveExperience(index)}
+                    className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors shrink-0"
+                    title="Delete"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Social Links Section */}
+        <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-[var(--portal-color-border-soft)] pb-3">
+            <h2 className="text-base font-semibold text-[var(--portal-color-text)]">
+              Social Links
+            </h2>
+            <button
+              type="button"
+              onClick={handleAddSocialLink}
+              className="inline-flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:opacity-80 transition-opacity"
+            >
+              <Plus className="h-4 w-4" /> Add Social Link
+            </button>
+          </div>
+
+          {socialLinks.length === 0 ? (
+            <p className="text-xs text-[var(--portal-color-text-tertiary)] py-2">
+              No social links added. Click "Add Social Link" to create one.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {socialLinks.map((link, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-2 p-3 rounded-lg border border-[var(--portal-color-border-soft)] bg-[var(--portal-color-background)]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 min-w-0">
+                      <input
+                        type="text"
+                        placeholder="Label (e.g. X)"
+                        value={link.label}
+                        onChange={(e) => handleSocialLinkChange(index, 'label', e.target.value)}
+                        className="input-base"
+                      />
+                      <input
+                        type="url"
+                        placeholder="URL (e.g. https://x.com/...)"
+                        value={link.href}
+                        onChange={(e) => handleSocialLinkChange(index, 'href', e.target.value)}
+                        className="input-base"
+                      />
+                      <select
+                        value={link.displayMode || 'both'}
+                        onChange={(e) => handleSocialLinkChange(index, 'displayMode', e.target.value)}
+                        className="input-base text-xs"
+                      >
+                        <option value="both">Both</option>
+                        <option value="icon">Icon Only</option>
+                        <option value="text">Text Only</option>
+                      </select>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSocialLink(index)}
+                      className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors shrink-0"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {link.icon ? (
+                      <div
+                        className="h-9 w-9 shrink-0 flex items-center justify-center rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text)]"
+                        dangerouslySetInnerHTML={{ __html: link.icon }}
+                        title="SVG Preview"
+                      />
+                    ) : (
+                      <div className="h-9 w-9 shrink-0 flex items-center justify-center rounded-lg border border-dashed border-[var(--portal-color-border)] text-[10px] text-[var(--portal-color-text-tertiary)] font-mono">
+                        SVG
+                      </div>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="SVG Icon Code (e.g. <svg>...</svg>)"
+                      value={link.icon || ''}
+                      onChange={(e) => handleSocialLinkChange(index, 'icon', e.target.value)}
+                      className="input-base flex-1 font-mono text-xs"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Submit button */}
+        <div className="flex justify-end pt-2">
+          <button
+            type="submit"
+            disabled={updateMutation.isPending}
+            className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-primary)] px-6 py-2.5 text-sm font-semibold text-white shadow-xs hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+          >
+            <Save className="h-4 w-4" />
+            {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

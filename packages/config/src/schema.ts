@@ -39,18 +39,34 @@ export const siteConfigSchema = z.object({
     }),
   about: z
     .object({
-      name: z.string().optional(),
-      bio: z.string().optional(),
-      avatar: z.string().optional(),
-      skills: z.array(z.string()).optional(),
+      title: z.string().optional(),
+      subtitle: z.string().optional(),
+      description: z.string().optional(),
+      experiences: z
+        .array(
+          z.object({
+            role: z.string(),
+            company: z.string(),
+            period: z.string(),
+          }),
+        )
+        .optional(),
       socialLinks: z
         .array(
           z.object({
             label: z.string(),
             href: z.string(),
             icon: z.string().optional(),
+            displayMode: z.enum(['icon', 'text', 'both']).optional(),
           }),
         )
+        .optional(),
+      email: z
+        .object({
+          address: z.string(),
+          icon: z.string().optional(),
+          displayMode: z.enum(['icon', 'text', 'both']).optional(),
+        })
         .optional(),
     })
     .optional(),

@@ -25,4 +25,5 @@ export {
 } from './moduleRegistry';
 export { applyPreset, getPresetModules, type PresetName } from './presets';
 export * from './resume';
+export * from './defaultAbout';
 export { type SiteConfigInput, type SiteConfigParsed, siteConfigSchema } from './schema';

@@ -13,6 +13,7 @@ import { referenceRouter } from './routers/reference';
 import { searchRouter } from './routers/search';
 import { attachmentRouter } from './routers/attachment';
 import { trendingRouter } from './routers/trending';
+import { aboutRouter } from './routers/about';
 import { router } from './trpc';
 
 export { createContext, createCallerFactory } from './trpc';
@@ -33,6 +34,7 @@ export const appRouter = router({
   profile: profileRouter,
   attachment: attachmentRouter,
   trending: trendingRouter,
+  about: aboutRouter,
 });
 
 export type AppRouter = typeof appRouter;
