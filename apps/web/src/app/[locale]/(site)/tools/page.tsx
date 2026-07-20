@@ -1,4 +1,4 @@
-import { FileJson, Hash, Settings2, Shield } from 'lucide-react';
+import { FileJson, FileText, Hash, Settings2, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import { Link } from '@/i18n/routing';
@@ -7,6 +7,15 @@ export default function ToolsPage() {
   const t = useTranslations('Tools');
 
   const tools = [
+    {
+      id: 'markdown-editor',
+      name: t('markdownEditor.name'),
+      description: t('markdownEditor.desc'),
+      icon: <FileText className="h-6 w-6" />,
+      href: '/tools/markdown-editor',
+      color: 'text-emerald-500',
+      bg: 'bg-[rgba(16,185,129,0.1)]',
+    },
     {
       id: 'json-formatter',
       name: t('jsonFormatter.name'),

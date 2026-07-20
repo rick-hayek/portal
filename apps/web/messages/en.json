@@ -101,7 +101,25 @@
     "jwt": {
       "name": "JWT Decoder",
       "desc": "Decode and inspect JSON Web Tokens inline securely."
+    },
+    "markdownEditor": {
+      "name": "Markdown Editor",
+      "desc": "Real-time Markdown editor with side-by-side live HTML preview."
     }
+  },
+  "ToolsMarkdown": {
+    "title": "Markdown Editor & Previewer",
+    "description": "Write Markdown on the left and see the rendered HTML preview instantly on the right.",
+    "editor": "Markdown Input",
+    "preview": "Live Preview",
+    "loadSample": "Load Sample",
+    "clear": "Clear",
+    "copyMd": "Copy MD",
+    "copyHtml": "Copy HTML",
+    "copied": "Copied!",
+    "words": "words",
+    "chars": "characters",
+    "placeholder": "Type or paste your Markdown content here..."
   },
   "About": {
     "title": "The Developer",

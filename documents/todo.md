@@ -1,2 +1,2 @@
 **Tools**
-add new tool: markdown editor
+- [x] add new tool: markdown editor
