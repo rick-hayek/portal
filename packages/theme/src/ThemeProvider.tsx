@@ -9,36 +9,17 @@ const STORAGE_KEY = 'portal-theme';
 export interface ThemeContextValue {
   /** Current active theme config */
   theme: ThemeConfig;
-  /** Current theme id */
+  /** Current theme setting id ('system' or specific theme id) */
   themeId: string;
-  /** Switch to a different theme by id */
+  /** Resolved active theme id applied to DOM */
+  resolvedThemeId: string;
+  /** Switch to a different theme by id ('system' | 'minimal-light' | ...) */
   setTheme: (id: string) => void;
   /** All available themes */
   themes: Record<string, ThemeConfig>;
 }
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
-
-/** Resolve initial theme: localStorage → prefers-color-scheme → fallback */
-function resolveInitialTheme(defaultThemeId: string, availableThemes: string[]): string {
-  if (typeof window === 'undefined') return defaultThemeId;
-
-  // 1. Check localStorage
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved && themes[saved] && availableThemes.includes(saved)) {
-    return saved;
-  }
-
-  // 2. Check prefers-color-scheme
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (prefersDark) {
-    const darkTheme = availableThemes.find((id) => themes[id]?.mode === 'dark');
-    if (darkTheme) return darkTheme;
-  }
-
-  // 3. Fallback
-  return defaultThemeId;
-}
 
 /** Inject theme tokens as CSS custom properties on :root */
 function applyThemeToDOM(theme: ThemeConfig): void {
@@ -91,7 +72,6 @@ function applyThemeToDOM(theme: ThemeConfig): void {
   if (surfaceAlt) root.style.setProperty('--portal-color-surface-alt', surfaceAlt);
 
   // background-glass: translucent variant of background for glass headers
-  // opacity 0.72 matches the original hardcoded style
   const backgroundGlass = (theme.colors as any).backgroundGlass ?? hexToRgba(background, 0.72);
   if (backgroundGlass) root.style.setProperty('--portal-color-background-glass', backgroundGlass);
 
@@ -110,9 +90,10 @@ function applyThemeToDOM(theme: ThemeConfig): void {
   root.style.setProperty('--portal-blur', theme.effects.blur);
   root.style.setProperty('--portal-transition', theme.effects.transition);
 
-  // Set data attribute for CSS selectors
+  // Set data attributes and class for CSS selectors
   root.setAttribute('data-theme', theme.id);
   root.setAttribute('data-theme-mode', theme.mode);
+  root.classList.toggle('dark', theme.mode === 'dark');
 }
 
 function camelToKebab(str: string): string {
@@ -134,11 +115,51 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const available = useMemo(() => availableThemes ?? Object.keys(themes), [availableThemes]);
 
-  const [themeId, setThemeId] = useState(() => resolveInitialTheme(defaultTheme, available));
+  // Initial state is consistently 'system' on both server and client hydration to prevent hydration mismatch
+  const [themeId, setThemeId] = useState('system');
+
+  // Read saved theme from localStorage post-hydration
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && (saved === 'system' || (themes[saved] && available.includes(saved)))) {
+      setThemeId(saved);
+    }
+  }, [available]);
+
+  // Listen to system prefers-color-scheme changes
+  const [systemPrefersDark, setSystemPrefersDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => {
+      setSystemPrefersDark(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  const resolvedThemeId = useMemo(() => {
+    if (themeId === 'system') {
+      if (systemPrefersDark) {
+        const darkTheme = available.find((id) => themes[id]?.mode === 'dark');
+        if (darkTheme) return darkTheme;
+      }
+      const lightTheme = available.find((id) => themes[id]?.mode === 'light');
+      return lightTheme ?? defaultTheme;
+    }
+    return themes[themeId] && available.includes(themeId) ? themeId : defaultTheme;
+  }, [themeId, systemPrefersDark, available, defaultTheme]);
 
   const theme = useMemo(
-    () => themes[themeId] ?? themes[defaultTheme] ?? Object.values(themes)[0]!,
-    [themeId, defaultTheme],
+    () => themes[resolvedThemeId] ?? themes[defaultTheme] ?? Object.values(themes)[0]!,
+    [resolvedThemeId, defaultTheme],
   );
 
   // Apply theme tokens to DOM
@@ -148,7 +169,7 @@ export function ThemeProvider({
 
   const setTheme = useCallback(
     (id: string) => {
-      if (!themes[id] || !available.includes(id)) return;
+      if (id !== 'system' && (!themes[id] || !available.includes(id))) return;
       setThemeId(id);
       localStorage.setItem(STORAGE_KEY, id);
     },
@@ -156,8 +177,8 @@ export function ThemeProvider({
   );
 
   const value = useMemo<ThemeContextValue>(
-    () => ({ theme, themeId, setTheme, themes }),
-    [theme, themeId, setTheme],
+    () => ({ theme, themeId, resolvedThemeId, setTheme, themes }),
+    [theme, themeId, resolvedThemeId, setTheme],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

@@ -2,6 +2,7 @@ import { marked } from 'marked';
 import Image from 'next/image';
 import { getTRPCServer } from '@/lib/trpc-server';
 import { notFound } from 'next/navigation';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 
 interface Project {
   id: string;
@@ -498,6 +499,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           </a>
         )}
       </div>
+      <MermaidRenderer />
     </div>
   );
 }

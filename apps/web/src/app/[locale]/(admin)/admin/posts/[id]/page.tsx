@@ -5,6 +5,7 @@ import { marked } from 'marked';
 import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useState } from 'react';
 import { Link } from '@/i18n/routing';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 
 const parseGfmAlertsInHtml = (html: string) => {
   const blockquoteRegex = /<blockquote>([\s\S]*?)<\/blockquote>/gi;
@@ -409,6 +410,7 @@ export default function EditPostPage() {
           </Link>
         </div>
       </form>
+      <MermaidRenderer content={content} />
     </div>
   );
 }

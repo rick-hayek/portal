@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from '@/i18n/routing';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 
 interface Book {
   id: string;
@@ -368,6 +369,7 @@ export default function BookDetailPage() {
           )}
         </div>
       </div>
+      <MermaidRenderer content={descriptionHtml + reviewHtml} />
     </div>
   );
 }

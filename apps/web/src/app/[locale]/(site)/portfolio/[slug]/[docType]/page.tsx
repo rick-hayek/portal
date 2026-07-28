@@ -6,6 +6,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 
 export const revalidate = 3600; // ISR validation every hour
 
@@ -94,6 +95,7 @@ export default async function ProjectDocPage({
           }}
         />
       </div>
+      <MermaidRenderer />
     </article>
   );
 }

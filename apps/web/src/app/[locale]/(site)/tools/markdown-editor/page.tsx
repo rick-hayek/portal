@@ -15,6 +15,7 @@ import {
 import { useTranslations } from 'next-intl';
 import React, { useMemo, useState } from 'react';
 import { Link } from '@/i18n/routing';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 
 const SAMPLE_MARKDOWN = `# 🚀 Welcome to Markdown Editor
 
@@ -23,6 +24,7 @@ This is a real-time **Markdown Editor & Previewer** built with Next.js and Tailw
 ## 🌟 Key Features
 - **Split-screen live preview** for instant feedback.
 - Full support for **GitHub Flavored Markdown (GFM)**.
+- Support for **Mermaid Diagrams** rendering.
 - Interactive GFM Callouts / Alerts support.
 
 > [!NOTE]
@@ -33,6 +35,26 @@ This is a real-time **Markdown Editor & Previewer** built with Next.js and Tailw
 
 > [!WARNING]
 > Urgent info that needs immediate user attention to avoid problems.
+
+### 📐 Mermaid Diagram Example
+\`\`\`mermaid
+sequenceDiagram
+    participant U as User Browser
+    participant SP as Service Provider
+    participant IdP as Identity Provider
+
+    U->>SP: 1. Access System
+    SP-->>U: 2. Redirect to IdP
+    U->>IdP: 3. Open Login Page
+    IdP-->>U: 4. Display Form
+    U->>IdP: 5. Submit Credentials
+    IdP->>IdP: 6. Verify Credentials & Session
+    IdP-->>U: 7. Redirect back with Token
+    U->>SP: 8. Access with Token
+    SP->>IdP: 9. Validate Token
+    IdP-->>SP: 10. User Information
+    SP-->>U: 11. Login Success
+\`\`\`
 
 ### 💻 Code Block Example
 \`\`\`typescript
@@ -48,11 +70,13 @@ console.log(greet("Developer"));
 | :--- | :---: | ---: |
 | Markdown Parser | ✅ Active | Instant |
 | Live Preview | ✅ Active | 0ms |
+| Mermaid Diagrams | ✅ Active | Fast |
 | GFM Callouts | ✅ Active | Fast |
 
 ### 📝 Task List
 - [x] Create Markdown Editor UI
 - [x] Add side-by-side live preview
+- [x] Support Mermaid diagrams
 - [x] Support GFM callout alerts
 `;
 
@@ -357,6 +381,7 @@ export default function MarkdownEditorPage() {
           </div>
         )}
       </div>
+      <MermaidRenderer content={input} />
     </div>
   );
 }

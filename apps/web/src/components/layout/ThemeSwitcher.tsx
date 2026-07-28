@@ -1,44 +1,59 @@
 'use client';
 
-import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { themes, useTheme } from '@portal/theme';
+import { useEffect, useState } from 'react';
+import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
 
 export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
   const { themeId, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const themeOptions: DropdownOption[] = Object.values(themes).map((t) => ({
-    value: t.id,
-    label: t.name,
-    icon: (
-      <span>
-        {
-          {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const themeOptions: DropdownOption[] = [
+    {
+      value: 'system',
+      label: 'System (Auto)',
+      icon: <span>💻</span>,
+    },
+    ...Object.values(themes).map((t) => ({
+      value: t.id,
+      label: t.name,
+      icon: (
+        <span>
+          {{
             'minimal-light': '⚪',
             'dark-neon': '⚡',
             cyberpunk: '👾',
             'nature-green': '🌿',
             'retro-brown': '☕',
-          }[t.id] || (t.mode === 'dark' ? '🌙' : '☀️')
-        }
-      </span>
-    ),
-  }));
+          }[t.id] || (t.mode === 'dark' ? '🌙' : '☀️')}
+        </span>
+      ),
+    })),
+  ];
 
-  const currentTheme = themes[themeId as keyof typeof themes];
-  const activeIcon = currentTheme
-    ? {
-        'minimal-light': '⚪',
-        'dark-neon': '⚡',
-        cyberpunk: '👾',
-        'nature-green': '🌿',
-        'retro-brown': '☕',
-      }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
-    : '☀️';
+  const displayThemeId = mounted ? themeId : 'system';
+  const currentTheme = themes[displayThemeId as keyof typeof themes];
+  const activeIcon =
+    displayThemeId === 'system'
+      ? '💻'
+      : currentTheme
+        ? {
+            'minimal-light': '⚪',
+            'dark-neon': '⚡',
+            cyberpunk: '👾',
+            'nature-green': '🌿',
+            'retro-brown': '☕',
+          }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
+        : '💻';
 
   if (iconOnly) {
     return (
       <Dropdown
-        value={themeId}
+        value={displayThemeId}
         onChange={(val) => setTheme(val as any)}
         options={themeOptions}
         align="right"
@@ -49,7 +64,7 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
             className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--portal-color-border,#e5e7eb)] bg-[var(--portal-color-surface)] text-sm text-[var(--portal-color-text)] transition-colors hover:border-[var(--portal-color-primary)] cursor-pointer focus:outline-none"
             aria-label="Switch theme"
           >
-            {activeIcon}
+            <span suppressHydrationWarning>{activeIcon}</span>
           </button>
         )}
       />
@@ -57,9 +72,9 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
   }
 
   return (
-    <div className="portal-theme-switcher w-40">
+    <div className="portal-theme-switcher w-44">
       <Dropdown
-        value={themeId}
+        value={displayThemeId}
         onChange={(val) => setTheme(val as any)}
         options={themeOptions}
         align="right"

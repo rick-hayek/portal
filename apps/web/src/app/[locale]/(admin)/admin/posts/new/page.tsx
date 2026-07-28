@@ -5,6 +5,7 @@ import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { marked } from 'marked';
 import { useEffect, useState } from 'react';
 import { useRouter } from '@/i18n/routing';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 
 const parseGfmAlertsInHtml = (html: string) => {
   const blockquoteRegex = /<blockquote>([\s\S]*?)<\/blockquote>/gi;
@@ -373,6 +374,7 @@ export default function NewPostPage() {
           </button>
         </div>
       </form>
+      <MermaidRenderer content={content} />
     </div>
   );
 }

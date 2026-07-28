@@ -10,6 +10,7 @@ import { MathRenderer } from '@/components/blog/MathRenderer';
 import { AdSense } from '@/components/blog/AdSense';
 import { CommentSection } from '@/components/blog/CommentSection';
 import { CustomBlockquote } from '@/components/blog/CustomBlockquote';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
@@ -201,8 +202,9 @@ export default async function BlogPostPage({
       {/* Comments */}
       <CommentSection postId={post.id} comments={post.comments} />
 
-      {/* Client-Side LaTeX Parser trigger */}
+      {/* Client-Side LaTeX & Mermaid Diagram triggers */}
       <MathRenderer />
+      <MermaidRenderer />
     </article>
   );
 }
