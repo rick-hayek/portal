@@ -104,22 +104,23 @@
     },
     "markdownEditor": {
       "name": "Markdown 编辑器",
-      "desc": "实时 Markdown 文本编辑器，支持双栏同步预览。"
+      "desc": "实时 Markdown 文本编辑器，支持 HTML 与图表同步预览。"
     }
   },
   "ToolsMarkdown": {
-    "title": "Markdown 编辑器与预览",
-    "description": "左侧输入 Markdown 源码，右侧实时渲染 HTML 预览效果。",
+    "title": "Markdown 编辑器",
+    "description": "输入 Markdown 源码，实时渲染 HTML 效果与流程图预览。",
     "editor": "Markdown 输入",
     "preview": "实时预览",
     "loadSample": "加载示例",
+    "importFile": "导入文件",
     "clear": "清空",
     "copyMd": "复制 MD",
     "copyHtml": "复制 HTML",
     "copied": "已复制!",
     "words": "字数",
     "chars": "字符数",
-    "placeholder": "在此输入或粘贴 Markdown 内容..."
+    "placeholder": "在此输入或粘贴 Markdown 内容，或直接拖拽本地 .md 文件至此..."
   },
   "About": {
     "title": "关于开发者",

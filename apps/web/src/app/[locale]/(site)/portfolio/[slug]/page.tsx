@@ -65,10 +65,6 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
       />
-      {/* Breadcrumb */}
-      <a href="/portfolio" className="text-sm text-[var(--portal-color-primary)] hover:underline">
-        ← Portfolio
-      </a>
 
       <div className="mt-4 flex items-center gap-3">
         {project.logo && (

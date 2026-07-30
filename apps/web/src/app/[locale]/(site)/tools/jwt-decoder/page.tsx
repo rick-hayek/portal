@@ -1,9 +1,9 @@
 'use client';
 
-import { ArrowLeft, Check, Copy, Shield, Trash2 } from 'lucide-react';
+import { Check, Copy, Shield, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
-import { Link } from '@/i18n/routing';
+import { ToolHeader } from '@/components/tools/ToolHeader';
 
 interface JwtPayload {
   header: any;
@@ -90,26 +90,13 @@ export default function JwtDecoderPage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
-      <header className="space-y-4">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/tools"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] transition-colors hover:bg-[var(--portal-color-bg)] hover:text-[var(--portal-color-text)]"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(249,115,22,0.1)] text-orange-500">
-            <Shield className="h-6 w-6" />
-          </div>
-        </div>
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--portal-color-text)]">
-            {t('title')}
-          </h1>
-          <p className="mt-2 text-[var(--portal-color-text-secondary)]">{t('description')}</p>
-        </div>
-      </header>
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-8">
+      <ToolHeader
+        title={t('title')}
+        description={t('description')}
+        icon={<Shield className="h-6 w-6" />}
+        iconBgColor="bg-[rgba(249,115,22,0.1)] text-orange-500"
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Input Section */}

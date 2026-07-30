@@ -104,22 +104,23 @@
     },
     "markdownEditor": {
       "name": "Markdown Editor",
-      "desc": "Real-time Markdown editor with side-by-side live HTML preview."
+      "desc": "Real-time Markdown editor with instant live HTML & diagram preview."
     }
   },
   "ToolsMarkdown": {
-    "title": "Markdown Editor & Previewer",
-    "description": "Write Markdown on the left and see the rendered HTML preview instantly on the right.",
+    "title": "Markdown Editor",
+    "description": "Write Markdown and see the rendered HTML preview & diagrams in real time.",
     "editor": "Markdown Input",
     "preview": "Live Preview",
     "loadSample": "Load Sample",
+    "importFile": "Import File",
     "clear": "Clear",
     "copyMd": "Copy MD",
     "copyHtml": "Copy HTML",
     "copied": "Copied!",
     "words": "words",
     "chars": "characters",
-    "placeholder": "Type or paste your Markdown content here..."
+    "placeholder": "Type or paste your Markdown content here, or drag & drop a .md file..."
   },
   "About": {
     "title": "The Developer",

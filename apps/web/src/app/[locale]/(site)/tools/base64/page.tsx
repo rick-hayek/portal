@@ -1,9 +1,9 @@
 'use client';
 
-import { ArrowLeft, ArrowRightLeft, Check, Copy, Hash, Trash2 } from 'lucide-react';
+import { ArrowRightLeft, Check, Copy, Hash, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
-import { Link } from '@/i18n/routing';
+import { ToolDropdown, ToolHeader } from '@/components/tools/ToolHeader';
 
 type Mode = 'encode' | 'decode';
 
@@ -31,8 +31,15 @@ export default function Base64Page() {
         setOutput(decodeURIComponent(escape(atob(val))));
       }
     } catch (err) {
-      setError(currentMode === 'encode' ? 'Failed to encode text' : t('error'));
+      setError(currentMode === 'decode' ? 'Invalid Base64 string' : 'Encoding failed');
       setOutput('');
+    }
+  };
+
+  const handleModeChange = (newMode: Mode) => {
+    if (newMode !== mode) {
+      setMode(newMode);
+      handleProcess(output, newMode);
     }
   };
 
@@ -61,50 +68,24 @@ export default function Base64Page() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
-      <header className="space-y-4">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/tools"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] transition-colors hover:bg-[var(--portal-color-bg)] hover:text-[var(--portal-color-text)]"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(168,85,247,0.1)] text-purple-500">
-            <Hash className="h-6 w-6" />
-          </div>
-        </div>
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[var(--portal-color-text)]">
-              {t('title')}
-            </h1>
-            <p className="mt-2 text-[var(--portal-color-text-secondary)]">{t('description')}</p>
-          </div>
-          <div className="flex items-center rounded-lg bg-[var(--portal-color-surface)] p-1 ring-1 ring-[var(--portal-color-border)] shrink-0">
-            <button
-              onClick={() => mode !== 'encode' && toggleMode()}
-              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
-                mode === 'encode'
-                  ? 'bg-[var(--portal-color-primary)] text-white shadow'
-                  : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)] hover:bg-[var(--portal-color-bg)]'
-              }`}
-            >
-              {t('encode')}
-            </button>
-            <button
-              onClick={() => mode !== 'decode' && toggleMode()}
-              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
-                mode === 'decode'
-                  ? 'bg-[var(--portal-color-primary)] text-white shadow'
-                  : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)] hover:bg-[var(--portal-color-bg)]'
-              }`}
-            >
-              {t('decode')}
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-8">
+      <ToolHeader
+        title={t('title')}
+        description={t('description')}
+        icon={<Hash className="h-6 w-6" />}
+        iconBgColor="bg-[rgba(168,85,247,0.1)] text-purple-500"
+        actions={
+          <ToolDropdown
+            value={mode}
+            onChange={(m) => handleModeChange(m)}
+            headerTitle="Mode"
+            options={[
+              { id: 'encode', label: t('encode'), icon: <ArrowRightLeft className="h-4 w-4 text-purple-500" /> },
+              { id: 'decode', label: t('decode'), icon: <ArrowRightLeft className="h-4 w-4 text-purple-500" /> },
+            ]}
+          />
+        }
+      />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr] h-[400px]">
         {/* Input Section */}

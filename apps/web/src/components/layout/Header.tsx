@@ -24,33 +24,108 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
   const isAdmin = session?.user?.role === 'admin';
   const displayNavItems = isAdmin ? [...navItems, { href: '/admin', label: 'Admin' }] : navItems;
 
+  const getDetailParent = (path: string): { href: string; labelKey: string } | null => {
+    const cleanPath = path.split('?')[0];
+    if (cleanPath.startsWith('/blog/') && cleanPath !== '/blog') {
+      return { href: '/blog', labelKey: 'blog' };
+    }
+    if (cleanPath.startsWith('/portfolio/') && cleanPath !== '/portfolio') {
+      return { href: '/portfolio', labelKey: 'portfolio' };
+    }
+    if (cleanPath.startsWith('/books/') && cleanPath !== '/books') {
+      return { href: '/books', labelKey: 'books' };
+    }
+    if (cleanPath.startsWith('/tools/') && cleanPath !== '/tools') {
+      return { href: '/tools', labelKey: 'tools' };
+    }
+    return null;
+  };
+
+  const detailParent = getDetailParent(pathname);
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-compat flex justify-center px-4 md:px-8 bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150">
         <div className="flex h-full w-full items-center justify-between px-0">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline text-[1.1rem] tracking-tight"
-          >
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]">
-              <svg
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                />
-              </svg>
-            </span>
-            {siteTitle}
+          {/* Logo / Mobile Back Button */}
+          <div className="flex items-center gap-2">
+            {detailParent ? (
+              <>
+                {/* On Desktop: Always render site Logo */}
+                <Link
+                  href="/"
+                  className="hidden md:flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline text-[1.1rem] tracking-tight"
+                >
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]">
+                    <svg
+                      className="h-3.5 w-3.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                      />
+                    </svg>
+                  </span>
+                  {siteTitle}
+                </Link>
 
-          </Link>
+                {/* On Mobile in detail pages: Render Back Button */}
+                <Link
+                  href={detailParent.href as any}
+                  className="flex md:hidden items-center gap-2 font-bold text-[var(--portal-color-text)] hover:text-[var(--portal-color-primary)] transition-colors no-underline text-base"
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] shadow-xs">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                      />
+                    </svg>
+                  </span>
+                  <span className="text-[0.95rem]">
+                    {t.has(detailParent.labelKey as any)
+                      ? t(detailParent.labelKey as any)
+                      : detailParent.labelKey}
+                  </span>
+                </Link>
+              </>
+            ) : (
+              /* On non-detail pages: Always render site Logo */
+              <Link
+                href="/"
+                className="flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline text-[1.1rem] tracking-tight"
+              >
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]">
+                  <svg
+                    className="h-3.5 w-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                    />
+                  </svg>
+                </span>
+                {siteTitle}
+              </Link>
+            )}
+          </div>
 
           {/* Desktop/Tablet Nav Links */}
           <nav className="hidden items-center gap-4 lg:gap-8 md:flex">

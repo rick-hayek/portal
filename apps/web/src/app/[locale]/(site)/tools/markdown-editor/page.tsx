@@ -2,20 +2,20 @@
 
 import { marked } from 'marked';
 import {
-  ArrowLeft,
   Check,
   Code2,
   Copy,
   Eye,
   FileText,
-  RotateCcw,
+  FolderOpen,
   Sparkles,
   Trash2,
+  Upload,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import React, { useMemo, useState } from 'react';
-import { Link } from '@/i18n/routing';
+import React, { useMemo, useRef, useState } from 'react';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
+import { ToolDropdown, ToolHeader } from '@/components/tools/ToolHeader';
 
 const SAMPLE_MARKDOWN = `# 🚀 Welcome to Markdown Editor
 
@@ -26,6 +26,7 @@ This is a real-time **Markdown Editor & Previewer** built with Next.js and Tailw
 - Full support for **GitHub Flavored Markdown (GFM)**.
 - Support for **Mermaid Diagrams** rendering.
 - Interactive GFM Callouts / Alerts support.
+- **Import local files** (.md, .markdown, .txt) with drag & drop support.
 
 > [!NOTE]
 > Useful information that users should know, even when skimming content.
@@ -78,6 +79,7 @@ console.log(greet("Developer"));
 - [x] Add side-by-side live preview
 - [x] Support Mermaid diagrams
 - [x] Support GFM callout alerts
+- [x] Support local file import & drag-and-drop
 `;
 
 const parseGfmAlertsInHtml = (html: string) => {
@@ -140,6 +142,9 @@ export default function MarkdownEditorPage() {
 
   const [copiedMd, setCopiedMd] = useState(false);
   const [copiedHtml, setCopiedHtml] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Parse HTML live
   const parsedHtml = useMemo(() => {
@@ -192,104 +197,136 @@ export default function MarkdownEditorPage() {
     setInput(SAMPLE_MARKDOWN);
   };
 
-  return (
-    <div className="mx-auto max-w-7xl space-y-6 pb-12">
-      {/* Header */}
-      <header className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/tools"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] transition-colors hover:bg-[var(--portal-color-bg)] hover:text-[var(--portal-color-text)]"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(16,185,129,0.1)] text-emerald-500">
-              <FileText className="h-6 w-6" />
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--portal-color-text)]">
-                {t('title')}
-              </h1>
-              <p className="text-xs sm:text-sm text-[var(--portal-color-text-secondary)]">
-                {t('description')}
-              </p>
-            </div>
-          </div>
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
 
-          {/* View Mode Toggle for small screens */}
-          <div className="hidden md:flex items-center gap-1 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-1 text-xs font-medium text-[var(--portal-color-text-secondary)]">
-            <button
-              onClick={() => setActiveTab('split')}
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors cursor-pointer ${
-                activeTab === 'split'
-                  ? 'bg-[var(--portal-color-primary)] text-white'
-                  : 'hover:bg-[var(--portal-color-bg)] text-[var(--portal-color-text-secondary)]'
-              }`}
-            >
-              <FileText className="h-3.5 w-3.5" />
-              Split View
-            </button>
-            <button
-              onClick={() => setActiveTab('edit')}
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors cursor-pointer ${
-                activeTab === 'edit'
-                  ? 'bg-[var(--portal-color-primary)] text-white'
-                  : 'hover:bg-[var(--portal-color-bg)] text-[var(--portal-color-text-secondary)]'
-              }`}
-            >
-              <Code2 className="h-3.5 w-3.5" />
-              Editor Only
-            </button>
-            <button
-              onClick={() => setActiveTab('preview')}
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors cursor-pointer ${
-                activeTab === 'preview'
-                  ? 'bg-[var(--portal-color-primary)] text-white'
-                  : 'hover:bg-[var(--portal-color-bg)] text-[var(--portal-color-text-secondary)]'
-              }`}
-            >
-              <Eye className="h-3.5 w-3.5" />
-              Preview Only
-            </button>
-          </div>
-        </div>
-      </header>
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result;
+      if (typeof text === 'string') {
+        setInput(text);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result;
+      if (typeof text === 'string') {
+        setInput(text);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 pb-12">
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept=".md,.markdown,.mdown,.mkd,.txt"
+        className="hidden"
+      />
+
+      {/* Reusable Tool Header with Top-Right Dropdown Switcher */}
+      <ToolHeader
+        title={t('title')}
+        description={t('description')}
+        icon={<FileText className="h-6 w-6" />}
+        iconBgColor="bg-[rgba(16,185,129,0.1)] text-emerald-500"
+        actions={
+          <ToolDropdown
+            value={activeTab}
+            onChange={setActiveTab}
+            headerTitle="View Mode"
+            options={[
+              { id: 'split', label: 'Split View', icon: <FileText className="h-4 w-4 text-emerald-500" /> },
+              { id: 'edit', label: 'Editor Only', icon: <Code2 className="h-4 w-4 text-blue-500" /> },
+              { id: 'preview', label: 'Preview Only', icon: <Eye className="h-4 w-4 text-purple-500" /> },
+            ]}
+          />
+        }
+      />
 
       {/* Main Container */}
       <div
         className={`grid gap-6 ${
           activeTab === 'split'
-            ? 'grid-cols-1 lg:grid-cols-2'
-            : activeTab === 'edit'
-            ? 'grid-cols-1'
-            : 'grid-cols-1'
-        } min-h-[650px]`}
+            ? 'grid-cols-1 lg:grid-cols-2 min-h-[600px] sm:min-h-[700px]'
+            : 'grid-cols-1 min-h-[calc(100vh-280px)]'
+        }`}
       >
         {/* Left: Editor Panel */}
         {(activeTab === 'split' || activeTab === 'edit') && (
-          <div className="flex flex-col rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] shadow-xs overflow-hidden">
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`relative flex flex-col rounded-2xl border transition-colors shadow-xs overflow-hidden ${
+              isDragging
+                ? 'border-[var(--portal-color-primary)] bg-[var(--portal-color-primary-soft,#f0f9ff)]'
+                : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]'
+            }`}
+          >
             {/* Editor Toolbar */}
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] px-4 py-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] px-3 sm:px-4 py-2 sm:py-2.5">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-[var(--portal-color-text)] flex items-center gap-1.5">
                   <Code2 className="h-4 w-4 text-[var(--portal-color-primary)]" />
                   {t('editor')}
                 </span>
                 <span className="text-[11px] font-mono text-[var(--portal-color-text-tertiary)] bg-[var(--portal-color-bg)] px-2 py-0.5 rounded-full border border-[var(--portal-color-border-soft)]">
-                  {wordCount} {t('words')} · {charCount} {t('chars')}
+                  {wordCount}w · {charCount}c
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <button
+                  type="button"
+                  onClick={handleImportClick}
+                  className="flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:opacity-80 transition-opacity cursor-pointer px-2 sm:px-2.5 py-1 rounded-md bg-[var(--portal-color-primary-soft,#f0f9ff)] hover:bg-[var(--portal-color-bg)] border border-[var(--portal-color-primary)]/20"
+                  title="Import local .md or .txt file"
+                >
+                  <FolderOpen className="h-3.5 w-3.5" />
+                  <span>{t('importFile')}</span>
+                </button>
                 <button
                   type="button"
                   onClick={handleLoadSample}
-                  className="flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:opacity-80 transition-opacity cursor-pointer px-2 py-1 rounded-md hover:bg-[var(--portal-color-bg)]"
+                  className="flex items-center gap-1 text-xs font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)] transition-colors cursor-pointer px-2 py-1 rounded-md hover:bg-[var(--portal-color-bg)]"
                   title="Load sample Markdown text"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  {t('loadSample')}
+                  <span className="hidden sm:inline">{t('loadSample')}</span>
                 </button>
                 <button
                   type="button"
@@ -306,7 +343,7 @@ export default function MarkdownEditorPage() {
                   ) : (
                     <>
                       <Copy className="h-3.5 w-3.5" />
-                      {t('copyMd')}
+                      <span className="hidden sm:inline">{t('copyMd')}</span>
                     </>
                   )}
                 </button>
@@ -318,17 +355,29 @@ export default function MarkdownEditorPage() {
                   title="Clear input"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  {t('clear')}
+                  <span className="hidden sm:inline">{t('clear')}</span>
                 </button>
               </div>
             </div>
+
+            {/* Drag & Drop Visual Overlay */}
+            {isDragging && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[var(--portal-color-surface)]/90 backdrop-blur-xs text-[var(--portal-color-primary)]">
+                <Upload className="h-10 w-10 animate-bounce mb-2" />
+                <p className="text-sm font-semibold">Drop .md or .txt file here to import</p>
+              </div>
+            )}
 
             {/* Input Textarea */}
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t('placeholder')}
-              className="w-full flex-1 resize-none bg-transparent p-5 text-sm font-mono text-[var(--portal-color-text)] outline-none placeholder:text-[var(--portal-color-text-tertiary)] leading-relaxed"
+              className={`w-full flex-1 resize-y bg-transparent p-4 sm:p-5 text-sm font-mono text-[var(--portal-color-text)] outline-none placeholder:text-[var(--portal-color-text-tertiary)] leading-relaxed ${
+                activeTab === 'edit'
+                  ? 'min-h-[calc(100vh-340px)]'
+                  : 'min-h-[480px] sm:min-h-[600px]'
+              }`}
               spellCheck={false}
             />
           </div>
@@ -338,7 +387,7 @@ export default function MarkdownEditorPage() {
         {(activeTab === 'split' || activeTab === 'preview') && (
           <div className="flex flex-col rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] shadow-xs overflow-hidden">
             {/* Preview Toolbar */}
-            <div className="flex items-center justify-between border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] px-4 py-2.5">
+            <div className="flex items-center justify-between border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] px-3 sm:px-4 py-2 sm:py-2.5">
               <span className="text-xs font-bold text-[var(--portal-color-text)] flex items-center gap-1.5">
                 <Eye className="h-4 w-4 text-emerald-500" />
                 {t('preview')}
@@ -366,7 +415,13 @@ export default function MarkdownEditorPage() {
             </div>
 
             {/* Preview Body */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div
+              className={`flex-1 overflow-y-auto p-4 sm:p-6 ${
+                activeTab === 'preview'
+                  ? 'min-h-[calc(100vh-340px)]'
+                  : 'min-h-[480px] sm:min-h-[600px]'
+              }`}
+            >
               {parsedHtml ? (
                 <div
                   className="prose prose-portal max-w-none text-[var(--portal-color-text)]"
