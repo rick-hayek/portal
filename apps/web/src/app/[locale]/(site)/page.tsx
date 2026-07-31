@@ -397,7 +397,7 @@ async function HomeDbSections({ locale }: { locale: string }) {
               {t('community')}
             </span>
             <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
-              {t('guestbookTitle')} (Unavailable)
+              {t('guestbookTitle')}
             </h2>
           </div>
 
