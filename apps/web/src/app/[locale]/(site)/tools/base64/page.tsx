@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRightLeft, Check, Copy, Hash, Trash2 } from 'lucide-react';
+import { ArrowRightLeft, Check, Copy, Hash, Lock, Trash2, Unlock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { ToolDropdown, ToolHeader } from '@/components/tools/ToolHeader';
@@ -80,8 +80,8 @@ export default function Base64Page() {
             onChange={(m) => handleModeChange(m)}
             headerTitle="Mode"
             options={[
-              { id: 'encode', label: t('encode'), icon: <ArrowRightLeft className="h-4 w-4 text-purple-500" /> },
-              { id: 'decode', label: t('decode'), icon: <ArrowRightLeft className="h-4 w-4 text-purple-500" /> },
+              { id: 'encode', label: t('encode'), icon: <Lock className="h-3.5 w-3.5" /> },
+              { id: 'decode', label: t('decode'), icon: <Unlock className="h-3.5 w-3.5" /> },
             ]}
           />
         }

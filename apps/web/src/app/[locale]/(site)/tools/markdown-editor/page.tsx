@@ -269,9 +269,9 @@ export default function MarkdownEditorPage() {
             onChange={setActiveTab}
             headerTitle="View Mode"
             options={[
-              { id: 'split', label: 'Split View', icon: <FileText className="h-4 w-4 text-emerald-500" /> },
-              { id: 'edit', label: 'Editor Only', icon: <Code2 className="h-4 w-4 text-blue-500" /> },
-              { id: 'preview', label: 'Preview Only', icon: <Eye className="h-4 w-4 text-purple-500" /> },
+              { id: 'split', label: 'Split View', icon: <FileText className="h-3.5 w-3.5" /> },
+              { id: 'edit', label: 'Editor Only', icon: <Code2 className="h-3.5 w-3.5" /> },
+              { id: 'preview', label: 'Preview Only', icon: <Eye className="h-3.5 w-3.5" /> },
             ]}
           />
         }
