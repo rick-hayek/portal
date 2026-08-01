@@ -111,15 +111,34 @@ export default async function BlogPostPage({
 
       {/* Header */}
       <header className="mb-8">
-        <div className="mb-3 flex items-center gap-3 text-sm text-[var(--portal-color-text-secondary)]">
+        <h1 className="mb-5 text-3xl font-bold leading-tight text-[var(--portal-color-text)] sm:text-4xl">
+          {post.title}
+        </h1>
+
+        {/* Author & Post Meta */}
+        <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--portal-color-text-secondary)]">
           {post.category && (
             <a
               href={`/blog?category=${post.category.slug}`}
-              className="rounded-full bg-[var(--portal-color-primary)] px-2.5 py-0.5 text-xs text-white hover:opacity-90"
+              className="rounded-full bg-[var(--portal-color-primary)] px-2.5 py-0.5 text-xs text-white hover:opacity-90 transition-opacity"
             >
               {getCategoryName(post.category, locale)}
             </a>
           )}
+
+          {post.author.image && (
+            <Image
+              src={post.author.image}
+              alt={post.author.name ?? ''}
+              width={24}
+              height={24}
+              className="h-6 w-6 rounded-full object-cover"
+            />
+          )}
+          <span className="font-medium text-[var(--portal-color-text)]">
+            {post.author.name}
+          </span>
+
           {post.publishedAt && (
             <time dateTime={new Date(post.publishedAt).toISOString()}>
               {new Date(post.publishedAt).toLocaleDateString('zh-CN', {
@@ -129,26 +148,6 @@ export default async function BlogPostPage({
               })}
             </time>
           )}
-        </div>
-
-        <h1 className="mb-4 text-3xl font-bold leading-tight text-[var(--portal-color-text)] sm:text-4xl">
-          {post.title}
-        </h1>
-
-        {/* Author */}
-        <div className="flex items-center gap-3">
-          {post.author.image && (
-            <Image
-              src={post.author.image}
-              alt={post.author.name ?? ''}
-              width={40}
-              height={40}
-              className="h-10 w-10 rounded-full object-cover"
-            />
-          )}
-          <span className="text-sm text-[var(--portal-color-text-secondary)]">
-            {post.author.name}
-          </span>
         </div>
 
         {/* Tags */}
