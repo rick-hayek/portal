@@ -32,10 +32,33 @@ export async function SafeMDXRemote({
   // Tier 1: Intelligent sanitization before MDX compilation
   const sanitizedSource = sanitizeMdxContent(sourceStr, activeComponents);
 
+  const defaultComponents = {
+    a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+      const isExternal = href?.startsWith('http://') || href?.startsWith('https://');
+      if (isExternal) {
+        return (
+          <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+            {children}
+          </a>
+        );
+      }
+      return (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      );
+    },
+  };
+
+  const mergedComponents = {
+    ...defaultComponents,
+    ...components,
+  };
+
   try {
     return await MDXRemote({
       source: sanitizedSource,
-      components,
+      components: mergedComponents,
       options,
     });
   } catch (err) {
@@ -50,7 +73,7 @@ export async function SafeMDXRemote({
 
       return await MDXRemote({
         source: aggressiveSource,
-        components,
+        components: mergedComponents,
         options,
       });
     } catch (fallbackErr) {
