@@ -181,10 +181,10 @@ textarea {
 }
 
 .prose-portal pre {
-  background: var(--portal-color-surface);
+  background: #282c34 !important;
   border: 1px solid var(--portal-color-border);
-  border-radius: 8px;
-  padding: 1em;
+  border-radius: 12px;
+  padding: 1em 1.2em;
   overflow-x: auto;
   margin: 1.5em 0;
   font-size: 0.875em;
@@ -193,7 +193,9 @@ textarea {
   overflow-wrap: break-word !important;
 }
 
-.prose-portal pre code {
+.prose-portal pre code,
+.prose-portal pre .hljs {
+  background: transparent !important;
   white-space: pre-wrap !important;
   word-break: break-word !important;
   overflow-wrap: break-word !important;

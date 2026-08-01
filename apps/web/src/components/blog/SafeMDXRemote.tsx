@@ -1,6 +1,7 @@
 import React from 'react';
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc';
 import { sanitizeMdxContent } from '@/lib/mdx-sanitizer';
+import { CodeBlock } from '@/components/blog/CodeBlock';
 
 interface SafeMDXRemoteProps extends MDXRemoteProps {
   knownComponents?: string[];
@@ -33,6 +34,7 @@ export async function SafeMDXRemote({
   const sanitizedSource = sanitizeMdxContent(sourceStr, activeComponents);
 
   const defaultComponents = {
+    pre: CodeBlock,
     a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
       const isExternal = href?.startsWith('http://') || href?.startsWith('https://');
       if (isExternal) {
