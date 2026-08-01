@@ -114,6 +114,17 @@ textarea {
   background: var(--portal-color-text-secondary, #6b7280);
 }
 
+/* Hide scrollbar utility */
+.scrollbar-none,
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-none::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
 /* ──────────────────────────────────────────────
    MDX / Prose styles for blog content
    ────────────────────────────────────────────── */

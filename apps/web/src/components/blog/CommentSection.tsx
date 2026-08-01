@@ -1,7 +1,7 @@
 'use client';
 
 import { signIn, useSession } from 'next-auth/react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 interface Comment {
@@ -25,6 +25,7 @@ function CommentItem({
   locale: string;
   depth?: number;
 }) {
+  const t = useTranslations('Comments');
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [replySubmitting, setReplySubmitting] = useState(false);
@@ -50,10 +51,10 @@ function CommentItem({
           setReplySubmitted(false);
         }, 3000);
       } else {
-        alert(locale === 'zh' ? '提交回复失败，请重试。' : 'Failed to submit reply, please try again.');
+        alert(t('replyFailed'));
       }
     } catch {
-      alert(locale === 'zh' ? '提交回复失败，请重试。' : 'Failed to submit reply, please try again.');
+      alert(t('replyFailed'));
     } finally {
       setReplySubmitting(false);
     }
@@ -70,7 +71,7 @@ function CommentItem({
           </span>
           <span className="font-medium text-[var(--portal-color-text)]">{comment.authorName}</span>
           <time className="text-xs text-[var(--portal-color-text-secondary)]">
-            {new Date(comment.createdAt).toLocaleDateString('zh-CN')}
+            {new Date(comment.createdAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US')}
           </time>
         </div>
         <p className="text-sm leading-relaxed text-[var(--portal-color-text)] whitespace-pre-wrap" style={{ whiteSpace: 'pre-wrap' }}>{comment.content}</p>
@@ -82,7 +83,7 @@ function CommentItem({
               onClick={() => setShowReplyForm(!showReplyForm)}
               className="flex items-center gap-1 text-xs font-medium text-[var(--portal-color-primary)] hover:underline"
             >
-              <span>💬</span> {locale === 'zh' ? '回复' : 'Reply'}
+              <span>💬</span> {t('reply')}
             </button>
           </div>
         )}
@@ -93,24 +94,24 @@ function CommentItem({
         <div className="ml-4 sm:ml-6 mb-4 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-4">
           {replySubmitted ? (
             <div className="text-xs text-[var(--portal-color-success)] text-center font-medium py-1">
-              ✅ {locale === 'zh' ? '回复已提交！审核后将会显示。' : 'Reply submitted! It will appear after review.'}
+              {t('replySubmitted')}
             </div>
           ) : (
             <form onSubmit={handleReplySubmit} className="space-y-3">
               <div className="flex items-center justify-between text-xs text-[var(--portal-color-text-secondary)]">
                 <span className="font-medium">
-                  {locale === 'zh' ? `回复 @${comment.authorName}` : `Replying to @${comment.authorName}`}
+                  {t('replyingTo', { name: comment.authorName })}
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowReplyForm(false)}
                   className="hover:underline text-red-500 font-medium"
                 >
-                  {locale === 'zh' ? '取消' : 'Cancel'}
+                  {t('cancel')}
                 </button>
               </div>
               <textarea
-                placeholder={locale === 'zh' ? '写下你的回复…' : 'Write your reply…'}
+                placeholder={t('replyPlaceholder')}
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
                 required
@@ -123,20 +124,14 @@ function CommentItem({
                   onClick={() => setShowReplyForm(false)}
                   className="rounded-lg border border-[var(--portal-color-border)] px-3 py-1 text-xs text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)]"
                 >
-                  {locale === 'zh' ? '取消' : 'Cancel'}
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={replySubmitting}
                   className="rounded-lg bg-[var(--portal-color-primary)] px-4 py-1 text-xs font-medium text-white hover:opacity-90 disabled:opacity-50"
                 >
-                  {replySubmitting
-                    ? locale === 'zh'
-                      ? '提交中…'
-                      : 'Submitting…'
-                    : locale === 'zh'
-                      ? '回复'
-                      : 'Reply'}
+                  {replySubmitting ? t('submitting') : t('reply')}
                 </button>
               </div>
             </form>
@@ -161,6 +156,7 @@ function CommentItem({
 export function CommentSection({ postId, comments = [] }: { postId: string; comments: Comment[] }) {
   const { data: session, status: sessionStatus } = useSession();
   const locale = useLocale();
+  const t = useTranslations('Comments');
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -181,10 +177,10 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
         setSubmitted(true);
         setContent('');
       } else {
-        alert(locale === 'zh' ? '提交评论失败，请重试。' : 'Failed to submit comment, please try again.');
+        alert(t('commentFailed'));
       }
     } catch {
-      alert(locale === 'zh' ? '提交评论失败，请重试。' : 'Failed to submit comment, please try again.');
+      alert(t('commentFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -193,7 +189,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
   return (
     <section className="mt-12">
       <h2 className="mb-6 text-2xl font-bold text-[var(--portal-color-text)]">
-        Comments ({comments.length})
+        {t('count', { count: comments.length })}
       </h2>
 
       {/* Comment List */}
@@ -211,7 +207,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
         </div>
       ) : (
         <p className="mb-8 text-sm text-[var(--portal-color-text-secondary)]">
-          No comments yet. Be the first!
+          {t('noComments')}
         </p>
       )}
 
@@ -240,7 +236,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
             className="text-[var(--portal-color-text)]"
             style={{ fontSize: '.9rem', fontStyle: 'normal' }}
           >
-            {locale === 'zh' ? '请登录后发表评论。' : 'Please sign in to leave a comment.'}
+            {t('signInToComment')}
           </p>
           <button
             onClick={() => signIn()}
@@ -256,12 +252,12 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
               boxShadow: '0 4px 12px rgba(107,142,201,0.2)',
             }}
           >
-            {locale === 'zh' ? '登录以发表评论' : 'Sign in to comment'}
+            {t('signInButton')}
           </button>
         </div>
       ) : submitted ? (
         <div className="rounded-lg border border-[var(--portal-color-success)] bg-[var(--portal-color-surface)] p-4 text-center text-sm text-[var(--portal-color-success)]">
-          ✅ {locale === 'zh' ? '评论已提交！审核后将会显示。' : 'Comment submitted! It will appear after review.'}
+          {t('commentSubmitted')}
         </div>
       ) : (
         <form
@@ -269,15 +265,13 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
           className="space-y-4 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6"
         >
           <h3 className="text-lg font-semibold text-[var(--portal-color-text)]">
-            {locale === 'zh' ? '发表评论' : 'Leave a comment'}
+            {t('leaveComment')}
           </h3>
           <p className="text-xs text-[var(--portal-color-text-secondary)]">
-            {locale === 'zh'
-              ? `当前以 ${session.user?.name || session.user?.email} 身份评论`
-              : `Posting as ${session.user?.name || session.user?.email}`}
+            {t('postingAs', { name: session.user?.name || session.user?.email || '' })}
           </p>
           <textarea
-            placeholder={locale === 'zh' ? '写下你的评论…' : 'Write your comment…'}
+            placeholder={t('commentPlaceholder')}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required
@@ -289,13 +283,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
             disabled={submitting}
             className="rounded-lg bg-[var(--portal-color-primary)] px-6 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {submitting
-              ? locale === 'zh'
-                ? '提交中…'
-                : 'Submitting…'
-              : locale === 'zh'
-                ? '提交'
-                : 'Submit'}
+            {submitting ? t('submitting') : t('submit')}
           </button>
         </form>
       )}
