@@ -16,6 +16,7 @@ import { useTranslations } from 'next-intl';
 import React, { useMemo, useRef, useState } from 'react';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 import { ToolDropdown, ToolHeader } from '@/components/tools/ToolHeader';
+import { sanitizeMdxContent } from '@/lib/mdx-sanitizer';
 
 const SAMPLE_MARKDOWN = `# 🚀 Welcome to Markdown Editor
 
@@ -197,6 +198,12 @@ export default function MarkdownEditorPage() {
     setInput(SAMPLE_MARKDOWN);
   };
 
+  const handleSanitizeMdx = () => {
+    if (!input) return;
+    const sanitized = sanitizeMdxContent(input);
+    setInput(sanitized);
+  };
+
   const handleImportClick = () => {
     fileInputRef.current?.click();
   };
@@ -327,6 +334,16 @@ export default function MarkdownEditorPage() {
                 >
                   <Sparkles className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline">{t('loadSample')}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSanitizeMdx}
+                  disabled={!input.trim()}
+                  className="flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 disabled:opacity-40 transition-colors cursor-pointer px-2 py-1 rounded-md border border-amber-200 dark:border-amber-900/50"
+                  title="Auto-escape unclosed angle brackets (e.g. <RP Name>) for MDX"
+                >
+                  <Code2 className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Fix MDX Tags</span>
                 </button>
                 <button
                   type="button"

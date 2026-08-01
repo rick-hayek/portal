@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { SafeMDXRemote } from '@/components/blog/SafeMDXRemote';
 import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
@@ -169,7 +169,7 @@ export default async function BlogPostPage({
 
       {/* Markdown Content */}
       <div className="prose prose-portal max-w-none">
-        <MDXRemote
+        <SafeMDXRemote
           source={post.content}
           components={{
             AdSense,
