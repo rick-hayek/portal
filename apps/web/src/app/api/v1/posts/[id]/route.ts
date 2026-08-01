@@ -17,7 +17,7 @@ async function findPostByIdOrSlug(idOrSlug: string) {
     },
     include: {
       author: { select: { id: true, name: true, image: true } },
-      category: { select: { id: true, name: true, slug: true } },
+      category: { select: { id: true, name: true, name_en: true, slug: true } },
       tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
     },
   });

@@ -34,11 +34,12 @@ export async function PUT(req: Request, { params }: RouteParams) {
     }
 
     const body = await req.json();
-    const { name, slug } = body;
+    const { name, name_en, slug } = body;
 
     const updatedCategory = await caller.admin.categoryUpdate({
       id: category.id,
       name: name || undefined,
+      name_en: name_en !== undefined ? name_en : undefined,
       slug: slug || undefined,
     });
 

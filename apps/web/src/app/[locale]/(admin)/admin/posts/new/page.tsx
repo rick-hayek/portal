@@ -71,6 +71,7 @@ const parseGfmAlertsInHtml = (html: string) => {
 interface Category {
   id: string;
   name: string;
+  name_en?: string | null;
 }
 
 export default function NewPostPage() {
@@ -269,7 +270,10 @@ export default function NewPostPage() {
                 onChange={(val) => setCategoryId(val)}
                 options={[
                   { value: '', label: 'No category' },
-                  ...categories.map((c) => ({ value: c.id, label: c.name })),
+                  ...categories.map((c) => ({
+                    value: c.id,
+                    label: c.name_en ? `${c.name} (${c.name_en})` : c.name,
+                  })),
                 ]}
               />
             )}

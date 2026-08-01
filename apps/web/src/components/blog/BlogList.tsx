@@ -6,10 +6,12 @@ import { useSearchParams } from 'next/navigation';
 import { PostCard } from '@/components/blog/PostCard';
 import { useLocalSWR } from '@/hooks/useLocalSWR';
 import { Link } from '@/i18n/routing';
+import { getCategoryName } from '@/lib/category';
 
 interface Category {
   id: string;
   name: string;
+  name_en?: string | null;
   slug: string;
   _count: {
     posts: number;
@@ -179,7 +181,7 @@ export function BlogList() {
               }`}
             style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
           >
-            {cat.name} ({cat._count.posts})
+            {getCategoryName(cat, locale)} ({cat._count.posts})
           </Link>
         ))}
       </div>

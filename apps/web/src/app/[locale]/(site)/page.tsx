@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
+import { getCategoryName } from '@/lib/category';
 import { Suspense } from 'react';
 import siteConfig from '@/site.config';
 
@@ -283,7 +284,7 @@ async function HomeDbSections({ locale }: { locale: string }) {
                         </span>
                         {post.category && (
                           <span className="inline-block text-[0.6rem] font-semibold tracking-widest uppercase text-[var(--portal-color-primary)] py-0.5 px-2 bg-[var(--portal-color-primary-soft)] rounded-[6px]">
-                            {post.category.name}
+                            {getCategoryName(post.category, locale)}
                           </span>
                         )}
                       </div>

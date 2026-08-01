@@ -58,7 +58,7 @@ export const searchRouter = router({
             take: input.limit,
             orderBy: { publishedAt: 'desc' },
             include: {
-              category: { select: { name: true } },
+              category: { select: { name: true, name_en: true } },
             },
           }),
           ctx.prisma.post.count({ where }),

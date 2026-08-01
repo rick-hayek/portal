@@ -577,6 +577,7 @@ export const adminRouter = router({
     .input(
       z.object({
         name: z.string().min(1).max(50),
+        name_en: z.string().max(50).optional().nullable(),
         slug: z.string().min(1).max(50),
       }),
     )
@@ -611,6 +612,7 @@ export const adminRouter = router({
       z.object({
         id: z.string(),
         name: z.string().min(1).max(50).optional(),
+        name_en: z.string().max(50).optional().nullable(),
         slug: z.string().min(1).max(50).optional(),
       }),
     )

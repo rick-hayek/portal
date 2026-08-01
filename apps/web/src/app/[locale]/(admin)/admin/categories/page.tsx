@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 interface Category {
   id: string;
   name: string;
+  name_en?: string | null;
   slug: string;
   _count?: {
     posts: number;
@@ -19,12 +20,14 @@ export default function AdminCategoriesPage() {
 
   // Create state
   const [newName, setNewName] = useState('');
+  const [newNameEn, setNewNameEn] = useState('');
   const [newSlug, setNewSlug] = useState('');
   const [creating, setCreating] = useState(false);
 
   // Edit state
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
+  const [editNameEn, setEditNameEn] = useState('');
   const [editSlug, setEditSlug] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -72,6 +75,7 @@ export default function AdminCategoriesPage() {
           '0': {
             json: {
               name: newName.trim(),
+              name_en: newNameEn.trim() || null,
               slug: newSlug.trim(),
             },
           },
@@ -82,6 +86,7 @@ export default function AdminCategoriesPage() {
         setError(data[0].error.message ?? 'Failed to create category');
       } else {
         setNewName('');
+        setNewNameEn('');
         setNewSlug('');
         loadCategories();
       }
@@ -106,6 +111,7 @@ export default function AdminCategoriesPage() {
             json: {
               id,
               name: editName.trim(),
+              name_en: editNameEn.trim() || null,
               slug: editSlug.trim(),
             },
           },
@@ -153,6 +159,7 @@ export default function AdminCategoriesPage() {
   function startEdit(cat: Category) {
     setEditingId(cat.id);
     setEditName(cat.name);
+    setEditNameEn(cat.name_en ?? '');
     setEditSlug(cat.slug);
   }
 
@@ -175,17 +182,33 @@ export default function AdminCategoriesPage() {
           <form onSubmit={handleCreate} className="space-y-4">
             <div className="flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-1">
               <label
-                htmlFor="category-name"
-                className="w-12 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
+                htmlFor="category-name-zh"
+                className="w-20 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
               >
-                Name
+                Name (ZH)
               </label>
               <input
-                id="category-name"
+                id="category-name-zh"
                 type="text"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 required
+                className="flex-1 md:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+                placeholder="e.g. 技术"
+              />
+            </div>
+            <div className="flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-1">
+              <label
+                htmlFor="category-name-en"
+                className="w-20 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
+              >
+                Name (EN)
+              </label>
+              <input
+                id="category-name-en"
+                type="text"
+                value={newNameEn}
+                onChange={(e) => setNewNameEn(e.target.value)}
                 className="flex-1 md:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
                 placeholder="e.g. Technology"
               />
@@ -193,7 +216,7 @@ export default function AdminCategoriesPage() {
             <div className="flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-1">
               <label
                 htmlFor="category-slug"
-                className="w-12 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
+                className="w-20 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
               >
                 Slug
               </label>
@@ -224,7 +247,10 @@ export default function AdminCategoriesPage() {
               <thead>
                 <tr className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] font-medium text-[var(--portal-color-text-secondary)]">
                   <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs">
-                    Name
+                    Name (ZH)
+                  </th>
+                  <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs">
+                    Name (EN)
                   </th>
                   <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs">
                     Slug
@@ -243,7 +269,7 @@ export default function AdminCategoriesPage() {
                   Array.from({ length: 3 }).map((_, i) => (
                     // biome-ignore lint/suspicious/noArrayIndexKey: skeleton elements do not have a natural id
                     <tr key={i} className="border-b border-[var(--portal-color-border)]">
-                      <td colSpan={4} className="px-2 sm:px-4 py-4">
+                      <td colSpan={5} className="px-2 sm:px-4 py-4">
                         <div className="h-5 w-full animate-pulse rounded bg-[var(--portal-color-border)]" />
                       </td>
                     </tr>
@@ -251,7 +277,7 @@ export default function AdminCategoriesPage() {
                 ) : categories.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={4}
+                      colSpan={5}
                       className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
                     >
                       No categories found.
@@ -272,8 +298,26 @@ export default function AdminCategoriesPage() {
                             className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2 py-1 text-sm text-[var(--portal-color-text)] focus:outline-none focus:border-[var(--portal-color-primary)] w-full"
                           />
                         ) : (
-                          <div className="max-w-[90px] sm:max-w-[200px] truncate" title={cat.name}>
+                          <div className="max-w-[90px] sm:max-w-[150px] truncate" title={cat.name}>
                             {cat.name}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-2 sm:px-4 py-3 font-medium text-[var(--portal-color-text-secondary)]">
+                        {editingId === cat.id ? (
+                          <input
+                            type="text"
+                            value={editNameEn}
+                            onChange={(e) => setEditNameEn(e.target.value)}
+                            placeholder="Optional"
+                            className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2 py-1 text-sm text-[var(--portal-color-text)] focus:outline-none focus:border-[var(--portal-color-primary)] w-full"
+                          />
+                        ) : (
+                          <div
+                            className="max-w-[90px] sm:max-w-[150px] truncate"
+                            title={cat.name_en ?? '—'}
+                          >
+                            {cat.name_en ?? '—'}
                           </div>
                         )}
                       </td>
@@ -286,7 +330,7 @@ export default function AdminCategoriesPage() {
                             className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2 py-1 font-mono text-xs text-[var(--portal-color-text)] focus:outline-none focus:border-[var(--portal-color-primary)] w-full"
                           />
                         ) : (
-                          <div className="max-w-[80px] sm:max-w-[150px] truncate" title={cat.slug}>
+                          <div className="max-w-[80px] sm:max-w-[120px] truncate" title={cat.slug}>
                             {cat.slug}
                           </div>
                         )}

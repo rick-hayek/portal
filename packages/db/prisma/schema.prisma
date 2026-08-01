@@ -77,9 +77,10 @@ model Post {
 }
 
 model Category {
-  id   String @id @default(cuid())
-  name String @unique
-  slug String @unique
+  id      String  @id @default(cuid())
+  name    String  @unique
+  name_en String?
+  slug    String  @unique
 
   posts Post[]
 }

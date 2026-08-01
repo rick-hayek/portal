@@ -34,7 +34,7 @@ export const postRouter = router({
             orderBy: { publishedAt: 'desc' },
             include: {
               author: { select: { id: true, name: true, image: true } },
-              category: { select: { id: true, name: true, slug: true } },
+              category: { select: { id: true, name: true, name_en: true, slug: true } },
               tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
             },
           }),
@@ -75,7 +75,7 @@ export const postRouter = router({
         where: { slug: s, status: 'published' },
         include: {
           author: { select: { id: true, name: true, image: true } },
-          category: { select: { id: true, name: true, slug: true } },
+          category: { select: { id: true, name: true, name_en: true, slug: true } },
           tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
           comments: {
             where: { status: 'approved', parentId: null },
@@ -113,7 +113,7 @@ export const postRouter = router({
           orderBy: { publishedAt: 'desc' },
           include: {
             author: { select: { id: true, name: true, image: true } },
-            category: { select: { id: true, name: true, slug: true } },
+            category: { select: { id: true, name: true, name_en: true, slug: true } },
           },
         });
       };

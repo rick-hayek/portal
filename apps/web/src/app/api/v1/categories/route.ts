@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { name, slug } = body;
+    const { name, name_en, slug } = body;
 
     if (!name || !slug) {
       return NextResponse.json(
@@ -34,6 +34,7 @@ export async function POST(req: Request) {
 
     const category = await caller.admin.categoryCreate({
       name,
+      name_en: name_en || undefined,
       slug,
     });
 

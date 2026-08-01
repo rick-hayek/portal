@@ -13,6 +13,7 @@ import { CustomBlockquote } from '@/components/blog/CustomBlockquote';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
+import { getCategoryName } from '@/lib/category';
 import siteConfig from '@/site.config';
 
 export const revalidate = 3600; // revalidate at most every hour (ISR)
@@ -116,7 +117,7 @@ export default async function BlogPostPage({
               href={`/blog?category=${post.category.slug}`}
               className="rounded-full bg-[var(--portal-color-primary)] px-2.5 py-0.5 text-xs text-white hover:opacity-90"
             >
-              {post.category.name}
+              {getCategoryName(post.category, locale)}
             </a>
           )}
           {post.publishedAt && (
