@@ -17,8 +17,9 @@ export async function SafeMDXRemote({
   options,
   knownComponents = [],
 }: SafeMDXRemoteProps) {
+  const componentKeys = components && typeof components === 'object' ? Object.keys(components) : [];
   const activeComponents = [
-    ...Object.keys(components),
+    ...componentKeys,
     ...knownComponents,
     'AdSense',
     'CustomBlockquote',
@@ -26,8 +27,10 @@ export async function SafeMDXRemote({
     'MermaidRenderer',
   ];
 
+  const sourceStr = typeof source === 'string' ? source : String(source ?? '');
+
   // Tier 1: Intelligent sanitization before MDX compilation
-  const sanitizedSource = sanitizeMdxContent(source, activeComponents);
+  const sanitizedSource = sanitizeMdxContent(sourceStr, activeComponents);
 
   try {
     return await MDXRemote({
@@ -60,7 +63,7 @@ export async function SafeMDXRemote({
             内容容错预览 (MDX 语法降级模式)
           </p>
           <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[var(--portal-color-text)]">
-            {source}
+            {sourceStr}
           </pre>
         </div>
       );
