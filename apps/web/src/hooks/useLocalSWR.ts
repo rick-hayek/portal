@@ -70,8 +70,15 @@ export function useLocalSWR<T>(
     try {
       const cached = localStorage.getItem(`swr:${cacheKey}`);
       if (cached) {
-        setData(JSON.parse(cached));
-        setLoading(false);
+        try {
+          const parsed = JSON.parse(cached);
+          setData(parsed);
+          setLoading(false);
+        } catch {
+          localStorage.removeItem(`swr:${cacheKey}`);
+          setData(null);
+          setLoading(true);
+        }
       } else {
         setData(null);
         setLoading(true);

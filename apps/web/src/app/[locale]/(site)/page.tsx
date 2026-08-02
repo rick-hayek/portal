@@ -36,7 +36,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     authorStackArr = ['.NETCore', 'TypeScript', 'Vue', 'Python', 'AI Agent'];
   }
 
-  const authorStatus = hasAuthorConfig ? authorObj.status : 'wondering';
+  const authorStatus = hasAuthorConfig ? authorObj.status : '';
 
   const developerEntries: { label: string; element: React.ReactNode }[] = [];
 

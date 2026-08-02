@@ -3,6 +3,7 @@
 import { ArrowUpRight, Check, Copy, Globe, Link2, Mail, Rss, Share2, UserPlus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
+import { useLocalSWR } from '@/hooks/useLocalSWR';
 import { trpc } from '@/lib/api/client';
 
 function getInitials(name: string): string {
@@ -23,9 +24,20 @@ function getInitials(name: string): string {
 
 export default function LinksPage() {
   const t = useTranslations('Links');
-  const { data: links, isLoading } = trpc.link.list.useQuery();
-  const { data: selfLink } = trpc.link.getSelf.useQuery();
-  const { data: aboutData } = trpc.about.getAbout.useQuery();
+  const trpcUtils = trpc.useUtils();
+
+  const { data: links, loading: isLoading } = useLocalSWR(
+    'portal:links:list',
+    React.useCallback(() => trpcUtils.link.list.fetch(), [trpcUtils])
+  );
+  const { data: selfLink } = useLocalSWR(
+    'portal:links:self',
+    React.useCallback(() => trpcUtils.link.getSelf.fetch(), [trpcUtils])
+  );
+  const { data: aboutData } = useLocalSWR(
+    'portal:about:info',
+    React.useCallback(() => trpcUtils.about.getAbout.fetch(), [trpcUtils])
+  );
   const [copiedType, setCopiedType] = React.useState<string | null>(null);
 
   let targetEmail = 'rick@example.com';
@@ -38,10 +50,8 @@ export default function LinksPage() {
   }
 
   const siteName = selfLink?.name || 'Voocii';
-  const siteUrl =
-    selfLink?.url ||
-    (typeof window !== 'undefined' ? window.location.origin : 'https://portal.dev');
-  const siteRss = selfLink?.rss || `${siteUrl}/feed.xml`;
+  const siteUrl = selfLink?.url || 'https://portal.dev';
+  const siteRss = selfLink?.rss || '';
   const siteAvatar = selfLink?.avatar || '';
   const siteDesc =
     selfLink?.description ||
@@ -58,33 +68,15 @@ export default function LinksPage() {
     {
       name: siteName,
       url: siteUrl,
-      avatar: siteAvatar,
+      ...(siteAvatar ? { avatar: siteAvatar } : {}),
       desc: siteDesc,
-      rss: siteRss,
+      ...(siteRss ? { rss: siteRss } : {}),
     },
     null,
     2,
   );
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 pt-8 sm:pt-12">
-        <header className="space-y-4">
-          <h1 className="text-4xl font-extrabold tracking-tight text-[var(--portal-color-text)] md:text-5xl">
-            {t('loading')}
-          </h1>
-        </header>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="flex h-32 animate-pulse rounded-2xl bg-[var(--portal-color-surface)] p-6"
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
+
 
   // Group links by category
   const groupedLinks =
@@ -349,6 +341,7 @@ export default function LinksPage() {
                 </>
               )}
             </button>
+
             <button
               onClick={() => handleCopy(markdownSnippet, 'markdown')}
               className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface)] hover:bg-[var(--portal-color-primary)] hover:text-white px-4 py-2.5 text-xs font-semibold text-[var(--portal-color-text)] border border-[var(--portal-color-border)]/50 transition-all shadow-2xs cursor-pointer"
@@ -365,6 +358,7 @@ export default function LinksPage() {
                 </>
               )}
             </button>
+
           </div>
         </div>
       </section>
