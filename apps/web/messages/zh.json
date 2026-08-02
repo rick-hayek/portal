@@ -17,7 +17,7 @@
     "trending": "AI 热榜"
   },
   "Index": {
-    "badge": "全栈开发者",
+    "badge": "我的空间",
     "title1": "生活与工作",
     "title2": "随想随记",
     "description": "记录和分享技术心得、生活感悟，顺便推荐个书",
@@ -154,7 +154,7 @@
   "About": {
     "title": "关于开发者",
     "subtitle": "关于我",
-    "intro1": "你好！我是 Rick，一名全栈工程师，热爱构建能让开发变得更轻松愉悦的工具。",
+    "intro1": "你好！我是 Jane Doe，一名全栈工程师，热爱构建能让开发变得更轻松愉悦的工具。",
     "intro2": "拥有计算机科学背景以及在 JavaScript 生态多年的深耕经验，我专注于打造高性能、高可用且设计精美的 Web 应用。",
     "intro3": "不在写代码的时候，我通常在探索新技术、为开源社区做贡献，或是通过写作分享我的所见所学。",
     "experience": "工作经历",
@@ -284,6 +284,8 @@
     "summarizeBtn": "AI 摘要",
     "summarizeTitle": "本周 AI 热门开源趋势",
     "saveImage": "保存图片",
-    "saving": "保存中..."
+    "saving": "保存中...",
+    "consecutiveWeeks": "连续 {weeks} 周上榜",
+    "consecutiveWeeksShort": "{weeks}周连榜"
   }
 }

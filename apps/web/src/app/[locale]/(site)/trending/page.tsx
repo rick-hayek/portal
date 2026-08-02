@@ -329,6 +329,11 @@ export default function TrendingPage() {
                           +{formatNumber(repo.starsGrowth)} {t('starsThisWeek') || 'this week'}
                         </span>
                       )}
+                      {((repo as any).consecutiveWeeks ?? 0) > 1 && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 whitespace-nowrap">
+                          🔥 {t('consecutiveWeeks', { weeks: (repo as any).consecutiveWeeks })}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -461,12 +466,19 @@ export default function TrendingPage() {
                         {idx + 1}
                       </span>
 
-                      {/* Name & Language */}
+                      {/* Name, Language & Streak */}
                       <div className="min-w-0 leading-tight">
                         <p className="font-bold text-[13px] text-white truncate">{repo.name}</p>
-                        {repo.language && (
-                          <span className="text-[9px] text-white/40 block mt-0.5 leading-none">{repo.language}</span>
-                        )}
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          {repo.language && (
+                            <span className="text-[9px] text-white/40 leading-none">{repo.language}</span>
+                          )}
+                          {((repo as any).consecutiveWeeks ?? 0) > 1 && (
+                            <span className="text-[8px] font-bold text-amber-400 bg-amber-400/10 px-1 py-0.2 rounded-xs border border-amber-400/20 leading-none shrink-0">
+                              🔥 {t('consecutiveWeeksShort', { weeks: (repo as any).consecutiveWeeks })}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
 

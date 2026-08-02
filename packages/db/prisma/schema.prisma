@@ -206,15 +206,19 @@ model SiteConfig {
 // ============ About Info ============
 
 model AboutInfo {
-  id          String   @id @default("default")
-  title       String   @default("The Developer")
-  subtitle    String   @default("ABOUT ME")
-  description String   @db.Text
-  experiences Json     @default("[]")
-  socialLinks Json     @default("[]")
-  email       Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default("default")
+  title          String   @default("The Developer")
+  title_en       String?
+  subtitle       String   @default("ABOUT ME")
+  subtitle_en    String?
+  description    String   @db.Text
+  description_en String?  @db.Text
+  experiences    Json     @default("[]")
+  socialLinks    Json     @default("[]")
+  email          Json?
+  author         Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 // ============ References ============

@@ -12,15 +12,77 @@ export const revalidate = 60; // revalidate at most every minute (ISR)
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
-  // Set request locale for static/ISR rendering in next-intl
-  setRequestLocale(locale);
+  const trpcServer = await getTRPCServer();
+  const aboutData = await trpcServer.about.getAbout();
+
+  const authorObj = aboutData?.author as any;
+  const hasAuthorConfig = authorObj && typeof authorObj === 'object' && Object.keys(authorObj).length > 0;
+
+  const authorName = hasAuthorConfig ? authorObj.name : 'Rick';
+  const authorRole = hasAuthorConfig
+    ? (locale === 'en' ? (authorObj.role_en || authorObj.role) : authorObj.role)
+    : (locale === 'en' ? 'Full-Stack Engineer' : '全栈开发者');
+
+  let authorStackArr: string[] | null = null;
+  if (hasAuthorConfig) {
+    if (authorObj.stack) {
+      authorStackArr = Array.isArray(authorObj.stack)
+        ? authorObj.stack
+        : String(authorObj.stack).split(',').map((s: string) => s.trim()).filter(Boolean);
+    }
+  } else {
+    authorStackArr = ['.NETCore', 'TypeScript', 'Vue', 'Python', 'AI Agent'];
+  }
+
+  const authorStatus = hasAuthorConfig ? authorObj.status : 'wondering';
+
+  const developerEntries: { label: string; element: React.ReactNode }[] = [];
+
+  if (authorName) {
+    developerEntries.push({
+      label: 'name',
+      element: <span className="text-emerald-600 dark:text-emerald-400">'{authorName}'</span>,
+    });
+  }
+
+  if (authorRole) {
+    developerEntries.push({
+      label: 'role',
+      element: <span className="text-emerald-600 dark:text-emerald-400">'{authorRole}'</span>,
+    });
+  }
+
+  if (authorStackArr && authorStackArr.length > 0) {
+    developerEntries.push({
+      label: 'stack',
+      element: (
+        <>
+          [
+          {authorStackArr.map((item: string, i: number) => (
+            <span key={item}>
+              <span className="text-emerald-600 dark:text-emerald-400">'{item}'</span>
+              {i < authorStackArr.length - 1 ? ', ' : ''}
+            </span>
+          ))}
+          ]
+        </>
+      ),
+    });
+  }
+
+  if (authorStatus) {
+    developerEntries.push({
+      label: 'status',
+      element: <span className="text-emerald-600 dark:text-emerald-400">'{authorStatus}'</span>,
+    });
+  }
 
   const t = await getTranslations({ locale, namespace: 'Index' });
 
   const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Rick Huang',
+    name: 'Rick',
     url: siteConfig.site.url,
     sameAs: [
       process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/rick-hayek',
@@ -50,7 +112,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75"></span>
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
               </span>
-              {t('badge')}
+              {authorRole || t('badge')}
             </div>
 
             {/* Title */}
@@ -155,29 +217,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <span className="text-violet-500">const</span>
                   <span className="text-[var(--portal-color-primary)]"> developer</span> = {'{ '}
                 </div>
-                <div className="pl-6">
-                  <span className="text-[var(--portal-color-primary)]">name:</span>{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Rick Huang'</span>,
-                </div>
-                <div className="pl-6">
-                  <span className="text-[var(--portal-color-primary)]">role:</span>{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    'Full-Stack Engineer'
-                  </span>
-                  ,
-                </div>
-                <div className="pl-6">
-                  <span className="text-[var(--portal-color-primary)]">stack:</span> [
-                  <span className="text-emerald-600 dark:text-emerald-400">'.NETCore'</span>,{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'TypeScript'</span>,{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Vue'</span>,{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Python'</span>,{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'AI Agent'</span>],
-                </div>
-                <div className="pl-6">
-                  <span className="text-[var(--portal-color-primary)]">status:</span>{' '}
-                  <span className="text-emerald-600 dark:text-emerald-400">'Building'</span>
-                </div>
+                {developerEntries.map((entry, idx) => (
+                  <div key={entry.label} className="pl-6">
+                    <span className="text-[var(--portal-color-primary)]">{entry.label}:</span>{' '}
+                    {entry.element}
+                    {idx < developerEntries.length - 1 ? ',' : ''}
+                  </div>
+                ))}
                 <div>{'}; '}</div>
                 <div className="mt-4 flex items-center gap-2 text-[var(--portal-color-text-secondary)]">
                   <span className="text-emerald-500">➜</span>

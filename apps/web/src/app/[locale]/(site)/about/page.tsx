@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback } from 'react';
 import { useLocalSWR } from '@/hooks/useLocalSWR';
 import siteConfig from '@/site.config';
@@ -13,7 +13,9 @@ interface SocialLink {
 }
 
 export default function AboutPage() {
+  const locale = useLocale();
   const t = useTranslations('About');
+  const isEn = locale === 'en';
 
   const { data: aboutData, loading: isLoading } = useLocalSWR(
     'about-info',
@@ -27,10 +29,12 @@ export default function AboutPage() {
     }, []),
   );
 
-  const subtitle = aboutData?.subtitle || t('subtitle');
-  const title = aboutData?.title || t('title');
+  const subtitle = (isEn && aboutData?.subtitle_en) || aboutData?.subtitle || t('subtitle');
+  const title = (isEn && aboutData?.title_en) || aboutData?.title || t('title');
   const rawDescription =
-    aboutData?.description || `${t('intro1')}\n\n${t('intro2')}\n\n${t('intro3')}`;
+    (isEn && aboutData?.description_en) ||
+    aboutData?.description ||
+    `${t('intro1')}\n\n${t('intro2')}\n\n${t('intro3')}`;
   const paragraphs = rawDescription.split(/\n\s*\n/).filter((p: string) => p.trim().length > 0);
 
   const experiences =

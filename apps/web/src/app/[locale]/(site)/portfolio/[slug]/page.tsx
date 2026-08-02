@@ -55,7 +55,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     softwareVersion: '1.0.0',
     publisher: {
       '@type': 'Person',
-      name: 'Rick Huang',
+      name: 'Rick',
     },
   };
 
@@ -477,23 +477,23 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         {(locale === 'en'
           ? project.privacyPolicyEn || project.privacyPolicy
           : project.privacyPolicy) && (
-          <a
-            href={`/portfolio/${project.slug}/Privacy_Policy`}
-            className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
-          >
-            Privacy Policy
-          </a>
-        )}
+            <a
+              href={`/portfolio/${project.slug}/Privacy_Policy`}
+              className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
+            >
+              Privacy Policy
+            </a>
+          )}
         {(locale === 'en'
           ? project.termsOfServiceEn || project.termsOfService
           : project.termsOfService) && (
-          <a
-            href={`/portfolio/${project.slug}/Terms_of_Service`}
-            className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
-          >
-            Terms of Service
-          </a>
-        )}
+            <a
+              href={`/portfolio/${project.slug}/Terms_of_Service`}
+              className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
+            >
+              Terms of Service
+            </a>
+          )}
       </div>
       <MermaidRenderer />
     </div>

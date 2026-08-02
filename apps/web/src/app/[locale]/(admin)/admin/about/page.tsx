@@ -30,8 +30,18 @@ export default function AdminAboutPage() {
   const updateMutation = trpc.about.updateAbout.useMutation();
 
   const [title, setTitle] = useState('');
+  const [titleEn, setTitleEn] = useState('');
   const [subtitle, setSubtitle] = useState('');
+  const [subtitleEn, setSubtitleEn] = useState('');
   const [description, setDescription] = useState('');
+  const [descriptionEn, setDescriptionEn] = useState('');
+
+  // Author Profile (Homepage Code Card) State
+  const [authorName, setAuthorName] = useState('');
+  const [authorRole, setAuthorRole] = useState('');
+  const [authorRoleEn, setAuthorRoleEn] = useState('');
+  const [authorStack, setAuthorStack] = useState('');
+  const [authorStatus, setAuthorStatus] = useState('');
 
   // Email state (stored in a single object/JSON field)
   const [emailAddress, setEmailAddress] = useState('');
@@ -46,10 +56,33 @@ export default function AdminAboutPage() {
   useEffect(() => {
     if (aboutData) {
       setTitle(aboutData.title ?? 'The Developer');
+      setTitleEn(aboutData.title_en ?? '');
       setSubtitle(aboutData.subtitle ?? 'ABOUT ME');
+      setSubtitleEn(aboutData.subtitle_en ?? '');
       setDescription(aboutData.description ?? '');
+      setDescriptionEn(aboutData.description_en ?? '');
       setExperiences(aboutData.experiences ?? []);
       setSocialLinks(aboutData.socialLinks ?? []);
+
+      // Author JSON object parsing
+      const authorObj = aboutData.author as any;
+      if (authorObj && typeof authorObj === 'object') {
+        setAuthorName(authorObj.name ?? '');
+        setAuthorRole(authorObj.role ?? '');
+        setAuthorRoleEn(authorObj.role_en ?? '');
+        setAuthorStack(
+          Array.isArray(authorObj.stack)
+            ? authorObj.stack.join(', ')
+            : authorObj.stack ?? ''
+        );
+        setAuthorStatus(authorObj.status ?? '');
+      } else {
+        setAuthorName('Rick');
+        setAuthorRole('全栈开发者');
+        setAuthorRoleEn('Full-Stack Developer');
+        setAuthorStack('Next.js, TypeScript, Vue, Python, AI Agent');
+        setAuthorStatus('Building');
+      }
 
       // Parse Email JSON object or fallback
       const rawEmail = aboutData.email;
@@ -112,20 +145,30 @@ export default function AdminAboutPage() {
     try {
       await updateMutation.mutateAsync({
         title: title.trim() || 'The Developer',
+        title_en: titleEn.trim() || null,
         subtitle: subtitle.trim() || 'ABOUT ME',
+        subtitle_en: subtitleEn.trim() || null,
         description: description.trim(),
+        description_en: descriptionEn.trim() || null,
         experiences: experiences.filter((exp) => exp.role.trim() || exp.company.trim()),
         socialLinks: socialLinks.filter((link) => link.label.trim() && link.href.trim()),
         email: emailAddress.trim()
           ? {
-              address: emailAddress.trim(),
-              icon: emailIcon.trim() || undefined,
-              displayMode: emailDisplayMode,
-            }
+            address: emailAddress.trim(),
+            icon: emailIcon.trim() || undefined,
+            displayMode: emailDisplayMode,
+          }
           : null,
+        author: {
+          name: authorName.trim() || undefined,
+          role: authorRole.trim() || undefined,
+          role_en: authorRoleEn.trim() || undefined,
+          stack: authorStack.trim() || undefined,
+          status: authorStatus.trim() || undefined,
+        },
       });
 
-      setFeedback({ type: 'success', message: 'About page information updated successfully!' });
+      setFeedback({ type: 'success', message: 'About page & author settings updated successfully!' });
       refetch();
     } catch (err: any) {
       setFeedback({ type: 'error', message: err?.message || 'Failed to save changes.' });
@@ -158,11 +201,10 @@ export default function AdminAboutPage() {
 
       {feedback && (
         <div
-          className={`flex items-center gap-2 rounded-xl p-4 text-sm font-medium ${
-            feedback.type === 'success'
+          className={`flex items-center gap-2 rounded-xl p-4 text-sm font-medium ${feedback.type === 'success'
               ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/30 dark:bg-emerald-950/20 dark:text-emerald-300'
               : 'border border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/30 dark:bg-rose-950/20 dark:text-rose-300'
-          }`}
+            }`}
         >
           {feedback.type === 'success' ? (
             <CheckCircle2 className="h-5 w-5 shrink-0" />
@@ -183,7 +225,7 @@ export default function AdminAboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
-                Subtitle
+                Subtitle (ZH / Default)
               </label>
               <input
                 type="text"
@@ -196,13 +238,39 @@ export default function AdminAboutPage() {
 
             <div>
               <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
-                Role / Title
+                Subtitle (EN)
+              </label>
+              <input
+                type="text"
+                value={subtitleEn}
+                onChange={(e) => setSubtitleEn(e.target.value)}
+                placeholder="ABOUT ME (EN fallback)"
+                className="input-base"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Title (ZH / Default)
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="The Developer"
+                className="input-base"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Title (EN)
+              </label>
+              <input
+                type="text"
+                value={titleEn}
+                onChange={(e) => setTitleEn(e.target.value)}
+                placeholder="The Developer (EN fallback)"
                 className="input-base"
               />
             </div>
@@ -266,20 +334,115 @@ export default function AdminAboutPage() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
-              Description
-            </label>
-            <p className="text-[11px] text-[var(--portal-color-text-tertiary)] mb-1.5">
-              Supports multiple paragraphs (separated by blank lines)
-            </p>
-            <textarea
-              rows={6}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Hello! I'm Jane Doe..."
-              className="input-base font-sans"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Description (ZH / Default)
+              </label>
+              <p className="text-[11px] text-[var(--portal-color-text-tertiary)] mb-1.5">
+                Supports multiple paragraphs (separated by blank lines)
+              </p>
+              <textarea
+                rows={6}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Hello! I'm Rick..."
+                className="input-base font-sans"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Description (EN Fallback)
+              </label>
+              <p className="text-[11px] text-[var(--portal-color-text-tertiary)] mb-1.5">
+                If omitted, falls back to Chinese description
+              </p>
+              <textarea
+                rows={6}
+                value={descriptionEn}
+                onChange={(e) => setDescriptionEn(e.target.value)}
+                placeholder="Hello! I'm Rick..."
+                className="input-base font-sans"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Homepage Developer Card (Author Config) Section */}
+        <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 space-y-4">
+          <h2 className="text-base font-semibold text-[var(--portal-color-text)] border-b border-[var(--portal-color-border-soft)] pb-3">
+            Homepage Code Terminal Config (首页代码卡片配置)
+          </h2>
+          <p className="text-xs text-[var(--portal-color-text-secondary)]">
+            Configure the <code className="font-mono text-[var(--portal-color-primary)]">const developer = &#123; ... &#125;</code> object on the homepage terminal. Omitted/empty fields will not be displayed.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Name (`name`)
+              </label>
+              <input
+                type="text"
+                value={authorName}
+                onChange={(e) => setAuthorName(e.target.value)}
+                placeholder="Rick"
+                className="input-base"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Status (`status`)
+              </label>
+              <input
+                type="text"
+                value={authorStatus}
+                onChange={(e) => setAuthorStatus(e.target.value)}
+                placeholder="wondering / Building"
+                className="input-base"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Role (ZH) (`role`)
+              </label>
+              <input
+                type="text"
+                value={authorRole}
+                onChange={(e) => setAuthorRole(e.target.value)}
+                placeholder="全栈开发者"
+                className="input-base"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Role (EN) (`role_en`)
+              </label>
+              <input
+                type="text"
+                value={authorRoleEn}
+                onChange={(e) => setAuthorRoleEn(e.target.value)}
+                placeholder="Full-Stack Developer"
+                className="input-base"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                Tech Stack (`stack`)
+              </label>
+              <input
+                type="text"
+                value={authorStack}
+                onChange={(e) => setAuthorStack(e.target.value)}
+                placeholder="Next.js, TypeScript, Vue, Python, AI Agent"
+                className="input-base"
+              />
+            </div>
           </div>
         </div>
 

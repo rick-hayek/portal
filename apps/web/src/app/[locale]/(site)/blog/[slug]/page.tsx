@@ -68,7 +68,7 @@ export default async function BlogPostPage({
     dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
     author: {
       '@type': 'Person',
-      name: post.author.name || 'Rick Huang',
+      name: post.author.name || 'Rick',
       image: post.author.image || '',
     },
     publisher: {

@@ -21,6 +21,14 @@ export interface EmailConfig {
   displayMode?: 'icon' | 'text' | 'both';
 }
 
+export interface AuthorConfig {
+  name?: string;
+  role?: string;
+  role_en?: string;
+  stack?: string | string[];
+  status?: string;
+}
+
 export const aboutRouter = router({
   getAbout: publicProcedure.query(async ({ ctx }) => {
     const fetchData = async () => {
@@ -29,13 +37,22 @@ export const aboutRouter = router({
       });
 
       if (!record) {
-        return defaultAboutConfig;
+        return {
+          ...defaultAboutConfig,
+          title_en: null,
+          subtitle_en: null,
+          description_en: null,
+          author: null,
+        };
       }
 
       return {
         title: record.title || defaultAboutConfig.title,
+        title_en: record.title_en || null,
         subtitle: record.subtitle || defaultAboutConfig.subtitle,
+        subtitle_en: record.subtitle_en || null,
         description: record.description || defaultAboutConfig.description,
+        description_en: record.description_en || null,
         experiences: Array.isArray(record.experiences)
           ? (record.experiences as unknown as ExperienceItem[])
           : defaultAboutConfig.experiences,
@@ -43,6 +60,7 @@ export const aboutRouter = router({
           ? (record.socialLinks as unknown as SocialLinkItem[])
           : defaultAboutConfig.socialLinks,
         email: (record.email as unknown as EmailConfig) || defaultAboutConfig.email,
+        author: (record.author as unknown as AuthorConfig) || null,
       };
     };
 
@@ -61,8 +79,11 @@ export const aboutRouter = router({
     .input(
       z.object({
         title: z.string().min(1, 'Title is required'),
+        title_en: z.string().optional().nullable(),
         subtitle: z.string().default('ABOUT ME'),
+        subtitle_en: z.string().optional().nullable(),
         description: z.string().min(1, 'Description is required'),
+        description_en: z.string().optional().nullable(),
         experiences: z.array(
           z.object({
             role: z.string(),
@@ -86,6 +107,16 @@ export const aboutRouter = router({
           })
           .optional()
           .nullable(),
+        author: z
+          .object({
+            name: z.string().optional(),
+            role: z.string().optional(),
+            role_en: z.string().optional(),
+            stack: z.union([z.string(), z.array(z.string())]).optional(),
+            status: z.string().optional(),
+          })
+          .optional()
+          .nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -94,19 +125,27 @@ export const aboutRouter = router({
         create: {
           id: 'default',
           title: input.title,
+          title_en: input.title_en ?? undefined,
           subtitle: input.subtitle,
+          subtitle_en: input.subtitle_en ?? undefined,
           description: input.description,
+          description_en: input.description_en ?? undefined,
           experiences: input.experiences as any,
           socialLinks: input.socialLinks as any,
           email: (input.email as any) ?? undefined,
+          author: (input.author as any) ?? undefined,
         },
         update: {
           title: input.title,
+          title_en: input.title_en ?? undefined,
           subtitle: input.subtitle,
+          subtitle_en: input.subtitle_en ?? undefined,
           description: input.description,
+          description_en: input.description_en ?? undefined,
           experiences: input.experiences as any,
           socialLinks: input.socialLinks as any,
           email: (input.email as any) ?? undefined,
+          author: (input.author as any) ?? undefined,
         },
       });
 

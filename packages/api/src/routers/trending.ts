@@ -31,7 +31,7 @@ export const trendingRouter = router({
       };
 
       const fetchRepos = async (targetWeek: Date, lim: number) => {
-        const [repos, totalCount] = await Promise.all([
+        const [repos, totalCount, pastRepos] = await Promise.all([
           ctx.prisma.trendingRepo.findMany({
             where: { weekOf: targetWeek },
             orderBy: { starsGrowth: 'desc' },
@@ -40,8 +40,58 @@ export const trendingRouter = router({
           ctx.prisma.trendingRepo.count({
             where: { weekOf: targetWeek },
           }),
+          ctx.prisma.trendingRepo.findMany({
+            where: {
+              weekOf: { lte: targetWeek },
+            },
+            select: {
+              githubId: true,
+              weekOf: true,
+            },
+            orderBy: { weekOf: 'desc' },
+          }),
         ]);
-        return { repos, totalCount };
+
+        // Map githubId -> Set of week YYYY-MM-DD keys
+        const repoWeeksMap = new Map<number, Set<string>>();
+        for (const item of pastRepos) {
+          const key = item.weekOf.toISOString().slice(0, 10);
+          if (!repoWeeksMap.has(item.githubId)) {
+            repoWeeksMap.set(item.githubId, new Set());
+          }
+          repoWeeksMap.get(item.githubId)!.add(key);
+        }
+
+        // Helper to check if date or near date exists in set
+        const hasDateNear = (set: Set<string>, targetDate: Date) => {
+          for (let offset = -2; offset <= 2; offset++) {
+            const d = new Date(targetDate.getTime() + offset * 24 * 60 * 60 * 1000);
+            if (set.has(d.toISOString().slice(0, 10))) return true;
+          }
+          return false;
+        };
+
+        const reposWithStreak = repos.map((repo) => {
+          const weeksSet = repoWeeksMap.get(repo.githubId);
+          let streak = 0;
+          let curr = new Date(targetWeek);
+
+          while (weeksSet) {
+            if (hasDateNear(weeksSet, curr)) {
+              streak++;
+              curr = new Date(curr.getTime() - 7 * 24 * 60 * 60 * 1000);
+            } else {
+              break;
+            }
+          }
+
+          return {
+            ...repo,
+            consecutiveWeeks: streak > 0 ? streak : 1,
+          };
+        });
+
+        return { repos: reposWithStreak, totalCount };
       };
 
       const fetchQuery = async (lim: number, wOf?: string) => {

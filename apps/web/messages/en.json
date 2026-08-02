@@ -17,7 +17,7 @@
     "trending": "AI Trending"
   },
   "Index": {
-    "badge": "Full-Stack Developer",
+    "badge": "My Space",
     "title1": "Reflections on",
     "title2": "Life & Work",
     "description": "A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.",
@@ -154,7 +154,7 @@
   "About": {
     "title": "The Developer",
     "subtitle": "About Me",
-    "intro1": "Hello! I'm Rick, a Full-Stack Engineer who loves building tools that make development easier and more enjoyable.",
+    "intro1": "Hello! I'm Jane Doe, a Full-Stack Engineer who loves building tools that make development easier and more enjoyable.",
     "intro2": "With a background in computer science and years of experience in the JavaScript ecosystem, I focus on creating performant, accessible, and beautiful web applications.",
     "intro3": "When I'm not coding, you can find me exploring new technologies, contributing to open source, or sharing my knowledge through writing.",
     "experience": "Experience",
@@ -284,6 +284,8 @@
     "summarizeBtn": "Summarize",
     "summarizeTitle": "Weekly AI Trending",
     "saveImage": "Save Image",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "consecutiveWeeks": "{weeks} wks on list",
+    "consecutiveWeeksShort": "{weeks}wks streak"
   }
 }
