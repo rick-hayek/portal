@@ -274,7 +274,7 @@ export default function LinksAdminPage() {
                 required
                 type="url"
                 value={selfData.url}
-                placeholder="https://example.com"
+                placeholder="https://your-site.com"
                 onChange={(e) => setSelfData((p) => ({ ...p, url: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
@@ -284,7 +284,7 @@ export default function LinksAdminPage() {
               <input
                 type="url"
                 value={selfData.avatar}
-                placeholder="https://example.com/avatar.png"
+                placeholder="https://your-site.com/avatar.png"
                 onChange={(e) => setSelfData((p) => ({ ...p, avatar: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
@@ -294,7 +294,7 @@ export default function LinksAdminPage() {
               <input
                 type="url"
                 value={selfData.screenshot}
-                placeholder="https://example.com/screenshot.png"
+                placeholder="https://your-site.com/screenshot.png"
                 onChange={(e) => setSelfData((p) => ({ ...p, screenshot: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
@@ -304,7 +304,7 @@ export default function LinksAdminPage() {
               <input
                 type="url"
                 value={selfData.rss}
-                placeholder="https://example.com/feed.xml"
+                placeholder="https://your-site.com/feed.xml"
                 onChange={(e) => setSelfData((p) => ({ ...p, rss: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
@@ -378,7 +378,7 @@ export default function LinksAdminPage() {
               <input
                 type="url"
                 value={formData.rss}
-                placeholder="https://example.com/feed.xml"
+                placeholder="https://your-site.com/feed.xml"
                 onChange={(e) => setFormData((p) => ({ ...p, rss: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 text-sm"
               />
@@ -546,9 +546,8 @@ export default function LinksAdminPage() {
                         {link.category}
                       </span>
                       {link.status && link.status !== 'approved' && (
-                        <span className={`ml-2 inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
-                          link.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
-                        }`}>
+                        <span className={`ml-2 inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${link.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
+                          }`}>
                           {link.status}
                         </span>
                       )}

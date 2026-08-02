@@ -4,7 +4,7 @@ const siteConfig = defineConfig({
   site: {
     title: 'Voocii',
     description: 'A modular personal website platform',
-    url: 'https://portal.dev',
+    url: 'https://voocii.com',
     locale: 'en-US',
   },
   preset: 'full',

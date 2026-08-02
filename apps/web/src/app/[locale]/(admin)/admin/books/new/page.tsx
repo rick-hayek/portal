@@ -199,22 +199,20 @@ export default function AdminNewBookPage() {
               <button
                 type="button"
                 onClick={() => setCoverSource('url')}
-                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
-                  coverSource === 'url'
+                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${coverSource === 'url'
                     ? 'bg-[var(--portal-color-primary)] text-white'
                     : 'bg-[var(--portal-color-surface)] border border-compat text-[var(--portal-color-text-secondary)]'
-                }`}
+                  }`}
               >
                 URL Link
               </button>
               <button
                 type="button"
                 onClick={() => setCoverSource('upload')}
-                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
-                  coverSource === 'upload'
+                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${coverSource === 'upload'
                     ? 'bg-[var(--portal-color-primary)] text-white'
                     : 'bg-[var(--portal-color-surface)] border border-compat text-[var(--portal-color-text-secondary)]'
-                }`}
+                  }`}
               >
                 Upload File
               </button>
@@ -230,7 +228,7 @@ export default function AdminNewBookPage() {
                   setCoverImageURL(e.target.value);
                   setCoverImage('');
                 }}
-                placeholder="https://example.com/cover.jpg"
+                placeholder="https://your-site.com/cover.jpg"
                 className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
               />
             </div>

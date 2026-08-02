@@ -100,9 +100,33 @@ This is a Turborepo monorepo.
 - `packages/shared`: Shared TypeScript types and constants.
 ## Deployment
 
+### 1. Site Configuration (Pre-deployment)
+
+Before deploying to production, update your site configuration in [`apps/web/src/site.config.ts`](file:///Users/rick/src/portal/apps/web/src/site.config.ts) with your domain name and site metadata:
+
+```ts
+const siteConfig = defineConfig({
+  site: {
+    title: 'Your Site Title',
+    description: 'Your site description',
+    url: 'https://your-domain.com', // Must be set to your production domain
+    locale: 'zh-CN',
+  },
+  // ...
+});
+```
+
+> [!IMPORTANT]
+> Setting `site.url` to your actual production domain is required for:
+> - **SEO & Search Crawlers**: Canonical URLs generated in `sitemap.xml` and `robots.txt`.
+> - **Social Sharing**: Open Graph and Twitter Card preview links when sharing pages.
+> - **RSS Feed**: Article canonical URLs in `/feed.xml`.
+
+### 2. Vercel Deployment
+
 The project is optimized for deployment on Vercel. Ensure you configure all relevant environment variables in your Vercel project settings.
 
-### Database Migrations (Production)
+### 3. Database Migrations (Production)
 
 When deploying updates that involve database schema changes, you must apply the migrations to your production database.
 
@@ -122,4 +146,5 @@ This ensures the database schema is always updated before building and serving t
 ## License
 
 MIT
+
 

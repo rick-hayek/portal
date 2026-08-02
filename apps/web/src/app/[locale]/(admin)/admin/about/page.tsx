@@ -325,7 +325,7 @@ export default function AdminAboutPage() {
                   type="email"
                   value={emailAddress}
                   onChange={(e) => setEmailAddress(e.target.value)}
-                  placeholder="your-email@example.com"
+                  placeholder="your-email@your-site.com"
                   className="input-base"
                 />
               </div>

@@ -219,7 +219,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <div className="w-2.5 h-2.5 rounded-full bg-[rgba(16,185,129,0.7)]"></div>
                 </div>
                 <span className="font-mono text-[0.65rem] text-[var(--portal-color-text-secondary)]">
-                  my-personal-portal — zsh
+                  {siteConfig.site.url.replace('https://', '')} — zsh
                 </span>
                 <div className="w-8"></div>
               </div>

@@ -15,6 +15,18 @@ const nextConfig: NextConfig = {
     '@portal/shared',
     '@portal/theme',
   ],
+  async rewrites() {
+    return [
+      {
+        source: '/feed.xml',
+        destination: '/api/feed.xml',
+      },
+      {
+        source: '/rss.xml',
+        destination: '/api/feed.xml',
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
