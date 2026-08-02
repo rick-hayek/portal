@@ -115,7 +115,6 @@
   "Links": {
     "title": "Bookmarks & Friends",
     "description": "A collection of tools I use, people I admire, and websites that inspire me.",
-    "loading": "Loading Links...",
     "noLinks": "No links found",
     "noLinksDesc": "Looks like the collection is empty for now.",
     "selfInfoTitle": "Site Link Information",

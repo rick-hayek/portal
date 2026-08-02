@@ -38,7 +38,7 @@
     "projectsTitle": "项目",
     "viewAll": "查看全部",
     "community": "社区互动",
-    "guestbookTitle": "留言板（禁用中）"
+    "guestbookTitle": "留言板（退休了）"
   },
   "Blog": {
     "title": "博客",
@@ -115,7 +115,6 @@
   "Links": {
     "title": "书签与友链",
     "description": "收集我常用的工具、欣赏的人以及给我带来灵感的网站。",
-    "loading": "加载链接中...",
     "noLinks": "暂无链接",
     "noLinksDesc": "看起来收藏夹暂时是空的。",
     "selfInfoTitle": "本站友链信息",

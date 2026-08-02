@@ -10,6 +10,14 @@ export function registerDefaultModules() {
     navItems: [{ label: 'Blog', href: '/blog', icon: '📝', order: 1 }],
   });
   registerModule({
+    id: 'trending',
+    name: 'AI Trending',
+    icon: '🔥',
+    version: '1.0.0',
+    routes: [{ path: '/trending', label: 'AI Trending' }],
+    navItems: [{ label: 'Trending', href: '/trending', icon: '🔥', order: 2 }],
+  });
+  registerModule({
     id: 'portfolio',
     name: 'Portfolio',
     icon: '🚀',
@@ -58,27 +66,19 @@ export function registerDefaultModules() {
     navItems: [{ label: 'Links', href: '/links', icon: '🔗', order: 8 }],
   });
   registerModule({
-    id: 'about',
-    name: 'About',
-    icon: '👤',
-    version: '1.0.0',
-    routes: [{ path: '/about', label: 'About' }],
-    navItems: [{ label: 'About', href: '/about', icon: '👤', order: 9 }],
-  });
-  registerModule({
     id: 'tools',
     name: 'Tools',
     icon: '🛠️',
     version: '1.0.0',
     routes: [{ path: '/tools', label: 'Tools' }],
-    navItems: [{ label: 'Tools', href: '/tools', icon: '🛠️', order: 10 }],
+    navItems: [{ label: 'Tools', href: '/tools', icon: '🛠️', order: 9 }],
   });
   registerModule({
-    id: 'trending',
-    name: 'AI Trending',
-    icon: '🔥',
+    id: 'about',
+    name: 'About',
+    icon: '👤',
     version: '1.0.0',
-    routes: [{ path: '/trending', label: 'AI Trending' }],
-    navItems: [{ label: 'Trending', href: '/trending', icon: '🔥', order: 2 }],
+    routes: [{ path: '/about', label: 'About' }],
+    navItems: [{ label: 'About', href: '/about', icon: '👤', order: 10 }],
   });
 }
