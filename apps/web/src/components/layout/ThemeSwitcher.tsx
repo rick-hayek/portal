@@ -40,8 +40,9 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
             'minimal-light': '⚪',
             'dark-neon': '⚡',
             cyberpunk: '👾',
-            'nature-green': '🌿',
             'retro-brown': '☕',
+            zenith: '🧘',
+            lumiere: '✨',
           }[themeItem.id] || (themeItem.mode === 'dark' ? '🌙' : '☀️')}
         </span>
       ),
@@ -55,12 +56,13 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
       ? '💻'
       : currentTheme
         ? {
-            'minimal-light': '⚪',
-            'dark-neon': '⚡',
-            cyberpunk: '👾',
-            'nature-green': '🌿',
-            'retro-brown': '☕',
-          }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
+          'minimal-light': '⚪',
+          'dark-neon': '⚡',
+          cyberpunk: '👾',
+          'retro-brown': '☕',
+          zenith: '🧘',
+          lumiere: '✨',
+        }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
         : '💻';
 
   if (iconOnly) {

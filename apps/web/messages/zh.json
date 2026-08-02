@@ -21,8 +21,9 @@
     "minimal-light": "极简极光",
     "dark-neon": "暗黑霓虹",
     "cyberpunk": "赛博朋克",
-    "nature-green": "自然清新",
-    "retro-brown": "复古棕调"
+    "retro-brown": "复古棕调",
+    "zenith": "静谧圣所",
+    "lumiere": "光影手札"
   },
   "Index": {
     "badge": "我的空间",
@@ -138,9 +139,9 @@
     },
     "applyTitle": "申请友情链接",
     "applyDesc": "欢迎互换友情链接！请先在贵站添加本站链接，然后将贵站信息发送邮件至站长。",
-    "step1Title": "1. 先添加本站",
+    "step1Title": "先添加本站",
     "step1Desc": "请参考下方“本站友链信息”在贵站友情链接页面添加本站。",
-    "step2Title": "2. 发送申请邮件",
+    "step2Title": "发送申请邮件",
     "step2Desc": "提交包含贵站名称、URL、头像、描述及可选的 RSS/截图地址的信息。",
     "sendEmailBtn": "发送申请邮件",
     "copyTemplateBtn": "复制申请格式",

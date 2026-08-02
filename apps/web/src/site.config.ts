@@ -10,7 +10,7 @@ const siteConfig = defineConfig({
   preset: 'full',
   theme: {
     default: 'minimal-light',
-    available: ['minimal-light', 'dark-neon', 'cyberpunk', 'nature-green', 'retro-brown'],
+    available: ['minimal-light', 'dark-neon', 'cyberpunk', 'retro-brown', 'zenith', 'lumiere'],
     allowUserSwitch: true,
   },
   about: defaultAboutConfig,

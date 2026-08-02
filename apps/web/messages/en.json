@@ -21,8 +21,9 @@
     "minimal-light": "Clean Portal",
     "dark-neon": "Dark Neon",
     "cyberpunk": "Cyberpunk",
-    "nature-green": "Nature Green",
-    "retro-brown": "Retro Brown"
+    "retro-brown": "Retro Brown",
+    "zenith": "Zenith Ethereal",
+    "lumiere": "Lumiere Editorial"
   },
   "Index": {
     "badge": "My Space",
@@ -138,9 +139,9 @@
     },
     "applyTitle": "Apply for Link Exchange",
     "applyDesc": "Welcome to exchange links! Please add our site link first, then send your site info via email.",
-    "step1Title": "1. Add Our Site First",
+    "step1Title": "Add Our Site First",
     "step1Desc": "Add our site details to your friend links page using the info below.",
-    "step2Title": "2. Send Application",
+    "step2Title": "Send Application",
     "step2Desc": "Send an email containing your site title, URL, avatar, description, and optional RSS/screenshot.",
     "sendEmailBtn": "Send Application Email",
     "copyTemplateBtn": "Copy Template",
