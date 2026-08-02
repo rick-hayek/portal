@@ -172,9 +172,12 @@ model Link {
   id          String  @id @default(cuid())
   name        String
   url         String
+  rss         String?
   avatar      String?
+  screenshot  String?
   description String?
   category    String  @default("default")
+  status      String  @default("approved")
   isAlive     Boolean @default(true)
   sortOrder   Int     @default(0)
 }

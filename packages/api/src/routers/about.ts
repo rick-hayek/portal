@@ -114,6 +114,12 @@ export const aboutRouter = router({
             role_en: z.string().optional(),
             stack: z.union([z.string(), z.array(z.string())]).optional(),
             status: z.string().optional(),
+            title1: z.string().optional(),
+            title1_en: z.string().optional(),
+            title2: z.string().optional(),
+            title2_en: z.string().optional(),
+            description: z.string().optional(),
+            description_en: z.string().optional(),
           })
           .optional()
           .nullable(),

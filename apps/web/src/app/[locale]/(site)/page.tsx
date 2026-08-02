@@ -7,6 +7,8 @@ import { getCategoryName } from '@/lib/category';
 import { Suspense } from 'react';
 import siteConfig from '@/site.config';
 
+import { ScrollDownButton } from '@/components/home/ScrollDownButton';
+
 export const revalidate = 60; // revalidate at most every minute (ISR)
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -79,10 +81,22 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const t = await getTranslations({ locale, namespace: 'Index' });
 
+  const heroTitle1 = hasAuthorConfig
+    ? (locale === 'en' ? authorObj.title1_en || authorObj.title1 : authorObj.title1) || t('title1')
+    : t('title1');
+
+  const heroTitle2 = hasAuthorConfig
+    ? (locale === 'en' ? authorObj.title2_en || authorObj.title2 : authorObj.title2) || t('title2')
+    : t('title2');
+
+  const heroDesc = hasAuthorConfig
+    ? (locale === 'en' ? authorObj.description_en || authorObj.description : authorObj.description) || t('description')
+    : t('description');
+
   const personSchema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Rick',
+    name: 'Jane Doe',
     url: siteConfig.site.url,
     sameAs: [
       process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/rick-hayek',
@@ -99,7 +113,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
       />
       {/* HERO SECTION */}
-      <section className="flex min-h-screen w-full items-center justify-center pt-20 pb-12 sm:pt-32 sm:pb-16 px-8">
+      <section className="relative flex min-h-[calc(100vh-4rem)] w-full items-center justify-center pt-16 pb-20 sm:pt-24 sm:pb-24 px-8">
         <div className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Hero Text */}
           <div>
@@ -117,14 +131,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
             {/* Title */}
             <h1 className="text-[clamp(2.8rem,5vw,4.5rem)] font-extrabold leading-[1.05] tracking-tighter mb-6 text-[var(--portal-color-text)]">
-              {t('title1')}
+              {heroTitle1}
               <br />
-              <span className="text-[var(--portal-color-primary)]">{t('title2')}</span>
+              <span className="text-[var(--portal-color-primary)]">{heroTitle2}</span>
             </h1>
 
             {/* Description */}
             <p className="text-[1.05rem] leading-[1.75] max-w-[440px] mb-10 border-l-2 border-[rgba(107,142,201,0.25)] pl-[1.2rem] text-[var(--portal-color-text-secondary)]">
-              {t('description')}
+              {heroDesc}
             </p>
 
             {/* CTA Buttons */}
@@ -170,7 +184,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
+                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s-8-1.79-8-4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
                   />
                 </svg>
                 tRPC
@@ -212,7 +226,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
               {/* Terminal Body */}
               <div className="p-6 font-mono text-[0.82rem] leading-[1.8] text-[var(--portal-color-text-secondary)]">
-                <div className="opacity-50">// Initializing Project</div>
+                <div className="opacity-50">{t('initComment')}</div>
                 <div>
                   <span className="text-violet-500">const</span>
                   <span className="text-[var(--portal-color-primary)]"> developer</span> = {'{ '}
@@ -234,6 +248,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
           </div>
         </div>
+
+        {/* Bouncing Scroll Down Indicator */}
+        <ScrollDownButton />
       </section>
 
       {/* DB-dependent sections loaded dynamically in the background */}

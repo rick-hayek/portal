@@ -27,7 +27,7 @@ async function main() {
     data: {
       id: 'clk123456000008l28z3z3z3z', // Fixed CUID to prevent session orphaning after re-seeding
       email: 'admin@portal.dev',
-      name: 'Rick',
+      name: 'Jane Doe',
       role: 'admin',
       passwordHash,
     },
@@ -277,7 +277,7 @@ const elapsedMs = Date.now() - startTime;
     await prisma.comment.create({
       data: {
         postId: firstPost.id,
-        authorName: 'Rick',
+        authorName: 'Jane Doe',
         content: '谢谢！有什么具体想了解的可以继续讨论。',
         status: 'approved',
         parentId: comment1.id,

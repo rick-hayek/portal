@@ -16,8 +16,17 @@
     "signIn": "Sign In",
     "trending": "AI Trending"
   },
+  "Themes": {
+    "system": "System (Auto)",
+    "minimal-light": "Clean Portal",
+    "dark-neon": "Dark Neon",
+    "cyberpunk": "Cyberpunk",
+    "nature-green": "Nature Green",
+    "retro-brown": "Retro Brown"
+  },
   "Index": {
     "badge": "My Space",
+    "initComment": "// Initializing Project",
     "title1": "Reflections on",
     "title2": "Life & Work",
     "description": "A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.",
@@ -109,12 +118,34 @@
     "loading": "Loading Links...",
     "noLinks": "No links found",
     "noLinksDesc": "Looks like the collection is empty for now.",
+    "selfInfoTitle": "Site Link Information",
+    "selfInfoDesc": "Welcome to link back to this site! Here are our site details:",
+    "copyMarkdown": "Copy Markdown",
+    "copyJson": "Copy JSON",
+    "copyText": "Copy Text",
+    "copied": "Copied!",
+    "selfFields": {
+      "name": "Title",
+      "desc": "Description",
+      "url": "URL",
+      "avatar": "Avatar",
+      "rss": "RSS Feed"
+    },
     "categories": {
       "friend": "Friends",
       "tool": "Tools & Utilities",
       "inspiration": "Inspirations",
       "other": "Other Links"
-    }
+    },
+    "applyTitle": "Apply for Link Exchange",
+    "applyDesc": "Welcome to exchange links! Please add our site link first, then send your site info via email.",
+    "step1Title": "1. Add Our Site First",
+    "step1Desc": "Add our site details to your friend links page using the info below.",
+    "step2Title": "2. Send Application",
+    "step2Desc": "Send an email containing your site title, URL, avatar, description, and optional RSS/screenshot.",
+    "sendEmailBtn": "Send Application Email",
+    "copyTemplateBtn": "Copy Template",
+    "templateCopied": "Template Copied!"
   },
   "Tools": {
     "title": "Developer Tools",

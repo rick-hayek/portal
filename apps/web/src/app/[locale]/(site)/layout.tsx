@@ -15,8 +15,8 @@ const navItems: NavItem[] = [
   ...getNavItems(siteConfig),
 ].filter(
   (item) =>
-    // 暂时隐藏，之后需要恢复：Resume, Gallery, Guestbook, Links
-    !['Resume', 'Gallery', 'Guestbook', 'Links'].includes(item.label),
+    // 暂时隐藏，之后需要恢复：Resume, Gallery, Guestbook
+    !['Resume', 'Gallery', 'Guestbook'].includes(item.label),
 );
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {

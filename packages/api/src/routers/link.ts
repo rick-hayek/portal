@@ -5,7 +5,7 @@ export const linkRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
     const fetchList = async () => {
       return ctx.prisma.link.findMany({
-        where: { isAlive: true },
+        where: { isAlive: true, status: 'approved', NOT: { id: 'site-self-link' } },
         orderBy: [{ category: 'asc' }, { sortOrder: 'asc' }],
       });
     };
@@ -19,5 +19,12 @@ export const linkRouter = router({
       return (await getCached()) as Awaited<ReturnType<typeof fetchList>>;
     }
     return fetchList();
+  }),
+
+  /** Get site's self link info */
+  getSelf: publicProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.link.findUnique({
+      where: { id: 'site-self-link' },
+    });
   }),
 });

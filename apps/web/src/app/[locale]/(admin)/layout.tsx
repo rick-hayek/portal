@@ -12,6 +12,7 @@ const navItems = [
   { href: '/admin/categories', label: 'Categories', icon: '📁' },
   { href: '/admin/portfolio', label: 'Portfolio', icon: '🚀' },
   { href: '/admin/books', label: 'Books', icon: '📚' },
+  { href: '/admin/links', label: 'Links', icon: '🔗' },
   { href: '/admin/comments', label: 'Comments', icon: '💬' },
   { href: '/admin/guestbook', label: 'Guestbook', icon: '📒' },
   { href: '/admin/references', label: 'References', icon: '📎' },

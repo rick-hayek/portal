@@ -55,7 +55,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     softwareVersion: '1.0.0',
     publisher: {
       '@type': 'Person',
-      name: 'Rick',
+      name: 'Jane Doe',
     },
   };
 

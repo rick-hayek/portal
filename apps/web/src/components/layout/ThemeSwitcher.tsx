@@ -1,10 +1,12 @@
 'use client';
 
 import { themes, useTheme } from '@portal/theme';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
 
 export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
+  const t = useTranslations('Themes');
   const { themeId, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -12,15 +14,26 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
     setMounted(true);
   }, []);
 
+  const getThemeLabel = (id: string, fallbackName: string) => {
+    try {
+      if (t.has(id as any)) {
+        return t(id as any);
+      }
+    } catch {
+      // Fallback
+    }
+    return fallbackName;
+  };
+
   const themeOptions: DropdownOption[] = [
     {
       value: 'system',
-      label: 'System (Auto)',
+      label: getThemeLabel('system', 'System (Auto)'),
       icon: <span>💻</span>,
     },
-    ...Object.values(themes).map((t) => ({
-      value: t.id,
-      label: t.name,
+    ...Object.values(themes).map((themeItem) => ({
+      value: themeItem.id,
+      label: getThemeLabel(themeItem.id, themeItem.name),
       icon: (
         <span>
           {{
@@ -29,7 +42,7 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
             cyberpunk: '👾',
             'nature-green': '🌿',
             'retro-brown': '☕',
-          }[t.id] || (t.mode === 'dark' ? '🌙' : '☀️')}
+          }[themeItem.id] || (themeItem.mode === 'dark' ? '🌙' : '☀️')}
         </span>
       ),
     })),

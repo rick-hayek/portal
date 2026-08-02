@@ -16,8 +16,17 @@
     "signIn": "登录",
     "trending": "AI 热榜"
   },
+  "Themes": {
+    "system": "跟随系统",
+    "minimal-light": "极简极光",
+    "dark-neon": "暗黑霓虹",
+    "cyberpunk": "赛博朋克",
+    "nature-green": "自然清新",
+    "retro-brown": "复古棕调"
+  },
   "Index": {
     "badge": "我的空间",
+    "initComment": "// 夫唯不争，故天下莫能与之争",
     "title1": "生活与工作",
     "title2": "随想随记",
     "description": "记录和分享技术心得、生活感悟，顺便推荐个书",
@@ -109,12 +118,34 @@
     "loading": "加载链接中...",
     "noLinks": "暂无链接",
     "noLinksDesc": "看起来收藏夹暂时是空的。",
+    "selfInfoTitle": "本站友链信息",
+    "selfInfoDesc": "欢迎添加本站为友情链接，以下为本站配置信息：",
+    "copyMarkdown": "复制 Markdown",
+    "copyJson": "复制 JSON",
+    "copyText": "复制文本",
+    "copied": "已复制！",
+    "selfFields": {
+      "name": "站点名称",
+      "desc": "站点描述",
+      "url": "站点链接",
+      "avatar": "头像链接",
+      "rss": "RSS 订阅"
+    },
     "categories": {
       "friend": "友情链接",
       "tool": "工具与效率",
       "inspiration": "灵感发现",
       "other": "其他链接"
-    }
+    },
+    "applyTitle": "申请友情链接",
+    "applyDesc": "欢迎互换友情链接！请先在贵站添加本站链接，然后将贵站信息发送邮件至站长。",
+    "step1Title": "1. 先添加本站",
+    "step1Desc": "请参考下方“本站友链信息”在贵站友情链接页面添加本站。",
+    "step2Title": "2. 发送申请邮件",
+    "step2Desc": "提交包含贵站名称、URL、头像、描述及可选的 RSS/截图地址的信息。",
+    "sendEmailBtn": "发送申请邮件",
+    "copyTemplateBtn": "复制申请格式",
+    "templateCopied": "已复制格式！"
   },
   "Tools": {
     "title": "开发者工具",

@@ -42,6 +42,12 @@ export default function AdminAboutPage() {
   const [authorRoleEn, setAuthorRoleEn] = useState('');
   const [authorStack, setAuthorStack] = useState('');
   const [authorStatus, setAuthorStatus] = useState('');
+  const [authorTitle1, setAuthorTitle1] = useState('');
+  const [authorTitle1En, setAuthorTitle1En] = useState('');
+  const [authorTitle2, setAuthorTitle2] = useState('');
+  const [authorTitle2En, setAuthorTitle2En] = useState('');
+  const [authorDesc, setAuthorDesc] = useState('');
+  const [authorDescEn, setAuthorDescEn] = useState('');
 
   // Email state (stored in a single object/JSON field)
   const [emailAddress, setEmailAddress] = useState('');
@@ -76,12 +82,24 @@ export default function AdminAboutPage() {
             : authorObj.stack ?? ''
         );
         setAuthorStatus(authorObj.status ?? '');
+        setAuthorTitle1(authorObj.title1 ?? '');
+        setAuthorTitle1En(authorObj.title1_en ?? '');
+        setAuthorTitle2(authorObj.title2 ?? '');
+        setAuthorTitle2En(authorObj.title2_en ?? '');
+        setAuthorDesc(authorObj.description ?? '');
+        setAuthorDescEn(authorObj.description_en ?? '');
       } else {
-        setAuthorName('Rick');
+        setAuthorName('Jane Doe');
         setAuthorRole('全栈开发者');
         setAuthorRoleEn('Full-Stack Developer');
         setAuthorStack('Next.js, TypeScript, Vue, Python, AI Agent');
         setAuthorStatus('Building');
+        setAuthorTitle1('生活与工作');
+        setAuthorTitle1En('Reflections on');
+        setAuthorTitle2('随想随记');
+        setAuthorTitle2En('Life & Work');
+        setAuthorDesc('记录和分享技术心得、生活感悟，顺便推荐个书');
+        setAuthorDescEn('A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.');
       }
 
       // Parse Email JSON object or fallback
@@ -165,6 +183,12 @@ export default function AdminAboutPage() {
           role_en: authorRoleEn.trim() || undefined,
           stack: authorStack.trim() || undefined,
           status: authorStatus.trim() || undefined,
+          title1: authorTitle1.trim() || undefined,
+          title1_en: authorTitle1En.trim() || undefined,
+          title2: authorTitle2.trim() || undefined,
+          title2_en: authorTitle2En.trim() || undefined,
+          description: authorDesc.trim() || undefined,
+          description_en: authorDescEn.trim() || undefined,
         },
       });
 
@@ -178,32 +202,43 @@ export default function AdminAboutPage() {
   if (isLoading) {
     return (
       <div className="space-y-6 max-w-4xl mx-auto">
-        <div className="h-8 w-48 animate-pulse rounded-lg bg-[var(--portal-color-surface-alt)]" />
-        <div className="h-64 animate-pulse rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]" />
+        <div className="flex items-center justify-between">
+          <div className="h-8 w-48 bg-[var(--portal-color-surface)] rounded animate-pulse" />
+        </div>
+        <div className="h-64 bg-[var(--portal-color-surface)] rounded-xl animate-pulse" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+    <form onSubmit={handleSave} className="space-y-6 max-w-4xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[var(--portal-color-border)] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--portal-color-border-soft)] pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--portal-color-text)] flex items-center gap-2">
+          <h1 className="text-2xl font-extrabold text-[var(--portal-color-text)] flex items-center gap-2">
             <User className="h-6 w-6 text-[var(--portal-color-primary)]" />
-            About Page Settings
+            About Page & Author Profile
           </h1>
           <p className="text-xs text-[var(--portal-color-text-secondary)] mt-1">
-            Manage profile intro, work experiences, and social links displayed on the /about page
+            Manage your personal profile, experiences, social links, and homepage terminal settings
           </p>
         </div>
+        <button
+          type="submit"
+          disabled={updateMutation.isPending}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--portal-color-primary)] text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+        >
+          <Save className="h-4 w-4" />
+          {updateMutation.isPending ? 'Saving...' : 'Save All Changes'}
+        </button>
       </div>
 
+      {/* Feedback Banner */}
       {feedback && (
         <div
-          className={`flex items-center gap-2 rounded-xl p-4 text-sm font-medium ${feedback.type === 'success'
-              ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/30 dark:bg-emerald-950/20 dark:text-emerald-300'
-              : 'border border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/30 dark:bg-rose-950/20 dark:text-rose-300'
+          className={`p-4 rounded-xl border flex items-center gap-3 text-sm font-medium ${feedback.type === 'success'
+            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+            : 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400'
             }`}
         >
           {feedback.type === 'success' ? (
@@ -211,15 +246,15 @@ export default function AdminAboutPage() {
           ) : (
             <AlertCircle className="h-5 w-5 shrink-0" />
           )}
-          {feedback.message}
+          <span>{feedback.message}</span>
         </div>
       )}
 
-      <form onSubmit={handleSave} className="space-y-8">
+      <div className="space-y-6">
         {/* Basic Information Section */}
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 space-y-4">
           <h2 className="text-base font-semibold text-[var(--portal-color-text)] border-b border-[var(--portal-color-border-soft)] pb-3">
-            Basic Information
+            Basic Information (About Me Page)
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -244,7 +279,7 @@ export default function AdminAboutPage() {
                 type="text"
                 value={subtitleEn}
                 onChange={(e) => setSubtitleEn(e.target.value)}
-                placeholder="ABOUT ME (EN fallback)"
+                placeholder="ABOUT ME (EN)"
                 className="input-base"
               />
             </div>
@@ -270,7 +305,7 @@ export default function AdminAboutPage() {
                 type="text"
                 value={titleEn}
                 onChange={(e) => setTitleEn(e.target.value)}
-                placeholder="The Developer (EN fallback)"
+                placeholder="The Developer (EN)"
                 className="input-base"
               />
             </div>
@@ -319,34 +354,32 @@ export default function AdminAboutPage() {
                     title="Email SVG Preview"
                   />
                 ) : (
-                  <div className="h-9 w-9 shrink-0 flex items-center justify-center rounded-lg border border-dashed border-[var(--portal-color-border)] text-[10px] text-[var(--portal-color-text-tertiary)] font-mono">
+                  <div className="h-9 w-9 shrink-0 flex items-center justify-center rounded-lg border border-dashed border-[var(--portal-color-border)] text-xs text-[var(--portal-color-text-tertiary)]">
                     SVG
                   </div>
                 )}
                 <input
                   type="text"
-                  placeholder="Email SVG Code: <svg>...</svg>"
                   value={emailIcon}
                   onChange={(e) => setEmailIcon(e.target.value)}
-                  className="input-base flex-1 font-mono text-xs"
+                  placeholder="Paste inline <svg>...</svg> code here"
+                  className="input-base font-mono text-xs"
                 />
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Description Section */}
+          <div className="space-y-4 pt-2 border-t border-[var(--portal-color-border-soft)]">
             <div>
               <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
                 Description (ZH / Default)
               </label>
-              <p className="text-[11px] text-[var(--portal-color-text-tertiary)] mb-1.5">
-                Supports multiple paragraphs (separated by blank lines)
-              </p>
               <textarea
                 rows={6}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Hello! I'm Rick..."
+                placeholder="你好！我是 Jane Doe..."
                 className="input-base font-sans"
               />
             </div>
@@ -355,27 +388,24 @@ export default function AdminAboutPage() {
               <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
                 Description (EN Fallback)
               </label>
-              <p className="text-[11px] text-[var(--portal-color-text-tertiary)] mb-1.5">
-                If omitted, falls back to Chinese description
-              </p>
               <textarea
                 rows={6}
                 value={descriptionEn}
                 onChange={(e) => setDescriptionEn(e.target.value)}
-                placeholder="Hello! I'm Rick..."
+                placeholder="Hello! I'm Jane Doe..."
                 className="input-base font-sans"
               />
             </div>
           </div>
         </div>
 
-        {/* Homepage Developer Card (Author Config) Section */}
+        {/* Homepage Developer Card & Hero Config Section */}
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 space-y-4">
           <h2 className="text-base font-semibold text-[var(--portal-color-text)] border-b border-[var(--portal-color-border-soft)] pb-3">
-            Homepage Code Terminal Config (首页代码卡片配置)
+            Homepage Hero & Code Terminal Config (首页 Hero 与代码卡片配置)
           </h2>
           <p className="text-xs text-[var(--portal-color-text-secondary)]">
-            Configure the <code className="font-mono text-[var(--portal-color-primary)]">const developer = &#123; ... &#125;</code> object on the homepage terminal. Omitted/empty fields will not be displayed.
+            Configure the homepage Hero titles, introduction, and the <code className="font-mono text-[var(--portal-color-primary)]">const developer = &#123; ... &#125;</code> object on the terminal.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -400,7 +430,7 @@ export default function AdminAboutPage() {
                 type="text"
                 value={authorStatus}
                 onChange={(e) => setAuthorStatus(e.target.value)}
-                placeholder="wondering / Building"
+                placeholder="Building"
                 className="input-base"
               />
             </div>
@@ -442,6 +472,87 @@ export default function AdminAboutPage() {
                 placeholder="Next.js, TypeScript, Vue, Python, AI Agent"
                 className="input-base"
               />
+            </div>
+
+            {/* Hero Titles & Description */}
+            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-[var(--portal-color-border-soft)]">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                  Hero Title Line 1 (ZH) (`title1`)
+                </label>
+                <input
+                  type="text"
+                  value={authorTitle1}
+                  onChange={(e) => setAuthorTitle1(e.target.value)}
+                  placeholder="生活与工作"
+                  className="input-base"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                  Hero Title Line 1 (EN) (`title1_en`)
+                </label>
+                <input
+                  type="text"
+                  value={authorTitle1En}
+                  onChange={(e) => setAuthorTitle1En(e.target.value)}
+                  placeholder="Reflections on"
+                  className="input-base"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                  Hero Title Line 2 (ZH) (`title2`)
+                </label>
+                <input
+                  type="text"
+                  value={authorTitle2}
+                  onChange={(e) => setAuthorTitle2(e.target.value)}
+                  placeholder="随想随记"
+                  className="input-base"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                  Hero Title Line 2 (EN) (`title2_en`)
+                </label>
+                <input
+                  type="text"
+                  value={authorTitle2En}
+                  onChange={(e) => setAuthorTitle2En(e.target.value)}
+                  placeholder="Life & Work"
+                  className="input-base"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                  Hero Description (ZH) (`description`)
+                </label>
+                <input
+                  type="text"
+                  value={authorDesc}
+                  onChange={(e) => setAuthorDesc(e.target.value)}
+                  placeholder="记录和分享技术心得、生活感悟，顺便推荐个书"
+                  className="input-base"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-xs font-semibold text-[var(--portal-color-text-secondary)] mb-1">
+                  Hero Description (EN) (`description_en`)
+                </label>
+                <input
+                  type="text"
+                  value={authorDescEn}
+                  onChange={(e) => setAuthorDescEn(e.target.value)}
+                  placeholder="A personal space dedicated to sharing tech insights..."
+                  className="input-base"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -603,7 +714,7 @@ export default function AdminAboutPage() {
             {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 }
