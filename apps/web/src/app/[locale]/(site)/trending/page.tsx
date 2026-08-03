@@ -224,8 +224,8 @@ export default function TrendingPage() {
                             setIsWeekOpen(false);
                           }}
                           className={`flex w-full items-center px-3 py-2 text-xs text-left cursor-pointer transition-colors ${isActive
-                              ? 'bg-[var(--portal-color-surface-alt)] font-semibold text-[var(--portal-color-primary)]'
-                              : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)]'
+                            ? 'bg-[var(--portal-color-surface-alt)] font-semibold text-[var(--portal-color-primary)]'
+                            : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)]'
                             }`}
                         >
                           <span className="w-5 text-center shrink-0 mr-1 text-[10px] font-bold">
@@ -289,25 +289,34 @@ export default function TrendingPage() {
                 >
                   {/* Header: Repo name + stars */}
                   <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-2 min-w-0">
-                      {/* GitHub icon */}
-                      <svg
-                        className="h-5 w-5 shrink-0 text-[var(--portal-color-text-secondary)]"
-                        viewBox="0 0 16 16"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <title>GitHub Icon</title>
-                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
-                      </svg>
-                      <a
-                        href={repo.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[var(--portal-color-text)] font-semibold text-[0.95rem] truncate hover:text-[var(--portal-color-primary)] transition-colors no-underline"
-                      >
-                        {repo.fullName}
-                      </a>
+                    <div className="flex flex-col gap-1 min-w-0">
+                      <div className="flex items-center gap-2 min-w-0">
+                        {/* GitHub icon */}
+                        <svg
+                          className="h-5 w-5 shrink-0 text-[var(--portal-color-text-secondary)]"
+                          viewBox="0 0 16 16"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <title>GitHub Icon</title>
+                          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                        </svg>
+                        <a
+                          href={repo.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[var(--portal-color-text)] font-semibold text-[0.95rem] truncate hover:text-[var(--portal-color-primary)] transition-colors no-underline"
+                        >
+                          {repo.fullName}
+                        </a>
+                      </div>
+                      {((repo as any).consecutiveWeeks ?? 0) > 1 && (
+                        <div className="flex items-center">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 whitespace-nowrap">
+                            🔥 {t('consecutiveWeeks', { weeks: (repo as any).consecutiveWeeks })}
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Star badge */}
@@ -327,11 +336,6 @@ export default function TrendingPage() {
                       {repo.starsGrowth > 0 && (
                         <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 whitespace-nowrap">
                           +{formatNumber(repo.starsGrowth)} {t('starsThisWeek') || 'this week'}
-                        </span>
-                      )}
-                      {((repo as any).consecutiveWeeks ?? 0) > 1 && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 whitespace-nowrap">
-                          🔥 {t('consecutiveWeeks', { weeks: (repo as any).consecutiveWeeks })}
                         </span>
                       )}
                     </div>
@@ -440,12 +444,12 @@ export default function TrendingPage() {
                     <Flame className="h-4 w-4 text-amber-500 fill-amber-500 animate-pulse" />
                     <span className="font-mono text-[9px] uppercase tracking-wider text-amber-400 font-bold">AI Trending Repo</span>
                   </div>
-                  <span className="text-[9px] text-white/30 font-mono">Voocii Portal</span>
+                  {/* <span className="text-[9px] text-white/30 font-mono">Voocii</span> */}
+                  <span className="text-[9px] text-white/50 font-mono">Week of {formatDate(selectedWeek || new Date().toISOString(), locale)}</span>
+
                 </div>
                 <h2 className="text-lg font-bold tracking-tight text-white mb-0.5">{t('summarizeTitle')}</h2>
-                <p className="text-[9px] text-white/50 font-mono">
-                  Week of {formatDate(selectedWeek || new Date().toISOString(), locale)}
-                </p>
+
                 <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-1.5" />
               </div>
 
@@ -459,9 +463,9 @@ export default function TrendingPage() {
                     <div className="flex items-center gap-2.5 min-w-0">
                       {/* Rank Badge */}
                       <span className={`flex items-center justify-center w-[22px] h-[22px] rounded-full font-mono text-[11px] font-black shrink-0 ${idx === 0 ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-slate-900' :
-                          idx === 1 ? 'bg-gradient-to-br from-slate-200 to-slate-400 text-slate-900' :
-                            idx === 2 ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white' :
-                              'bg-white/10 text-white/70'
+                        idx === 1 ? 'bg-gradient-to-br from-slate-200 to-slate-400 text-slate-900' :
+                          idx === 2 ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white' :
+                            'bg-white/10 text-white/70'
                         }`}>
                         {idx + 1}
                       </span>
@@ -501,12 +505,12 @@ export default function TrendingPage() {
               {/* Card Footer */}
               <div className="relative z-10 mt-auto pt-2 border-t border-white/10 flex items-center justify-between text-[8px] text-white/40">
                 <div className="space-y-0.5">
-                  <p className="font-semibold text-white/70 leading-none">Voocii Portal</p>
+                  <p className="font-semibold text-white/70 leading-none">Voocii</p>
                   <p className="leading-none">AI-driven personal platform</p>
                 </div>
                 <div className="text-right font-mono space-y-0.5">
                   <p className="leading-none">Generated by AI Agent</p>
-                  <p className="leading-none">Explore more at voocii.com</p>
+                  {/* <p className="leading-none">Explore more at voocii.com</p> */}
                 </div>
               </div>
             </div>
