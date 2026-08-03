@@ -129,6 +129,7 @@
       "desc": "Description",
       "url": "URL",
       "avatar": "Avatar",
+      "screenshot": "Screenshot",
       "rss": "RSS Feed"
     },
     "categories": {

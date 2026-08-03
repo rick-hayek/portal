@@ -53,6 +53,7 @@ export default function LinksPage() {
   const siteUrl = selfLink?.url || 'https://portal.dev';
   const siteRss = selfLink?.rss || '';
   const siteAvatar = selfLink?.avatar || '';
+  const siteScreenshot = selfLink?.screenshot || '';
   const siteDesc =
     selfLink?.description ||
     'A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.';
@@ -69,6 +70,7 @@ export default function LinksPage() {
       name: siteName,
       url: siteUrl,
       ...(siteAvatar ? { avatar: siteAvatar } : {}),
+      ...(siteScreenshot ? { screenshot: siteScreenshot } : {}),
       desc: siteDesc,
       ...(siteRss ? { rss: siteRss } : {}),
     },
@@ -294,6 +296,7 @@ export default function LinksPage() {
             { label: t('selfFields.desc'), value: siteDesc, key: 'desc' },
             { label: t('selfFields.url'), value: siteUrl, key: 'url' },
             ...(siteAvatar ? [{ label: t('selfFields.avatar'), value: siteAvatar, key: 'avatar' }] : []),
+            ...(siteScreenshot ? [{ label: t('selfFields.screenshot'), value: siteScreenshot, key: 'screenshot' }] : []),
             ...(siteRss ? [{ label: t('selfFields.rss'), value: siteRss, key: 'rss' }] : []),
           ].map((item) => (
             <div

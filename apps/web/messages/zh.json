@@ -128,7 +128,8 @@
       "name": "站点名称",
       "desc": "站点描述",
       "url": "站点链接",
-      "avatar": "头像链接",
+      "avatar": "站点Logo",
+      "screenshot": "站点截图",
       "rss": "RSS 订阅"
     },
     "categories": {
