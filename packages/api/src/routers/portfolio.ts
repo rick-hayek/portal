@@ -33,31 +33,30 @@ export const portfolioRouter = router({
             return fetchList(t, f);
           },
           ['portfolio-list'],
-          { tags: ['projects'], revalidate: 3600 }
+          { tags: ['projects'], revalidate: 3600 },
         );
-        return (await getCached(input?.tech, input?.featured)) as Awaited<ReturnType<typeof fetchList>>;
+        return (await getCached(input?.tech, input?.featured)) as Awaited<
+          ReturnType<typeof fetchList>
+        >;
       }
       return fetchList(input?.tech, input?.featured);
     }),
 
   /** Single project by slug */
-  bySlug: publicProcedure
-    .input(z.object({ slug: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const fetchProject = async (s: string) => {
-        return ctx.prisma.project.findUnique({ where: { slug: s } });
-      };
+  bySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
+    const fetchProject = async (s: string) => {
+      return ctx.prisma.project.findUnique({ where: { slug: s } });
+    };
 
-      if (ctx.unstable_cache) {
-        const getCached = ctx.unstable_cache(
-          fetchProject,
-          ['portfolio-by-slug'],
-          { tags: ['projects'], revalidate: 3600 }
-        );
-        return (await getCached(input.slug)) as Awaited<ReturnType<typeof fetchProject>>;
-      }
-      return fetchProject(input.slug);
-    }),
+    if (ctx.unstable_cache) {
+      const getCached = ctx.unstable_cache(fetchProject, ['portfolio-by-slug'], {
+        tags: ['projects'],
+        revalidate: 3600,
+      });
+      return (await getCached(input.slug)) as Awaited<ReturnType<typeof fetchProject>>;
+    }
+    return fetchProject(input.slug);
+  }),
 
   /** All unique tech stack values (for filter UI) */
   techStacks: publicProcedure.query(async ({ ctx }) => {
@@ -70,11 +69,10 @@ export const portfolioRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchTechStacks,
-        ['portfolio-tech-stacks'],
-        { tags: ['projects'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchTechStacks, ['portfolio-tech-stacks'], {
+        tags: ['projects'],
+        revalidate: 3600,
+      });
       return (await getCached()) as Awaited<ReturnType<typeof fetchTechStacks>>;
     }
     return fetchTechStacks();

@@ -3,7 +3,8 @@ import { sanitizeMdxContent } from '../apps/web/src/lib/mdx-sanitizer';
 
 describe('sanitizeMdxContent', () => {
   it('escapes unclosed plain text angle brackets like <RP Name>', () => {
-    const input = '解决方法是：Set-AdfsRelyingPartyTrust -TargetName <RP Name> -SamlResponseSignature MessageAndAssertion';
+    const input =
+      '解决方法是：Set-AdfsRelyingPartyTrust -TargetName <RP Name> -SamlResponseSignature MessageAndAssertion';
     const output = sanitizeMdxContent(input);
     expect(output).toContain('&lt;RP Name&gt;');
     expect(output).not.toContain('<RP Name>');

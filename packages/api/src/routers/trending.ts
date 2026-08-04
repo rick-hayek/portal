@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { publicProcedure, protectedProcedure, router } from '../trpc';
+import { protectedProcedure, publicProcedure, router } from '../trpc';
 
 export const trendingRouter = router({
   /** List trending repos for a given week (defaults to latest week) */
@@ -109,7 +109,7 @@ export const trendingRouter = router({
             return fetchQuery(lim, wOf);
           },
           ['trending-list'],
-          { tags: ['trending'], revalidate: 3600 }
+          { tags: ['trending'], revalidate: 3600 },
         );
         return (await getCached(limit, input?.weekOf)) as Awaited<ReturnType<typeof fetchQuery>>;
       }
@@ -129,11 +129,10 @@ export const trendingRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchWeeks,
-        ['trending-weeks'],
-        { tags: ['trending'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchWeeks, ['trending-weeks'], {
+        tags: ['trending'],
+        revalidate: 3600,
+      });
       return (await getCached()) as Awaited<ReturnType<typeof fetchWeeks>>;
     }
     return fetchWeeks();

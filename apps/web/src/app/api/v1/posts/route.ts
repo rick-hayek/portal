@@ -1,6 +1,6 @@
+import { TRPCError } from '@trpc/server';
 import { NextResponse } from 'next/server';
 import { authenticateRequest, getPublicCaller } from '@/lib/api-auth';
-import { TRPCError } from '@trpc/server';
 
 export async function GET(req: Request) {
   try {
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     if (!title || !slug || !content) {
       return NextResponse.json(
         { error: 'Missing required fields: title, slug, content' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 

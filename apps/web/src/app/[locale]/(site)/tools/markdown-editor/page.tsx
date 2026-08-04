@@ -1,6 +1,5 @@
 'use client';
 
-import { marked } from 'marked';
 import {
   Check,
   Code2,
@@ -12,8 +11,10 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react';
+import { marked } from 'marked';
 import { useTranslations } from 'next-intl';
-import React, { useMemo, useRef, useState } from 'react';
+import type React from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 import { ToolDropdown, ToolHeader } from '@/components/tools/ToolHeader';
 import { sanitizeMdxContent } from '@/lib/mdx-sanitizer';
@@ -95,22 +96,26 @@ const parseGfmAlertsInHtml = (html: string) => {
         NOTE: {
           label: 'Note',
           icon: 'ℹ️',
-          classes: 'border-blue-500 bg-blue-50/50 text-blue-900 dark:bg-blue-950/20 dark:text-blue-200',
+          classes:
+            'border-blue-500 bg-blue-50/50 text-blue-900 dark:bg-blue-950/20 dark:text-blue-200',
         },
         TIP: {
           label: 'Tip',
           icon: '💡',
-          classes: 'border-green-500 bg-green-50/50 text-green-900 dark:bg-green-950/20 dark:text-green-200',
+          classes:
+            'border-green-500 bg-green-50/50 text-green-900 dark:bg-green-950/20 dark:text-green-200',
         },
         IMPORTANT: {
           label: 'Important',
           icon: '📢',
-          classes: 'border-purple-500 bg-purple-50/50 text-purple-900 dark:bg-purple-950/20 dark:text-purple-200',
+          classes:
+            'border-purple-500 bg-purple-50/50 text-purple-900 dark:bg-purple-950/20 dark:text-purple-200',
         },
         WARNING: {
           label: 'Warning',
           icon: '⚠️',
-          classes: 'border-yellow-500 bg-yellow-50/50 text-yellow-900 dark:bg-yellow-950/20 dark:text-yellow-200',
+          classes:
+            'border-yellow-500 bg-yellow-50/50 text-yellow-900 dark:bg-yellow-950/20 dark:text-yellow-200',
         },
         CAUTION: {
           label: 'Caution',

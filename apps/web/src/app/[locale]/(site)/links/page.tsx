@@ -28,15 +28,15 @@ export default function LinksPage() {
 
   const { data: links, loading: isLoading } = useLocalSWR(
     'portal:links:list',
-    React.useCallback(() => trpcUtils.link.list.fetch(), [trpcUtils])
+    React.useCallback(() => trpcUtils.link.list.fetch(), [trpcUtils]),
   );
   const { data: selfLink } = useLocalSWR(
     'portal:links:self',
-    React.useCallback(() => trpcUtils.link.getSelf.fetch(), [trpcUtils])
+    React.useCallback(() => trpcUtils.link.getSelf.fetch(), [trpcUtils]),
   );
   const { data: aboutData } = useLocalSWR(
     'portal:about:info',
-    React.useCallback(() => trpcUtils.about.getAbout.fetch(), [trpcUtils])
+    React.useCallback(() => trpcUtils.about.getAbout.fetch(), [trpcUtils]),
   );
   const [copiedType, setCopiedType] = React.useState<string | null>(null);
 
@@ -77,8 +77,6 @@ export default function LinksPage() {
     null,
     2,
   );
-
-
 
   // Group links by category
   const groupedLinks =
@@ -229,7 +227,9 @@ export default function LinksPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-2xl bg-[var(--portal-color-bg)] p-5 border border-compat space-y-2">
               <h3 className="font-semibold text-sm text-[var(--portal-color-text)] flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--portal-color-primary-soft)] text-xs font-bold text-[var(--portal-color-primary)]">1</span>
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--portal-color-primary-soft)] text-xs font-bold text-[var(--portal-color-primary)]">
+                  1
+                </span>
                 {t('step1Title')}
               </h3>
               <p className="text-xs sm:text-sm text-[var(--portal-color-text-secondary)] leading-relaxed">
@@ -239,7 +239,9 @@ export default function LinksPage() {
 
             <div className="rounded-2xl bg-[var(--portal-color-bg)] p-5 border border-compat space-y-2">
               <h3 className="font-semibold text-sm text-[var(--portal-color-text)] flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--portal-color-primary-soft)] text-xs font-bold text-[var(--portal-color-primary)]">2</span>
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--portal-color-primary-soft)] text-xs font-bold text-[var(--portal-color-primary)]">
+                  2
+                </span>
                 {t('step2Title')}
               </h3>
               <p className="text-xs sm:text-sm text-[var(--portal-color-text-secondary)] leading-relaxed">
@@ -260,7 +262,12 @@ export default function LinksPage() {
 
             <button
               type="button"
-              onClick={() => handleCopy(`站点名称：\n站点链接：\n站点描述：\n头像链接：\nRSS订阅：\n网页截图：`, 'template')}
+              onClick={() =>
+                handleCopy(
+                  `站点名称：\n站点链接：\n站点描述：\n头像链接：\nRSS订阅：\n网页截图：`,
+                  'template',
+                )
+              }
               className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface-alt)] hover:bg-[var(--portal-color-border-soft)] px-5 py-2.5 text-xs sm:text-sm font-semibold text-[var(--portal-color-text)] border border-compat transition-all cursor-pointer"
             >
               {copiedType === 'template' ? (
@@ -295,8 +302,12 @@ export default function LinksPage() {
             { label: t('selfFields.name'), value: siteName, key: 'name' },
             { label: t('selfFields.desc'), value: siteDesc, key: 'desc' },
             { label: t('selfFields.url'), value: siteUrl, key: 'url' },
-            ...(siteAvatar ? [{ label: t('selfFields.avatar'), value: siteAvatar, key: 'avatar' }] : []),
-            ...(siteScreenshot ? [{ label: t('selfFields.screenshot'), value: siteScreenshot, key: 'screenshot' }] : []),
+            ...(siteAvatar
+              ? [{ label: t('selfFields.avatar'), value: siteAvatar, key: 'avatar' }]
+              : []),
+            ...(siteScreenshot
+              ? [{ label: t('selfFields.screenshot'), value: siteScreenshot, key: 'screenshot' }]
+              : []),
             ...(siteRss ? [{ label: t('selfFields.rss'), value: siteRss, key: 'rss' }] : []),
           ].map((item) => (
             <div
@@ -361,7 +372,6 @@ export default function LinksPage() {
                 </>
               )}
             </button>
-
           </div>
         </div>
       </section>

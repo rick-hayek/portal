@@ -1,9 +1,8 @@
 'use client';
 
-import { Dropdown } from '@/components/ui/Dropdown';
-
 import { useTranslations } from 'next-intl';
 import { use, useCallback, useEffect, useState, useTransition } from 'react';
+import { Dropdown } from '@/components/ui/Dropdown';
 import { Link, useRouter } from '@/i18n/routing';
 
 interface PageProps {
@@ -26,6 +25,7 @@ export default function AdminEditBookPage({ params }: PageProps) {
   const [translator, setTranslator] = useState('');
   const [isbn, setIsbn] = useState('');
   const [publishYear, setPublishYear] = useState('');
+  const [ebookUrl, setEbookUrl] = useState('');
   const [originalBookId, setOriginalBookId] = useState('');
   const [allBooks, setAllBooks] = useState<{ id: string; title: string; author: string }[]>([]);
   const [description, setDescription] = useState('');
@@ -56,7 +56,7 @@ export default function AdminEditBookPage({ params }: PageProps) {
     try {
       const res = await fetch(
         '/api/trpc/admin.bookGet?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: { id } } })),
+          encodeURIComponent(JSON.stringify({ '0': { json: { id } } })),
       );
       const data = await res.json();
       const book = data[0]?.result?.data?.json;
@@ -69,6 +69,7 @@ export default function AdminEditBookPage({ params }: PageProps) {
         setTranslator(book.translator ?? '');
         setIsbn(book.isbn ?? '');
         setPublishYear(book.publishYear ?? '');
+        setEbookUrl(book.ebookUrl ?? '');
         setOriginalBookId(book.originalBookId ?? '');
         setDescription(book.description ?? '');
         setReview(book.review ?? '');
@@ -144,6 +145,7 @@ export default function AdminEditBookPage({ params }: PageProps) {
               translator: translator.trim() || null,
               isbn: isbn.trim() || null,
               publishYear: publishYear.trim() || null,
+              ebookUrl: ebookUrl.trim() || null,
               originalBookId: originalBookId || null,
               description: description.trim() || null,
               review: review.trim() || null,
@@ -260,20 +262,22 @@ export default function AdminEditBookPage({ params }: PageProps) {
               <button
                 type="button"
                 onClick={() => setCoverSource('url')}
-                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${coverSource === 'url'
+                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
+                  coverSource === 'url'
                     ? 'bg-[var(--portal-color-primary)] text-white'
                     : 'bg-[var(--portal-color-surface)] border border-compat text-[var(--portal-color-text-secondary)]'
-                  }`}
+                }`}
               >
                 URL Link
               </button>
               <button
                 type="button"
                 onClick={() => setCoverSource('upload')}
-                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${coverSource === 'upload'
+                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
+                  coverSource === 'upload'
                     ? 'bg-[var(--portal-color-primary)] text-white'
                     : 'bg-[var(--portal-color-surface)] border border-compat text-[var(--portal-color-text-secondary)]'
-                  }`}
+                }`}
               >
                 Upload File
               </button>
@@ -364,7 +368,19 @@ export default function AdminEditBookPage({ params }: PageProps) {
               className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
             />
           </div>
-          <div className="sm:col-span-2">
+          <div>
+            <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+              {t('fields.ebookUrl')} ({t('optional')})
+            </label>
+            <input
+              type="url"
+              value={ebookUrl}
+              onChange={(e) => setEbookUrl(e.target.value)}
+              placeholder="https://example.com/book.pdf"
+              className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+            />
+          </div>
+          <div>
             <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
               {t('fields.originalBook')} ({t('optional')})
             </label>

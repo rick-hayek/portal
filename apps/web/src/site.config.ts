@@ -1,4 +1,4 @@
-import { defineConfig, defaultAboutConfig } from '@portal/config';
+import { defaultAboutConfig, defineConfig } from '@portal/config';
 
 const siteConfig = defineConfig({
   site: {

@@ -1,6 +1,6 @@
+import { appRouter, createCallerFactory, createContext } from '@portal/api';
 import { prisma } from '@portal/db';
-import { appRouter, createContext, createCallerFactory } from '@portal/api';
-import { unstable_cache, revalidateTag, revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 
 const createCaller = createCallerFactory(appRouter);
 
@@ -19,8 +19,9 @@ export interface ApiAuthResult {
 }
 
 export async function authenticateRequest(req: Request): Promise<ApiAuthResult | null> {
-  const apiKey = req.headers.get('x-api-key') || req.headers.get('authorization')?.replace('Bearer ', '');
-  
+  const apiKey =
+    req.headers.get('x-api-key') || req.headers.get('authorization')?.replace('Bearer ', '');
+
   if (!apiKey || !process.env.ADMIN_API_KEY || apiKey !== process.env.ADMIN_API_KEY) {
     return null;
   }

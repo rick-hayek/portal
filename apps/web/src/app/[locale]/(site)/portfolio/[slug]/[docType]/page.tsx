@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { SafeMDXRemote } from '@/components/blog/SafeMDXRemote';
-import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
+import { SafeMDXRemote } from '@/components/blog/SafeMDXRemote';
+import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
-import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 
 export const revalidate = 3600; // ISR validation every hour
 

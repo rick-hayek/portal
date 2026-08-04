@@ -18,11 +18,10 @@ export const referenceRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchList,
-        ['reference-list'],
-        { tags: ['references'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchList, ['reference-list'], {
+        tags: ['references'],
+        revalidate: 3600,
+      });
       return getCached();
     }
     return fetchList();

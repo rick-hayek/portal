@@ -1,7 +1,7 @@
 'use client';
 
-import { useTransition } from 'react';
 import { useLocale } from 'next-intl';
+import { useTransition } from 'react';
 import { usePathname, useRouter } from '@/i18n/routing';
 
 export function LanguageSwitcher() {
@@ -31,7 +31,9 @@ export function LanguageSwitcher() {
       {/* Mobile view */}
       <span className="font-mono text-xs font-bold uppercase md:hidden">{locale}</span>
       {/* Desktop view */}
-      <span className="hidden md:inline text-xs font-bold">{locale === 'zh' ? '中文简体' : 'English'}</span>
+      <span className="hidden md:inline text-xs font-bold">
+        {locale === 'zh' ? '中文简体' : 'English'}
+      </span>
     </button>
   );
 }

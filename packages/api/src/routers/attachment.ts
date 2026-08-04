@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { adminProcedure, publicProcedure, router } from '../trpc';
-import { uploadToR2, deleteFromR2 } from '../utils/r2';
+import { deleteFromR2, uploadToR2 } from '../utils/r2';
 
 export const attachmentRouter = router({
   /** List all attachments (metadata only) */

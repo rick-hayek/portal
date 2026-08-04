@@ -64,7 +64,11 @@ export default function AboutPage() {
   let emailDisplayMode: 'icon' | 'text' | 'both' = 'both';
 
   if (typeof emailObj === 'object' && emailObj !== null && 'address' in emailObj) {
-    const e = emailObj as { address: string; icon?: string; displayMode?: 'icon' | 'text' | 'both' };
+    const e = emailObj as {
+      address: string;
+      icon?: string;
+      displayMode?: 'icon' | 'text' | 'both';
+    };
     emailAddress = e.address;
     emailIcon = e.icon;
     emailDisplayMode = e.displayMode || 'both';
@@ -177,22 +181,26 @@ export default function AboutPage() {
               {t('experience')}
             </h3>
             <div className="space-y-0">
-              {experiences.map((job: { role: string; company: string; period: string }, i: number) => (
-                <div
-                  key={i}
-                  className="flex items-baseline justify-between border-b border-[var(--portal-color-border-soft)] py-4 last:border-0 last:pb-0 first:pt-0"
-                >
-                  <div>
-                    <div className="font-semibold text-[var(--portal-color-text)]">{job.role}</div>
-                    <div className="text-sm text-[var(--portal-color-text-secondary)]">
-                      {job.company}
+              {experiences.map(
+                (job: { role: string; company: string; period: string }, i: number) => (
+                  <div
+                    key={i}
+                    className="flex items-baseline justify-between border-b border-[var(--portal-color-border-soft)] py-4 last:border-0 last:pb-0 first:pt-0"
+                  >
+                    <div>
+                      <div className="font-semibold text-[var(--portal-color-text)]">
+                        {job.role}
+                      </div>
+                      <div className="text-sm text-[var(--portal-color-text-secondary)]">
+                        {job.company}
+                      </div>
+                    </div>
+                    <div className="font-mono text-xs text-[var(--portal-color-text-tertiary)]">
+                      {job.period}
                     </div>
                   </div>
-                  <div className="font-mono text-xs text-[var(--portal-color-text-tertiary)]">
-                    {job.period}
-                  </div>
-                </div>
-              ))}
+                ),
+              )}
             </div>
           </div>
         </div>

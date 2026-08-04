@@ -1,8 +1,8 @@
 import { marked } from 'marked';
 import Image from 'next/image';
-import { getTRPCServer } from '@/lib/trpc-server';
 import { notFound } from 'next/navigation';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
+import { getTRPCServer } from '@/lib/trpc-server';
 
 interface Project {
   id: string;
@@ -34,7 +34,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
   try {
     const trpc = await getTRPCServer();
-    project = await trpc.portfolio.bySlug({ slug }) as Project | null;
+    project = (await trpc.portfolio.bySlug({ slug })) as Project | null;
   } catch (err) {
     console.error('Failed to load project details:', err);
   }
@@ -47,7 +47,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: project.title,
-    description: locale === 'en' && project.descriptionEn ? project.descriptionEn : project.description,
+    description:
+      locale === 'en' && project.descriptionEn ? project.descriptionEn : project.description,
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'All',
     screenshot: project.coverImage || undefined,
@@ -477,23 +478,23 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         {(locale === 'en'
           ? project.privacyPolicyEn || project.privacyPolicy
           : project.privacyPolicy) && (
-            <a
-              href={`/portfolio/${project.slug}/Privacy_Policy`}
-              className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
-            >
-              Privacy Policy
-            </a>
-          )}
+          <a
+            href={`/portfolio/${project.slug}/Privacy_Policy`}
+            className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
+          >
+            Privacy Policy
+          </a>
+        )}
         {(locale === 'en'
           ? project.termsOfServiceEn || project.termsOfService
           : project.termsOfService) && (
-            <a
-              href={`/portfolio/${project.slug}/Terms_of_Service`}
-              className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
-            >
-              Terms of Service
-            </a>
-          )}
+          <a
+            href={`/portfolio/${project.slug}/Terms_of_Service`}
+            className="rounded-lg border border-compat px-5 py-2.5 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface)]"
+          >
+            Terms of Service
+          </a>
+        )}
       </div>
       <MermaidRenderer />
     </div>

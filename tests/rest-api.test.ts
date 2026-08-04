@@ -43,7 +43,10 @@ describe('REST API — Categories Endpoint Exports', () => {
   });
 
   it('categories/[id]/route.ts exports PUT and DELETE', () => {
-    const content = fs.readFileSync(path.join(WEB_SRC, 'app/api/v1/categories/[id]/route.ts'), 'utf-8');
+    const content = fs.readFileSync(
+      path.join(WEB_SRC, 'app/api/v1/categories/[id]/route.ts'),
+      'utf-8',
+    );
     expect(content).toContain('export async function PUT');
     expect(content).toContain('export async function DELETE');
   });

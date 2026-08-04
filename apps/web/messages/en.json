@@ -257,6 +257,9 @@
       "translator": "Translator",
       "isbn": "ISBN",
       "publishYear": "Publish Year",
+      "ebookUrl": "E-Book URL",
+      "onlineBook": "Online E-Book",
+      "readOnline": "Read Online",
       "originalBook": "Original Work",
       "description": "Description",
       "review": "Book Review / Thoughts"

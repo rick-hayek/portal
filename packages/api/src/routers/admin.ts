@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
 import { ensurePostsIndex, indexPost, meili, POSTS_INDEX, removePostFromIndex } from '../search';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
 
@@ -386,6 +386,7 @@ export const adminRouter = router({
         translator: z.string().nullable().optional().or(z.literal('')),
         isbn: z.string().nullable().optional().or(z.literal('')),
         publishYear: z.string().nullable().optional().or(z.literal('')),
+        ebookUrl: z.string().url().nullable().optional().or(z.literal('')),
         originalBookId: z.string().nullable().optional().or(z.literal('')),
         description: z.string().nullable().optional().or(z.literal('')),
         review: z.string().nullable().optional().or(z.literal('')),
@@ -403,6 +404,7 @@ export const adminRouter = router({
           translator: input.translator || null,
           isbn: input.isbn || null,
           publishYear: input.publishYear || null,
+          ebookUrl: input.ebookUrl || null,
           originalBookId: input.originalBookId || null,
           description: input.description || null,
           review: input.review || null,
@@ -432,6 +434,7 @@ export const adminRouter = router({
         translator: z.string().nullable().optional().or(z.literal('')),
         isbn: z.string().nullable().optional().or(z.literal('')),
         publishYear: z.string().nullable().optional().or(z.literal('')),
+        ebookUrl: z.string().url().nullable().optional().or(z.literal('')),
         originalBookId: z.string().nullable().optional().or(z.literal('')),
         description: z.string().nullable().optional().or(z.literal('')),
         review: z.string().nullable().optional().or(z.literal('')),
@@ -450,6 +453,7 @@ export const adminRouter = router({
           translator: data.translator || null,
           isbn: data.isbn || null,
           publishYear: data.publishYear || null,
+          ebookUrl: data.ebookUrl !== undefined ? data.ebookUrl || null : undefined,
           originalBookId: data.originalBookId || null,
           description: data.description || null,
           review: data.review || null,
@@ -794,24 +798,14 @@ export const adminRouter = router({
         '"ai-agent"',
         '"agentic ai"',
         '"agentic-ai"',
-        '"agent harness"'
+        '"agent harness"',
       ].join(' OR ');
 
-      const searchTerms3 = [
-        '"openai"',
-        '"anthropic"',
-        '"gemini"',
-        '"grok"',
-        '"llama"'
-      ].join(' OR ');
+      const searchTerms3 = ['"openai"', '"anthropic"', '"gemini"', '"grok"', '"llama"'].join(
+        ' OR ',
+      );
 
-      const searchTerms4 = [
-        '"claude"',
-        '"qwen"',
-        '"deepseek"',
-        '"agentic"',
-        '"glm"'
-      ].join(' OR ');
+      const searchTerms4 = ['"claude"', '"qwen"', '"deepseek"', '"agentic"', '"glm"'].join(' OR ');
 
       const headers: Record<string, string> = {
         Accept: 'application/vnd.github+json',
@@ -866,7 +860,9 @@ export const adminRouter = router({
         .sort((a, b) => b.stargazers_count - a.stargazers_count)
         .slice(0, 100);
 
-      console.log(`[GitHub API] Successfully retrieved and merged ${finalItems.length} candidate repositories.`);
+      console.log(
+        `[GitHub API] Successfully retrieved and merged ${finalItems.length} candidate repositories.`,
+      );
 
       let upsertCount = 0;
       for (const repo of finalItems) {
@@ -887,7 +883,10 @@ export const adminRouter = router({
         } else {
           // Fallback: estimate growth based on total stars divided by age in days times 7
           const createdDate = new Date(repo.created_at);
-          const daysOld = Math.max(1, Math.round((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)));
+          const daysOld = Math.max(
+            1,
+            Math.round((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)),
+          );
           const weekDays = daysOld > 7 ? 7 : daysOld;
           growth = Math.round((repo.stargazers_count / daysOld) * weekDays);
         }
@@ -1031,4 +1030,3 @@ export const adminRouter = router({
     return { success: false, message: 'Revalidation function not available' };
   }),
 });
-

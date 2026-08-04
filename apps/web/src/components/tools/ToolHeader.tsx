@@ -1,7 +1,8 @@
 'use client';
 
 import { Check, ChevronDown } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface ToolDropdownOption<T extends string> {
   id: T;
@@ -107,7 +108,9 @@ export function ToolDropdown<T extends string>({
                     {option.icon}
                     <span>{option.label}</span>
                   </div>
-                  {isSelected && <Check className="h-3.5 w-3.5 text-[var(--portal-color-primary)]" />}
+                  {isSelected && (
+                    <Check className="h-3.5 w-3.5 text-[var(--portal-color-primary)]" />
+                  )}
                 </button>
               );
             })}
@@ -154,9 +157,7 @@ export function ToolHeader({
       </div>
 
       {actions && (
-        <div className="absolute right-0 top-4 sm:top-8 z-20 flex items-center">
-          {actions}
-        </div>
+        <div className="absolute right-0 top-4 sm:top-8 z-20 flex items-center">{actions}</div>
       )}
     </header>
   );

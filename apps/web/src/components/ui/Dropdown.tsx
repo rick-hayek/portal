@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Check } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface DropdownOption<T extends string | number = string> {
   value: T;
@@ -94,11 +95,11 @@ export function Dropdown<T extends string | number = string>({
         >
           <span className="flex items-center gap-2 truncate">
             {selectedOption?.icon && (
-              <span className="shrink-0 flex items-center justify-center">{selectedOption.icon}</span>
+              <span className="shrink-0 flex items-center justify-center">
+                {selectedOption.icon}
+              </span>
             )}
-            <span className="truncate">
-              {selectedOption ? selectedOption.label : placeholder}
-            </span>
+            <span className="truncate">{selectedOption ? selectedOption.label : placeholder}</span>
           </span>
           <ChevronDown
             className={`h-4 w-4 text-[var(--portal-color-text-tertiary,#9ca3af)] shrink-0 transition-transform duration-200 ${
@@ -128,8 +129,8 @@ export function Dropdown<T extends string | number = string>({
                     isSelected
                       ? 'bg-[var(--portal-color-surface-alt,#f3f4f6)] font-semibold text-[var(--portal-color-primary,#3b82f6)]'
                       : option.disabled
-                      ? 'opacity-40 cursor-not-allowed text-[var(--portal-color-text-tertiary)]'
-                      : 'text-[var(--portal-color-text,#111827)] hover:bg-[var(--portal-color-surface-alt,#f3f4f6)]'
+                        ? 'opacity-40 cursor-not-allowed text-[var(--portal-color-text-tertiary)]'
+                        : 'text-[var(--portal-color-text,#111827)] hover:bg-[var(--portal-color-surface-alt,#f3f4f6)]'
                   }`}
                   role="option"
                   aria-selected={isSelected}
@@ -141,7 +142,9 @@ export function Dropdown<T extends string | number = string>({
                       <span className="w-3.5 shrink-0" />
                     )}
                     {option.icon && (
-                      <span className="shrink-0 flex items-center justify-center">{option.icon}</span>
+                      <span className="shrink-0 flex items-center justify-center">
+                        {option.icon}
+                      </span>
                     )}
                     <span className="truncate">{option.label}</span>
                   </span>

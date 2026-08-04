@@ -48,12 +48,17 @@ describe('Blog Module — Pages', () => {
   });
 
   it('blog/[slug]/page.tsx exists', () => {
-    expect(fs.existsSync(path.join(WEB_SRC, 'app/[locale]/(site)/blog/[slug]/page.tsx'))).toBe(true);
+    expect(fs.existsSync(path.join(WEB_SRC, 'app/[locale]/(site)/blog/[slug]/page.tsx'))).toBe(
+      true,
+    );
   });
 });
 
 describe('Blog Module — List page', () => {
-  const pageContent = fs.readFileSync(path.join(WEB_SRC, 'app/[locale]/(site)/blog/page.tsx'), 'utf-8');
+  const pageContent = fs.readFileSync(
+    path.join(WEB_SRC, 'app/[locale]/(site)/blog/page.tsx'),
+    'utf-8',
+  );
   const listContent = fs.readFileSync(path.join(WEB_SRC, 'components/blog/BlogList.tsx'), 'utf-8');
 
   it('Renders BlogList client component', () => {
@@ -82,7 +87,10 @@ describe('Blog Module — List page', () => {
 });
 
 describe('Blog Module — Detail page', () => {
-  const content = fs.readFileSync(path.join(WEB_SRC, 'app/[locale]/(site)/blog/[slug]/page.tsx'), 'utf-8');
+  const content = fs.readFileSync(
+    path.join(WEB_SRC, 'app/[locale]/(site)/blog/[slug]/page.tsx'),
+    'utf-8',
+  );
 
   it('Uses tRPC post.bySlug', () => {
     expect(content).toContain('post.bySlug');

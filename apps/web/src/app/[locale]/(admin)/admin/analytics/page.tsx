@@ -1,7 +1,7 @@
 'use client';
 
-import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { useEffect, useState } from 'react';
+import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
 
 const analyticsDaysOptions: DropdownOption<number>[] = [
   { value: 7, label: 'Last 7 days' },
@@ -102,8 +102,14 @@ export default function AdminAnalyticsPage() {
             No data in range
           </p>
         ) : (
-          <div className="w-full overflow-x-auto pb-2 scrollbar-none" style={{ WebkitOverflowScrolling: 'touch' }}>
-            <div className="flex items-end gap-0.5 md:gap-1 min-w-[400px] md:min-w-0" style={{ height: 160 }}>
+          <div
+            className="w-full overflow-x-auto pb-2 scrollbar-none"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            <div
+              className="flex items-end gap-0.5 md:gap-1 min-w-[400px] md:min-w-0"
+              style={{ height: 160 }}
+            >
               {data.viewsByDay.map((d) => (
                 <div key={d.date} className="group relative flex-1" style={{ height: '100%' }}>
                   <div

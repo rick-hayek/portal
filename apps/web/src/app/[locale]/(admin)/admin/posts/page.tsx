@@ -84,7 +84,7 @@ export default function PostsPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex items-center gap-3">
         <input
           type="text"
           placeholder="Search posts…"
@@ -93,9 +93,9 @@ export default function PostsPage() {
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+          className="flex-1 min-w-0 sm:max-w-xs rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
         />
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             type="button"
             onClick={(e) => {

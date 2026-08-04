@@ -74,8 +74,13 @@ function CommentItem({
             {new Date(comment.createdAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US')}
           </time>
         </div>
-        <p className="text-sm leading-relaxed text-[var(--portal-color-text)] whitespace-pre-wrap" style={{ whiteSpace: 'pre-wrap' }}>{comment.content}</p>
-        
+        <p
+          className="text-sm leading-relaxed text-[var(--portal-color-text)] whitespace-pre-wrap"
+          style={{ whiteSpace: 'pre-wrap' }}
+        >
+          {comment.content}
+        </p>
+
         {/* Reply button */}
         {session && (
           <div className="mt-2 flex justify-end">
@@ -99,9 +104,7 @@ function CommentItem({
           ) : (
             <form onSubmit={handleReplySubmit} className="space-y-3">
               <div className="flex items-center justify-between text-xs text-[var(--portal-color-text-secondary)]">
-                <span className="font-medium">
-                  {t('replyingTo', { name: comment.authorName })}
-                </span>
+                <span className="font-medium">{t('replyingTo', { name: comment.authorName })}</span>
                 <button
                   type="button"
                   onClick={() => setShowReplyForm(false)}
@@ -206,9 +209,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
           ))}
         </div>
       ) : (
-        <p className="mb-8 text-sm text-[var(--portal-color-text-secondary)]">
-          {t('noComments')}
-        </p>
+        <p className="mb-8 text-sm text-[var(--portal-color-text-secondary)]">{t('noComments')}</p>
       )}
 
       {/* Comment Form or Sign In Prompt */}

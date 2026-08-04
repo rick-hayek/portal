@@ -13,11 +13,10 @@ export const categoryRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchList,
-        ['category-list'],
-        { tags: ['categories'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchList, ['category-list'], {
+        tags: ['categories'],
+        revalidate: 3600,
+      });
       return (await getCached()) as Awaited<ReturnType<typeof fetchList>>;
     }
     return fetchList();

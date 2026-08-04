@@ -1,7 +1,7 @@
 import { appRouter, createContext } from '@portal/api';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { cache } from 'react';
 import { auth } from '@/auth';
-import { unstable_cache, revalidateTag, revalidatePath } from 'next/cache';
 
 /**
  * Direct server-side tRPC caller.

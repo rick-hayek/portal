@@ -31,7 +31,11 @@ export default function GuestbookPage() {
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const { data: cachedData, loading, mutate } = useLocalSWR(
+  const {
+    data: cachedData,
+    loading,
+    mutate,
+  } = useLocalSWR(
     'guestbook-entries',
     useCallback(async () => {
       const res = await fetch('/api/trpc/guestbook.list?input={}');
@@ -40,7 +44,7 @@ export default function GuestbookPage() {
         entries: data.result.data.json.entries,
         total: data.result.data.json.pagination.total,
       };
-    }, [])
+    }, []),
   );
 
   const entries = cachedData?.entries ?? [];

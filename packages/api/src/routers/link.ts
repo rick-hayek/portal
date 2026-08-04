@@ -11,11 +11,10 @@ export const linkRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchList,
-        ['link-list'],
-        { tags: ['links'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchList, ['link-list'], {
+        tags: ['links'],
+        revalidate: 3600,
+      });
       return (await getCached()) as Awaited<ReturnType<typeof fetchList>>;
     }
     return fetchList();

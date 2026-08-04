@@ -4,8 +4,8 @@ import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from '@/i18n/routing';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
+import { Link } from '@/i18n/routing';
 
 interface Book {
   id: string;
@@ -18,6 +18,7 @@ interface Book {
   translator: string | null;
   isbn: string | null;
   publishYear: string | null;
+  ebookUrl: string | null;
   originalBook: {
     id: string;
     slug: string;
@@ -62,7 +63,7 @@ export default function BookDetailPage() {
     try {
       const res = await fetch(
         '/api/trpc/book.get?batch=1&input=' +
-          encodeURIComponent(JSON.stringify({ '0': { json: { slug } } })),
+        encodeURIComponent(JSON.stringify({ '0': { json: { slug } } })),
       );
       const data = await res.json();
       const bookData = data[0]?.result?.data?.json;
@@ -153,7 +154,6 @@ export default function BookDetailPage() {
 
   return (
     <div className="mx-auto max-w-[1000px] px-8 py-16">
-
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-12 items-start">
         {/* Left Side: Book Cover Art */}
         <div className="flex flex-col items-center md:items-start">
@@ -246,23 +246,21 @@ export default function BookDetailPage() {
               )}
             </div>
 
-            {/* Reactions Bar */}
+            {/* Reactions & Actions Bar */}
             <div className="mt-6 flex flex-col gap-2">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 {/* Like Button */}
                 <button
                   type="button"
                   disabled={status !== 'authenticated'}
                   onClick={() => handleReact('LIKE')}
-                  className={`flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${
-                    userReaction === 'LIKE'
-                      ? 'border-green-500 bg-green-500/10 text-green-500'
-                      : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:text-green-500 hover:border-green-500/50'
-                  } ${
-                    status !== 'authenticated'
+                  className={`flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${userReaction === 'LIKE'
+                    ? 'border-green-500 bg-green-500/10 text-green-500'
+                    : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:text-green-500 hover:border-green-500/50'
+                    } ${status !== 'authenticated'
                       ? 'cursor-not-allowed opacity-60'
                       : 'hover:-translate-y-0.5 active:translate-y-0'
-                  }`}
+                    }`}
                 >
                   <svg
                     className="h-4 w-4"
@@ -285,15 +283,13 @@ export default function BookDetailPage() {
                   type="button"
                   disabled={status !== 'authenticated'}
                   onClick={() => handleReact('DISLIKE')}
-                  className={`flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${
-                    userReaction === 'DISLIKE'
-                      ? 'border-red-500 bg-red-500/10 text-red-500'
-                      : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:text-red-500 hover:border-red-500/50'
-                  } ${
-                    status !== 'authenticated'
+                  className={`flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${userReaction === 'DISLIKE'
+                    ? 'border-red-500 bg-red-500/10 text-red-500'
+                    : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:text-red-500 hover:border-red-500/50'
+                    } ${status !== 'authenticated'
                       ? 'cursor-not-allowed opacity-60'
                       : 'hover:-translate-y-0.5 active:translate-y-0'
-                  }`}
+                    }`}
                 >
                   <svg
                     className="h-4 w-4"
@@ -310,6 +306,44 @@ export default function BookDetailPage() {
                   </svg>
                   <span>{dislikesCount}</span>
                 </button>
+
+                {/* E-Book Link Button */}
+                {book.ebookUrl && (
+                  <a
+                    href={book.ebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-full border border-[var(--portal-color-primary)]/30 bg-[var(--portal-color-primary)]/10 px-4 py-1.5 text-xs font-semibold text-[var(--portal-color-primary)] transition-all duration-300 hover:bg-[var(--portal-color-primary)] hover:text-white hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
+                  >
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                      />
+                    </svg>
+                    <span>{t('fields.readOnline')}</span>
+                    <svg
+                      className="h-3.5 w-3.5 opacity-70"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </a>
+                )}
               </div>
 
               {status !== 'authenticated' && (

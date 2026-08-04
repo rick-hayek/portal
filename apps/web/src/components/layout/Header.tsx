@@ -272,10 +272,11 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href as any}
-                  className={`transition-colors text-[0.82rem] tracking-tight whitespace-nowrap ${isActive
+                  className={`transition-colors text-[0.82rem] tracking-tight whitespace-nowrap ${
+                    isActive
                       ? 'font-semibold text-[var(--portal-color-primary)]'
                       : 'font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]'
-                    }`}
+                  }`}
                 >
                   {translatedLabel}
                 </Link>
@@ -352,10 +353,11 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                   <Link
                     key={item.href}
                     href={item.href as any}
-                    className={`rounded-md px-3 py-2 text-sm transition-colors ${isActive
+                    className={`rounded-md px-3 py-2 text-sm transition-colors ${
+                      isActive
                         ? 'bg-[var(--portal-color-background)] text-[var(--portal-color-primary)] font-semibold'
                         : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-primary)] font-[500]'
-                      }`}
+                    }`}
                     onClick={() => setMobileOpen(false)}
                   >
                     {translatedLabel}

@@ -1,19 +1,19 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { SafeMDXRemote } from '@/components/blog/SafeMDXRemote';
-import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import { MathRenderer } from '@/components/blog/MathRenderer';
 import { AdSense } from '@/components/blog/AdSense';
 import { CommentSection } from '@/components/blog/CommentSection';
 import { CustomBlockquote } from '@/components/blog/CustomBlockquote';
+import { MathRenderer } from '@/components/blog/MathRenderer';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
+import { SafeMDXRemote } from '@/components/blog/SafeMDXRemote';
 import { Link } from '@/i18n/routing';
-import { getTRPCServer } from '@/lib/trpc-server';
 import { getCategoryName } from '@/lib/category';
+import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
+import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
 
 export const revalidate = 3600; // revalidate at most every hour (ISR)
@@ -135,9 +135,7 @@ export default async function BlogPostPage({
               className="h-6 w-6 rounded-full object-cover"
             />
           )}
-          <span className="font-medium text-[var(--portal-color-text)]">
-            {post.author.name}
-          </span>
+          <span className="font-medium text-[var(--portal-color-text)]">{post.author.name}</span>
 
           {post.publishedAt && (
             <time dateTime={new Date(post.publishedAt).toISOString()}>

@@ -1,13 +1,12 @@
 import { prisma } from '@portal/db';
 import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link } from '@/i18n/routing';
-import { getTRPCServer } from '@/lib/trpc-server';
-import { getCategoryName } from '@/lib/category';
 import { Suspense } from 'react';
-import siteConfig from '@/site.config';
-
 import { ScrollDownButton } from '@/components/home/ScrollDownButton';
+import { Link } from '@/i18n/routing';
+import { getCategoryName } from '@/lib/category';
+import { getTRPCServer } from '@/lib/trpc-server';
+import siteConfig from '@/site.config';
 
 export const revalidate = 60; // revalidate at most every minute (ISR)
 
@@ -18,19 +17,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const aboutData = await trpcServer.about.getAbout();
 
   const authorObj = aboutData?.author as any;
-  const hasAuthorConfig = authorObj && typeof authorObj === 'object' && Object.keys(authorObj).length > 0;
+  const hasAuthorConfig =
+    authorObj && typeof authorObj === 'object' && Object.keys(authorObj).length > 0;
 
   const authorName = hasAuthorConfig ? authorObj.name : 'Rick';
   const authorRole = hasAuthorConfig
-    ? (locale === 'en' ? (authorObj.role_en || authorObj.role) : authorObj.role)
-    : (locale === 'en' ? 'Full-Stack Engineer' : '全栈开发者');
+    ? locale === 'en'
+      ? authorObj.role_en || authorObj.role
+      : authorObj.role
+    : locale === 'en'
+      ? 'Full-Stack Engineer'
+      : '全栈开发者';
 
   let authorStackArr: string[] | null = null;
   if (hasAuthorConfig) {
     if (authorObj.stack) {
       authorStackArr = Array.isArray(authorObj.stack)
         ? authorObj.stack
-        : String(authorObj.stack).split(',').map((s: string) => s.trim()).filter(Boolean);
+        : String(authorObj.stack)
+            .split(',')
+            .map((s: string) => s.trim())
+            .filter(Boolean);
     }
   } else {
     authorStackArr = ['.NETCore', 'TypeScript', 'Vue', 'Python', 'AI Agent'];
@@ -90,7 +97,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     : t('title2');
 
   const heroDesc = hasAuthorConfig
-    ? (locale === 'en' ? authorObj.description_en || authorObj.description : authorObj.description) || t('description')
+    ? (locale === 'en'
+        ? authorObj.description_en || authorObj.description
+        : authorObj.description) || t('description')
     : t('description');
 
   const personSchema = {
@@ -268,24 +277,17 @@ async function HomeDbSections({ locale }: { locale: string }) {
   const trpc = await getTRPCServer();
 
   // Parallelize all DB/tRPC calls to optimize performance
-  const [
-    postsData,
-    projects,
-    guestbookData,
-    postCount,
-    projectCount,
-    viewCount,
-    guestbookCount,
-  ] = await Promise.all([
-    trpc.post.list({ page: 1, limit: 3, status: 'published' }),
-    trpc.portfolio.list({ featured: true }),
-    trpc.guestbook.list({ page: 1, limit: 4 }),
-    prisma.post.count({ where: { status: 'published' } }),
-    prisma.project.count(),
-    // prisma.pageView.count(), // Temporarily disabled for performance
-    0,
-    prisma.guestbookEntry.count(),
-  ]);
+  const [postsData, projects, guestbookData, postCount, projectCount, viewCount, guestbookCount] =
+    await Promise.all([
+      trpc.post.list({ page: 1, limit: 3, status: 'published' }),
+      trpc.portfolio.list({ featured: true }),
+      trpc.guestbook.list({ page: 1, limit: 4 }),
+      prisma.post.count({ where: { status: 'published' } }),
+      prisma.project.count(),
+      // prisma.pageView.count(), // Temporarily disabled for performance
+      0,
+      prisma.guestbookEntry.count(),
+    ]);
 
   const posts = postsData.posts;
   const guestbookEntries = guestbookData.entries;
@@ -319,14 +321,14 @@ async function HomeDbSections({ locale }: { locale: string }) {
               posts.map((post) => {
                 const formattedDate = post.publishedAt
                   ? (() => {
-                    const date = new Date(post.publishedAt);
-                    const isCurrentYear = date.getFullYear() === new Date().getFullYear();
-                    return date.toLocaleDateString(locale, {
-                      year: isCurrentYear ? undefined : 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    });
-                  })()
+                      const date = new Date(post.publishedAt);
+                      const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+                      return date.toLocaleDateString(locale, {
+                        year: isCurrentYear ? undefined : 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      });
+                    })()
                   : '—';
 
                 return (

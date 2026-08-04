@@ -1,11 +1,10 @@
 'use client';
 
-import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
-
 import { marked } from 'marked';
 import { useEffect, useState } from 'react';
-import { useRouter } from '@/i18n/routing';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
+import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
+import { useRouter } from '@/i18n/routing';
 
 const parseGfmAlertsInHtml = (html: string) => {
   const blockquoteRegex = /<blockquote>([\s\S]*?)<\/blockquote>/gi;

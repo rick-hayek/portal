@@ -11,7 +11,10 @@ export const postRouter = router({
           limit: z.number().int().min(1).max(50).default(10),
           categorySlug: z.string().optional(),
           tagSlug: z.string().optional(),
-          month: z.string().regex(/^\d{4}-\d{2}$/).optional(),
+          month: z
+            .string()
+            .regex(/^\d{4}-\d{2}$/)
+            .optional(),
           status: z.enum(['draft', 'published']).default('published'),
         })
         .default({ page: 1, limit: 10, status: 'published' as const }),
@@ -20,7 +23,7 @@ export const postRouter = router({
       const { page, limit, categorySlug, tagSlug, month, status } = input;
       const skip = (page - 1) * limit;
 
-      let dateFilter: { gte?: Date; lt?: Date } | undefined = undefined;
+      let dateFilter: { gte?: Date; lt?: Date } | undefined;
       if (month) {
         const parts = month.split('-');
         if (parts.length === 2 && parts[0] && parts[1]) {
@@ -66,9 +69,11 @@ export const postRouter = router({
             return fetchQuery();
           },
           ['post-list'],
-          { tags: ['posts'], revalidate: 3600 }
+          { tags: ['posts'], revalidate: 3600 },
         );
-        result = (await getCached(page, limit, categorySlug, tagSlug, status, month)) as Awaited<ReturnType<typeof fetchQuery>>;
+        result = (await getCached(page, limit, categorySlug, tagSlug, status, month)) as Awaited<
+          ReturnType<typeof fetchQuery>
+        >;
       } else {
         result = await fetchQuery();
       }
@@ -93,7 +98,10 @@ export const postRouter = router({
         orderBy: { publishedAt: 'desc' },
       });
 
-      const countsMap = new Map<string, { year: number; month: number; key: string; count: number }>();
+      const countsMap = new Map<
+        string,
+        { year: number; month: number; key: string; count: number }
+      >();
 
       for (const post of posts) {
         if (!post.publishedAt) continue;
@@ -114,11 +122,10 @@ export const postRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchArchives,
-        ['post-archives'],
-        { tags: ['posts'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchArchives, ['post-archives'], {
+        tags: ['posts'],
+        revalidate: 3600,
+      });
       return (await getCached()) as Awaited<ReturnType<typeof fetchArchives>>;
     }
     return fetchArchives();
@@ -148,11 +155,10 @@ export const postRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchPost,
-        ['post-by-slug'],
-        { tags: ['posts'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchPost, ['post-by-slug'], {
+        tags: ['posts'],
+        revalidate: 3600,
+      });
       return (await getCached(input.slug)) as Awaited<ReturnType<typeof fetchPost>>;
     }
     return fetchPost(input.slug);
@@ -175,11 +181,10 @@ export const postRouter = router({
       };
 
       if (ctx.unstable_cache) {
-        const getCached = ctx.unstable_cache(
-          fetchRecent,
-          ['post-recent'],
-          { tags: ['posts'], revalidate: 3600 }
-        );
+        const getCached = ctx.unstable_cache(fetchRecent, ['post-recent'], {
+          tags: ['posts'],
+          revalidate: 3600,
+        });
         return (await getCached(input.count)) as Awaited<ReturnType<typeof fetchRecent>>;
       }
       return fetchRecent(input.count);

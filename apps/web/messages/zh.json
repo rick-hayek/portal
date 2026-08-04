@@ -257,6 +257,9 @@
       "translator": "译者",
       "isbn": "ISBN",
       "publishYear": "出版年份",
+      "ebookUrl": "电子书链接",
+      "onlineBook": "在线电子书",
+      "readOnline": "在线阅读",
       "originalBook": "原作",
       "description": "简介",
       "review": "书评 / 随感"

@@ -1,8 +1,8 @@
 'use client';
 
-import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { ChevronDown, ChevronUp, Link as LinkIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
+import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
 
 const linkCategoryOptions: DropdownOption[] = [
   { value: 'friend', label: 'Friend' },
@@ -234,7 +234,8 @@ export default function LinksAdminPage() {
               <span>🏠</span> My Site Link Info (本站友链信息配置)
             </h2>
             <p className="text-xs text-[var(--portal-color-text-secondary)] mt-0.5">
-              This information will be displayed at the bottom of the /links page for other bloggers to copy.
+              This information will be displayed at the bottom of the /links page for other bloggers
+              to copy.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -257,9 +258,14 @@ export default function LinksAdminPage() {
         </div>
 
         {isSelfExpanded && (
-          <form onSubmit={handleSaveSelf} className="grid gap-4 sm:grid-cols-2 pt-5 border-t border-[var(--portal-color-border)]/50 mt-4">
+          <form
+            onSubmit={handleSaveSelf}
+            className="grid gap-4 sm:grid-cols-2 pt-5 border-t border-[var(--portal-color-border)]/50 mt-4"
+          >
             <div className="space-y-1">
-              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">Site Name (Title)</label>
+              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
+                Site Name (Title)
+              </label>
               <input
                 required
                 value={selfData.name}
@@ -269,7 +275,9 @@ export default function LinksAdminPage() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">Site URL</label>
+              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
+                Site URL
+              </label>
               <input
                 required
                 type="url"
@@ -280,7 +288,9 @@ export default function LinksAdminPage() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">Avatar URL</label>
+              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
+                Avatar URL
+              </label>
               <input
                 type="url"
                 value={selfData.avatar}
@@ -290,7 +300,9 @@ export default function LinksAdminPage() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">Screenshot URL</label>
+              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
+                Screenshot URL
+              </label>
               <input
                 type="url"
                 value={selfData.screenshot}
@@ -300,7 +312,9 @@ export default function LinksAdminPage() {
               />
             </div>
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">RSS Feed URL</label>
+              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
+                RSS Feed URL
+              </label>
               <input
                 type="url"
                 value={selfData.rss}
@@ -310,7 +324,9 @@ export default function LinksAdminPage() {
               />
             </div>
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">Site Description</label>
+              <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
+                Site Description
+              </label>
               <input
                 value={selfData.description}
                 placeholder="A personal space dedicated to tech and life reflections..."
@@ -546,8 +562,13 @@ export default function LinksAdminPage() {
                         {link.category}
                       </span>
                       {link.status && link.status !== 'approved' && (
-                        <span className={`ml-2 inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${link.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
-                          }`}>
+                        <span
+                          className={`ml-2 inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
+                            link.status === 'pending'
+                              ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                              : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
+                          }`}
+                        >
                           {link.status}
                         </span>
                       )}

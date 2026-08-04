@@ -1,6 +1,6 @@
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { getTRPCServer } from '@/lib/trpc-server';
-import { getTranslations } from 'next-intl/server';
 
 interface Book {
   id: string;

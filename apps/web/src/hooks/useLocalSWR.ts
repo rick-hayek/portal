@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * A lightweight Stale-While-Revalidate (SWR) hook that caches data in localStorage
@@ -9,14 +9,11 @@ import { useState, useEffect, useCallback, useRef } from 'react';
  * @param cacheKey The unique key used to partition localStorage cache
  * @param fetcher The async function that retrieves the fresh data
  */
-export function useLocalSWR<T>(
-  cacheKey: string,
-  fetcher: () => Promise<T>
-) {
+export function useLocalSWR<T>(cacheKey: string, fetcher: () => Promise<T>) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  
+
   // Keep track of the active cacheKey to prevent race conditions from slower, out-of-order fetches
   const currentKeyRef = useRef(cacheKey);
   useEffect(() => {
@@ -32,7 +29,7 @@ export function useLocalSWR<T>(
   const revalidate = useCallback(async () => {
     try {
       const freshData = await fetcherRef.current();
-      
+
       // If the cacheKey has changed since this fetch started, discard the result
       if (cacheKey !== currentKeyRef.current) {
         return;

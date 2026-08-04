@@ -1,7 +1,7 @@
-import React from 'react';
-import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc';
-import { sanitizeMdxContent } from '@/lib/mdx-sanitizer';
+import { MDXRemote, type MDXRemoteProps } from 'next-mdx-remote/rsc';
+import type React from 'react';
 import { CodeBlock } from '@/components/blog/CodeBlock';
+import { sanitizeMdxContent } from '@/lib/mdx-sanitizer';
 
 interface SafeMDXRemoteProps extends MDXRemoteProps {
   knownComponents?: string[];

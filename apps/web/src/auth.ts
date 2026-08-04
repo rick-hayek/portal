@@ -71,21 +71,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user, account }) {
       // Automatically update account credentials (token, scope) in the database asynchronously after successful sign-in
       if (account && user?.id) {
-        await prisma.account.updateMany({
-          where: {
-            userId: user.id,
-            provider: account.provider,
-            providerAccountId: account.providerAccountId,
-          },
-          data: {
-            access_token: account.access_token,
-            refresh_token: account.refresh_token,
-            scope: account.scope,
-            expires_at: account.expires_at,
-          },
-        }).catch((err) => {
-          console.error('Failed to update OAuth credentials in database:', err);
-        });
+        await prisma.account
+          .updateMany({
+            where: {
+              userId: user.id,
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+            },
+            data: {
+              access_token: account.access_token,
+              refresh_token: account.refresh_token,
+              scope: account.scope,
+              expires_at: account.expires_at,
+            },
+          })
+          .catch((err) => {
+            console.error('Failed to update OAuth credentials in database:', err);
+          });
       }
     },
   },

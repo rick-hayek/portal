@@ -259,6 +259,7 @@ model Book {
   translator         String?
   isbn               String?
   publishYear        String?
+  ebookUrl           String?
   description        String?  @db.Text
   review             String?  @db.Text
   createdAt          DateTime @default(now())

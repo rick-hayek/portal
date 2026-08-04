@@ -65,11 +65,10 @@ export const aboutRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchData,
-        ['about-info'],
-        { tags: ['about'], revalidate: 3600 },
-      );
+      const getCached = ctx.unstable_cache(fetchData, ['about-info'], {
+        tags: ['about'],
+        revalidate: 3600,
+      });
       return (await getCached()) as Awaited<ReturnType<typeof fetchData>>;
     }
     return fetchData();

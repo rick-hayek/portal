@@ -1,7 +1,7 @@
 'use client';
 
+import { ChevronLeft, ChevronRight, ExternalLink, Pencil, RefreshCw, Trash2 } from 'lucide-react';
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { Pencil, Trash2, ExternalLink, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 
 interface TrendingRepo {
   id: string;
@@ -225,7 +225,10 @@ export default function AdminTrendingPage() {
             <tbody className="divide-y divide-[var(--portal-color-border)]">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-sm text-[var(--portal-color-text-tertiary)]">
+                  <td
+                    colSpan={5}
+                    className="p-8 text-center text-sm text-[var(--portal-color-text-tertiary)]"
+                  >
                     <div className="flex items-center justify-center gap-2">
                       <div className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--portal-color-primary)] border-t-transparent" />
                       Loading repositories...
@@ -234,8 +237,12 @@ export default function AdminTrendingPage() {
                 </tr>
               ) : repos.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-12 text-center text-[var(--portal-color-text-secondary)]">
-                    No trending repos found for this week. Click &quot;Fetch from GitHub&quot; above.
+                  <td
+                    colSpan={5}
+                    className="p-12 text-center text-[var(--portal-color-text-secondary)]"
+                  >
+                    No trending repos found for this week. Click &quot;Fetch from GitHub&quot;
+                    above.
                   </td>
                 </tr>
               ) : (
@@ -259,10 +266,16 @@ export default function AdminTrendingPage() {
                         )}
                       </td>
                       <td className="px-4 py-3 text-xs space-y-1 text-[var(--portal-color-text-secondary)]">
-                        <div>⭐ <span className="font-semibold text-[var(--portal-color-text)]">{repo.stars.toLocaleString()}</span></div>
+                        <div>
+                          ⭐{' '}
+                          <span className="font-semibold text-[var(--portal-color-text)]">
+                            {repo.stars.toLocaleString()}
+                          </span>
+                        </div>
                         {repo.starsGrowth > 0 && (
                           <div className="text-[10px] text-green-500 font-medium">
-                            +{repo.starsGrowth.toLocaleString()} <span className="hidden md:inline">this week</span>
+                            +{repo.starsGrowth.toLocaleString()}{' '}
+                            <span className="hidden md:inline">this week</span>
                           </div>
                         )}
                         <div className="hidden md:block">🍴 {repo.forks.toLocaleString()}</div>
@@ -273,25 +286,39 @@ export default function AdminTrendingPage() {
                             {repo.language}
                           </span>
                         ) : (
-                          <span className="text-xs text-[var(--portal-color-text-tertiary)]">-</span>
+                          <span className="text-xs text-[var(--portal-color-text-tertiary)]">
+                            -
+                          </span>
                         )}
                       </td>
                       <td className="px-4 py-3 space-y-2 hidden md:table-cell">
                         {repo.summaryZh ? (
                           <div className="text-xs">
-                            <span className="font-medium text-[var(--portal-color-primary)]">ZH: </span>
-                            <span className="text-[var(--portal-color-text)] line-clamp-3">{repo.summaryZh}</span>
+                            <span className="font-medium text-[var(--portal-color-primary)]">
+                              ZH:{' '}
+                            </span>
+                            <span className="text-[var(--portal-color-text)] line-clamp-3">
+                              {repo.summaryZh}
+                            </span>
                           </div>
                         ) : (
-                          <div className="text-xs text-[var(--portal-color-text-tertiary)] italic">No ZH summary</div>
+                          <div className="text-xs text-[var(--portal-color-text-tertiary)] italic">
+                            No ZH summary
+                          </div>
                         )}
                         {repo.summaryEn ? (
                           <div className="text-xs">
-                            <span className="font-medium text-[var(--portal-color-primary)]">EN: </span>
-                            <span className="text-[var(--portal-color-text)] line-clamp-3">{repo.summaryEn}</span>
+                            <span className="font-medium text-[var(--portal-color-primary)]">
+                              EN:{' '}
+                            </span>
+                            <span className="text-[var(--portal-color-text)] line-clamp-3">
+                              {repo.summaryEn}
+                            </span>
                           </div>
                         ) : (
-                          <div className="text-xs text-[var(--portal-color-text-tertiary)] italic">No EN summary</div>
+                          <div className="text-xs text-[var(--portal-color-text-tertiary)] italic">
+                            No EN summary
+                          </div>
                         )}
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -404,8 +431,7 @@ export default function AdminTrendingPage() {
                   <span className="font-semibold text-[var(--portal-color-text)]">
                     {Math.min(page * 20, total)}
                   </span>{' '}
-                  of{' '}
-                  <span className="font-semibold text-[var(--portal-color-text)]">{total}</span>{' '}
+                  of <span className="font-semibold text-[var(--portal-color-text)]">{total}</span>{' '}
                   entries
                 </p>
               </div>

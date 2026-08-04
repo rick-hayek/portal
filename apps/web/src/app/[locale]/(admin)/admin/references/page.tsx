@@ -39,7 +39,7 @@ export default function ReferencesAdminPage() {
     try {
       const res = await fetch(
         '/api/trpc/reference.list?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: null } })),
+          encodeURIComponent(JSON.stringify({ '0': { json: null } })),
       );
       const data = await res.json();
       setReferences(data[0]?.result?.data?.json ?? []);

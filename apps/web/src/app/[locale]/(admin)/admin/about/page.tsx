@@ -1,10 +1,10 @@
 'use client';
 
-import { trpc } from '@/lib/api/client';
 import { defaultAboutConfig } from '@portal/config';
-import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
-import { Plus, Trash2, User, Save, CheckCircle2, AlertCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Plus, Save, Trash2, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
+import { trpc } from '@/lib/api/client';
 
 interface ExperienceItem {
   role: string;
@@ -57,7 +57,9 @@ export default function AdminAboutPage() {
   const [experiences, setExperiences] = useState<ExperienceItem[]>([]);
   const [socialLinks, setSocialLinks] = useState<SocialLinkItem[]>([]);
 
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(
+    null,
+  );
 
   useEffect(() => {
     if (aboutData) {
@@ -77,9 +79,7 @@ export default function AdminAboutPage() {
         setAuthorRole(authorObj.role ?? '');
         setAuthorRoleEn(authorObj.role_en ?? '');
         setAuthorStack(
-          Array.isArray(authorObj.stack)
-            ? authorObj.stack.join(', ')
-            : authorObj.stack ?? ''
+          Array.isArray(authorObj.stack) ? authorObj.stack.join(', ') : (authorObj.stack ?? ''),
         );
         setAuthorStatus(authorObj.status ?? '');
         setAuthorTitle1(authorObj.title1 ?? '');
@@ -99,13 +99,19 @@ export default function AdminAboutPage() {
         setAuthorTitle2('随想随记');
         setAuthorTitle2En('Life & Work');
         setAuthorDesc('记录和分享技术心得、生活感悟，顺便推荐个书');
-        setAuthorDescEn('A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.');
+        setAuthorDescEn(
+          'A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.',
+        );
       }
 
       // Parse Email JSON object or fallback
       const rawEmail = aboutData.email;
       if (typeof rawEmail === 'object' && rawEmail !== null && 'address' in rawEmail) {
-        const eObj = rawEmail as { address: string; icon?: string; displayMode?: 'icon' | 'text' | 'both' };
+        const eObj = rawEmail as {
+          address: string;
+          icon?: string;
+          displayMode?: 'icon' | 'text' | 'both';
+        };
         setEmailAddress(eObj.address ?? '');
         setEmailIcon(eObj.icon ?? '');
         setEmailDisplayMode(eObj.displayMode ?? 'both');
@@ -172,10 +178,10 @@ export default function AdminAboutPage() {
         socialLinks: socialLinks.filter((link) => link.label.trim() && link.href.trim()),
         email: emailAddress.trim()
           ? {
-            address: emailAddress.trim(),
-            icon: emailIcon.trim() || undefined,
-            displayMode: emailDisplayMode,
-          }
+              address: emailAddress.trim(),
+              icon: emailIcon.trim() || undefined,
+              displayMode: emailDisplayMode,
+            }
           : null,
         author: {
           name: authorName.trim() || undefined,
@@ -192,7 +198,10 @@ export default function AdminAboutPage() {
         },
       });
 
-      setFeedback({ type: 'success', message: 'About page & author settings updated successfully!' });
+      setFeedback({
+        type: 'success',
+        message: 'About page & author settings updated successfully!',
+      });
       refetch();
     } catch (err: any) {
       setFeedback({ type: 'error', message: err?.message || 'Failed to save changes.' });
@@ -236,10 +245,11 @@ export default function AdminAboutPage() {
       {/* Feedback Banner */}
       {feedback && (
         <div
-          className={`p-4 rounded-xl border flex items-center gap-3 text-sm font-medium ${feedback.type === 'success'
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
-            : 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400'
-            }`}
+          className={`p-4 rounded-xl border flex items-center gap-3 text-sm font-medium ${
+            feedback.type === 'success'
+              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+              : 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400'
+          }`}
         >
           {feedback.type === 'success' ? (
             <CheckCircle2 className="h-5 w-5 shrink-0" />
@@ -405,7 +415,11 @@ export default function AdminAboutPage() {
             Homepage Hero & Code Terminal Config (首页 Hero 与代码卡片配置)
           </h2>
           <p className="text-xs text-[var(--portal-color-text-secondary)]">
-            Configure the homepage Hero titles, introduction, and the <code className="font-mono text-[var(--portal-color-primary)]">const developer = &#123; ... &#125;</code> object on the terminal.
+            Configure the homepage Hero titles, introduction, and the{' '}
+            <code className="font-mono text-[var(--portal-color-primary)]">
+              const developer = &#123; ... &#125;
+            </code>{' '}
+            object on the terminal.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

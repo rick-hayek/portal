@@ -1,14 +1,14 @@
 'use client';
 
+import { Calendar, ChevronDown, ChevronRight, Filter, Folder, X } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useTranslations, useLocale } from 'next-intl';
-import { useSearchParams } from 'next/navigation';
 import { PostCard } from '@/components/blog/PostCard';
 import { useLocalSWR } from '@/hooks/useLocalSWR';
 import { Link } from '@/i18n/routing';
 import { getCategoryName } from '@/lib/category';
-import { Calendar, ChevronDown, ChevronRight, Filter, Folder, X } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -97,23 +97,23 @@ export function BlogList() {
     useCallback(async () => {
       const res = await fetch(
         '/api/trpc/post.list?batch=1&input=' +
-        encodeURIComponent(
-          JSON.stringify({
-            '0': {
-              json: {
-                page,
-                limit: 10,
-                categorySlug: category,
-                tagSlug: tag,
-                month: month,
+          encodeURIComponent(
+            JSON.stringify({
+              '0': {
+                json: {
+                  page,
+                  limit: 10,
+                  categorySlug: category,
+                  tagSlug: tag,
+                  month: month,
+                },
               },
-            },
-          })
-        )
+            }),
+          ),
       );
       const json = await res.json();
       return json[0]?.result?.data?.json as BlogData;
-    }, [page, category, tag, month])
+    }, [page, category, tag, month]),
   );
 
   // 2. Fetch categories
@@ -122,11 +122,11 @@ export function BlogList() {
     useCallback(async () => {
       const res = await fetch(
         '/api/trpc/category.list?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: null } }))
+          encodeURIComponent(JSON.stringify({ '0': { json: null } })),
       );
       const json = await res.json();
       return (json[0]?.result?.data?.json ?? []) as Category[];
-    }, [])
+    }, []),
   );
 
   // 3. Fetch monthly archives
@@ -135,11 +135,11 @@ export function BlogList() {
     useCallback(async () => {
       const res = await fetch(
         '/api/trpc/post.archives?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: null } }))
+          encodeURIComponent(JSON.stringify({ '0': { json: null } })),
       );
       const json = await res.json();
       return (json[0]?.result?.data?.json ?? []) as ArchiveItem[];
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
@@ -219,10 +219,11 @@ export function BlogList() {
           <button
             type="button"
             onClick={() => setMobileMonthOpen(true)}
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium border shrink-0 transition-colors ${month
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium border shrink-0 transition-colors ${
+              month
                 ? 'bg-[var(--portal-color-primary)] text-white border-transparent'
                 : 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] border-[var(--portal-color-border)] hover:border-[var(--portal-color-primary)]'
-              }`}
+            }`}
           >
             <Calendar className="h-3.5 w-3.5" />
             <span>
@@ -236,10 +237,11 @@ export function BlogList() {
           {/* Horizontal Category Pills on Mobile */}
           <Link
             href={getFilterUrl({ cat: null })}
-            className={`rounded-full shrink-0 px-3.5 py-1.5 text-xs font-medium transition-colors ${!category
+            className={`rounded-full shrink-0 px-3.5 py-1.5 text-xs font-medium transition-colors ${
+              !category
                 ? 'bg-[var(--portal-color-primary)] text-white'
                 : 'border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
-              }`}
+            }`}
           >
             {t('all')}
           </Link>
@@ -247,10 +249,11 @@ export function BlogList() {
             <Link
               key={cat.id}
               href={getFilterUrl({ cat: cat.slug })}
-              className={`rounded-full shrink-0 px-3.5 py-1.5 text-xs font-medium transition-colors ${category === cat.slug
+              className={`rounded-full shrink-0 px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                category === cat.slug
                   ? 'bg-[var(--portal-color-primary)] text-white'
                   : 'border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
-                }`}
+              }`}
             >
               {getCategoryName(cat, locale)} ({cat._count.posts})
             </Link>
@@ -259,71 +262,75 @@ export function BlogList() {
       </div>
 
       {/* Mobile Month Modal Sheet */}
-      {mobileMonthOpen && mounted && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div
-            className="absolute inset-0"
-            onClick={() => setMobileMonthOpen(false)}
-          />
-          <div className="relative z-10 w-full max-w-sm rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 shadow-2xl max-h-[80vh] flex flex-col my-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--portal-color-border)] mb-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-[var(--portal-color-text)]">
-                <Calendar className="h-4 w-4 text-[var(--portal-color-primary)]" />
-                <span>{t('selectMonth')}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setMobileMonthOpen(false)}
-                className="rounded-full p-1 text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)]"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="overflow-y-auto space-y-3 flex-1 pr-1">
-              <Link
-                href={getFilterUrl({ mo: null })}
-                onClick={() => setMobileMonthOpen(false)}
-                className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors ${!month
-                    ? 'bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] font-semibold'
-                    : 'text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]'
-                  }`}
-              >
-                <span>{t('allMonths')}</span>
-              </Link>
-              {years.map((y) => (
-                <div key={y} className="pt-2 border-t border-[var(--portal-color-border)]/60">
-                  <div className="px-2 py-1 text-xs font-mono font-bold text-[var(--portal-color-text-secondary)]">
-                    {y}
-                  </div>
-                  <div className="grid grid-cols-2 gap-1.5 mt-1">
-                    {archivesByYear[y].map((item) => (
-                      <Link
-                        key={item.key}
-                        href={getFilterUrl({ mo: item.key })}
-                        onClick={() => setMobileMonthOpen(false)}
-                        className={`flex items-center justify-between rounded-lg px-3 py-2 text-xs transition-colors ${month === item.key
-                            ? 'bg-[var(--portal-color-primary)] text-white font-medium'
-                            : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]'
-                          }`}
-                      >
-                        <span>{formatMonthLabel(item.year, item.month, locale)}</span>
-                        <span
-                          className={`text-[10px] ${month === item.key ? 'text-white/80' : 'text-[var(--portal-color-text-tertiary)]'
-                            }`}
-                        >
-                          ({item.count})
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
+      {mobileMonthOpen &&
+        mounted &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="absolute inset-0" onClick={() => setMobileMonthOpen(false)} />
+            <div className="relative z-10 w-full max-w-sm rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 shadow-2xl max-h-[80vh] flex flex-col my-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-[var(--portal-color-border)] mb-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-[var(--portal-color-text)]">
+                  <Calendar className="h-4 w-4 text-[var(--portal-color-primary)]" />
+                  <span>{t('selectMonth')}</span>
                 </div>
-              ))}
+                <button
+                  type="button"
+                  onClick={() => setMobileMonthOpen(false)}
+                  className="rounded-full p-1 text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)]"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="overflow-y-auto space-y-3 flex-1 pr-1">
+                <Link
+                  href={getFilterUrl({ mo: null })}
+                  onClick={() => setMobileMonthOpen(false)}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors ${
+                    !month
+                      ? 'bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] font-semibold'
+                      : 'text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]'
+                  }`}
+                >
+                  <span>{t('allMonths')}</span>
+                </Link>
+                {years.map((y) => (
+                  <div key={y} className="pt-2 border-t border-[var(--portal-color-border)]/60">
+                    <div className="px-2 py-1 text-xs font-mono font-bold text-[var(--portal-color-text-secondary)]">
+                      {y}
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5 mt-1">
+                      {archivesByYear[y].map((item) => (
+                        <Link
+                          key={item.key}
+                          href={getFilterUrl({ mo: item.key })}
+                          onClick={() => setMobileMonthOpen(false)}
+                          className={`flex items-center justify-between rounded-lg px-3 py-2 text-xs transition-colors ${
+                            month === item.key
+                              ? 'bg-[var(--portal-color-primary)] text-white font-medium'
+                              : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]'
+                          }`}
+                        >
+                          <span>{formatMonthLabel(item.year, item.month, locale)}</span>
+                          <span
+                            className={`text-[10px] ${
+                              month === item.key
+                                ? 'text-white/80'
+                                : 'text-[var(--portal-color-text-tertiary)]'
+                            }`}
+                          >
+                            ({item.count})
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </div>,
-        document.body
-      )}
+          </div>,
+          document.body,
+        )}
 
       {/* Active Filter Indicators Bar */}
       {(category || month || tag) && (
@@ -435,10 +442,11 @@ export function BlogList() {
             <div className="space-y-1">
               <Link
                 href={getFilterUrl({ cat: null })}
-                className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors ${!category
+                className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors ${
+                  !category
                     ? 'bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] font-semibold'
                     : 'text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]'
-                  }`}
+                }`}
               >
                 <span>{t('all')}</span>
                 <span className="text-[10px] font-mono text-[var(--portal-color-text-tertiary)]">
@@ -449,10 +457,11 @@ export function BlogList() {
                 <Link
                   key={cat.id}
                   href={getFilterUrl({ cat: cat.slug })}
-                  className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors ${category === cat.slug
+                  className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors ${
+                    category === cat.slug
                       ? 'bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] font-semibold'
                       : 'text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]'
-                    }`}
+                  }`}
                 >
                   <span className="truncate pr-2">{getCategoryName(cat, locale)}</span>
                   <span className="text-[10px] font-mono text-[var(--portal-color-text-tertiary)] shrink-0">
@@ -477,10 +486,11 @@ export function BlogList() {
               <div className="space-y-3">
                 <Link
                   href={getFilterUrl({ mo: null })}
-                  className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors ${!month
+                  className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors ${
+                    !month
                       ? 'bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] font-semibold'
                       : 'text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]'
-                    }`}
+                  }`}
                 >
                   <span>{t('allTime')}</span>
                 </Link>
@@ -511,10 +521,11 @@ export function BlogList() {
                             <Link
                               key={item.key}
                               href={getFilterUrl({ mo: item.key })}
-                              className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors ${month === item.key
+                              className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
+                                month === item.key
                                   ? 'bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] font-semibold'
                                   : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]'
-                                }`}
+                              }`}
                             >
                               <span>{formatMonthLabel(item.year, item.month, locale)}</span>
                               <span className="text-[10px] font-mono text-[var(--portal-color-text-tertiary)]">

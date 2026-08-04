@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { authenticateRequest } from '@/lib/api-auth';
 import { prisma } from '@portal/db';
 import { TRPCError } from '@trpc/server';
+import { NextResponse } from 'next/server';
+import { authenticateRequest } from '@/lib/api-auth';
 
 interface RouteParams {
   params: Promise<{

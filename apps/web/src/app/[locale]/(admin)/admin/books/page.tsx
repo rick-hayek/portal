@@ -1,8 +1,8 @@
 'use client';
 
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState, useTransition } from 'react';
-import { Pencil, Trash2, Eye } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
 
 interface Book {

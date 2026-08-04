@@ -56,13 +56,13 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
       ? '💻'
       : currentTheme
         ? {
-          'minimal-light': '⚪',
-          'dark-neon': '⚡',
-          cyberpunk: '👾',
-          'retro-brown': '☕',
-          zenith: '🧘',
-          lumiere: '✨',
-        }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
+            'minimal-light': '⚪',
+            'dark-neon': '⚡',
+            cyberpunk: '👾',
+            'retro-brown': '☕',
+            zenith: '🧘',
+            lumiere: '✨',
+          }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
         : '💻';
 
   if (iconOnly) {

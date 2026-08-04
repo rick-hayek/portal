@@ -1,11 +1,11 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState, useRef } from 'react';
-import { useLocalSWR } from '@/hooks/useLocalSWR';
-import { useSession } from 'next-auth/react';
-import { Sparkles, Download, X, Flame, Star } from 'lucide-react';
 import { toPng } from 'html-to-image';
+import { Download, Flame, Sparkles, Star, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useLocale, useTranslations } from 'next-intl';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocalSWR } from '@/hooks/useLocalSWR';
 
 // GitHub language color mapping
 const LANG_COLORS: Record<string, string> = {
@@ -122,7 +122,7 @@ export default function TrendingPage() {
       const input = selectedWeek ? { weekOf: selectedWeek } : {};
       const res = await fetch(
         '/api/trpc/trending.list?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: input } })),
+          encodeURIComponent(JSON.stringify({ '0': { json: input } })),
       );
       const data = await res.json();
       const result = data[0]?.result?.data?.json;
@@ -196,8 +196,9 @@ export default function TrendingPage() {
                       : 'Select Week'}
                   </span>
                   <svg
-                    className={`h-3.5 w-3.5 text-[var(--portal-color-text-secondary)] transition-transform duration-200 ${isWeekOpen ? 'rotate-180' : ''
-                      }`}
+                    className={`h-3.5 w-3.5 text-[var(--portal-color-text-secondary)] transition-transform duration-200 ${
+                      isWeekOpen ? 'rotate-180' : ''
+                    }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -223,10 +224,11 @@ export default function TrendingPage() {
                             setSelectedWeek(w);
                             setIsWeekOpen(false);
                           }}
-                          className={`flex w-full items-center px-3 py-2 text-xs text-left cursor-pointer transition-colors ${isActive
-                            ? 'bg-[var(--portal-color-surface-alt)] font-semibold text-[var(--portal-color-primary)]'
-                            : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)]'
-                            }`}
+                          className={`flex w-full items-center px-3 py-2 text-xs text-left cursor-pointer transition-colors ${
+                            isActive
+                              ? 'bg-[var(--portal-color-surface-alt)] font-semibold text-[var(--portal-color-primary)]'
+                              : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)]'
+                          }`}
                         >
                           <span className="w-5 text-center shrink-0 mr-1 text-[10px] font-bold">
                             {isActive && '✓'}
@@ -442,13 +444,18 @@ export default function TrendingPage() {
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-1.5">
                     <Flame className="h-4 w-4 text-amber-500 fill-amber-500 animate-pulse" />
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-amber-400 font-bold">AI Trending Repo</span>
+                    <span className="font-mono text-[9px] uppercase tracking-wider text-amber-400 font-bold">
+                      AI Trending Repo
+                    </span>
                   </div>
                   {/* <span className="text-[9px] text-white/30 font-mono">Voocii</span> */}
-                  <span className="text-[9px] text-white/50 font-mono">Week of {formatDate(selectedWeek || new Date().toISOString(), locale)}</span>
-
+                  <span className="text-[9px] text-white/50 font-mono">
+                    Week of {formatDate(selectedWeek || new Date().toISOString(), locale)}
+                  </span>
                 </div>
-                <h2 className="text-lg font-bold tracking-tight text-white mb-0.5">{t('summarizeTitle')}</h2>
+                <h2 className="text-lg font-bold tracking-tight text-white mb-0.5">
+                  {t('summarizeTitle')}
+                </h2>
 
                 <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-1.5" />
               </div>
@@ -462,11 +469,17 @@ export default function TrendingPage() {
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       {/* Rank Badge */}
-                      <span className={`flex items-center justify-center w-[22px] h-[22px] rounded-full font-mono text-[11px] font-black shrink-0 ${idx === 0 ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-slate-900' :
-                        idx === 1 ? 'bg-gradient-to-br from-slate-200 to-slate-400 text-slate-900' :
-                          idx === 2 ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white' :
-                            'bg-white/10 text-white/70'
-                        }`}>
+                      <span
+                        className={`flex items-center justify-center w-[22px] h-[22px] rounded-full font-mono text-[11px] font-black shrink-0 ${
+                          idx === 0
+                            ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-slate-900'
+                            : idx === 1
+                              ? 'bg-gradient-to-br from-slate-200 to-slate-400 text-slate-900'
+                              : idx === 2
+                                ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white'
+                                : 'bg-white/10 text-white/70'
+                        }`}
+                      >
                         {idx + 1}
                       </span>
 
@@ -475,11 +488,16 @@ export default function TrendingPage() {
                         <p className="font-bold text-[13px] text-white truncate">{repo.name}</p>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           {repo.language && (
-                            <span className="text-[9px] text-white/40 leading-none">{repo.language}</span>
+                            <span className="text-[9px] text-white/40 leading-none">
+                              {repo.language}
+                            </span>
                           )}
                           {((repo as any).consecutiveWeeks ?? 0) > 1 && (
                             <span className="text-[8px] font-bold text-amber-400 bg-amber-400/10 px-1 py-0.2 rounded-xs border border-amber-400/20 leading-none shrink-0">
-                              🔥 {t('consecutiveWeeksShort', { weeks: (repo as any).consecutiveWeeks })}
+                              🔥{' '}
+                              {t('consecutiveWeeksShort', {
+                                weeks: (repo as any).consecutiveWeeks,
+                              })}
                             </span>
                           )}
                         </div>
@@ -516,10 +534,7 @@ export default function TrendingPage() {
             </div>
 
             {/* Action buttons (Not captured in image) */}
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="mt-4 flex items-center gap-3"
-            >
+            <div onClick={(e) => e.stopPropagation()} className="mt-4 flex items-center gap-3">
               <button
                 type="button"
                 onClick={handleSaveImage}

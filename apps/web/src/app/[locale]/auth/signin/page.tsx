@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { Suspense, useState } from 'react';
+import siteConfig from '../../../../site.config';
 
 function SignInContent() {
   const searchParams = useSearchParams();
@@ -59,10 +60,10 @@ function SignInContent() {
           </div>
 
           <h1 className="text-2xl font-bold tracking-tight text-[var(--portal-color-text)] font-heading">
-            Welcome back
+            Welcome to {siteConfig.site.title}
           </h1>
           <p className="mt-1 text-[0.95rem] text-[var(--portal-color-text-secondary)]">
-            Sign in to your Portal account
+            A personal portal for fun
           </p>
         </div>
 
@@ -82,6 +83,7 @@ function SignInContent() {
             Continue with GitHub
           </button>
 
+          {/*
           <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[var(--portal-color-border-soft)]" />
@@ -130,7 +132,6 @@ function SignInContent() {
               </div>
             </div>
 
-            {/* Spacing increased to separate password input from sign in button */}
             <div className="pt-4">
               <button
                 type="submit"
@@ -166,6 +167,7 @@ function SignInContent() {
               </button>
             </div>
           </form>
+          */}
         </div>
       </div>
     </div>

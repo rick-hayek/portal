@@ -1,6 +1,6 @@
+import { prisma } from '@portal/db';
 import type { MetadataRoute } from 'next';
 import siteConfig from '../site.config';
-import { prisma } from '@portal/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.site.url;

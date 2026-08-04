@@ -1,8 +1,7 @@
 'use client';
 
-import { Dropdown } from '@/components/ui/Dropdown';
-
 import { useEffect, useState } from 'react';
+import { Dropdown } from '@/components/ui/Dropdown';
 import { useRouter } from '@/i18n/routing';
 
 export default function NewProjectPage() {

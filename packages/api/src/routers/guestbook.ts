@@ -35,7 +35,7 @@ export const guestbookRouter = router({
             return fetchQuery();
           },
           ['guestbook-list'],
-          { tags: ['guestbook'], revalidate: 3600 }
+          { tags: ['guestbook'], revalidate: 3600 },
         );
         result = (await getCached(page, limit)) as Awaited<ReturnType<typeof fetchQuery>>;
       } else {
@@ -44,7 +44,12 @@ export const guestbookRouter = router({
 
       return {
         entries: result.entries,
-        pagination: { page, limit, total: result.total, totalPages: Math.ceil(result.total / limit) },
+        pagination: {
+          page,
+          limit,
+          total: result.total,
+          totalPages: Math.ceil(result.total / limit),
+        },
       };
     }),
 

@@ -1,7 +1,7 @@
 'use client';
 
+import { Eye, Pencil, Star, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { Pencil, Trash2, Eye, Star } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 
 interface Project {
@@ -26,7 +26,7 @@ export default function AdminPortfolioPage() {
     try {
       const res = await fetch(
         '/api/trpc/admin.projectList?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: null } })),
+          encodeURIComponent(JSON.stringify({ '0': { json: null } })),
       );
       const data = await res.json();
       setProjects(data[0]?.result?.data?.json ?? []);
@@ -112,10 +112,11 @@ export default function AdminPortfolioPage() {
               <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => toggleFeatured(p.id, p.featured)}
-                  className={`inline-flex items-center gap-1 text-xs px-2 py-1.5 rounded border transition-colors ${p.featured
+                  className={`inline-flex items-center gap-1 text-xs px-2 py-1.5 rounded border transition-colors ${
+                    p.featured
                       ? 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20'
                       : 'border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)]'
-                    }`}
+                  }`}
                   title={p.featured ? 'Unfeature project' : 'Feature project'}
                 >
                   <Star className="h-3.5 w-3.5" fill={p.featured ? 'currentColor' : 'none'} />

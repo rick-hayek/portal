@@ -1,5 +1,5 @@
-import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
 import { BlogList } from '@/components/blog/BlogList';
 import siteConfig from '@/site.config';
 
@@ -12,13 +12,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default async function BlogPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  
+
   // Set requested locale for translation mappings
   setRequestLocale(locale);
 
@@ -29,7 +25,12 @@ export default async function BlogPage({
           {/* Header Skeleton */}
           <div className="flex items-baseline mb-6 md:mb-8" style={{ gap: '.8rem' }}>
             <span
-              style={{ width: 28, height: 2, background: 'var(--portal-color-primary)', flexShrink: 0 }}
+              style={{
+                width: 28,
+                height: 2,
+                background: 'var(--portal-color-primary)',
+                flexShrink: 0,
+              }}
             ></span>
             <span className="h-4 bg-gray-200 rounded w-16 dark:bg-gray-800 animate-pulse"></span>
             <span className="h-6 bg-gray-200 rounded w-24 dark:bg-gray-800 animate-pulse"></span>

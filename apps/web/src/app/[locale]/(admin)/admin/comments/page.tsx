@@ -106,7 +106,9 @@ export default function CommentsPage() {
                       {c.status}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-[var(--portal-color-text)] whitespace-pre-wrap">{c.content}</p>
+                  <p className="mt-2 text-sm text-[var(--portal-color-text)] whitespace-pre-wrap">
+                    {c.content}
+                  </p>
                   <p className="mt-2 text-xs text-[var(--portal-color-text-secondary)]">
                     on <em>{c.post.title}</em> · {new Date(c.createdAt).toLocaleDateString()}
                   </p>

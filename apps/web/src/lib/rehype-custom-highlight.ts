@@ -1,17 +1,17 @@
-import { createLowlight } from 'lowlight';
-import javascript from 'highlight.js/lib/languages/javascript';
-import typescript from 'highlight.js/lib/languages/typescript';
-import css from 'highlight.js/lib/languages/css';
-import xml from 'highlight.js/lib/languages/xml'; // html
-import python from 'highlight.js/lib/languages/python';
-import rust from 'highlight.js/lib/languages/rust';
-import go from 'highlight.js/lib/languages/go';
 import bash from 'highlight.js/lib/languages/bash';
+import csharp from 'highlight.js/lib/languages/csharp';
+import css from 'highlight.js/lib/languages/css';
+import go from 'highlight.js/lib/languages/go';
+import javascript from 'highlight.js/lib/languages/javascript';
 import json from 'highlight.js/lib/languages/json';
 import markdown from 'highlight.js/lib/languages/markdown';
-import yaml from 'highlight.js/lib/languages/yaml';
+import python from 'highlight.js/lib/languages/python';
+import rust from 'highlight.js/lib/languages/rust';
 import sql from 'highlight.js/lib/languages/sql';
-import csharp from 'highlight.js/lib/languages/csharp';
+import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml'; // html
+import yaml from 'highlight.js/lib/languages/yaml';
+import { createLowlight } from 'lowlight';
 
 // Statically register only the necessary languages to keep server bundle size under 3MB
 const lowlight = createLowlight({
@@ -63,7 +63,7 @@ function nodeToText(node: any): string {
  * It statically registers a custom subset of languages to avoid bundling the entire Highlight.js set.
  */
 export default function rehypeCustomHighlight() {
-  return function (tree: any) {
+  return (tree: any) => {
     walk(tree, (node: any, parent: any) => {
       if (
         node.tagName !== 'code' ||

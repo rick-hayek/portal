@@ -11,11 +11,10 @@ export const bookRouter = router({
     };
 
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchList,
-        ['book-list'],
-        { tags: ['books'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchList, ['book-list'], {
+        tags: ['books'],
+        revalidate: 3600,
+      });
       return getCached();
     }
     return fetchList();
@@ -42,11 +41,10 @@ export const bookRouter = router({
 
     let book;
     if (ctx.unstable_cache) {
-      const getCached = ctx.unstable_cache(
-        fetchBook,
-        ['book-get'],
-        { tags: ['books'], revalidate: 3600 }
-      );
+      const getCached = ctx.unstable_cache(fetchBook, ['book-get'], {
+        tags: ['books'],
+        revalidate: 3600,
+      });
       book = (await getCached(input.slug)) as Awaited<ReturnType<typeof fetchBook>>;
     } else {
       book = await fetchBook(input.slug);

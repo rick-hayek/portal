@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
-import React, { useCallback, useState } from 'react';
+import type React from 'react';
+import { useCallback, useState } from 'react';
 import { useLocalSWR } from '@/hooks/useLocalSWR';
 
 interface Project {
@@ -29,10 +30,7 @@ function PlatformBadge({
   url?: string;
   showLabel?: boolean;
 }) {
-  const configs: Record<
-    string,
-    { label: string; bg: string; icon: React.ReactNode }
-  > = {
+  const configs: Record<string, { label: string; bg: string; icon: React.ReactNode }> = {
     appstore: {
       label: 'App Store',
       bg: 'bg-slate-950/90 hover:bg-black border-white/30 text-white shadow-md ring-1 ring-white/10',
@@ -132,7 +130,10 @@ function PlatformBadge({
   }
 
   return (
-    <span className={`${badgeClasses} shrink-0 leading-none`} title={`Available on ${config.label}`}>
+    <span
+      className={`${badgeClasses} shrink-0 leading-none`}
+      title={`Available on ${config.label}`}
+    >
       {badgeContent}
     </span>
   );
@@ -148,15 +149,15 @@ export default function PortfolioPage() {
     useCallback(async () => {
       const res = await fetch(
         '/api/trpc/portfolio.list?batch=1&input=' +
-        encodeURIComponent(
-          JSON.stringify({
-            '0': { json: activeTech ? { tech: activeTech } : {} },
-          }),
-        ),
+          encodeURIComponent(
+            JSON.stringify({
+              '0': { json: activeTech ? { tech: activeTech } : {} },
+            }),
+          ),
       );
       const json = await res.json();
       return (json[0]?.result?.data?.json ?? []) as Project[];
-    }, [activeTech])
+    }, [activeTech]),
   );
 
   const { data: techStacksData, loading: loadingTechs } = useLocalSWR(
@@ -164,15 +165,15 @@ export default function PortfolioPage() {
     useCallback(async () => {
       const res = await fetch(
         '/api/trpc/portfolio.techStacks?batch=1&input=' +
-        encodeURIComponent(
-          JSON.stringify({
-            '0': { json: null },
-          }),
-        ),
+          encodeURIComponent(
+            JSON.stringify({
+              '0': { json: null },
+            }),
+          ),
       );
       const json = await res.json();
       return (json[0]?.result?.data?.json ?? []) as string[];
-    }, [])
+    }, []),
   );
 
   const projects = projectsData ?? [];
@@ -218,10 +219,11 @@ export default function PortfolioPage() {
           >
             <button
               onClick={() => setActiveTech(null)}
-              className={`rounded-full shrink-0 transition-colors ${!activeTech
+              className={`rounded-full shrink-0 transition-colors ${
+                !activeTech
                   ? 'bg-[var(--portal-color-primary)] text-white'
                   : 'border border-compat text-[var(--portal-color-text-secondary)] hover-border-compat-primary'
-                }`}
+              }`}
               style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
             >
               {t('all')}
@@ -230,10 +232,11 @@ export default function PortfolioPage() {
               <button
                 key={tech}
                 onClick={() => setActiveTech(tech)}
-                className={`rounded-full shrink-0 transition-colors ${activeTech === tech
+                className={`rounded-full shrink-0 transition-colors ${
+                  activeTech === tech
                     ? 'bg-[var(--portal-color-primary)] text-white'
                     : 'border border-compat text-[var(--portal-color-text-secondary)] hover-border-compat-primary'
-                  }`}
+                }`}
                 style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
               >
                 {tech}
@@ -371,7 +374,11 @@ export default function PortfolioPage() {
                               dangerouslySetInnerHTML={{ __html: project.logo }}
                             />
                           ) : (
-                            <img src={project.logo} alt="" className="h-full w-full object-contain" />
+                            <img
+                              src={project.logo}
+                              alt=""
+                              className="h-full w-full object-contain"
+                            />
                           )}
                         </div>
                       )}
