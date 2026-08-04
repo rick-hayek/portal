@@ -173,9 +173,8 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
     <>
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-compat flex justify-center px-4 md:px-8 bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150 transition-transform duration-300 ease-in-out md:translate-y-0 ${
-          isHidden ? '-translate-y-full' : 'translate-y-0'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-compat flex justify-center px-4 md:px-8 bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150 transition-transform duration-300 ease-in-out md:translate-y-0 ${isHidden ? '-translate-y-full' : 'translate-y-0'
+          }`}
       >
         <div className="flex h-full w-full items-center justify-between px-0">
           {/* Logo / Mobile Back Button */}
@@ -272,11 +271,10 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href as any}
-                  className={`transition-colors text-[0.82rem] tracking-tight whitespace-nowrap ${
-                    isActive
-                      ? 'font-semibold text-[var(--portal-color-primary)]'
-                      : 'font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]'
-                  }`}
+                  className={`transition-colors text-[0.82rem] tracking-tight whitespace-nowrap ${isActive
+                      ? 'font-bold text-[var(--portal-color-primary)]'
+                      : 'font-medium text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-text)]'
+                    }`}
                 >
                   {translatedLabel}
                 </Link>
@@ -302,9 +300,8 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
 
             {/* Hamburger — shown below md (mobile) OR when compact (desktop overflow) */}
             <button
-              className={`h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] ${
-                isCompact ? 'flex' : 'flex md:hidden'
-              }`}
+              className={`h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] ${isCompact ? 'flex' : 'flex md:hidden'
+                }`}
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-expanded={mobileOpen}
             >
@@ -335,9 +332,8 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
         {/* Mobile/Tablet Nav Drawer */}
         {mobileOpen && (
           <div
-            className={`absolute top-14 left-0 right-0 z-40 border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-4 shadow-lg ${
-              isCompact ? '' : 'lg:hidden'
-            }`}
+            className={`absolute top-14 left-0 right-0 z-40 border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-4 shadow-lg ${isCompact ? '' : 'lg:hidden'
+              }`}
           >
             {/* Main Navigation Links (Visible only below md) */}
             <nav className="flex flex-col gap-1 md:hidden">
@@ -353,11 +349,10 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                   <Link
                     key={item.href}
                     href={item.href as any}
-                    className={`rounded-md px-3 py-2 text-sm transition-colors ${
-                      isActive
-                        ? 'bg-[var(--portal-color-background)] text-[var(--portal-color-primary)] font-semibold'
-                        : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-primary)] font-[500]'
-                    }`}
+                    className={`rounded-md px-3 py-2 text-sm transition-colors ${isActive
+                        ? 'bg-[var(--portal-color-surface-alt)] text-[var(--portal-color-primary)] font-bold'
+                        : 'text-[var(--portal-color-text-tertiary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)] font-medium'
+                      }`}
                     onClick={() => setMobileOpen(false)}
                   >
                     {translatedLabel}
@@ -385,9 +380,8 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
       {/* Backdrop for closing menu on outside click */}
       {mobileOpen && (
         <div
-          className={`fixed inset-0 z-30 bg-black/30 backdrop-blur-xs transition-opacity ${
-            isCompact ? '' : 'lg:hidden'
-          }`}
+          className={`fixed inset-0 z-30 bg-black/30 backdrop-blur-xs transition-opacity ${isCompact ? '' : 'lg:hidden'
+            }`}
           onClick={() => setMobileOpen(false)}
         />
       )}
