@@ -99,7 +99,7 @@ export default function AboutPage() {
     });
   }
 
-  const githubRepoUrl = process.env.NEXT_PUBLIC_GITHUB_REPO || 'https://github.com';
+  const githubRepoUrl = 'https://github.com/rick-hayek/portal';
 
   return (
     <div className="flex w-full flex-col items-center">

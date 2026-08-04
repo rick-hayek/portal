@@ -110,9 +110,10 @@ export interface ThemeProviderProps {
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'minimal-light',
+  defaultTheme: initialDefaultTheme,
   availableThemes,
 }: ThemeProviderProps) {
+  const defaultTheme = initialDefaultTheme || Object.keys(themes)[0] || 'zenith';
   const available = useMemo(() => availableThemes ?? Object.keys(themes), [availableThemes]);
 
   // Initial state is consistently 'system' on both server and client hydration to prevent hydration mismatch

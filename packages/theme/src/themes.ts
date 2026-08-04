@@ -1,35 +1,35 @@
 import type { ThemeConfig } from '@portal/shared';
 
 export const themes: Record<string, ThemeConfig> = {
-  'minimal-light': {
-    id: 'minimal-light',
-    name: 'Clean Portal',
+  zenith: {
+    id: 'zenith',
+    name: 'Zenith Ethereal',
     mode: 'light',
     colors: {
-      primary: '#6b8ec9', // Soft Blue
-      secondary: '#5a7db8', // Darker Blue
-      accent: '#10b981', // Green for success/terminal
-      background: '#f8f9fb', // Off-white
-      surface: '#ffffff', // Pure white
-      text: '#111827', // Gray 900
-      textSecondary: '#4b5563', // Gray 600
-      textTertiary: '#9ca3af', // Gray 400
-      border: '#f0f1f3', // Lighter Gray
-      surfaceAlt: '#f1f3f7', // Light Gray Surface
-      error: '#ef4444',
-      success: '#10b981',
+      primary: '#536746', // Organic Sage Green
+      secondary: '#755754', // Muted Warm Terracotta
+      accent: '#98a68e', // Soft Sage Container
+      background: '#efefef', // Sanctuary Surface Base (off-white)
+      surface: '#ffffff', // Pure White Elevated Card Lift
+      surfaceAlt: '#ecefe8', // Surface Nest / Secondary Section
+      text: '#191c18', // Soft Charcoal (no pure black)
+      textSecondary: '#444841', // Soft Olive Gray / On-surface-variant
+      textTertiary: '#74796e', // Muted Olive Outline
+      border: '#e1e4db', // Ambient Ghost Border
+      error: '#ba1a1a', // Muted Crimson
+      success: '#55624d', // Sage Green
     },
     typography: {
-      fontFamily: 'var(--font-sora), system-ui, sans-serif',
-      headingFont: 'var(--font-sora), system-ui, sans-serif',
-      monoFont: 'var(--font-mono), monospace',
+      fontFamily: '"Plus Jakarta Sans", "Manrope", system-ui, sans-serif',
+      headingFont: '"Manrope", "Plus Jakarta Sans", system-ui, sans-serif',
+      monoFont: '"Fira Code", monospace',
       scale: 1,
     },
-    spacing: { unit: 4, radius: '0.75rem' },
+    spacing: { unit: 4, radius: '1rem' },
     effects: {
-      shadow: '0 4px 16px rgba(0,0,0,0.05)',
-      blur: '12px',
-      transition: '0.2s ease',
+      shadow: '0 8px 30px rgba(85, 98, 77, 0.06)',
+      blur: '20px',
+      transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     },
   },
 
@@ -123,35 +123,35 @@ export const themes: Record<string, ThemeConfig> = {
     },
   },
 
-  zenith: {
-    id: 'zenith',
-    name: 'Zenith Ethereal',
+  'minimal-light': {
+    id: 'minimal-light',
+    name: 'Clean Portal',
     mode: 'light',
     colors: {
-      primary: '#536746', // Organic Sage Green
-      secondary: '#755754', // Muted Warm Terracotta
-      accent: '#98a68e', // Soft Sage Container
-      background: '#efefef', // Sanctuary Surface Base (off-white)
-      surface: '#ffffff', // Pure White Elevated Card Lift
-      surfaceAlt: '#ecefe8', // Surface Nest / Secondary Section
-      text: '#191c18', // Soft Charcoal (no pure black)
-      textSecondary: '#444841', // Soft Olive Gray / On-surface-variant
-      textTertiary: '#74796e', // Muted Olive Outline
-      border: '#e1e4db', // Ambient Ghost Border
-      error: '#ba1a1a', // Muted Crimson
-      success: '#55624d', // Sage Green
+      primary: '#6b8ec9', // Soft Blue
+      secondary: '#5a7db8', // Darker Blue
+      accent: '#10b981', // Green for success/terminal
+      background: '#f8f9fb', // Off-white
+      surface: '#ffffff', // Pure white
+      text: '#111827', // Gray 900
+      textSecondary: '#4b5563', // Gray 600
+      textTertiary: '#9ca3af', // Gray 400
+      border: '#f0f1f3', // Lighter Gray
+      surfaceAlt: '#f1f3f7', // Light Gray Surface
+      error: '#ef4444',
+      success: '#10b981',
     },
     typography: {
-      fontFamily: '"Plus Jakarta Sans", "Manrope", system-ui, sans-serif',
-      headingFont: '"Manrope", "Plus Jakarta Sans", system-ui, sans-serif',
-      monoFont: '"Fira Code", monospace',
+      fontFamily: 'var(--font-sora), system-ui, sans-serif',
+      headingFont: 'var(--font-sora), system-ui, sans-serif',
+      monoFont: 'var(--font-mono), monospace',
       scale: 1,
     },
-    spacing: { unit: 4, radius: '1rem' },
+    spacing: { unit: 4, radius: '0.75rem' },
     effects: {
-      shadow: '0 8px 30px rgba(85, 98, 77, 0.06)',
-      blur: '20px',
-      transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+      shadow: '0 4px 16px rgba(0,0,0,0.05)',
+      blur: '12px',
+      transition: '0.2s ease',
     },
   },
 
