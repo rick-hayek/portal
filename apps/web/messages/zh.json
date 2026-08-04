@@ -37,6 +37,8 @@
     "blogTitle": "博客",
     "selectedWork": "精选作品",
     "projectsTitle": "项目",
+    "readingList": "书单推荐",
+    "booksTitle": "图书",
     "viewAll": "查看全部",
     "community": "社区互动",
     "guestbookTitle": "留言板（退休了）"
@@ -186,7 +188,7 @@
   "About": {
     "title": "关于开发者",
     "subtitle": "关于我",
-    "siteSubtitle": "关于本站",
+    "siteSubtitle": "About Site",
     "siteTitle": "Voocii Portal 系统架构与项目介绍",
     "siteDesc": "Voocii Portal 是一个完全自研的个人站点系统，集成了技术博客、作品集展示、读书笔记、友链朋友圈及实用开发者工具箱。",
     "modulesTitle": "核心功能模块",

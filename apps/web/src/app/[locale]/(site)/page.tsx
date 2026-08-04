@@ -277,10 +277,11 @@ async function HomeDbSections({ locale }: { locale: string }) {
   const trpc = await getTRPCServer();
 
   // Parallelize all DB/tRPC calls to optimize performance
-  const [postsData, projects, guestbookData, postCount, projectCount, viewCount, guestbookCount] =
+  const [postsData, projects, allBooks, guestbookData, postCount, projectCount, viewCount, guestbookCount] =
     await Promise.all([
       trpc.post.list({ page: 1, limit: 3, status: 'published' }),
       trpc.portfolio.list({ featured: true }),
+      trpc.book.list(),
       trpc.guestbook.list({ page: 1, limit: 4 }),
       prisma.post.count({ where: { status: 'published' } }),
       prisma.project.count(),
@@ -290,11 +291,12 @@ async function HomeDbSections({ locale }: { locale: string }) {
     ]);
 
   const posts = postsData.posts;
+  const books = allBooks.slice(0, 4);
   const guestbookEntries = guestbookData.entries;
 
   return (
     <>
-      {/* BLOG SECTION */}
+      {/* BLOG SECTION (Surface / White Background) */}
       <div className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)]">
         <section className="py-20 px-8 max-w-[1200px] mx-auto w-full">
           <div className="flex items-baseline justify-between mb-10">
@@ -377,7 +379,7 @@ async function HomeDbSections({ locale }: { locale: string }) {
         </section>
       </div>
 
-      {/* PORTFOLIO SECTION */}
+      {/* PORTFOLIO SECTION (Page / Off-White Background) */}
       <section className="py-20 px-8 max-w-[1200px] mx-auto w-full">
         <div className="flex items-baseline justify-between mb-10">
           <div className="flex items-baseline gap-3">
@@ -454,85 +456,156 @@ async function HomeDbSections({ locale }: { locale: string }) {
         </div>
       </section>
 
-      {/* GUESTBOOK SECTION */}
+      {/* BOOKS SECTION (Surface / White Background) */}
       <div className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)]">
         <section className="py-20 px-8 max-w-[1200px] mx-auto w-full">
-          <div className="flex items-baseline gap-3 mb-10">
-            <span className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"></span>
-            <span className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium">
-              {t('community')}
-            </span>
-            <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
-              {t('guestbookTitle')}
-            </h2>
+          <div className="flex items-baseline justify-between mb-10">
+            <div className="flex items-baseline gap-3">
+              <span className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"></span>
+              <span className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium">
+                {t('readingList')}
+              </span>
+              <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
+                {t('booksTitle')}
+              </h2>
+            </div>
+            <Link
+              href="/books"
+              className="group flex items-center gap-1.5 no-underline transition-colors text-[0.82rem] font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]"
+            >
+              {t('viewAll')}{' '}
+              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {guestbookEntries.length > 0 ? (
-              guestbookEntries.map((entry) => (
-                <div
-                  key={entry.id}
-                  className="p-5 rounded-xl bg-[var(--portal-color-background)] border border-compat-soft hover-border-compat-primary transition-all duration-300 ease-out hover:shadow-[0_8px_24px_rgba(0,0,0,0.03)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)]"
-                >
-                  <div className="flex items-center gap-2.5 mb-2">
-                    {entry.avatar ? (
-                      <img
-                        src={entry.avatar}
-                        alt={entry.authorName}
-                        className="w-7 h-7 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-7 h-7 rounded-full bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] flex items-center justify-center text-[0.65rem] font-bold">
-                        {entry.authorName.slice(0, 2).toUpperCase()}
-                      </div>
-                    )}
-                    <span className="text-[0.78rem] font-semibold text-[var(--portal-color-text)]">
-                      {entry.authorName}
-                    </span>
-                    <span className="ml-auto text-[0.6rem] font-mono text-[var(--portal-color-text-tertiary)]">
-                      {new Date(entry.createdAt).toLocaleDateString(locale, {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </span>
-                  </div>
-                  <div className="text-[0.82rem] leading-relaxed text-[var(--portal-color-text-secondary)]">
-                    {entry.content}
-                  </div>
-                </div>
-              ))
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+            {books.length > 0 ? (
+              books.map((book: any) => {
+                const coverSrc = book.coverImage ?? book.coverImageURL ?? '';
+                return (
+                  <Link
+                    key={book.id}
+                    href={`/books/${book.slug}`}
+                    className="group flex flex-col no-underline items-start"
+                  >
+                    {/* Book Cover Container */}
+                    <div className="relative mb-4 aspect-[3/4] w-full shrink-0 overflow-hidden rounded-xl bg-[var(--portal-color-surface-alt)] shadow-[0_8px_20px_rgba(0,0,0,0.1)] transition-all duration-300 group-hover:-translate-y-2 group-hover:rotate-1 group-hover:shadow-[0_16px_30px_rgba(0,0,0,0.2)] border border-[var(--portal-color-border)]/50">
+                      {coverSrc ? (
+                        <img
+                          src={coverSrc}
+                          alt={book.title}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full flex-col items-center justify-center p-4 text-center">
+                          <span className="text-4xl mb-2">📚</span>
+                          <span className="text-xs font-semibold text-[var(--portal-color-text-tertiary)] uppercase tracking-wider">
+                            No Cover
+                          </span>
+                        </div>
+                      )}
+                      {/* Subtle Spine effect */}
+                      <div className="absolute left-0 top-0 h-full w-2.5 bg-gradient-to-r from-black/20 to-transparent" />
+                    </div>
+
+                    {/* Info */}
+                    <div className="space-y-1 pl-1 flex-1 py-1 w-full">
+                      <h3 className="line-clamp-1 text-sm font-bold tracking-tight text-[var(--portal-color-text)] transition-colors group-hover:text-[var(--portal-color-primary)]">
+                        {book.title}
+                      </h3>
+                      <p className="truncate text-xs text-[var(--portal-color-text-secondary)]">
+                        {book.author}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })
             ) : (
               <p className="col-span-full py-12 text-center text-[var(--portal-color-text-secondary)]">
-                No guestbook messages yet.
+                No recommended books available yet.
               </p>
             )}
           </div>
-
-          {/* Stats Row */}
-          <div className="mt-8 pt-8 border-t border-compat-soft grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center">
-            {[
-              { num: String(postCount), label: tGuestbook('stats.posts') },
-              { num: String(projectCount), label: tGuestbook('stats.projects') },
-              /* TODO: enable page view count
-              {
-                num: viewCount >= 1000 ? `${(viewCount / 1000).toFixed(1)}K` : String(viewCount), 
-                label: tGuestbook('stats.pageViews'),
-              },
-              */
-              { num: String(guestbookCount), label: tGuestbook('stats.guestbook') },
-            ].map((stat, i) => (
-              <div key={i} className="text-center">
-                <div className="text-3xl font-extrabold tracking-tighter leading-none text-[var(--portal-color-text)]">
-                  {stat.num}
-                </div>
-                <div className="mt-1 text-[0.72rem] font-medium tracking-wider uppercase text-[var(--portal-color-text-secondary)]">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
         </section>
       </div>
+
+      {/* GUESTBOOK SECTION (Page / Off-White Background) */}
+      <section className="py-20 px-8 max-w-[1200px] mx-auto w-full">
+        <div className="flex items-baseline gap-3 mb-10">
+          <span className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"></span>
+          <span className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium">
+            {t('community')}
+          </span>
+          <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
+            {t('guestbookTitle')}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {guestbookEntries.length > 0 ? (
+            guestbookEntries.map((entry) => (
+              <div
+                key={entry.id}
+                className="p-5 rounded-xl bg-[var(--portal-color-surface)] border border-compat-soft hover-border-compat-primary transition-all duration-300 ease-out hover:shadow-[0_8px_24px_rgba(0,0,0,0.03)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)]"
+              >
+                <div className="flex items-center gap-2.5 mb-2">
+                  {entry.avatar ? (
+                    <img
+                      src={entry.avatar}
+                      alt={entry.authorName}
+                      className="w-7 h-7 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-[var(--portal-color-primary-soft)] text-[var(--portal-color-primary)] flex items-center justify-center text-[0.65rem] font-bold">
+                      {entry.authorName.slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
+                  <span className="text-[0.78rem] font-semibold text-[var(--portal-color-text)]">
+                    {entry.authorName}
+                  </span>
+                  <span className="ml-auto text-[0.6rem] font-mono text-[var(--portal-color-text-tertiary)]">
+                    {new Date(entry.createdAt).toLocaleDateString(locale, {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+                <div className="text-[0.82rem] leading-relaxed text-[var(--portal-color-text-secondary)]">
+                  {entry.content}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="col-span-full py-12 text-center text-[var(--portal-color-text-secondary)]">
+              No guestbook messages yet.
+            </p>
+          )}
+        </div>
+
+        {/* Stats Row */}
+        <div className="mt-8 pt-8 border-t border-compat-soft grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center">
+          {[
+            { num: String(postCount), label: tGuestbook('stats.posts') },
+            { num: String(projectCount), label: tGuestbook('stats.projects') },
+            /* TODO: enable page view count
+            {
+              num: viewCount >= 1000 ? `${(viewCount / 1000).toFixed(1)}K` : String(viewCount), 
+              label: tGuestbook('stats.pageViews'),
+            },
+            */
+            { num: String(guestbookCount), label: tGuestbook('stats.guestbook') },
+          ].map((stat, i) => (
+            <div key={i} className="text-center">
+              <div className="text-3xl font-extrabold tracking-tighter leading-none text-[var(--portal-color-text)]">
+                {stat.num}
+              </div>
+              <div className="mt-1 text-[0.72rem] font-medium tracking-wider uppercase text-[var(--portal-color-text-secondary)]">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </>
   );
 }
@@ -564,6 +637,21 @@ function HomeDbSectionsSkeleton() {
           <div className="h-64 bg-gray-100 dark:bg-gray-900 rounded-2xl" />
           <div className="h-64 bg-gray-100 dark:bg-gray-900 rounded-2xl" />
           <div className="h-64 bg-gray-100 dark:bg-gray-900 rounded-2xl" />
+        </div>
+      </div>
+      {/* Books Section Skeleton */}
+      <div className="w-full border-y border-compat-soft bg-[var(--portal-color-surface)] py-20 px-8">
+        <div className="max-w-[1200px] mx-auto w-full">
+          <div className="flex items-baseline justify-between mb-10">
+            <div className="h-6 w-48 bg-gray-200 dark:bg-gray-800 rounded" />
+            <div className="h-4 w-16 bg-gray-200 dark:bg-gray-800 rounded" />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <div className="h-48 bg-gray-100 dark:bg-gray-900 rounded-xl" />
+            <div className="h-48 bg-gray-100 dark:bg-gray-900 rounded-xl" />
+            <div className="h-48 bg-gray-100 dark:bg-gray-900 rounded-xl" />
+            <div className="h-48 bg-gray-100 dark:bg-gray-900 rounded-xl" />
+          </div>
         </div>
       </div>
     </div>
