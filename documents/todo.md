@@ -8,5 +8,7 @@
 - [ ] 添加中文readme-zh.md
 
 **About**
-- [ ] 添加中文About Site
+- [ ] 添加About Site
 
+**ebook**
+[schema.prisma#L261-261](textBlock;file:///Users/rick/src/portal/packages/db/prisma/schema.prisma#L261-261) 加一个eBook的license字段，让用户可以放心通过该链接阅读eBook。目前

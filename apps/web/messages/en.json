@@ -186,6 +186,28 @@
   "About": {
     "title": "The Developer",
     "subtitle": "About Me",
+    "siteSubtitle": "About Site",
+    "siteTitle": "Portal Platform & Architecture",
+    "siteDesc": "Portal is a modern, modular personal website platform built from scratch. It integrates technical blog, portfolio showcase, AI trending repos, book reviews, friend links, and developer utilities into a unified digital workspace.",
+    "modulesTitle": "Main Modules",
+    "techTitle": "Tech Stack & Architecture",
+    "openSourceTitle": "Self-Developed Open Source Project",
+    "openSourceDesc": "This website is an open-source personal portal system. You are welcome to inspect the source code, star the repository, or deploy your own instance.",
+    "viewOnGithub": "View Source on GitHub",
+    "modules": {
+      "blog": "Blog — Technical articles, insights & deep-dive writing",
+      "trending": "AI Trending — Weekly GitHub hot repos with AI summaries",
+      "portfolio": "Portfolio — Featured projects, works & applications",
+      "books": "Books — Recommended reading list & book reflections",
+      "links": "Links — Blog roll & friendly connections",
+      "tools": "Tools — Handy developer utilities (Base64, JSON, JWT, Markdown)"
+    },
+    "tech": {
+      "core": "Next.js 15 (App Router), React 19, TypeScript",
+      "api": "tRPC v11, Prisma ORM, PostgreSQL, Redis",
+      "search": "Meilisearch, Cloudflare R2 / S3 Storage",
+      "feature": "next-intl (Bilingual), NextAuth.js, TailwindCSS"
+    },
     "intro1": "Hello! I'm Jane Doe, a Full-Stack Engineer who loves building tools that make development easier and more enjoyable.",
     "intro2": "With a background in computer science and years of experience in the JavaScript ecosystem, I focus on creating performant, accessible, and beautiful web applications.",
     "intro3": "When I'm not coding, you can find me exploring new technologies, contributing to open source, or sharing my knowledge through writing.",

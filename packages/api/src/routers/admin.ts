@@ -379,7 +379,7 @@ export const adminRouter = router({
           .min(1)
           .regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores'),
         title: z.string().min(1),
-        coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
+        coverImageURL: z.string().nullable().optional().or(z.literal('')),
         coverImage: z.string().nullable().optional().or(z.literal('')),
         author: z.string().min(1),
         publisher: z.string().nullable().optional().or(z.literal('')),
@@ -427,7 +427,7 @@ export const adminRouter = router({
           .regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores')
           .optional(),
         title: z.string().min(1).optional(),
-        coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
+        coverImageURL: z.string().nullable().optional().or(z.literal('')),
         coverImage: z.string().nullable().optional().or(z.literal('')),
         author: z.string().min(1).optional(),
         publisher: z.string().nullable().optional().or(z.literal('')),

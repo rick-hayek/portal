@@ -67,12 +67,8 @@ export default function AdminNewBookPage() {
       setError('Title, Author, and URL Slug are required.');
       return;
     }
-    if (coverSource === 'url' && coverImageURL.trim() && !coverImageURL.startsWith('http')) {
-      setError('Please provide a valid image URL starting with http/https.');
-      return;
-    }
-    if (!coverImage && !coverImageURL) {
-      setError('Please provide a book cover (either upload one or provide a URL).');
+    if (!coverImage && !coverImageURL.trim()) {
+      setError('Please provide a book cover (either upload one or provide a URL/path).');
       return;
     }
 
