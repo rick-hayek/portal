@@ -14,6 +14,7 @@
     "profile": "个人中心",
     "signOut": "退出登录",
     "signIn": "登录",
+    "account": "账号中心",
     "trending": "AI 热榜"
   },
   "Themes": {
@@ -346,5 +347,17 @@
     "saving": "保存中...",
     "consecutiveWeeks": "连续 {weeks} 周上榜",
     "consecutiveWeeksShort": "{weeks}周连榜"
+  },
+  "Auth": {
+    "welcome": "欢迎来到 {title}",
+    "subtitle": "记录、分享与感悟",
+    "github": "使用 GitHub 账号登录",
+    "or": "或",
+    "emailPlaceholder": "电子邮箱",
+    "passwordPlaceholder": "密码",
+    "invalidCredentials": "邮箱或密码错误",
+    "verifying": "正在验证...",
+    "signInButton": "登录",
+    "cancel": "取消"
   }
 }

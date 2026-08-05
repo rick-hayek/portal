@@ -32,6 +32,11 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
   const userMenuRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
 
+  // Close mobile drawer menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   const isAdmin = session?.user?.role === 'admin';
   const displayNavItems = isAdmin ? [...navItems, { href: '/admin', label: 'Admin' }] : navItems;
 
@@ -272,8 +277,8 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                   key={item.href}
                   href={item.href as any}
                   className={`transition-colors text-[0.82rem] tracking-tight whitespace-nowrap ${isActive
-                      ? 'font-bold text-[var(--portal-color-primary)]'
-                      : 'font-medium text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-text)]'
+                    ? 'font-bold text-[var(--portal-color-primary)]'
+                    : 'font-medium text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-text)]'
                     }`}
                 >
                   {translatedLabel}
@@ -294,9 +299,22 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
               <LanguageSwitcher />
               <ThemeSwitcher />
             </div>
-            <div ref={userMenuRef} className="shrink-0">
+
+            {/* Desktop UserMenu */}
+            <div ref={userMenuRef} className="hidden md:block shrink-0">
               <UserMenu />
             </div>
+
+            {/* Mobile Admin Quick Button — shown on mobile top right when logged in as admin */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="flex items-center gap-1.5 rounded-full bg-[var(--portal-color-primary-soft)] border border-[var(--portal-color-primary)]/30 px-3 py-1 text-xs font-bold text-[var(--portal-color-primary)] transition-colors hover:bg-[var(--portal-color-primary)] hover:text-white md:hidden"
+              >
+                <span>⚙️</span>
+                <span>{t('admin')}</span>
+              </Link>
+            )}
 
             {/* Hamburger — shown below md (mobile) OR when compact (desktop overflow) */}
             <button
@@ -337,41 +355,51 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
           >
             {/* Main Navigation Links (Visible only below md) */}
             <nav className="flex flex-col gap-1 md:hidden">
-              {displayNavItems.map((item) => {
-                const labelKey = item.label.toLowerCase() as any;
-                const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
-                const isActive =
-                  item.href === '/'
-                    ? pathname === '/'
-                    : pathname === item.href || pathname.startsWith(item.href + '/');
+              {displayNavItems
+                .filter((item) => !(isAdmin && item.href === '/admin'))
+                .map((item) => {
+                  const labelKey = item.label.toLowerCase() as any;
+                  const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
+                  const isActive =
+                    item.href === '/'
+                      ? pathname === '/'
+                      : pathname === item.href || pathname.startsWith(item.href + '/');
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href as any}
-                    className={`rounded-md px-3 py-2 text-sm transition-colors ${isActive
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href as any}
+                      className={`rounded-md px-3 py-2 text-sm transition-colors ${isActive
                         ? 'bg-[var(--portal-color-surface-alt)] text-[var(--portal-color-primary)] font-bold'
                         : 'text-[var(--portal-color-text-tertiary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)] font-medium'
-                      }`}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {translatedLabel}
-                  </Link>
-                );
-              })}
+                        }`}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {translatedLabel}
+                    </Link>
+                  );
+                })}
             </nav>
 
             {/* Top Divider (Visible only below md) */}
             <div className="mt-3 border-t border-[var(--portal-color-border)] md:hidden" />
 
-            {/* Settings Actions: Search, Language, Theme */}
-            <div className="pt-4 flex flex-row items-center justify-center gap-3 px-3 w-full">
+            {/* Settings Actions Row 1: Search, Language, Theme */}
+            <div className="pt-3 pb-1 flex flex-row items-center justify-center gap-3 px-3 w-full">
               <SearchDialog
                 className="flex w-36 items-center gap-2 rounded-full border border-compat bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] transition-colors hover:border-[var(--portal-color-primary)] hover:text-[var(--portal-color-text)] py-2 px-3 text-[0.78rem]"
                 showLabel={true}
               />
-              <LanguageSwitcher />
-              <ThemeSwitcher iconOnly={true} />
+              <LanguageSwitcher onItemClick={() => setMobileOpen(false)} />
+              <ThemeSwitcher iconOnly={true} onItemClick={() => setMobileOpen(false)} />
+            </div>
+
+            {/* Divider Line between Search row & User Account row */}
+            <div className="my-2.5 border-t border-[var(--portal-color-border)]/60 md:hidden" />
+
+            {/* Settings Actions Row 2: User Account / Login */}
+            <div className="pt-1 pb-1 px-1 md:hidden">
+              <UserMenu showDetails={true} align="left" onItemClick={() => setMobileOpen(false)} />
             </div>
           </div>
         )}

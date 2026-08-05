@@ -14,6 +14,7 @@
     "profile": "Profile",
     "signOut": "Sign Out",
     "signIn": "Sign In",
+    "account": "Account",
     "trending": "AI Trending"
   },
   "Themes": {
@@ -346,5 +347,17 @@
     "saving": "Saving...",
     "consecutiveWeeks": "{weeks} wks on list",
     "consecutiveWeeksShort": "{weeks}wks streak"
+  },
+  "Auth": {
+    "welcome": "Welcome to {title}",
+    "subtitle": "A personal portal for fun",
+    "github": "Continue with GitHub",
+    "or": "OR",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "invalidCredentials": "Invalid email or password",
+    "verifying": "Verifying...",
+    "signInButton": "Sign In",
+    "cancel": "Cancel"
   }
 }

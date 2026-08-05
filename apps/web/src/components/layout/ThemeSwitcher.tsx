@@ -5,7 +5,13 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
 
-export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
+export function ThemeSwitcher({
+  iconOnly = false,
+  onItemClick,
+}: {
+  iconOnly?: boolean;
+  onItemClick?: () => void;
+}) {
   const t = useTranslations('Themes');
   const { themeId, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -65,11 +71,16 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
           }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
         : '💻';
 
+  const handleChange = (val: string) => {
+    setTheme(val as any);
+    onItemClick?.();
+  };
+
   if (iconOnly) {
     return (
       <Dropdown
         value={displayThemeId}
-        onChange={(val) => setTheme(val as any)}
+        onChange={handleChange}
         options={themeOptions}
         align="right"
         menuClassName="w-48"
@@ -90,7 +101,7 @@ export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
     <div className="portal-theme-switcher w-44">
       <Dropdown
         value={displayThemeId}
-        onChange={(val) => setTheme(val as any)}
+        onChange={handleChange}
         options={themeOptions}
         align="right"
         menuClassName="w-48"
