@@ -48,6 +48,7 @@ export const siteConfigSchema = z.object({
             role: z.string(),
             company: z.string(),
             period: z.string(),
+            public: z.boolean().default(true).optional(),
           }),
         )
         .optional(),

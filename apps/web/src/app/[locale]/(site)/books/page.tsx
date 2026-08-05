@@ -18,6 +18,14 @@ interface PageProps {
   params: Promise<{ locale: string }>;
 }
 
+export async function generateMetadata({ params }: PageProps) {
+  const { locale } = await params;
+  const tNav = await getTranslations({ locale, namespace: 'Navigation' });
+  return {
+    title: tNav('books'),
+  };
+}
+
 export default async function PublicBooksPage({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Books' });

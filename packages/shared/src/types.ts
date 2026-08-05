@@ -25,6 +25,7 @@ export interface SiteConfig {
       role: string;
       company: string;
       period: string;
+      public?: boolean;
     }[];
     socialLinks?: {
       label: string;

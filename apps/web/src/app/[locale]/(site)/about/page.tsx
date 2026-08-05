@@ -49,7 +49,7 @@ export default function AboutPage() {
     `${t('intro1')}\n\n${t('intro2')}\n\n${t('intro3')}`;
   const paragraphs = rawDescription.split(/\n\s*\n/).filter((p: string) => p.trim().length > 0);
 
-  const experiences =
+  const rawExperiences =
     aboutData?.experiences && aboutData.experiences.length > 0
       ? aboutData.experiences
       : [
@@ -57,10 +57,13 @@ export default function AboutPage() {
           role: t('jobs.senior'),
           company: 'Tech Corp',
           period: `2023 — ${t('jobs.present')}`,
+          public: true,
         },
-        { role: t('jobs.stack'), company: 'Startup Inc', period: '2020 — 2023' },
-        { role: t('jobs.frontend'), company: 'Web Studio', period: '2018 — 2020' },
+        { role: t('jobs.stack'), company: 'Startup Inc', period: '2020 — 2023', public: true },
+        { role: t('jobs.frontend'), company: 'Web Studio', period: '2018 — 2020', public: true },
       ];
+
+  const experiences = rawExperiences.filter((exp: any) => exp.public !== false);
 
   const rawSocialLinks =
     aboutData?.socialLinks && aboutData.socialLinks.length > 0

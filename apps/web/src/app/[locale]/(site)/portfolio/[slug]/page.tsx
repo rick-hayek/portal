@@ -1,6 +1,7 @@
 import { marked } from 'marked';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 import { getTRPCServer } from '@/lib/trpc-server';
 
@@ -26,6 +27,22 @@ interface Project {
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps) {
+  const { locale, slug } = await params;
+  try {
+    const trpc = await getTRPCServer();
+    const project = (await trpc.portfolio.bySlug({ slug })) as Project | null;
+    if (!project) return { title: 'Not Found' };
+    const tNav = await getTranslations({ locale, namespace: 'Navigation' });
+    return {
+      title: `${project.title} | ${tNav('portfolio')}`,
+      description: project.description ?? '',
+    };
+  } catch {
+    return { title: 'Project Details' };
+  }
 }
 
 export default async function ProjectDetailPage({ params }: PageProps) {

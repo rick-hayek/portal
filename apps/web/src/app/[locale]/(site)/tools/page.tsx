@@ -1,7 +1,16 @@
 import { FileJson, FileText, Hash, Settings2, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import React from 'react';
 import { Link } from '@/i18n/routing';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const tNav = await getTranslations({ locale, namespace: 'Navigation' });
+  return {
+    title: tNav('tools'),
+  };
+}
 
 export default function ToolsPage() {
   const t = useTranslations('Tools');

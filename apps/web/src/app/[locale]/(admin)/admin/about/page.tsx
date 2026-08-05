@@ -10,6 +10,7 @@ interface ExperienceItem {
   role: string;
   company: string;
   period: string;
+  public?: boolean;
 }
 
 interface SocialLinkItem {
@@ -129,7 +130,7 @@ export default function AdminAboutPage() {
 
   // Handle adding experience
   const handleAddExperience = () => {
-    setExperiences([...experiences, { role: '', company: '', period: '' }]);
+    setExperiences([...experiences, { role: '', company: '', period: '', public: true }]);
   };
 
   // Handle removing experience
@@ -138,7 +139,7 @@ export default function AdminAboutPage() {
   };
 
   // Handle experience field change
-  const handleExperienceChange = (index: number, field: keyof ExperienceItem, value: string) => {
+  const handleExperienceChange = (index: number, field: keyof ExperienceItem, value: any) => {
     const updated = [...experiences];
     updated[index] = { ...updated[index], [field]: value };
     setExperiences(updated);
@@ -620,6 +621,15 @@ export default function AdminAboutPage() {
                       className="input-base"
                     />
                   </div>
+                  <label className="flex items-center gap-1.5 cursor-pointer text-xs font-medium text-[var(--portal-color-text-secondary)] select-none shrink-0 px-1.5 py-1 rounded-md border border-[var(--portal-color-border-soft)] bg-[var(--portal-color-surface-alt)] hover:bg-[var(--portal-color-surface)]">
+                    <input
+                      type="checkbox"
+                      checked={exp.public !== false}
+                      onChange={(e) => handleExperienceChange(index, 'public', e.target.checked)}
+                      className="rounded border-[var(--portal-color-border)] text-[var(--portal-color-primary)] focus:ring-[var(--portal-color-primary)] h-3.5 w-3.5 cursor-pointer"
+                    />
+                    <span>{exp.public !== false ? 'Public' : 'Hidden'}</span>
+                  </label>
                   <button
                     type="button"
                     onClick={() => handleRemoveExperience(index)}

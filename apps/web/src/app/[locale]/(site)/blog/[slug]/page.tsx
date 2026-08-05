@@ -32,13 +32,19 @@ export async function generateStaticParams() {
   );
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
   const trpc = await getTRPCServer();
   const post = await trpc.post.bySlug({ slug });
   if (!post) return { title: 'Not Found' };
+
+  const tNav = await getTranslations({ locale, namespace: 'Navigation' });
   return {
-    title: `${post.title} — ${siteConfig.site.title}`,
+    title: `${post.title} | ${tNav('blog')}`,
     description: post.excerpt ?? '',
   };
 }

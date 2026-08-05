@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Blog' });
   return {
-    title: `${t('title')} — ${siteConfig.site.title}`,
+    title: t('title'),
     description: t('latestPosts'),
   };
 }

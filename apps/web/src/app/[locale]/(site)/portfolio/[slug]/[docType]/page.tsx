@@ -1,21 +1,20 @@
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 import { SafeMDXRemote } from '@/components/blog/SafeMDXRemote';
 import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
 import { getTRPCServer } from '@/lib/trpc-server';
-import siteConfig from '@/site.config';
 
 export const revalidate = 3600; // ISR validation every hour
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string; docType: string }>;
+  params: Promise<{ locale: string; slug: string; docType: string }>;
 }) {
-  const { slug, docType } = await params;
+  const { locale, slug, docType } = await params;
   if (docType !== 'Privacy_Policy' && docType !== 'Terms_of_Service') {
     return { title: 'Not Found' };
   }
@@ -24,9 +23,10 @@ export async function generateMetadata({
   const project = await trpc.portfolio.bySlug({ slug });
   if (!project) return { title: 'Not Found' };
 
+  const tNav = await getTranslations({ locale, namespace: 'Navigation' });
   const docTitle = docType === 'Privacy_Policy' ? 'Privacy Policy' : 'Terms of Service';
   return {
-    title: `${docTitle} - ${project.title} — ${siteConfig.site.title}`,
+    title: `${docTitle} | ${project.title} | ${tNav('portfolio')}`,
   };
 }
 

@@ -28,7 +28,7 @@
   },
   "Index": {
     "badge": "我的空间",
-    "initComment": "// 夫唯不争，故天下莫能与之争",
+    "initComment": "// 初始化进行中 ...",
     "title1": "生活与工作",
     "title2": "随想随记",
     "description": "记录和分享技术心得、生活感悟，顺便推荐个书",
@@ -117,8 +117,8 @@
     }
   },
   "Links": {
-    "title": "书签与友链",
-    "description": "收集我常用的工具、欣赏的人以及给我带来灵感的网站。",
+    "title": "友情链接",
+    "description": "一些欣赏的人，和给我带来灵感的网站。",
     "noLinks": "暂无链接",
     "noLinksDesc": "看起来收藏夹暂时是空的。",
     "selfInfoTitle": "本站友链信息",
@@ -327,7 +327,7 @@
   "Trending": {
     "sectionLabel": "AI / LLM",
     "title": "AI 热榜",
-    "subtitle": "来自 GitHub 的本周最热门 AI 与大模型开源项目",
+    "subtitle": "来自 GitHub 的本周最热门 AI 与大模型开源项目（每周日更新）",
     "weekOf": "所属周",
     "stars": "Stars",
     "forks": "Forks",
@@ -342,7 +342,7 @@
     "loginToStar": "使用 GitHub 登录以 star 仓库",
     "starFailed": "操作失败，请检查 GitHub 授权！",
     "summarizeBtn": "AI 摘要",
-    "summarizeTitle": "本周 AI 热门开源趋势",
+    "summarizeTitle": "本周 AI 开源项目焦虑排行榜",
     "saveImage": "保存图片",
     "saving": "保存中...",
     "consecutiveWeeks": "连续 {weeks} 周上榜",

@@ -5,10 +5,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const tNav = await getTranslations({ locale, namespace: 'Navigation' });
   return {
-    title: tNav('resume'),
+    title: tNav('portfolio'),
   };
 }
 
-export default function ResumeLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+export default function PortfolioLayout({ children }: { children: React.ReactNode }) {
+  return children;
 }

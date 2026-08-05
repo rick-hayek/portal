@@ -6,6 +6,7 @@ export interface ExperienceItem {
   role: string;
   company: string;
   period: string;
+  public?: boolean;
 }
 
 export interface SocialLinkItem {
@@ -88,6 +89,7 @@ export const aboutRouter = router({
             role: z.string(),
             company: z.string(),
             period: z.string(),
+            public: z.boolean().default(true).optional(),
           }),
         ),
         socialLinks: z.array(
