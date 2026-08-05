@@ -47,6 +47,8 @@ export default function LinksPage() {
     } else if (typeof aboutData.email === 'string') {
       targetEmail = aboutData.email;
     }
+  } else if (process.env.NEXT_PUBLIC_EMAIL) {
+    targetEmail = process.env.NEXT_PUBLIC_EMAIL;
   }
 
   const siteName = selfLink?.name || 'Voocii';
@@ -253,7 +255,7 @@ export default function LinksPage() {
           {/* Buttons: Send Email & Copy Application Template */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <a
-              href={`mailto:${targetEmail}?subject=${encodeURIComponent('友情链接申请')}&body=${encodeURIComponent(`站点名称：\n站点链接：\n站点描述：\n头像链接：\nRSS订阅：\n网页截图：`)}`}
+              href={`mailto:${targetEmail}?subject=${encodeURIComponent('友情链接申请 - Voocii')}&body=${encodeURIComponent(`站点名称：\n站点链接：\n站点描述：\n头像链接：\nRSS订阅：\n网页截图：`)}`}
               className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-primary)] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm cursor-pointer no-underline"
             >
               <Mail className="h-4 w-4" />

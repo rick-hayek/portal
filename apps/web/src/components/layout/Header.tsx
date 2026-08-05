@@ -1,6 +1,18 @@
 'use client';
 
 import type { NavItem } from '@portal/shared';
+import {
+  Book,
+  Briefcase,
+  FileText,
+  Flame,
+  Globe,
+  Home,
+  Link2,
+  Settings,
+  User,
+  Wrench,
+} from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -9,6 +21,31 @@ import { UserMenu } from '../auth/UserMenu';
 import { SearchDialog } from '../search/SearchDialog';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeSwitcher } from './ThemeSwitcher';
+
+const getNavIcon = (href: string) => {
+  switch (href) {
+    case '/':
+      return <Home className="h-4 w-4 shrink-0" />;
+    case '/blog':
+      return <FileText className="h-4 w-4 shrink-0" />;
+    case '/trending':
+      return <Flame className="h-4 w-4 shrink-0" />;
+    case '/portfolio':
+      return <Briefcase className="h-4 w-4 shrink-0" />;
+    case '/books':
+      return <Book className="h-4 w-4 shrink-0" />;
+    case '/links':
+      return <Link2 className="h-4 w-4 shrink-0" />;
+    case '/tools':
+      return <Wrench className="h-4 w-4 shrink-0" />;
+    case '/about':
+      return <User className="h-4 w-4 shrink-0" />;
+    case '/admin':
+      return <Settings className="h-4 w-4 shrink-0" />;
+    default:
+      return <Globe className="h-4 w-4 shrink-0" />;
+  }
+};
 
 interface HeaderProps {
   siteTitle: string;
@@ -311,7 +348,7 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                 href="/admin"
                 className="flex items-center gap-1.5 rounded-full bg-[var(--portal-color-primary-soft)] border border-[var(--portal-color-primary)]/30 px-3 py-1 text-xs font-bold text-[var(--portal-color-primary)] transition-colors hover:bg-[var(--portal-color-primary)] hover:text-white md:hidden"
               >
-                <span>⚙️</span>
+                <Settings className="h-3.5 w-3.5" />
                 <span>{t('admin')}</span>
               </Link>
             )}
@@ -369,13 +406,14 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                     <Link
                       key={item.href}
                       href={item.href as any}
-                      className={`rounded-md px-3 py-2 text-sm transition-colors ${isActive
+                      className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ${isActive
                         ? 'bg-[var(--portal-color-surface-alt)] text-[var(--portal-color-primary)] font-bold'
                         : 'text-[var(--portal-color-text-tertiary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)] font-medium'
                         }`}
                       onClick={() => setMobileOpen(false)}
                     >
-                      {translatedLabel}
+                      {getNavIcon(item.href)}
+                      <span>{translatedLabel}</span>
                     </Link>
                   );
                 })}

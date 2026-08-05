@@ -11,7 +11,7 @@ registerDefaultModules();
 
 // Get nav items dynamically based on enabled modules in siteConfig
 const navItems: NavItem[] = [
-  { label: 'Home', href: '/', icon: '🏠', order: 0 },
+  { label: 'Home', href: '/', order: 0 },
   ...getNavItems(siteConfig),
 ].filter(
   (item) =>
