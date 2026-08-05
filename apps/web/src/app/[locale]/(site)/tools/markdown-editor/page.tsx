@@ -17,6 +17,7 @@ import type React from 'react';
 import { useMemo, useRef, useState } from 'react';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 import { ToolDropdown, ToolHeader } from '@/components/tools/ToolHeader';
+import { highlightCode } from '@/lib/highlight';
 import { sanitizeMdxContent } from '@/lib/mdx-sanitizer';
 
 const SAMPLE_MARKDOWN = `# 🚀 Welcome to Markdown Editor
@@ -140,6 +141,23 @@ const parseGfmAlertsInHtml = (html: string) => {
     return match;
   });
 };
+
+marked.use({
+  renderer: {
+    code(token: any) {
+      const text = typeof token === 'object' && token !== null ? (token.text ?? '') : String(token || '');
+      const lang = typeof token === 'object' && token !== null ? (token.lang ?? '') : '';
+      const language = (lang || '').trim().split(/\s+/)[0].toLowerCase();
+
+      if (language === 'mermaid') {
+        return `<pre class="language-mermaid"><code class="language-mermaid">${text}</code></pre>\n`;
+      }
+
+      const highlighted = highlightCode(text, language);
+      return `<pre class="hljs"><code class="hljs language-${language}">${highlighted}</code></pre>\n`;
+    },
+  },
+});
 
 export default function MarkdownEditorPage() {
   const t = useTranslations('ToolsMarkdown');

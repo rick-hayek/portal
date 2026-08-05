@@ -91,6 +91,17 @@ export default function rehypeCustomHighlight() {
         }
       }
 
+      // Ensure class list exists and includes 'hljs'
+      if (!node.properties) {
+        node.properties = {};
+      }
+      if (!Array.isArray(node.properties.className)) {
+        node.properties.className = [];
+      }
+      if (!node.properties.className.includes('hljs')) {
+        node.properties.className.unshift('hljs');
+      }
+
       if (!lang) return;
 
       const text = nodeToText(node);
@@ -99,11 +110,6 @@ export default function rehypeCustomHighlight() {
         const result = lowlight.highlight(lang, text, { prefix: 'hljs-' });
         if (result.children && result.children.length > 0) {
           node.children = result.children;
-        }
-
-        // Add the standard "hljs" class to style the block
-        if (!node.properties.className.includes('hljs')) {
-          node.properties.className.unshift('hljs');
         }
       } catch (error) {
         // Ignore parsing errors for unknown/unregistered languages
