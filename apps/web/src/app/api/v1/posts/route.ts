@@ -47,7 +47,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { title, slug, content, excerpt, status = 'draft', categoryId, tagIds = [] } = body;
+    const { title, slug, content, excerpt, status = 'draft', category, tagIds = [] } = body;
 
     if (!title || !slug || !content) {
       return NextResponse.json(
@@ -56,13 +56,28 @@ export async function POST(req: Request) {
       );
     }
 
+    let categoryId: string | undefined = undefined;
+    if (category) {
+      const caller1 = await getPublicCaller();
+      const categories = await caller1.category.list();
+      const foundCategory = categories.find((c) =>
+        c.id === category ||
+        c.slug === category ||
+        c.name === category ||
+        c.name_en === category,
+      );
+      if (foundCategory) {
+        categoryId = foundCategory.id;
+      }
+    }
+
     const post = await caller.admin.postCreate({
       title,
       slug,
       content,
       excerpt: excerpt || undefined,
       status,
-      categoryId: categoryId || undefined,
+      categoryId,
       tagIds,
     });
 
