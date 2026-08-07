@@ -253,7 +253,6 @@ model Book {
   slug               String     @unique
   title              String
   coverImageURL      String?
-  coverImage         String?    @db.Text
   author             String
   publisher          String?
   translator         String?

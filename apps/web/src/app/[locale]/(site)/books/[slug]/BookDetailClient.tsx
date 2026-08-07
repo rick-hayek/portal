@@ -12,7 +12,6 @@ interface Book {
   slug: string;
   title: string;
   coverImageURL: string | null;
-  coverImage: string | null;
   author: string;
   publisher: string | null;
   translator: string | null;
@@ -150,7 +149,7 @@ export function BookDetailClient() {
     );
   }
 
-  const coverSrc = book.coverImage ?? book.coverImageURL ?? '';
+  const coverSrc = book.coverImageURL ?? '';
 
   return (
     <div className="mx-auto max-w-[1000px] px-8 py-16">

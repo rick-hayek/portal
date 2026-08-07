@@ -7,7 +7,6 @@ interface Book {
   slug: string;
   title: string;
   coverImageURL: string | null;
-  coverImage: string | null;
   author: string;
   publisher: string | null;
   translator: string | null;
@@ -79,7 +78,7 @@ export default async function PublicBooksPage({ params }: PageProps) {
         ) : (
           <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 sm:gap-x-8 sm:gap-y-12">
             {books.map((book) => {
-              const coverSrc = book.coverImage ?? book.coverImageURL ?? '';
+              const coverSrc = book.coverImageURL ?? '';
               return (
                 <Link
                   key={book.id}

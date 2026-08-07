@@ -481,7 +481,7 @@ async function HomeDbSections({ locale }: { locale: string }) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
             {books.length > 0 ? (
               books.map((book: any) => {
-                const coverSrc = book.coverImage ?? book.coverImageURL ?? '';
+                const coverSrc = book.coverImageURL ?? '';
                 return (
                   <Link
                     key={book.id}

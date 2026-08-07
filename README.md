@@ -1,4 +1,4 @@
-# Portal
+# Voocii Portal
 
 A modern, full-stack personal portal and portfolio built with Next.js 16, tRPC, Prisma, and Tailwind CSS v4.
 

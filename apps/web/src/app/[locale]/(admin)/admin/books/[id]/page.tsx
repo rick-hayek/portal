@@ -18,9 +18,7 @@ export default function AdminEditBookPage({ params }: PageProps) {
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [author, setAuthor] = useState('');
-  const [coverSource, setCoverSource] = useState<'url' | 'upload'>('url');
   const [coverImageURL, setCoverImageURL] = useState('');
-  const [coverImage, setCoverImage] = useState(''); // Base64
   const [publisher, setPublisher] = useState('');
   const [translator, setTranslator] = useState('');
   const [isbn, setIsbn] = useState('');
@@ -73,13 +71,7 @@ export default function AdminEditBookPage({ params }: PageProps) {
         setOriginalBookId(book.originalBookId ?? '');
         setDescription(book.description ?? '');
         setReview(book.review ?? '');
-        if (book.coverImage) {
-          setCoverSource('upload');
-          setCoverImage(book.coverImage);
-        } else if (book.coverImageURL) {
-          setCoverSource('url');
-          setCoverImageURL(book.coverImageURL);
-        }
+        setCoverImageURL(book.coverImageURL ?? '');
       } else {
         setError('Book not found');
       }
@@ -96,29 +88,14 @@ export default function AdminEditBookPage({ params }: PageProps) {
     }
   }, [id, loadBook]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 500 * 1024) {
-      alert('File size exceeds 500KB limit.');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setCoverImage(reader.result as string);
-      setCoverImageURL(''); // Clear remote URL when uploading local file
-    };
-    reader.readAsDataURL(file);
-  };
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!title.trim() || !author.trim() || !slug.trim()) {
       setError('Title, Author, and URL Slug are required.');
       return;
     }
-    if (!coverImage && !coverImageURL.trim()) {
-      setError('Please provide a book cover (either upload one or provide a URL/path).');
+    if (!coverImageURL.trim()) {
+      setError('Please provide a book cover URL.');
       return;
     }
 
@@ -135,8 +112,7 @@ export default function AdminEditBookPage({ params }: PageProps) {
               title: title.trim(),
               author: author.trim(),
               slug: slug.trim().toLowerCase(),
-              coverImageURL: coverSource === 'url' && coverImageURL ? coverImageURL.trim() : null,
-              coverImage: coverSource === 'upload' && coverImage ? coverImage : null,
+              coverImageURL: coverImageURL.trim(),
               publisher: publisher.trim() || null,
               translator: translator.trim() || null,
               isbn: isbn.trim() || null,
@@ -248,68 +224,19 @@ export default function AdminEditBookPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Cover Image Block */}
-        <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)]/30 p-4 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-[var(--portal-color-text)]">
-              Book Cover *
-            </span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setCoverSource('url')}
-                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
-                  coverSource === 'url'
-                    ? 'bg-[var(--portal-color-primary)] text-white'
-                    : 'bg-[var(--portal-color-surface)] border border-compat text-[var(--portal-color-text-secondary)]'
-                }`}
-              >
-                URL Link
-              </button>
-              <button
-                type="button"
-                onClick={() => setCoverSource('upload')}
-                className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
-                  coverSource === 'upload'
-                    ? 'bg-[var(--portal-color-primary)] text-white'
-                    : 'bg-[var(--portal-color-surface)] border border-compat text-[var(--portal-color-text-secondary)]'
-                }`}
-              >
-                Upload File
-              </button>
-            </div>
-          </div>
-
-          {coverSource === 'url' ? (
-            <div>
-              <input
-                type="text"
-                value={coverImageURL}
-                onChange={(e) => {
-                  setCoverImageURL(e.target.value);
-                  setCoverImage('');
-                }}
-                placeholder="https://your-site.com/cover.jpg"
-                className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-              />
-            </div>
-          ) : (
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full text-sm text-[var(--portal-color-text-secondary)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-compat file:bg-[var(--portal-color-surface)] file:text-[var(--portal-color-text)] file:text-sm file:font-semibold hover:file:bg-[var(--portal-color-surface-alt)]"
-              />
-              {(coverImage || coverImageURL) && (
-                <img
-                  src={coverImage || coverImageURL}
-                  alt="Current cover"
-                  className="h-20 w-14 object-cover rounded shadow border border-[var(--portal-color-border)]"
-                />
-              )}
-            </div>
-          )}
+        {/* Cover Image URL Block */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
+            Book Cover URL *
+          </label>
+          <input
+            type="text"
+            required
+            value={coverImageURL}
+            onChange={(e) => setCoverImageURL(e.target.value)}
+            placeholder="e.g. /uploads/book-daodejing.jpeg or https://example.com/cover.jpg"
+            className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+          />
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3">

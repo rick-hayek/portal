@@ -178,7 +178,7 @@ export default function PostsPage() {
                 Category
               </th>
               <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
-                Status
+                Slug
               </th>
               <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
                 Comments
@@ -217,26 +217,25 @@ export default function PostsPage() {
                   className="border-b border-[var(--portal-color-border)] hover:bg-[var(--portal-color-surface)]"
                 >
                   <td className="px-4 py-3">
-                    <Link
-                      href={`/admin/posts/${post.id}`}
-                      className="font-medium text-[var(--portal-color-text)] hover:text-[var(--portal-color-primary)]"
-                    >
-                      {post.title}
-                    </Link>
+                    <div className="inline-flex items-center gap-2 flex-wrap">
+                      <Link
+                        href={`/admin/posts/${post.id}`}
+                        className="font-medium text-[var(--portal-color-text)] hover:text-[var(--portal-color-primary)]"
+                      >
+                        {post.title}
+                      </Link>
+                      {post.status === 'draft' && (
+                        <span className="inline-flex items-center rounded-full bg-[#d8caa8]/60 px-2.5 py-0.5 text-xs font-semibold text-[#eab308] dark:bg-[#4a4033] dark:text-[#facc15]">
+                          draft
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)]">
                     {post.category?.name ?? '—'}
                   </td>
-                  <td className="hidden md:table-cell px-4 py-3">
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs ${
-                        post.status === 'published'
-                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                          : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
-                      }`}
-                    >
-                      {post.status}
-                    </span>
+                  <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)] font-mono text-xs">
+                    {post.slug}
                   </td>
                   <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)]">
                     {post._count.comments}
