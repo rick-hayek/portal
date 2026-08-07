@@ -35,9 +35,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       authorStackArr = Array.isArray(authorObj.stack)
         ? authorObj.stack
         : String(authorObj.stack)
-            .split(',')
-            .map((s: string) => s.trim())
-            .filter(Boolean);
+          .split(',')
+          .map((s: string) => s.trim())
+          .filter(Boolean);
     }
   } else {
     authorStackArr = ['.NETCore', 'TypeScript', 'Vue', 'Python', 'AI Agent'];
@@ -98,8 +98,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const heroDesc = hasAuthorConfig
     ? (locale === 'en'
-        ? authorObj.description_en || authorObj.description
-        : authorObj.description) || t('description')
+      ? authorObj.description_en || authorObj.description
+      : authorObj.description) || t('description')
     : t('description');
 
   const personSchema = {
@@ -178,14 +178,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {/* Tags */}
             <div className="flex gap-4 text-[0.78rem] font-medium text-[var(--portal-color-text-secondary)]">
               <span className="flex items-center gap-1.5">
+                <span className="font-bold">TS</span>
+                TypeScript
+              </span>
+              <span className="flex items-center gap-1.5">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
                 Next.js
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="font-bold">TS</span>
-                TypeScript
               </span>
               <span className="flex items-center gap-1.5">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -323,14 +323,14 @@ async function HomeDbSections({ locale }: { locale: string }) {
               posts.map((post) => {
                 const formattedDate = post.publishedAt
                   ? (() => {
-                      const date = new Date(post.publishedAt);
-                      const isCurrentYear = date.getFullYear() === new Date().getFullYear();
-                      return date.toLocaleDateString(locale, {
-                        year: isCurrentYear ? undefined : 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      });
-                    })()
+                    const date = new Date(post.publishedAt);
+                    const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+                    return date.toLocaleDateString(locale, {
+                      year: isCurrentYear ? undefined : 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    });
+                  })()
                   : '—';
 
                 return (
