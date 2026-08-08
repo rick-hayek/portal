@@ -1,5 +1,6 @@
 'use client';
 
+import { Check, Copy } from 'lucide-react';
 import { marked } from 'marked';
 import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useState } from 'react';
@@ -96,6 +97,18 @@ export default function EditPostPage() {
   const [creatingCat, setCreatingCat] = useState(false);
 
   const [tab, setTab] = useState<'edit' | 'preview'>('edit');
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyMarkdown = async () => {
+    if (!content) return;
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy markdown', err);
+    }
+  };
 
   const handleCreateCategory = async () => {
     if (!newCatName.trim()) return;
@@ -350,29 +363,50 @@ export default function EditPostPage() {
             <label className="text-sm font-medium text-[var(--portal-color-text)]">
               Content (Markdown)
             </label>
-            <div className="flex rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] p-0.5 text-xs font-medium">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setTab('edit')}
-                className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
-                  tab === 'edit'
-                    ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
-                    : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
-                }`}
+                onClick={handleCopyMarkdown}
+                title="Copy Markdown"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)] hover:bg-[var(--portal-color-background)] transition-colors shadow-sm cursor-pointer"
               >
-                Edit
+                {copied ? (
+                  <>
+                    <Check className="h-3.5 w-3.5 text-emerald-500" />
+                    <span className="text-emerald-500 font-semibold">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3.5 w-3.5" />
+                    <span>Copy</span>
+                  </>
+                )}
               </button>
-              <button
-                type="button"
-                onClick={() => setTab('preview')}
-                className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
-                  tab === 'preview'
-                    ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
-                    : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
-                }`}
-              >
-                Preview
-              </button>
+
+              <div className="flex rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] p-0.5 text-xs font-medium">
+                <button
+                  type="button"
+                  onClick={() => setTab('edit')}
+                  className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
+                    tab === 'edit'
+                      ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
+                      : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
+                  }`}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTab('preview')}
+                  className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
+                    tab === 'preview'
+                      ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
+                      : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
+                  }`}
+                >
+                  Preview
+                </button>
+              </div>
             </div>
           </div>
 

@@ -508,9 +508,9 @@ export default function LinksAdminPage() {
             <thead className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] text-[var(--portal-color-text-secondary)]">
               <tr>
                 <th className="px-4 py-3 font-medium">Link</th>
-                <th className="px-4 py-3 font-medium">Category</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Order</th>
+                <th className="hidden md:table-cell px-4 py-3 font-medium">Category</th>
+                <th className="hidden md:table-cell px-4 py-3 font-medium">Status</th>
+                <th className="hidden md:table-cell px-4 py-3 font-medium">Order</th>
                 <th className="px-4 py-3 font-medium text-right">Actions</th>
               </tr>
             </thead>
@@ -553,11 +553,11 @@ export default function LinksAdminPage() {
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-[var(--portal-color-text-tertiary)] line-clamp-1 min-w-[200px]">
+                      <div className="text-xs text-[var(--portal-color-text-tertiary)] line-clamp-1">
                         {link.description || link.url}
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="hidden md:table-cell px-4 py-3">
                       <span className="inline-flex rounded-full bg-[var(--portal-color-primary)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--portal-color-primary)] capitalize">
                         {link.category}
                       </span>
@@ -573,7 +573,7 @@ export default function LinksAdminPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="hidden md:table-cell px-4 py-3">
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ${link.isAlive ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}
                       >
@@ -583,22 +583,26 @@ export default function LinksAdminPage() {
                         {link.isAlive ? 'Active' : 'Broken'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-[var(--portal-color-text-secondary)]">
+                    <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)]">
                       {link.sortOrder}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1.5 sm:gap-2">
                         <button
+                          type="button"
                           onClick={() => editLink(link)}
-                          className="p-1.5 text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors"
+                          className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline cursor-pointer"
                         >
-                          <Pencil className="h-4 w-4" />
+                          <Pencil className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Edit</span>
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleDelete(link.id)}
-                          className="p-1.5 text-[var(--portal-color-text-tertiary)] hover:text-red-500 transition-colors"
+                          className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Delete</span>
                         </button>
                       </div>
                     </td>
