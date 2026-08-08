@@ -49,10 +49,18 @@ export async function POST(req: Request) {
       fileData,
     });
 
-    return NextResponse.json({
-      success: true,
-      data: attachment,
-    }, { status: 201 });
+    const url = attachment.url || `/uploads/${attachment.filename}`;
+
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          ...attachment,
+          url,
+        },
+      },
+      { status: 201 },
+    );
   } catch (error: any) {
     console.error('REST POST /upload error:', error);
     if (error instanceof TRPCError) {
