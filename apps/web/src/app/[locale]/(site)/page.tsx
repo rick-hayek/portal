@@ -109,7 +109,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     url: siteConfig.site.url,
     sameAs: [
       process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/rick-hayek',
-      process.env.NEXT_PUBLIC_TWITTER_URL || 'https://twitter.com',
+      process.env.NEXT_PUBLIC_X_URL || 'https://x.com/wevoocii',
     ],
     jobTitle: 'Full-Stack Engineer',
     knowsAbout: ['Next.js', 'TypeScript', 'tRPC', 'Prisma', 'Vue', 'Python', 'AI Agent'],
