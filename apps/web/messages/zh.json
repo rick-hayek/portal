@@ -15,7 +15,8 @@
     "signOut": "退出登录",
     "signIn": "登录",
     "account": "账号中心",
-    "trending": "AI 热榜"
+    "trending": "AI 热榜",
+    "tableOfContents": "目录"
   },
   "Themes": {
     "system": "跟随系统",

@@ -15,7 +15,8 @@
     "signOut": "Sign Out",
     "signIn": "Sign In",
     "account": "Account",
-    "trending": "AI Trending"
+    "trending": "AI Trending",
+    "tableOfContents": "On this page"
   },
   "Themes": {
     "system": "System (Auto)",

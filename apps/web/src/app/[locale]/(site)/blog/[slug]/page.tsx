@@ -10,9 +10,10 @@ import { CustomBlockquote } from '@/components/blog/CustomBlockquote';
 import { MathRenderer } from '@/components/blog/MathRenderer';
 import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
 import { SafeMDXRemote } from '@/components/blog/SafeMDXRemote';
-import { Link } from '@/i18n/routing';
+import { TableOfContents } from '@/components/blog/TableOfContents';
 import { getCategoryName } from '@/lib/category';
 import rehypeCustomHighlight from '@/lib/rehype-custom-highlight';
+import { extractTocItems } from '@/lib/toc';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
 
@@ -64,6 +65,7 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   const t = await getTranslations({ locale, namespace: 'Navigation' });
+  const hasToc = extractTocItems(post.content).length > 0;
 
   const blogSchema = {
     '@context': 'https://schema.org',
@@ -92,7 +94,7 @@ export default async function BlogPostPage({
   };
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <div className="px-4 py-12 sm:px-6 lg:px-8">
       {/* Load KaTeX stylesheet and core JS script from CDN to avoid compiling local assets */}
       <link
         rel="stylesheet"
@@ -115,84 +117,107 @@ export default async function BlogPostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
       />
 
-      {/* Header */}
-      <header className="mb-8">
-        <h1 className="mb-5 text-3xl font-bold leading-tight text-[var(--portal-color-text)] sm:text-4xl">
-          {post.title}
-        </h1>
+      {/* Main Container */}
+      <div
+        className={`mx-auto max-w-3xl ${
+          hasToc
+            ? 'min-[1250px]:relative max-[1249px]:lg:flex max-[1249px]:lg:justify-center max-[1249px]:lg:gap-8 max-[1249px]:xl:gap-10'
+            : ''
+        }`}
+      >
+        {/* Main Article Content */}
+        <article className="w-full max-w-3xl shrink-0 min-w-0">
+          {/* Header */}
+          <header className="mb-8">
+            <h1 className="mb-5 text-3xl font-bold leading-tight text-[var(--portal-color-text)] sm:text-4xl">
+              {post.title}
+            </h1>
 
-        {/* Author & Post Meta */}
-        <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--portal-color-text-secondary)]">
-          {post.category && (
-            <a
-              href={`/blog?category=${post.category.slug}`}
-              className="rounded-full bg-[var(--portal-color-primary)] px-2.5 py-0.5 text-xs text-white hover:opacity-90 transition-opacity"
-            >
-              {getCategoryName(post.category, locale)}
-            </a>
-          )}
+            {/* Author & Post Meta */}
+            <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--portal-color-text-secondary)]">
+              {post.category && (
+                <a
+                  href={`/blog?category=${post.category.slug}`}
+                  className="rounded-full bg-[var(--portal-color-primary)] px-2.5 py-0.5 text-xs text-white hover:opacity-90 transition-opacity"
+                >
+                  {getCategoryName(post.category, locale)}
+                </a>
+              )}
 
-          {post.author.image && (
-            <Image
-              src={post.author.image}
-              alt={post.author.name ?? ''}
-              width={24}
-              height={24}
-              className="h-6 w-6 rounded-full object-cover"
+              {post.author.image && (
+                <Image
+                  src={post.author.image}
+                  alt={post.author.name ?? ''}
+                  width={24}
+                  height={24}
+                  className="h-6 w-6 rounded-full object-cover"
+                />
+              )}
+              <span className="font-medium text-[var(--portal-color-text)]">
+                {post.author.name}
+              </span>
+
+              {post.publishedAt && (
+                <time dateTime={new Date(post.publishedAt).toISOString()}>
+                  {new Date(post.publishedAt).toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+              )}
+            </div>
+
+            {/* Tags */}
+            {post.tags.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {post.tags.map(({ tag }) => (
+                  <a
+                    key={tag.id}
+                    href={`/blog?tag=${tag.slug}`}
+                    className="rounded-md border border-[var(--portal-color-border)] px-2 py-0.5 text-xs text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]"
+                  >
+                    #{tag.name}
+                  </a>
+                ))}
+              </div>
+            )}
+          </header>
+
+          {/* Markdown Content */}
+          <div className="prose prose-portal max-w-none">
+            <SafeMDXRemote
+              source={post.content}
+              components={{
+                AdSense,
+                blockquote: CustomBlockquote,
+              }}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm, remarkMath],
+                  rehypePlugins: [rehypeCustomHighlight, rehypeSlug],
+                },
+              }}
             />
-          )}
-          <span className="font-medium text-[var(--portal-color-text)]">{post.author.name}</span>
-
-          {post.publishedAt && (
-            <time dateTime={new Date(post.publishedAt).toISOString()}>
-              {new Date(post.publishedAt).toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </time>
-          )}
-        </div>
-
-        {/* Tags */}
-        {post.tags.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {post.tags.map(({ tag }) => (
-              <a
-                key={tag.id}
-                href={`/blog?tag=${tag.slug}`}
-                className="rounded-md border border-[var(--portal-color-border)] px-2 py-0.5 text-xs text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]"
-              >
-                #{tag.name}
-              </a>
-            ))}
           </div>
+
+          {/* Comments */}
+          <CommentSection postId={post.id} comments={post.comments} />
+
+          {/* Client-Side LaTeX & Mermaid Diagram triggers */}
+          <MathRenderer />
+          <MermaidRenderer />
+        </article>
+
+        {/* Right Sidebar - Sticky Table of Contents (Desktop Only, only if hasToc) */}
+        {hasToc && (
+          <aside className="hidden lg:block shrink-0 min-w-[180px] w-[200px] xl:w-[240px] min-[1250px]:absolute min-[1250px]:top-0 min-[1250px]:left-[calc(100%+2rem)] min-[1250px]:h-full min-[1250px]:w-[calc(50vw-384px-3.5rem)] min-[1250px]:min-w-[180px] min-[1250px]:max-w-[260px] min-[1400px]:max-w-[280px]">
+            <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1">
+              <TableOfContents content={post.content} title={t('tableOfContents')} />
+            </div>
+          </aside>
         )}
-      </header>
-
-      {/* Markdown Content */}
-      <div className="prose prose-portal max-w-none">
-        <SafeMDXRemote
-          source={post.content}
-          components={{
-            AdSense,
-            blockquote: CustomBlockquote,
-          }}
-          options={{
-            mdxOptions: {
-              remarkPlugins: [remarkGfm, remarkMath],
-              rehypePlugins: [rehypeCustomHighlight, rehypeSlug],
-            },
-          }}
-        />
       </div>
-
-      {/* Comments */}
-      <CommentSection postId={post.id} comments={post.comments} />
-
-      {/* Client-Side LaTeX & Mermaid Diagram triggers */}
-      <MathRenderer />
-      <MermaidRenderer />
-    </article>
+    </div>
   );
 }
