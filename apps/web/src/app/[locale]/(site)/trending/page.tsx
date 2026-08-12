@@ -4,7 +4,7 @@ import { toPng } from 'html-to-image';
 import { Download, Flame, Sparkles, Star, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocalSWR } from '@/hooks/useLocalSWR';
 
 // GitHub language color mapping
@@ -109,7 +109,15 @@ export default function TrendingPage() {
       return (data[0]?.result?.data?.json ?? []) as string[];
     }, []),
   );
-  const weeks = weeksData ?? [];
+
+  // Optimistically include selectedWeek in weeks list so week selector renders instantly
+  const weeks = useMemo(() => {
+    const fetched = weeksData ?? [];
+    if (selectedWeek && !fetched.includes(selectedWeek)) {
+      return [selectedWeek, ...fetched];
+    }
+    return fetched;
+  }, [weeksData, selectedWeek]);
 
   // Fetch repos for selected week
   const {
@@ -212,7 +220,7 @@ export default function TrendingPage() {
 
                 {isWeekOpen && (
                   <div className="absolute right-0 top-full z-50 mt-1.5 w-52 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]/95 backdrop-blur-md py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150">
-                    {weeks.map((w) => {
+                    {weeks.map((w: string) => {
                       const label = `${t('weekOf')} ${formatDate(w, locale)}`;
                       const isActive = selectedWeek === w;
 

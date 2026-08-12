@@ -48,23 +48,34 @@ cp .env.example .env
 
 Ensure you set the `DATABASE_URL` to your local or remote PostgreSQL instance.
 
-### 4. Database Setup
+### 4. Database Setup & Migrations
 
-Launch database server:
+Launch local PostgreSQL database with Docker:
 ```bash
 docker compose up -d
 ```
 
-Run Prisma migrations to initialize the database schema:
+#### For Local Development
+Run Prisma migrations to execute all version-controlled SQL scripts in chronological order:
 
 ```bash
-pnpm prisma migrate dev
+pnpm --filter @portal/db migrate:dev
 ```
+
+#### For Production Deployment
+Apply all incremental migrations safely to your production database without resetting data:
+
+```bash
+pnpm --filter @portal/db migrate:deploy
+```
+
+> [!NOTE]
+> All database structural changes and version history are tracked in `packages/db/prisma/migrations/`. Running the migration command automatically applies every migration sequentially from `20260213044327_init` to the latest schema version.
 
 (Optional) Seed the database with initial data:
 
 ```bash
-pnpm prisma db seed
+pnpm --filter @portal/db seed
 ```
 
 ### 5. Run the Development Server

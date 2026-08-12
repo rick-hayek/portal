@@ -119,11 +119,10 @@ export const trendingRouter = router({
   /** List all available weeks (for the week switcher dropdown) */
   weeks: publicProcedure.query(async ({ ctx }) => {
     const fetchWeeks = async () => {
-      const weeks = await ctx.prisma.trendingRepo.findMany({
+      const weeks = await ctx.prisma.trendingWeek.findMany({
         select: { weekOf: true },
-        distinct: ['weekOf'],
         orderBy: { weekOf: 'desc' },
-        take: 12, // last 12 weeks max
+        take: 52, // Up to 52 weeks (1 year)
       });
       return weeks.map((w) => w.weekOf.toISOString());
     };

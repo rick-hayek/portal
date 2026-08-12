@@ -921,6 +921,13 @@ export const adminRouter = router({
         upsertCount++;
       }
 
+      // Upsert current week into TrendingWeek table
+      await ctx.prisma.trendingWeek.upsert({
+        where: { weekOf: monday },
+        update: {},
+        create: { weekOf: monday },
+      });
+
       if (ctx.revalidateTag) {
         ctx.revalidateTag('trending');
       }

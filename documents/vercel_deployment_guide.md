@@ -87,9 +87,9 @@ Vercel 是 Serverless 运行环境，无法在每次部署时自动安全地执�
 在本地终端中，通过临时环境变量将迁移应用到生产数据库：
 
 ```bash
-DATABASE_URL="你的生产环境数据库连接串" pnpm db:migrate
+DATABASE_URL="你的生产环境数据库连接串" pnpm db:migrate:deploy
 ```
-或者，如果不想生成开发时的 migration 文件，只应用现有迁移：
+或者显式指定包名：
 ```bash
 DATABASE_URL="你的生产环境数据库连接串" pnpm --filter @portal/db exec prisma migrate deploy
 ```
@@ -98,7 +98,7 @@ DATABASE_URL="你的生产环境数据库连接串" pnpm --filter @portal/db exe
 
 你可以将 Vercel 的 Build Command 修改为先执行迁移再打包：
 ```bash
-pnpm --filter @portal/db exec prisma migrate deploy && pnpm --filter @portal/web build
+pnpm db:migrate:deploy && pnpm --filter @portal/web build
 ```
 * 注意：这要求你的生产数据库没有 IP 白名单限制，或者允许 Vercel 构建服务器的 IP 连接。
 

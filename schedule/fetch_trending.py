@@ -256,6 +256,14 @@ def main():
             ))
             upsert_count += 1
             
+        # Ensure current week is inserted into TrendingWeek table
+        wk_uid_str = f"wk_{uuid.uuid4().hex[:21]}"
+        cur.execute("""
+            INSERT INTO "TrendingWeek" (id, "weekOf", "createdAt")
+            VALUES (%s, %s, NOW())
+            ON CONFLICT ("weekOf") DO NOTHING;
+        """, (wk_uid_str, monday))
+
         conn.commit()
         print(f"Successfully saved/updated {upsert_count} repositories to database.")
     except Exception as e:

@@ -318,3 +318,12 @@ model TrendingRepo {
   @@index([stars])
   @@index([starsGrowth])
 }
+
+model TrendingWeek {
+  id        String   @id @default(cuid())
+  weekOf    DateTime @unique
+  createdAt DateTime @default(now())
+
+  @@index([weekOf])
+}
+
