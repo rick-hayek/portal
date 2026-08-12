@@ -23,6 +23,15 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
   useEffect(() => {
     if (items.length === 0) return;
 
+    // Helper to get element by id or by index in .prose container
+    const getHeadingElement = (item: (typeof items)[0], idx: number): HTMLElement | null => {
+      const byId = document.getElementById(item.id);
+      if (byId) return byId;
+
+      const h2s = document.querySelectorAll<HTMLElement>('.prose h2');
+      return h2s[idx] || null;
+    };
+
     // Scroll spy: Determine active heading based on window.scrollY + header offset & bottom check
     const handleScroll = () => {
       if (isClickingRef.current) return;
@@ -43,17 +52,15 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
       const scrollPosition = window.scrollY + headerOffset;
 
       let currentActiveId = items[0]?.id || '';
-      for (const item of items) {
-        const el = document.getElementById(item.id);
+      items.forEach((item, idx) => {
+        const el = getHeadingElement(item, idx);
         if (el) {
           const top = el.offsetTop;
           if (scrollPosition >= top) {
             currentActiveId = item.id;
-          } else {
-            break;
           }
         }
-      }
+      });
 
       setActiveId(currentActiveId);
     };
@@ -75,7 +82,7 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
     return null;
   }
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string, index: number) => {
     e.preventDefault();
     setActiveId(id);
 
@@ -86,13 +93,20 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
       isClickingRef.current = false;
     }, 800);
 
-    const targetElement = document.getElementById(id);
+    let targetElement = document.getElementById(id);
+    if (!targetElement) {
+      const h2s = document.querySelectorAll<HTMLElement>('.prose h2');
+      if (h2s[index]) {
+        targetElement = h2s[index];
+      }
+    }
+
     if (targetElement) {
       const yOffset = -90; // Fixed navbar height offset
       const y = targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
 
-      window.history.pushState(null, '', `#${id}`);
+      window.history.pushState(null, '', `#${targetElement.id || id}`);
     }
   };
 
@@ -113,7 +127,7 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
             <li key={`${item.id}-${index}`} className="overflow-hidden">
               <a
                 href={`#${item.id}`}
-                onClick={(e) => handleLinkClick(e, item.id)}
+                onClick={(e) => handleLinkClick(e, item.id, index)}
                 title={item.text}
                 className={`-ml-px block border-l-2 py-1.5 pl-3 pr-2 text-xs leading-relaxed transition-all duration-200 rounded-r-md truncate whitespace-nowrap ${
                   isActive

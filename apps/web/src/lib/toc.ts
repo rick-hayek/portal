@@ -29,10 +29,15 @@ export function extractTocItems(markdown: string): TocItem[] {
       .replace(/\*([^*]+)\*/g, '$1') // italic *text* -> text
       .replace(/~~([^~]+)~~/g, '$1'); // strikethrough ~~text~~ -> text
 
+    // Github-slugger matching algorithm:
+    // 1. Lowercase
+    // 2. Remove punctuation and symbols (do NOT replace punctuation with hyphens)
+    // 3. Replace whitespace sequences with a single hyphen
     let baseSlug = cleanText
       .toLowerCase()
       .trim()
-      .replace(/[\s\p{P}\p{S}]+/gu, '-')
+      .replace(/[^\w\s\u4e00-\u9fa5\u3040-\u30ff\u3400-\u4dbf-]/g, '')
+      .replace(/\s+/g, '-')
       .replace(/^-+|-+$/g, '');
 
     if (!baseSlug) baseSlug = 'heading';
