@@ -94,7 +94,7 @@ export default async function BlogPostPage({
   };
 
   return (
-    <div className="px-4 py-12 sm:px-6 lg:px-8">
+    <div className="px-4 py-12 sm:px-6 lg:px-8 mx-auto w-full max-w-[1536px]">
       {/* Load KaTeX stylesheet and core JS script from CDN to avoid compiling local assets */}
       <link
         rel="stylesheet"
@@ -117,16 +117,18 @@ export default async function BlogPostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
       />
 
-      {/* Main Container */}
-      <div
-        className={`mx-auto max-w-3xl ${
-          hasToc
-            ? 'min-[1250px]:relative max-[1249px]:lg:flex max-[1249px]:lg:justify-center max-[1249px]:lg:gap-8 max-[1249px]:xl:gap-10'
-            : ''
-        }`}
-      >
+      {/* Symmetrical 3-Column Layout: Left Balance Spacer + Centered Article + Right TOC */}
+      <div className="flex justify-center items-start gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
+        {/* Left Empty Balance Spacer (Desktop ≥ 1250px, only if hasToc) */}
+        {hasToc && (
+          <div
+            className="hidden min-[1250px]:block shrink w-[180px] xl:w-[220px] 2xl:w-[260px] min-w-[160px] max-w-[260px]"
+            aria-hidden="true"
+          />
+        )}
+
         {/* Main Article Content */}
-        <article className="w-full max-w-3xl shrink-0 min-w-0">
+        <article className="w-full max-w-3xl shrink min-w-0">
           {/* Header */}
           <header className="mb-8">
             <h1 className="mb-5 text-3xl font-bold leading-tight text-[var(--portal-color-text)] sm:text-4xl">
@@ -211,8 +213,8 @@ export default async function BlogPostPage({
 
         {/* Right Sidebar - Sticky Table of Contents (Desktop Only, only if hasToc) */}
         {hasToc && (
-          <aside className="hidden lg:block shrink-0 min-w-[180px] w-[200px] xl:w-[240px] min-[1250px]:absolute min-[1250px]:top-0 min-[1250px]:left-[calc(100%+2rem)] min-[1250px]:h-full min-[1250px]:w-[calc(50vw-384px-3.5rem)] min-[1250px]:min-w-[180px] min-[1250px]:max-w-[260px] min-[1400px]:max-w-[280px]">
-            <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1">
+          <aside className="hidden lg:block shrink w-[180px] xl:w-[220px] 2xl:w-[260px] min-w-[160px] max-w-[260px] sticky top-24">
+            <div>
               <TableOfContents content={post.content} title={t('tableOfContents')} />
             </div>
           </aside>

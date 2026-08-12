@@ -2,8 +2,8 @@
 
 import { AlignLeft } from 'lucide-react';
 import type React from 'react';
-import { useEffect, useState } from 'react';
-import { extractTocItems, type TocItem } from '@/lib/toc';
+import { useEffect, useMemo, useState } from 'react';
+import { extractTocItems } from '@/lib/toc';
 
 interface TableOfContentsProps {
   content: string;
@@ -12,25 +12,15 @@ interface TableOfContentsProps {
 }
 
 export function TableOfContents({ content, title = '目录', className = '' }: TableOfContentsProps) {
-  const [headings, setHeadings] = useState<TocItem[]>(() => extractTocItems(content));
+  const headings = useMemo(() => extractTocItems(content), [content]);
   const [activeId, setActiveId] = useState<string>('');
 
   useEffect(() => {
-    // 1. Sync headings with exact IDs and text content rendered in DOM by rehype-slug
-    const headingElements = Array.from(document.querySelectorAll<HTMLElement>('.prose h2[id]'));
+    if (headings.length === 0) return;
 
-    if (headingElements.length > 0) {
-      const domHeadings: TocItem[] = headingElements.map((el) => ({
-        id: el.id,
-        text: el.textContent?.replace(/^#+\s*/, '').trim() || '',
-      }));
-      setHeadings(domHeadings);
-      setActiveId((prev) => prev || headingElements[0]?.id || '');
-    }
+    setActiveId((prev) => prev || headings[0]?.id || '');
 
-    if (headingElements.length === 0) return;
-
-    // 2. Set up IntersectionObserver for scroll tracking
+    // Set up IntersectionObserver for scroll tracking
     const observerCallback: IntersectionObserverCallback = (entries) => {
       // Find headings intersecting in top portion of viewport
       const visibleEntries = entries.filter((entry) => entry.isIntersecting);
@@ -48,14 +38,26 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
       threshold: 0.1,
     });
 
-    for (const el of headingElements) {
-      observer.observe(el);
-    }
+    const observedElements: HTMLElement[] = [];
+
+    const bindElements = () => {
+      for (const item of headings) {
+        const el = document.getElementById(item.id);
+        if (el && !observedElements.includes(el)) {
+          observer.observe(el);
+          observedElements.push(el);
+        }
+      }
+    };
+
+    bindElements();
+    const timer = setTimeout(bindElements, 100);
 
     return () => {
+      clearTimeout(timer);
       observer.disconnect();
     };
-  }, []);
+  }, [headings]);
 
   if (headings.length === 0) {
     return null;
@@ -87,10 +89,10 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
       </div>
 
       <ul className="space-y-1 text-sm border-l border-[var(--portal-color-border)]">
-        {headings.map((item) => {
+        {headings.map((item, index) => {
           const isActive = activeId === item.id;
           return (
-            <li key={item.id} className="overflow-hidden">
+            <li key={`${item.id}-${index}`} className="overflow-hidden">
               <a
                 href={`#${item.id}`}
                 onClick={(e) => handleLinkClick(e, item.id)}

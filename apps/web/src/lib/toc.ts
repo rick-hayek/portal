@@ -6,6 +6,7 @@ export interface TocItem {
 /**
  * Extracts Level 2 headings (## Heading) from raw Markdown text.
  * Strips code blocks and inline markdown formatting.
+ * Deduplicates heading IDs with -1, -2 suffixes matching github-slugger / rehype-slug.
  */
 export function extractTocItems(markdown: string): TocItem[] {
   if (!markdown) return [];
@@ -15,6 +16,7 @@ export function extractTocItems(markdown: string): TocItem[] {
 
   const headingRegex = /^##\s+(.+)$/gm;
   const items: TocItem[] = [];
+  const slugCounts = new Map<string, number>();
 
   const matches = contentWithoutCodeBlocks.matchAll(headingRegex);
   for (const match of matches) {
@@ -27,8 +29,7 @@ export function extractTocItems(markdown: string): TocItem[] {
       .replace(/\*([^*]+)\*/g, '$1') // italic *text* -> text
       .replace(/~~([^~]+)~~/g, '$1'); // strikethrough ~~text~~ -> text
 
-    // Initial fallback slug generator (DOM sync in useEffect will bind exact rehypeSlug id)
-    const fallbackId = cleanText
+    let baseSlug = cleanText
       .toLowerCase()
       .trim()
       .replace(
@@ -37,9 +38,16 @@ export function extractTocItems(markdown: string): TocItem[] {
       )
       .replace(/\s+/g, '-');
 
+    if (!baseSlug) baseSlug = 'heading';
+
+    const count = slugCounts.get(baseSlug) || 0;
+    slugCounts.set(baseSlug, count + 1);
+
+    const finalId = count === 0 ? baseSlug : `${baseSlug}-${count}`;
+
     if (cleanText) {
       items.push({
-        id: fallbackId,
+        id: finalId,
         text: cleanText,
       });
     }
