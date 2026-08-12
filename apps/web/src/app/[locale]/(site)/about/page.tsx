@@ -102,7 +102,7 @@ export default function AboutPage() {
     });
   }
 
-  const githubRepoUrl = 'https://github.com/rick-hayek/portal';
+  const githubRepoUrl = 'https://github.com/rick-hayek/voocii-portal';
 
   return (
     <div className="flex w-full flex-col items-center">
