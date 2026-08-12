@@ -206,6 +206,12 @@
       "links": "朋友圈 — 独立博客友人与互联互通",
       "tools": "开发者工具 — 常用 Web 工具箱（Base64、JSON、JWT、Markdown）"
     },
+    "techCategory": {
+      "core": "核心框架",
+      "api": "API 与数据库",
+      "search": "搜索与存储",
+      "feature": "国际化与认证"
+    },
     "tech": {
       "core": "Next.js 15 (App Router)、React 19、TypeScript",
       "api": "tRPC v11、Prisma ORM、PostgreSQL、Redis",

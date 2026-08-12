@@ -206,6 +206,12 @@
       "links": "Links — Blog roll & friendly connections",
       "tools": "Tools — Handy developer utilities (Base64, JSON, JWT, Markdown)"
     },
+    "techCategory": {
+      "core": "Core Framework",
+      "api": "API & Database",
+      "search": "Search & Storage",
+      "feature": "i18n & Auth"
+    },
     "tech": {
       "core": "Next.js 15 (App Router), React 19, TypeScript",
       "api": "tRPC v11, Prisma ORM, PostgreSQL, Redis",

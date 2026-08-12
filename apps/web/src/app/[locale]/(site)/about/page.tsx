@@ -34,7 +34,7 @@ export default function AboutPage() {
     useCallback(async () => {
       const res = await fetch(
         '/api/trpc/about.getAbout?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: null } })),
+          encodeURIComponent(JSON.stringify({ '0': { json: null } })),
       );
       const json = await res.json();
       return json[0]?.result?.data?.json ?? null;
@@ -53,15 +53,15 @@ export default function AboutPage() {
     aboutData?.experiences && aboutData.experiences.length > 0
       ? aboutData.experiences
       : [
-        {
-          role: t('jobs.senior'),
-          company: 'Tech Corp',
-          period: `2023 — ${t('jobs.present')}`,
-          public: true,
-        },
-        { role: t('jobs.stack'), company: 'Startup Inc', period: '2020 — 2023', public: true },
-        { role: t('jobs.frontend'), company: 'Web Studio', period: '2018 — 2020', public: true },
-      ];
+          {
+            role: t('jobs.senior'),
+            company: 'Tech Corp',
+            period: `2023 — ${t('jobs.present')}`,
+            public: true,
+          },
+          { role: t('jobs.stack'), company: 'Startup Inc', period: '2020 — 2023', public: true },
+          { role: t('jobs.frontend'), company: 'Web Studio', period: '2018 — 2020', public: true },
+        ];
 
   const experiences = rawExperiences.filter((exp: any) => exp.public !== false);
 
@@ -322,25 +322,25 @@ export default function AboutPage() {
               <div className="space-y-3.5 text-sm text-[var(--portal-color-text-secondary)]">
                 <div className="rounded-xl bg-[var(--portal-color-surface-alt)]/60 p-3.5 border border-[var(--portal-color-border)]/40">
                   <span className="font-semibold text-[var(--portal-color-text)] block mb-1 text-xs uppercase tracking-wider">
-                    Core Framework
+                    {t('techCategory.core')}
                   </span>
                   <span>{t('tech.core')}</span>
                 </div>
                 <div className="rounded-xl bg-[var(--portal-color-surface-alt)]/60 p-3.5 border border-[var(--portal-color-border)]/40">
                   <span className="font-semibold text-[var(--portal-color-text)] block mb-1 text-xs uppercase tracking-wider">
-                    API & Database
+                    {t('techCategory.api')}
                   </span>
                   <span>{t('tech.api')}</span>
                 </div>
                 <div className="rounded-xl bg-[var(--portal-color-surface-alt)]/60 p-3.5 border border-[var(--portal-color-border)]/40">
                   <span className="font-semibold text-[var(--portal-color-text)] block mb-1 text-xs uppercase tracking-wider">
-                    Search & Storage
+                    {t('techCategory.search')}
                   </span>
                   <span>{t('tech.search')}</span>
                 </div>
                 <div className="rounded-xl bg-[var(--portal-color-surface-alt)]/60 p-3.5 border border-[var(--portal-color-border)]/40">
                   <span className="font-semibold text-[var(--portal-color-text)] block mb-1 text-xs uppercase tracking-wider">
-                    i18n & Auth
+                    {t('techCategory.feature')}
                   </span>
                   <span>{t('tech.feature')}</span>
                 </div>
