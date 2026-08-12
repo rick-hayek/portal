@@ -32,11 +32,8 @@ export function extractTocItems(markdown: string): TocItem[] {
     let baseSlug = cleanText
       .toLowerCase()
       .trim()
-      .replace(
-        /[^\w\u4e00-\u9fa5\u3040-\u30ff\u3400-\u4dbf\u20000-\u2a6df\u2a700-\u2b73f\u2b740-\u2b81f\u2b820-\u2ceaf-]/g,
-        '',
-      )
-      .replace(/\s+/g, '-');
+      .replace(/[\s\p{P}\p{S}]+/gu, '-')
+      .replace(/^-+|-+$/g, '');
 
     if (!baseSlug) baseSlug = 'heading';
 

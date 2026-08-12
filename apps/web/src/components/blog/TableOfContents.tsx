@@ -2,7 +2,7 @@
 
 import { AlignLeft } from 'lucide-react';
 import type React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { extractTocItems } from '@/lib/toc';
 
 interface TableOfContentsProps {
@@ -12,54 +12,66 @@ interface TableOfContentsProps {
 }
 
 export function TableOfContents({ content, title = '目录', className = '' }: TableOfContentsProps) {
-  const headings = useMemo(() => extractTocItems(content), [content]);
+  // Deterministically extract TOC items from markdown content
+  const items = useMemo(() => extractTocItems(content), [content]);
   const [activeId, setActiveId] = useState<string>('');
 
+  // Lock scroll spy updating during smooth scroll triggered by explicit click
+  const isClickingRef = useRef(false);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    if (headings.length === 0) return;
+    if (items.length === 0) return;
 
-    setActiveId((prev) => prev || headings[0]?.id || '');
+    // Scroll spy: Determine active heading based on window.scrollY + header offset & bottom check
+    const handleScroll = () => {
+      if (isClickingRef.current) return;
 
-    // Set up IntersectionObserver for scroll tracking
-    const observerCallback: IntersectionObserverCallback = (entries) => {
-      // Find headings intersecting in top portion of viewport
-      const visibleEntries = entries.filter((entry) => entry.isIntersecting);
-      if (visibleEntries.length > 0) {
-        // Pick the top-most visible heading
-        const topEntry = visibleEntries.reduce((prev, curr) =>
-          prev.boundingClientRect.top < curr.boundingClientRect.top ? prev : curr,
-        );
-        setActiveId(topEntry.target.id);
-      }
-    };
+      // Edge case: If scrolled to bottom of document, highlight the final TOC item
+      const isBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
 
-    const observer = new IntersectionObserver(observerCallback, {
-      rootMargin: '-80px 0px -60% 0px',
-      threshold: 0.1,
-    });
-
-    const observedElements: HTMLElement[] = [];
-
-    const bindElements = () => {
-      for (const item of headings) {
-        const el = document.getElementById(item.id);
-        if (el && !observedElements.includes(el)) {
-          observer.observe(el);
-          observedElements.push(el);
+      if (isBottom && items.length > 0) {
+        const lastId = items[items.length - 1]?.id;
+        if (lastId) {
+          setActiveId(lastId);
+          return;
         }
       }
+
+      const headerOffset = 125; // Header height + safety gap
+      const scrollPosition = window.scrollY + headerOffset;
+
+      let currentActiveId = items[0]?.id || '';
+      for (const item of items) {
+        const el = document.getElementById(item.id);
+        if (el) {
+          const top = el.offsetTop;
+          if (scrollPosition >= top) {
+            currentActiveId = item.id;
+          } else {
+            break;
+          }
+        }
+      }
+
+      setActiveId(currentActiveId);
     };
 
-    bindElements();
-    const timer = setTimeout(bindElements, 100);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Re-check after dynamic content (images/mdx) finish loading
+    const timer = setTimeout(handleScroll, 300);
 
     return () => {
       clearTimeout(timer);
-      observer.disconnect();
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [headings]);
+  }, [items]);
 
-  if (headings.length === 0) {
+  if (items.length === 0) {
     return null;
   }
 
@@ -67,13 +79,19 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
     e.preventDefault();
     setActiveId(id);
 
+    // Lock scroll spy while smooth scrolling to target heading
+    isClickingRef.current = true;
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    clickTimerRef.current = setTimeout(() => {
+      isClickingRef.current = false;
+    }, 800);
+
     const targetElement = document.getElementById(id);
     if (targetElement) {
-      const yOffset = -90; // Header height offset
+      const yOffset = -90; // Fixed navbar height offset
       const y = targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
 
-      // Update URL hash without scrolling
       window.history.pushState(null, '', `#${id}`);
     }
   };
@@ -89,7 +107,7 @@ export function TableOfContents({ content, title = '目录', className = '' }: T
       </div>
 
       <ul className="space-y-1 text-sm border-l border-[var(--portal-color-border)]">
-        {headings.map((item, index) => {
+        {items.map((item, index) => {
           const isActive = activeId === item.id;
           return (
             <li key={`${item.id}-${index}`} className="overflow-hidden">

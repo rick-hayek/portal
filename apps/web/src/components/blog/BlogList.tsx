@@ -444,7 +444,7 @@ export function BlogList() {
         </div>
 
         {/* Right Sidebar Column (Desktop Only ≥ 1024px) */}
-        <aside className="hidden lg:block shrink w-[200px] xl:w-[240px] 2xl:w-[280px] min-w-[180px] max-w-[280px] space-y-6 sticky top-24">
+        <aside className="hidden lg:block shrink w-[200px] xl:w-[240px] 2xl:w-[280px] min-w-[180px] max-w-[280px] space-y-6">
           <div className="space-y-6">
             {/* Categories Sidebar Box */}
             <div className="rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 shadow-sm">

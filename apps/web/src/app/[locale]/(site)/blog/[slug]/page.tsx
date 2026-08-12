@@ -214,7 +214,7 @@ export default async function BlogPostPage({
         {/* Right Sidebar - Sticky Table of Contents (Desktop Only, only if hasToc) */}
         {hasToc && (
           <aside className="hidden lg:block shrink w-[180px] xl:w-[220px] 2xl:w-[260px] min-w-[160px] max-w-[260px] sticky top-24">
-            <div>
+            <div className="max-h-[calc(100vh-7rem)] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               <TableOfContents content={post.content} title={t('tableOfContents')} />
             </div>
           </aside>
