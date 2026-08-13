@@ -17,7 +17,6 @@ export function LanguageSwitcher({ onItemClick }: { onItemClick?: () => void }) 
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
     startTransition(() => {
       router.replace(pathname, { locale: nextLocale });
-      router.refresh();
     });
   };
 

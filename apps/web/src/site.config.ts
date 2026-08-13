@@ -13,6 +13,7 @@ const siteConfig = defineConfig({
     available: ['zenith', 'dark-neon', 'cyberpunk', 'retro-brown', 'minimal-light', 'lumiere'],
     allowUserSwitch: true,
   },
+  homeLayout: 'metro',
   about: defaultAboutConfig,
 });
 

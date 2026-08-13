@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const tNav = await getTranslations({ locale, namespace: 'Navigation' });
   const tTools = await getTranslations({ locale, namespace: 'Tools' });
   return {
-    title: `${tTools('jwtDecoder.name')} | ${tNav('tools')}`,
+    title: `${tTools('jwt.name')} | ${tNav('tools')}`,
   };
 }
 

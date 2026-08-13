@@ -28,6 +28,7 @@ export const siteConfigSchema = z.object({
       available: ['minimal-light', 'dark-neon', 'cyberpunk', 'nature-green', 'retro-brown'],
       allowUserSwitch: true,
     }),
+  homeLayout: z.enum(['classic', 'metro']).default('classic'),
   admin: z
     .object({
       enabled: z.boolean().default(false),

@@ -40,7 +40,7 @@ export default function LinksPage() {
   );
   const [copiedType, setCopiedType] = React.useState<string | null>(null);
 
-  let targetEmail = 'rick@your-site.com';
+  let targetEmail = 'ricksname@your-site.com';
   if (aboutData?.email) {
     if (typeof aboutData.email === 'object' && 'address' in (aboutData.email as any)) {
       targetEmail = (aboutData.email as any).address;

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Digital Craftsman | Metro Blog</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#fbbc00",
+                        "tertiary-container": "#ffb9a1",
+                        "surface-dim": "#121414",
+                        "on-tertiary-fixed": "#380c00",
+                        "tertiary-fixed": "#ffdbcf",
+                        "on-primary-container": "#6d5000",
+                        "on-tertiary-container": "#973307",
+                        "on-secondary-container": "#00616d",
+                        "inverse-surface": "#e2e2e2",
+                        "surface": "#121414",
+                        "inverse-primary": "#795900",
+                        "on-tertiary": "#5c1a00",
+                        "surface-container-high": "#282a2b",
+                        "surface-variant": "#333535",
+                        "background": "#121414",
+                        "inverse-on-surface": "#2f3131",
+                        "surface-container-lowest": "#0c0f0f",
+                        "primary-fixed-dim": "#fbbc00",
+                        "tertiary-fixed-dim": "#ffb59c",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#d4c5ab",
+                        "on-error": "#690005",
+                        "primary-container": "#ffbf00",
+                        "outline-variant": "#504532",
+                        "on-surface": "#e2e2e2",
+                        "on-background": "#e2e2e2",
+                        "tertiary": "#ffdfd4",
+                        "surface-bright": "#37393a",
+                        "on-secondary-fixed": "#001f24",
+                        "secondary-fixed": "#9cf0ff",
+                        "secondary-container": "#00e3fd",
+                        "on-secondary": "#00363d",
+                        "on-primary": "#402d00",
+                        "on-tertiary-fixed-variant": "#822800",
+                        "on-primary-fixed-variant": "#5c4300",
+                        "secondary-fixed-dim": "#00daf3",
+                        "secondary": "#bdf4ff",
+                        "surface-container-low": "#1a1c1c",
+                        "surface-container-highest": "#333535",
+                        "primary": "#ffe2ab",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "on-primary-fixed": "#261a00",
+                        "surface-container": "#1e2020",
+                        "primary-fixed": "#ffdfa0",
+                        "outline": "#9c8f78",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-cols-desktop": "12",
+                        "tile-padding": "24px",
+                        "gutter": "12px",
+                        "unit": "4px",
+                        "grid-cols-tablet": "6",
+                        "margin-page": "48px",
+                        "grid-cols-mobile": "2"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Montserrat"],
+                        "display-lg": ["Montserrat"],
+                        "code": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Montserrat"],
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "900" }],
+                        "code": ["14px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "label-bold": ["14px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "900" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .metro-tile {
+            transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+        }
+        .metro-tile:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="bg-background dark:bg-background text-primary dark:text-primary border-b-2 border-surface-variant w-full h-20">
+<div class="flex justify-between items-center px-margin-page py-6 w-full max-w-full mx-auto h-full">
+<a class="font-display-lg text-display-lg-mobile md:text-display-lg text-surface-tint dark:text-surface-tint italic leading-none" href="#">
+                METROLOG
+            </a>
+<div class="hidden md:flex space-x-6">
+<a class="font-headline-sm text-headline-sm uppercase tracking-tighter text-primary dark:text-primary font-bold border-b-4 border-primary hover:bg-primary hover:text-on-primary transition-colors duration-150 py-1" href="#">Home</a>
+<a class="font-headline-sm text-headline-sm uppercase tracking-tighter text-on-background dark:text-on-background font-medium hover:bg-primary hover:text-on-primary transition-colors duration-150 py-1" href="#">Blog</a>
+<a class="font-headline-sm text-headline-sm uppercase tracking-tighter text-on-background dark:text-on-background font-medium hover:bg-primary hover:text-on-primary transition-colors duration-150 py-1" href="#">Portfolio</a>
+<a class="font-headline-sm text-headline-sm uppercase tracking-tighter text-on-background dark:text-on-background font-medium hover:bg-primary hover:text-on-primary transition-colors duration-150 py-1" href="#">Friends</a>
+<a class="font-headline-sm text-headline-sm uppercase tracking-tighter text-on-background dark:text-on-background font-medium hover:bg-primary hover:text-on-primary transition-colors duration-150 py-1" href="#">About</a>
+<a class="font-headline-sm text-headline-sm uppercase tracking-tighter text-on-background dark:text-on-background font-medium hover:bg-primary hover:text-on-primary transition-colors duration-150 py-1" href="#">Books</a>
+<a class="font-headline-sm text-headline-sm uppercase tracking-tighter text-on-background dark:text-on-background font-medium hover:bg-primary hover:text-on-primary transition-colors duration-150 py-1" href="#">Tools</a>
+</div>
+<button class="md:hidden text-primary hover:text-surface-tint transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="menu">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Grid -->
+<main class="flex-grow px-margin-page py-12 max-w-[1400px] mx-auto w-full">
+<!-- Masonry Grid Container -->
+<div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-12 gap-gutter auto-rows-[200px]">
+<!-- Hero Tile (2x2 relative size, spans 4 cols, 2 rows on desktop) -->
+<a class="metro-tile col-span-2 md:col-span-6 lg:col-span-8 row-span-2 bg-surface-tint text-on-primary flex flex-col md:flex-row p-tile-padding relative overflow-hidden group" href="#">
+<div class="flex-1 flex flex-col justify-center z-10 pr-6">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-4 text-on-primary">Hello, I'm a Digital Craftsman</h1>
+<p class="font-body-lg text-body-lg text-on-primary opacity-90 max-w-2xl">
+                        Building precise, robust, and beautiful digital experiences. Specializing in architecture, design systems, and relentless optimization. Welcome to my operational log.
+                    </p>
+</div>
+<div class="w-full md:w-1/3 mt-6 md:mt-0 flex items-end justify-end z-10 relative">
+<img alt="Avatar" class="w-32 h-32 md:w-48 md:h-48 object-cover rounded-none grayscale group-hover:grayscale-0 transition-all duration-300 border-4 border-on-primary" data-alt="A striking portrait of a focused tech professional in a high-tech, sleek studio environment. The lighting is high-contrast, moody, and cinematic, emphasizing sharp geometric lines and a modern digital aesthetic with deep blacks and vibrant amber highlights. The subject exudes confidence and craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLDOdKuOILF705bLZmfciv6kqbw2sA3mTgcRg29r8AeqhkaabecIZsrnpQgXEnV7cWTHjFSEifKYTuCfBt3QhVUG4VU8uqrZog1nxJtfqzTZ0sYZNias-6UQPOwuKXVsVx46SbhxxeuLaiBYmLfuJATTktcWeB4lIlw6TzuOrDieGNNmb4-rOZQq1-DTZnrDJbjrHIBDFwkrAGGUZ5QitSgosb43eth25j0C-PHCf61v3sa8OxJIXQ9A"/>
+</div>
+</a>
+<!-- Blog Tile (2x1 relative size, spans 4 cols, 1 row on desktop) -->
+<a class="metro-tile col-span-2 md:col-span-6 lg:col-span-4 row-span-1 bg-secondary text-on-secondary p-tile-padding flex flex-col justify-between" href="#">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-bold text-label-bold uppercase bg-on-secondary text-secondary px-2 py-1">Latest Log</span>
+<span class="material-symbols-outlined text-on-secondary" data-icon="article">article</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg line-clamp-2 mt-4 text-on-secondary">Exploring the Future of Web Dev</h2>
+</div>
+<div class="font-code text-code opacity-80 flex items-center gap-2 mt-4">
+<span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span>
+                    OCT 24, 2024
+                </div>
+</a>
+<!-- Secondary Blog Tile -->
+<a class="metro-tile col-span-2 md:col-span-3 lg:col-span-4 row-span-1 bg-surface-variant text-on-surface-variant p-tile-padding border-2 border-outline-variant flex flex-col justify-between" href="#">
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-2 text-on-surface">Mastering Modern UI Patterns</h3>
+<p class="font-body-md text-body-md opacity-80 line-clamp-2">A deep dive into flat design constraints and tile-based grid systems for enterprise dashboards.</p>
+</div>
+<div class="font-code text-code opacity-60 flex items-center gap-2 mt-4">
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+                    OCT 18, 2024
+                </div>
+</a>
+<!-- Portfolio Tile (1x2 relative size, spans 4 cols, 2 rows on desktop) -->
+<a class="metro-tile col-span-2 md:col-span-3 lg:col-span-4 row-span-2 bg-tertiary text-on-tertiary p-0 relative overflow-hidden group border-4 border-transparent hover:border-on-tertiary" href="#">
+<div class="absolute inset-0 bg-black/40 z-10 transition-opacity group-hover:bg-black/20"></div>
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A highly detailed, futuristic user interface dashboard displayed on a sleek monitor. The UI features complex data visualizations, intricate grid systems, and stark typography in a dark mode setting with coral and neon accents. The scene is lit to emphasize digital craftsmanship and precise technical architecture." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuClJ4TrnkB-jRDdqYgyRx05dxG8aPD8DDiZoOlBw8h7Tmqn1CIR6JTA7ETuS5DNzrzaNa_uq34Ra8bT8xHBVNPXY6G0LhxU62a21O1Ld0n2imVnZd7x2lsSJvC-M7cjCffZDTadfbH0XCkoCuUI4CxPc5-c8tpDT6V7o7G3JxJpXEDAglU4Pqg9icK7wA0SKyyagQ2WDuAHUc12nEuwBA6g-SfMBWTPGom5tnd9LntECFPA20T_S7EF8A')"></div>
+<div class="absolute inset-0 z-20 p-tile-padding flex flex-col justify-between">
+<span class="font-label-bold text-label-bold uppercase bg-on-tertiary text-tertiary px-3 py-1 self-start">Featured Project</span>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-white mb-2 drop-shadow-md">Project Alpha</h2>
+<p class="font-body-md text-body-md text-white/90 max-w-[80%] drop-shadow-md">High-throughput data visualization engine.</p>
+</div>
+</div>
+</a>
+<!-- About Tile (1x1 relative size, spans 4 cols, 1 row on desktop) -->
+<a class="metro-tile col-span-2 md:col-span-6 lg:col-span-4 row-span-1 bg-[#4f46e5] text-white p-tile-padding flex flex-col justify-center" href="#">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-3xl" data-icon="terminal">terminal</span>
+<h3 class="font-headline-sm text-headline-sm">Core Stack</h3>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="font-label-bold text-label-bold uppercase bg-white/20 px-2 py-1">Fullstack</span>
+<span class="font-label-bold text-label-bold uppercase bg-white/20 px-2 py-1">Design Systems</span>
+<span class="font-label-bold text-label-bold uppercase bg-white/20 px-2 py-1">Go Enthusiast</span>
+<span class="font-label-bold text-label-bold uppercase bg-white/20 px-2 py-1">Tailwind</span>
+</div>
+</a>
+<!-- Books Tile (1x1 relative size, spans 4 cols, 1 row on desktop) -->
+<a class="metro-tile col-span-2 md:col-span-3 lg:col-span-2 row-span-1 bg-[#6b21a8] p-4 flex flex-col" href="#">
+<h3 class="font-label-bold text-label-bold uppercase text-white mb-3 flex items-center justify-between">
+                    Reading
+                    <span class="material-symbols-outlined" data-icon="book">book</span>
+</h3>
+<div class="grid grid-cols-2 grid-rows-2 gap-2 flex-grow">
+<div class="bg-cover bg-center w-full h-full bg-surface-variant" data-alt="A minimalist, abstract book cover design with sharp geometric shapes, primarily deep purple and white, representing a technical manual on computer science." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgF8wawmIbAxvRJ1JNdZPUcF_22pSCpfeyid0l_j05Cyq5TW1o251pbAljPSRXkDA8JrRkcg7wsg5fB2tG3UfV1dBlOE0emXMY5jOtxBOfmRvXSEHK4MrhF8vOeAbgFy3X8zvk4hMObw4HSeVfb54m5LNIYeas8evZniTh5aoQJE67-lHweBJk-nKSZUQIEWeeDVhjzG_tD6iTqLuBao8uHZhQbDvedqCgMh9ijley-z6bQXYVvxsPDg')"></div>
+<div class="bg-cover bg-center w-full h-full bg-surface-variant" data-alt="A sleek, modern book cover focused on typography and digital design, utilizing stark contrast and grid lines, reflecting a high-end design system aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBPCwV3CQTY5qHWN-oFmGftVCvvmdr_0A5xiolxhzPETXQvaZ8SB82J7papgphH85MNJolOCBy4yY5i53abK-W29yBzOIZJKyo-RMpYS7Q3eP6IHEG8f2r31j2GX5IGYc-8AlBgTph3UKYxLJHnvep-I_vPDCJsxFJyiHL5ODrXhWOAMycn1b0Q7jHUJ9Kb0JOdbjpfHHJw44oBEvfd_M9K2B2lXyll8xXC8Toakw6rqjcNPfWRzwQtDA')"></div>
+<div class="bg-cover bg-center w-full h-full bg-surface-variant" data-alt="An authoritative technical book cover with a flat, bold color palette and precise line art illustrating software architecture concepts." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD9HCSzeEYHAqaWf4vmeJbMtgdlGK3tj4km6CGHiKyGDBsKScWHftWVtJ5OwHvMmUwOPVALNx2DMIY04IiGg_QUMHpymzz6bvxX17zn5xeADFauMXvjhS7anB5OXK1iLloxA8aG9QY4SJmTrk1KG_nLrspaad1aLL_XajORf33t5AbwlenHee6do8vIwze_XnqPjN0fsYsgga8lwpEmJDjOcHAORqeYO6qW21zYuF-iP6uwD8xXyjkBaA')"></div>
+<div class="bg-cover bg-center w-full h-full bg-surface-variant" data-alt="A contemporary book cover design featuring a striking, high-contrast flat illustration of a server rack, emphasizing digital infrastructure." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB3DT1hijUrV3NtzoBfktVX93Flcjo1upEQ9FMfpow2VsZ86Mz_Xlb1zQo2Kcj4LH3penVvwH5UBy4sViHsol3jeu4iiZ2SuJE6e3kM4ntgeEdBeXmjASZdLyBfi3kpwctvSsmezMAcUCZzee37eDFxFm7OfBIS1pF579-_ywwQDUlXTtcht-jAruKa385RhjOfUN9thzXYlQbgUyrzWA4QtVueWv0PB8QCLFdok-lwr1V1MPhcpxIJAQ')"></div>
+</div>
+</a>
+<!-- Tools Tile (1x1 relative size, spans 4 cols, 1 row on desktop) -->
+<a class="metro-tile col-span-2 md:col-span-3 lg:col-span-2 row-span-1 bg-[#0d9488] p-tile-padding flex flex-col justify-center items-center" href="#">
+<h3 class="font-label-bold text-label-bold uppercase text-white mb-4 self-start">Arsenal</h3>
+<div class="grid grid-cols-2 gap-4 w-full h-full">
+<div class="flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors p-2 text-white">
+<span class="material-symbols-outlined text-4xl" data-icon="code">code</span>
+</div>
+<div class="flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors p-2 text-white">
+<span class="material-symbols-outlined text-4xl" data-icon="design_services">design_services</span>
+</div>
+<div class="flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors p-2 text-white">
+<span class="material-symbols-outlined text-4xl" data-icon="hub">hub</span>
+</div>
+<div class="flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors p-2 text-white">
+<span class="material-symbols-outlined text-4xl" data-icon="dns">dns</span>
+</div>
+</div>
+</a>
+<!-- Friends Tile (1x1 relative size) -->
+<a class="metro-tile col-span-2 md:col-span-3 lg:col-span-4 row-span-1 bg-[#e11d48] p-tile-padding flex flex-col" href="#">
+<h3 class="font-label-bold text-label-bold uppercase text-white mb-4 flex items-center justify-between">
+                    Network
+                    <span class="material-symbols-outlined" data-icon="group">group</span>
+</h3>
+<div class="flex flex-wrap gap-4 items-center justify-center flex-grow">
+<img alt="Friend 1" class="w-12 h-12 rounded-full border-2 border-white/50 hover:border-white transition-colors" data-alt="A stylized, flat-vector avatar portrait of a creative professional in a deep red and white color scheme, fitting a precise tech-blog aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrgPnbnGTfrX5kGFuSVfCjyp9wyXeTlCwt0-CFJS2TeZ32hZbI1vBZPOWwMEF_IJ-VWFaOheeI8YROz_-EkpJlcCQYEQaXk0GKifU_GH3FARu9nZ_uY81m-kJ9bc9hEzVPPI6Aop_pU7cYgzbsiEz_z6O0ZBQsFiORtZTYE9jXs4gVXcWVbTHOB7uoe6R5nE00G4DAEWKqN5CEJvCi5zVWxvDQKKiI8jYI44wPMsHE0Mf8tirx31z35A"/>
+<img alt="Friend 2" class="w-12 h-12 rounded-full border-2 border-white/50 hover:border-white transition-colors" data-alt="A stylized, flat-vector avatar portrait of a developer with glasses, rendered in stark contrast with rose and deep dark tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVb7qvOQRwd22baUcK2AJ9JLdsBLXU7Q6EGzCkV5GqtRGqKvTw9P1FE32-cc5Mu2XIh50cxYPikqfeAt83k9DW8ApIdbcXrx3edTXsc4WDH41mac_UqFKGx1tQPp-4ImGla4r0KvboexzKA2ptKhSW6t3fUoqprh4xZvuB4QgK5OPppB3NePIv1rpCPxzWnp-hYpW8OFZGb5-WY_PVf2bpd6i2_Izb1HTqmCxyAk_N9je8APHV0gmOcQ"/>
+<img alt="Friend 3" class="w-12 h-12 rounded-full border-2 border-white/50 hover:border-white transition-colors" data-alt="A stylized, flat-vector avatar portrait of a designer with a minimal geometric aesthetic, strong solid colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS33zxoXRwsMYqYIJUDAs4ldW9eACAENJ_LKBv27vh4TiTadkaSbzjsKMhM0rnAhyrvfBpQKA8qN-BnS4KUK-SL9O4dNnla0xlUweF-8dZuu72b9cgRcMf5V81pHu-J-malOu6l0BCZsmFcH07JuwHpqZNelC8xcsfJFfl8EkYwLKAQqfhhQjCzz8qcOK9Qr8KPI9uuT4t2UUQscpCEfsW73yUbRaB2Ja0MW7Ah-oKOkw1z0WjQNaOQQ"/>
+<div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-label-bold text-label-bold border-2 border-transparent hover:border-white transition-colors">
+                         +5
+                     </div>
+</div>
+</a>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest w-full py-12 mt-12 border-t-2 border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-page w-full max-w-[1400px] mx-auto">
+<div class="mb-6 md:mb-0 text-center md:text-left">
+<p class="font-headline-sm text-headline-sm text-on-surface mb-2">METROLOG</p>
+<p class="font-label-bold text-label-bold uppercase text-on-surface-variant dark:text-on-surface-variant text-xs">
+                    © 2024 DIGITAL CRAFTSMANSHIP. ALL RIGHTS RESERVED.
+                </p>
+</div>
+<div class="flex gap-8">
+<a class="font-label-bold text-label-bold uppercase text-on-surface-variant dark:text-on-surface-variant hover:text-secondary-container transition-colors" href="#">RSS</a>
+<a class="font-label-bold text-label-bold uppercase text-on-surface-variant dark:text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Newsletter</a>
+<a class="font-label-bold text-label-bold uppercase text-on-surface-variant dark:text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

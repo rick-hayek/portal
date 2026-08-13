@@ -167,6 +167,10 @@
       "name": "JWT 解析",
       "desc": "安全地在本地解析并查看 JSON Web Tokens 内容。"
     },
+    "jwtDecoder": {
+      "name": "JWT 解析",
+      "desc": "安全地在本地解析并查看 JSON Web Tokens 内容。"
+    },
     "markdownEditor": {
       "name": "Markdown 编辑器",
       "desc": "实时 Markdown 文本编辑器，支持 HTML 与图表同步预览。"
