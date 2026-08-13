@@ -1,6 +1,8 @@
-# Voocii Portal
+# Voocii Portal ![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)
 
 A modern, full-stack personal portal and portfolio built with Next.js 16, tRPC, Prisma, and Tailwind CSS v4.
+
+English | [中文](./README.zh.md) 
 
 ## Features
 
@@ -109,11 +111,47 @@ This is a Turborepo monorepo.
 - `packages/theme`: Design system and theme configurations.
 - `packages/config`: Shared site configurations and utilities.
 - `packages/shared`: Shared TypeScript types and constants.
+
+## Layout Configuration & Extensibility
+
+### 1. Configuring Homepage Layout (`homeLayout`)
+
+You can switch the homepage layout style easily in [`apps/web/src/site.config.ts`](apps/web/src/site.config.ts):
+
+```ts
+const siteConfig = defineConfig({
+  // ...
+  homeLayout: 'classic', // Built-in options: 'classic' | 'metro'
+});
+```
+
+Built-in layouts:
+- `'classic'`: Traditional responsive flow layout with clean hero section, post lists, and card grids.
+- `'metro'`: Microsoft Windows Metro-style grid layout (Tessellate Noir dark high-contrast grid design).
+
+### 2. Layout Extensibility (Adding Custom Layouts)
+
+The architecture decouples layout components from page data fetching, allowing seamless addition of new homepage layouts (e.g. `'bento'`, `'newspaper'`, `'minimal'`):
+
+1. **Create Layout Component**:
+   Build your layout component inside [`apps/web/src/components/home/layouts/`](apps/web/src/components/home/layouts/) (e.g. `BentoLayout.tsx`).
+2. **Register Config Option**:
+   Add your new layout key to `homeLayout` type/options in configuration.
+3. **Dispatch in Home Route**:
+   In [`apps/web/src/app/[locale]/(site)/page.tsx`](apps/web/src/app/[locale]/(site)/page.tsx), add a dispatch branch:
+   ```tsx
+   if (activeLayout === 'bento') {
+     return <BentoLayout {...layoutProps} />;
+   }
+   ```
+
+---
+
 ## Deployment
 
 ### 1. Site Configuration (Pre-deployment)
 
-Before deploying to production, update your site configuration in [`apps/web/src/site.config.ts`](file:///Users/rick/src/portal/apps/web/src/site.config.ts) with your domain name and site metadata:
+Before deploying to production, update your site configuration in [`apps/web/src/site.config.ts`](apps/web/src/site.config.ts) with your domain name and site metadata:
 
 ```ts
 const siteConfig = defineConfig({
@@ -153,6 +191,15 @@ Configure the **Build Command** in your Vercel project settings to run migration
 pnpm --filter @portal/db migrate:deploy && turbo build
 ```
 This ensures the database schema is always updated before building and serving the new version.
+
+## Versioning & Changelog
+
+This project adheres to [Semantic Versioning (SemVer)](https://semver.org/):
+- **MAJOR (`X.0.0`)**: Breaking changes or major architectural overhauls.
+- **MINOR (`0.X.0`)**: New feature modules, layouts, or non-breaking API additions.
+- **PATCH (`0.0.X`)**: Bug fixes, performance optimizations, or UI styling polish.
+
+All version releases, detailed feature additions, and breaking changes are documented in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## License
 
