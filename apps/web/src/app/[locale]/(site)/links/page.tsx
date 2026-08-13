@@ -136,7 +136,7 @@ export default function LinksPage() {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative hidden sm:flex flex-row items-start gap-3.5 sm:gap-4 rounded-2xl border border-compat hover-border-compat-primary bg-[var(--portal-color-surface)] p-4 sm:p-5 transition-all hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(107,142,201,0.05)]"
+                    className="group relative hidden sm:block rounded-2xl cursor-pointer"
                   >
                     {/* Floating Screenshot Preview Tooltip */}
                     {link.screenshot && (
@@ -152,47 +152,50 @@ export default function LinksPage() {
                       </div>
                     )}
 
-                    <div className="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--portal-color-primary-soft)] border border-compat transition-transform group-hover:scale-110 text-[var(--portal-color-primary)] font-bold text-xs sm:text-sm font-mono tracking-wider select-none">
-                      {avatarSrc ? (
-                        <img
-                          src={avatarSrc}
-                          alt={link.name}
-                          className="h-full w-full object-cover"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <span>{getInitials(link.name)}</span>
-                      )}
-                    </div>
-                    <div className="flex-1 space-y-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <h3 className="font-semibold leading-snug tracking-tight text-[var(--portal-color-text)] text-sm sm:text-base truncate">
-                          {link.name}
-                        </h3>
-                        {link.rss ? (
-                          <button
-                            type="button"
-                            title={`RSS: ${link.rss}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              window.open(link.rss!, '_blank', 'noopener,noreferrer');
-                            }}
-                            className="flex h-6 w-6 sm:h-6.5 sm:w-6.5 shrink-0 items-center justify-center rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors"
-                          >
-                            <Rss className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                          </button>
+                    {/* Inner Body (Performs -translate-y-1 transform without moving outer <a> hitbox) */}
+                    <div className="flex flex-row items-start gap-3.5 sm:gap-4 rounded-2xl border border-compat hover-border-compat-primary bg-[var(--portal-color-surface)] p-4 sm:p-5 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_8px_30px_rgba(107,142,201,0.05)]">
+                      <div className="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--portal-color-primary-soft)] border border-compat transition-transform group-hover:scale-110 text-[var(--portal-color-primary)] font-bold text-xs sm:text-sm font-mono tracking-wider select-none">
+                        {avatarSrc ? (
+                          <img
+                            src={avatarSrc}
+                            alt={link.name}
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                          />
                         ) : (
-                          <div className="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-full bg-[var(--portal-color-bg)] text-[var(--portal-color-text-tertiary)] transition-colors group-hover:bg-[var(--portal-color-primary)] group-hover:text-white">
-                            <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                          </div>
+                          <span>{getInitials(link.name)}</span>
                         )}
                       </div>
-                      {link.description && (
-                        <p className="line-clamp-2 text-xs sm:text-sm text-[var(--portal-color-text-secondary)]">
-                          {link.description}
-                        </p>
-                      )}
+                      <div className="flex-1 space-y-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="font-semibold leading-snug tracking-tight text-[var(--portal-color-text)] text-sm sm:text-base truncate">
+                            {link.name}
+                          </h3>
+                          {link.rss ? (
+                            <button
+                              type="button"
+                              title={`RSS: ${link.rss}`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                window.open(link.rss!, '_blank', 'noopener,noreferrer');
+                              }}
+                              className="flex h-6 w-6 sm:h-6.5 sm:w-6.5 shrink-0 items-center justify-center rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors"
+                            >
+                              <Rss className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                            </button>
+                          ) : (
+                            <div className="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-full bg-[var(--portal-color-bg)] text-[var(--portal-color-text-tertiary)] transition-colors group-hover:bg-[var(--portal-color-primary)] group-hover:text-white">
+                              <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                            </div>
+                          )}
+                        </div>
+                        {link.description && (
+                          <p className="line-clamp-2 text-xs sm:text-sm text-[var(--portal-color-text-secondary)]">
+                            {link.description}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </a>
 
