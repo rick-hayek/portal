@@ -142,19 +142,22 @@ const siteConfig = defineConfig({
 
 ### 2. 布局的可扩展性 (扩展自定义布局)
 
-系统采用了数据获取与布局组件解耦的架构设计，可以非常方便地添加新的自定义首页布局（如 `'bento'`、`'newspaper'`、`'minimal'` 等）：
+系统采用了插件工厂与 Code-Splitting 动态切包的解耦架构，可以非常方便地添加新的自定义首页布局（如 `'bento'`、`'newspaper'`、`'minimal'` 等）：
 
-1. **创建布局组件**：
-   在 [`apps/web/src/components/home/layouts/`](apps/web/src/components/home/layouts/) 下创建新的 Layout 组件（例如 `BentoLayout.tsx`）。
-2. **注册配置选项**：
-   在配置文件中将新布局 key 添加至 `homeLayout` 类型与选项中。
-3. **在首页路由中配置分发**：
-   在 [`apps/web/src/app/[locale]/(site)/page.tsx`](apps/web/src/app/[locale]/(site)/page.tsx) 中增加分发分支：
-   ```tsx
-   if (activeLayout === 'bento') {
-     return <BentoLayout {...layoutProps} />;
-   }
-   ```
+1. **创建布局与 Header 组件**：
+   - 在 [`apps/web/src/components/home/layouts/`](apps/web/src/components/home/layouts/) 创建 Layout 组件（例如 `BentoLayout.tsx`）。
+   - 在 [`apps/web/src/components/layout/headers/`](apps/web/src/components/layout/headers/) 创建 Header 组件（例如 `BentoHeader.tsx`）。
+2. **在注册中心配置动态加载**：
+   - 在 [`apps/web/src/components/home/layouts/index.ts`](apps/web/src/components/home/layouts/index.ts) 中注册 Layout：
+     ```ts
+     bento: dynamic(() => import('./BentoLayout').then((m) => m.BentoLayout)),
+     ```
+   - 在 [`apps/web/src/components/layout/Header.tsx`](apps/web/src/components/layout/Header.tsx) 中注册 Header：
+     ```ts
+     bento: dynamic(() => import('./headers/BentoHeader').then((m) => m.BentoHeader)),
+     ```
+3. **注册配置选项**：
+   在 [`apps/web/src/site.config.ts`](apps/web/src/site.config.ts) 中将新布局 key 添加至 `homeLayout` 类型选项即可完成切换，未使用的布局与 Header 将通过 `next/dynamic` 自动实现客户端 0 Bundle 占用。
 
 ---
 

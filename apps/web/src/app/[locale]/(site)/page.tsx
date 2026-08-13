@@ -1,7 +1,6 @@
 import { prisma } from '@portal/db';
 import { getTranslations } from 'next-intl/server';
-import { ClassicLayout } from '@/components/home/layouts/ClassicLayout';
-import { MetroLayout } from '@/components/home/layouts/MetroLayout';
+import { layoutMap } from '@/components/home/layouts';
 import { getTRPCServer } from '@/lib/trpc-server';
 import siteConfig from '@/site.config';
 
@@ -153,10 +152,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   // Dispatch layout based on site.config.ts configuration
   const activeLayout = siteConfig.homeLayout || 'classic';
+  const ActiveLayoutComponent = layoutMap[activeLayout] || layoutMap.classic;
 
-  if (activeLayout === 'metro') {
-    return <MetroLayout {...layoutProps} />;
-  }
-
-  return <ClassicLayout {...layoutProps} />;
+  return <ActiveLayoutComponent {...layoutProps} />;
 }

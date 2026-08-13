@@ -8,9 +8,11 @@ import siteConfig from '@/site.config';
 
 export function ThemeSwitcher({
   iconOnly = false,
+  responsive = false,
   onItemClick,
 }: {
   iconOnly?: boolean;
+  responsive?: boolean;
   onItemClick?: () => void;
 }) {
   const t = useTranslations('Themes');
@@ -85,6 +87,42 @@ export function ThemeSwitcher({
     setTheme(val as any);
     onItemClick?.();
   };
+
+  if (responsive) {
+    return (
+      <>
+        {/* Mobile: Icon Circle */}
+        <div className="md:hidden">
+          <Dropdown
+            value={displayThemeId}
+            onChange={handleChange}
+            options={themeOptions}
+            align="right"
+            menuClassName="w-48"
+            renderTrigger={() => (
+              <button
+                type="button"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--portal-color-border,#e5e7eb)] bg-[var(--portal-color-surface)] text-sm text-[var(--portal-color-text)] transition-colors hover:border-[var(--portal-color-primary)] cursor-pointer focus:outline-none"
+                aria-label="Switch theme"
+              >
+                <span suppressHydrationWarning>{activeIcon}</span>
+              </button>
+            )}
+          />
+        </div>
+        {/* Desktop / Medium: Full Dropdown */}
+        <div className="hidden md:block portal-theme-switcher w-44">
+          <Dropdown
+            value={displayThemeId}
+            onChange={handleChange}
+            options={themeOptions}
+            align="right"
+            menuClassName="w-48"
+          />
+        </div>
+      </>
+    );
+  }
 
   if (iconOnly) {
     return (

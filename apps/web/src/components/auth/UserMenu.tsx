@@ -8,11 +8,17 @@ import { Link, usePathname, useRouter } from '@/i18n/routing';
 
 interface UserMenuProps {
   showDetails?: boolean;
-  align?: 'left' | 'right';
+  responsive?: boolean;
+  align?: 'left' | 'right' | 'center';
   onItemClick?: () => void;
 }
 
-export function UserMenu({ showDetails = false, align = 'right', onItemClick }: UserMenuProps) {
+export function UserMenu({
+  showDetails = false,
+  responsive = false,
+  align = 'right',
+  onItemClick,
+}: UserMenuProps) {
   const { data: session, status } = useSession();
   const t = useTranslations('Navigation');
   const router = useRouter();
@@ -25,6 +31,21 @@ export function UserMenu({ showDetails = false, align = 'right', onItemClick }: 
     window.addEventListener('click', closeMenu);
     return () => window.removeEventListener('click', closeMenu);
   }, [isOpen]);
+
+  if (responsive) {
+    return (
+      <>
+        {/* Mobile: Circle Icon Only */}
+        <div className="md:hidden">
+          <UserMenu showDetails={false} align={align} onItemClick={onItemClick} />
+        </div>
+        {/* Desktop / Medium: Full Card Details */}
+        <div className="hidden md:block">
+          <UserMenu showDetails={true} align={align} onItemClick={onItemClick} />
+        </div>
+      </>
+    );
+  }
 
   const handleSignIn = () => {
     onItemClick?.();
@@ -41,7 +62,9 @@ export function UserMenu({ showDetails = false, align = 'right', onItemClick }: 
         <button
           type="button"
           onClick={handleSignIn}
-          className="flex items-center gap-3 w-full py-1 focus:outline-none cursor-pointer group"
+          className={`flex items-center gap-3 py-1 focus:outline-none cursor-pointer group ${
+            align === 'center' ? 'mx-auto justify-center' : 'w-full'
+          }`}
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--portal-color-surface-alt)] text-[var(--portal-color-text-secondary)] border border-compat shrink-0">
             👤
@@ -67,7 +90,7 @@ export function UserMenu({ showDetails = false, align = 'right', onItemClick }: 
   const userInitial = (session.user.name ?? session.user.email ?? 'U')[0].toUpperCase();
 
   return (
-    <div className={`relative ${showDetails ? 'w-full' : ''}`}>
+    <div className={`relative ${showDetails && align !== 'center' ? 'w-full' : ''}`}>
       {/* Dropdown Trigger */}
       <button
         type="button"
@@ -76,7 +99,11 @@ export function UserMenu({ showDetails = false, align = 'right', onItemClick }: 
           setIsOpen(!isOpen);
         }}
         className={`flex items-center focus:outline-none focus:ring-0 cursor-pointer ${
-          showDetails ? 'w-full justify-between gap-3 py-1' : 'gap-1.5'
+          showDetails
+            ? align === 'center'
+              ? 'mx-auto justify-center gap-3 py-1.5 px-4 rounded-xl border border-compat bg-[var(--portal-color-surface-alt)]/50 hover:bg-[var(--portal-color-surface-alt)] transition-colors'
+              : 'w-full justify-between gap-3 py-1'
+            : 'gap-1.5'
         }`}
         aria-label="User menu"
       >
@@ -126,10 +153,12 @@ export function UserMenu({ showDetails = false, align = 'right', onItemClick }: 
       {isOpen && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className={`absolute bottom-full mb-2 md:bottom-auto md:top-10 md:mb-0 z-50 w-44 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-bottom-2 md:slide-in-from-top-2 duration-150 ${
-            align === 'left'
-              ? 'left-0 origin-bottom-left md:left-auto md:right-0 md:origin-top-right'
-              : 'right-0 origin-bottom-right md:origin-top-right'
+          className={`absolute top-full mt-2 z-50 w-44 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150 ${
+            align === 'center'
+              ? 'left-1/2 -translate-x-1/2 origin-top'
+              : align === 'left'
+                ? 'left-0 origin-top-left'
+                : 'right-0 origin-top-right'
           }`}
         >
           {!showDetails && (

@@ -142,19 +142,22 @@ Built-in layouts:
 
 ### 2. Layout Extensibility (Adding Custom Layouts)
 
-The architecture decouples layout components from page data fetching, allowing seamless addition of new homepage layouts (e.g. `'bento'`, `'newspaper'`, `'minimal'`):
+The platform utilizes a Layout Factory Registry architecture with `next/dynamic` code splitting, allowing seamless addition of custom homepage layouts (e.g. `'bento'`, `'newspaper'`, `'minimal'`):
 
-1. **Create Layout Component**:
-   Build your layout component inside [`apps/web/src/components/home/layouts/`](apps/web/src/components/home/layouts/) (e.g. `BentoLayout.tsx`).
-2. **Register Config Option**:
-   Add your new layout key to `homeLayout` type/options in configuration.
-3. **Dispatch in Home Route**:
-   In [`apps/web/src/app/[locale]/(site)/page.tsx`](apps/web/src/app/[locale]/(site)/page.tsx), add a dispatch branch:
-   ```tsx
-   if (activeLayout === 'bento') {
-     return <BentoLayout {...layoutProps} />;
-   }
-   ```
+1. **Create Layout & Header Components**:
+   - Create your layout component in [`apps/web/src/components/home/layouts/`](apps/web/src/components/home/layouts/) (e.g., `BentoLayout.tsx`).
+   - Create your header component in [`apps/web/src/components/layout/headers/`](apps/web/src/components/layout/headers/) (e.g., `BentoHeader.tsx`).
+2. **Register in Dynamic Dispatchers**:
+   - Register in [`apps/web/src/components/home/layouts/index.ts`](apps/web/src/components/home/layouts/index.ts):
+     ```ts
+     bento: dynamic(() => import('./BentoLayout').then((m) => m.BentoLayout)),
+     ```
+   - Register in [`apps/web/src/components/layout/Header.tsx`](apps/web/src/components/layout/Header.tsx):
+     ```ts
+     bento: dynamic(() => import('./headers/BentoHeader').then((m) => m.BentoHeader)),
+     ```
+3. **Register Config Type**:
+   Add the new layout key to `homeLayout` options in [`apps/web/src/site.config.ts`](apps/web/src/site.config.ts). Unused layouts and headers will automatically achieve zero client bundle overhead via `next/dynamic`.
 
 ---
 
