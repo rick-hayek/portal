@@ -4,6 +4,9 @@
 
 [English](./README.md) | 中文
 
+![Metro Homepage](./designs/screenshot/voocii-metro.png){width=400} | ![Classic Homepage](./designs/screenshot/voocii-classic-zh.png){width=400}
+
+
 ## 特性
 
 - **Next.js 16 App Router**：充分利用最新的 React 特性与服务端组件 (RSC)。
