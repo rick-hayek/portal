@@ -13,6 +13,7 @@ export interface SiteConfig {
     available: string[];
     allowUserSwitch: boolean;
   };
+  homeLayout?: 'classic' | 'metro';
   admin: {
     enabled: boolean;
     basePath: string;

@@ -17,6 +17,7 @@ import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
+import siteConfig from '@/site.config';
 import { UserMenu } from '../auth/UserMenu';
 import { SearchDialog } from '../search/SearchDialog';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -62,12 +63,21 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
   const { data: session } = useSession();
   const pathname = usePathname();
 
+  const isMetro = siteConfig.homeLayout === 'metro';
+
   const headerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
+
+  // Lock dark theme when in Metro layout
+  useEffect(() => {
+    if (isMetro) {
+      document.documentElement.classList.add('dark');
+    }
+  }, [isMetro]);
 
   // Close mobile drawer menu on route change
   useEffect(() => {
@@ -211,30 +221,65 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
     return () => window.removeEventListener('scroll', onScroll);
   }, [mobileOpen, isHidden]);
 
-  return (
-    <>
-      <header
-        ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-compat flex justify-center px-4 md:px-8 bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150 transition-transform duration-300 ease-in-out md:translate-y-0 ${isHidden ? '-translate-y-full' : 'translate-y-0'
+  if (isMetro) {
+    return (
+      <>
+        <header
+          ref={headerRef}
+          className={`fixed top-0 left-0 right-0 z-50 w-full h-14 flex justify-center border-b-2 border-[#333535] bg-[#121414]/90 backdrop-blur-md transition-transform duration-300 ease-in-out md:translate-y-0 ${
+            isHidden ? '-translate-y-full' : 'translate-y-0'
           }`}
-      >
-        <div className="flex h-full w-full items-center justify-between px-0">
-          {/* Logo / Mobile Back Button */}
-          <div ref={logoRef} className="flex items-center gap-2 shrink-0">
-            {detailParent ? (
-              <>
-                {/* On Desktop: Always render site Logo */}
+        >
+          <div className="flex h-full w-full items-center justify-between max-w-[1400px] mx-auto px-4 sm:px-8">
+            {/* Logo / Mobile Back Button */}
+            <div ref={logoRef} className="flex items-center gap-2 shrink-0">
+              {detailParent ? (
+                <>
+                  <Link
+                    href="/"
+                    className="hidden md:flex items-center gap-2.5 font-mono font-black text-base sm:text-lg uppercase tracking-[0.25em] text-[#fbbc00] hover:text-[#ffd65c] transition-colors no-underline"
+                  >
+                    <span className="flex h-7.5 w-7.5 items-center justify-center rounded-md bg-[#fbbc00] text-[#121414] shadow-xs">
+                      <svg
+                        className="h-4.5 w-4.5 stroke-[2.5]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                        />
+                      </svg>
+                    </span>
+                    {siteTitle}
+                  </Link>
+                  <Link
+                    href={detailParent.href as any}
+                    className="flex md:hidden items-center gap-2 font-bold text-[#e2e2e2] hover:text-[#fbbc00] transition-colors no-underline text-base"
+                  >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#333535] bg-[#1a1c1c] text-[#9c8f78] text-xs">
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                      </svg>
+                    </span>
+                    <span className="font-mono text-xs uppercase">
+                      {t.has(detailParent.labelKey as any) ? t(detailParent.labelKey as any) : detailParent.labelKey}
+                    </span>
+                  </Link>
+                </>
+              ) : (
                 <Link
                   href="/"
-                  className="hidden md:flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline text-[1.1rem] tracking-tight"
+                  className="flex items-center gap-2.5 font-mono font-black text-base sm:text-lg uppercase tracking-[0.25em] text-[#fbbc00] hover:text-[#ffd65c] transition-colors no-underline"
                 >
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]">
+                  <span className="flex h-7.5 w-7.5 items-center justify-center rounded-md bg-[#fbbc00] text-[#121414] shadow-xs">
                     <svg
-                      className="h-3.5 w-3.5"
+                      className="h-4.5 w-4.5 stroke-[2.5]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
-                      strokeWidth={2}
                     >
                       <path
                         strokeLinecap="round"
@@ -245,53 +290,174 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                   </span>
                   {siteTitle}
                 </Link>
+              )}
+            </div>
 
-                {/* On Mobile in detail pages: Render Back Button */}
+            {/* Desktop Nav Links (Pushed towards the right side) */}
+            <nav ref={navRef} className="hidden items-center gap-4 lg:gap-8 md:flex shrink-0 ml-auto mr-4 sm:mr-6">
+              {displayNavItems.map((item) => {
+                const labelKey = item.label.toLowerCase() as any;
+                const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
+                const isActive =
+                  item.href === '/'
+                    ? pathname === '/'
+                    : pathname === item.href || pathname.startsWith(item.href + '/');
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href as any}
+                    className={`transition-colors whitespace-nowrap font-mono text-[0.78rem] uppercase tracking-wider ${
+                      isActive
+                        ? 'font-extrabold text-[#00e3fd]'
+                        : 'font-medium text-[#9c8f78] hover:text-[#00e3fd]'
+                    }`}
+                  >
+                    {translatedLabel}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Right Side Controls (Only ≡ Hamburger Button on Header Bar) */}
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-1.5 rounded-full bg-[#1e2020] border border-[#333535] text-[#00e3fd] px-3 py-1 text-xs font-bold transition-colors md:hidden"
+                >
+                  <Settings className="h-3.5 w-3.5" />
+                  <span>{t('admin')}</span>
+                </Link>
+              )}
+
+              <button
+                className="flex h-9 w-9 items-center justify-center text-[#e2e2e2] hover:bg-[#1e2020] rounded-none transition-colors cursor-pointer"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-expanded={mobileOpen}
+              >
+                <span className="sr-only">Toggle menu</span>
+                {mobileOpen ? (
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Metro Drawer Menu */}
+          {mobileOpen && (
+            <div className="absolute top-14 left-0 right-0 z-40 border-b border-[#333535] bg-[#121414] text-[#e2e2e2] px-6 py-4 shadow-lg">
+              <nav className="flex flex-col gap-1 md:hidden">
+                {displayNavItems
+                  .filter((item) => !(isAdmin && item.href === '/admin'))
+                  .map((item) => {
+                    const labelKey = item.label.toLowerCase() as any;
+                    const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
+                    const isActive =
+                      item.href === '/'
+                        ? pathname === '/'
+                        : pathname === item.href || pathname.startsWith(item.href + '/');
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href as any}
+                        className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors rounded-none font-mono uppercase tracking-wider ${
+                          isActive
+                            ? 'bg-[#1e2020] text-[#00e3fd] font-bold'
+                            : 'text-[#9c8f78] hover:bg-[#1a1c1c] hover:text-[#00e3fd] font-medium'
+                        }`}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {getNavIcon(item.href)}
+                        <span>{translatedLabel}</span>
+                      </Link>
+                    );
+                  })}
+              </nav>
+
+              <div className="mt-3 border-t border-[#333535] md:hidden" />
+
+              <div className="pt-3 pb-1 flex flex-row items-center justify-center gap-3 px-3 w-full">
+                <SearchDialog
+                  className="flex w-36 items-center gap-2 rounded-none border border-[#333535] bg-[#1a1c1c] text-[#9c8f78] hover:text-[#00e3fd] hover:border-[#00e3fd] transition-colors py-2 px-3 text-[0.78rem] font-mono"
+                  showLabel={true}
+                />
+                <LanguageSwitcher onItemClick={() => setMobileOpen(false)} />
+              </div>
+
+              <div className="my-2.5 border-t border-[#333535]" />
+
+              <div className="pt-1 pb-1 px-1">
+                <UserMenu showDetails={true} align="left" onItemClick={() => setMobileOpen(false)} />
+              </div>
+            </div>
+          )}
+        </header>
+
+        {mobileOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-black/30 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Classic Header (Default return when !isMetro)
+  return (
+    <>
+      <header
+        ref={headerRef}
+        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 border-b border-compat flex justify-center px-4 md:px-8 bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150 transition-transform duration-300 ease-in-out md:translate-y-0 ${
+          isHidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
+      >
+        <div className="flex h-full w-full items-center justify-between px-0">
+          {/* Logo / Mobile Back Button */}
+          <div ref={logoRef} className="flex items-center gap-2 shrink-0">
+            {detailParent ? (
+              <>
+                <Link
+                  href="/"
+                  className="hidden md:flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline text-[1.1rem] tracking-tight"
+                >
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]">
+                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                  </span>
+                  {siteTitle}
+                </Link>
                 <Link
                   href={detailParent.href as any}
                   className="flex md:hidden items-center gap-2 font-bold text-[var(--portal-color-text)] hover:text-[var(--portal-color-primary)] transition-colors no-underline text-base"
                 >
                   <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] shadow-xs">
-                    <svg
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                      />
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                   </span>
                   <span className="text-[0.95rem]">
-                    {t.has(detailParent.labelKey as any)
-                      ? t(detailParent.labelKey as any)
-                      : detailParent.labelKey}
+                    {t.has(detailParent.labelKey as any) ? t(detailParent.labelKey as any) : detailParent.labelKey}
                   </span>
                 </Link>
               </>
             ) : (
-              /* On non-detail pages: Always render site Logo */
               <Link
                 href="/"
                 className="flex items-center gap-2 font-bold text-[var(--portal-color-text)] no-underline text-[1.1rem] tracking-tight"
               >
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]">
-                  <svg
-                    className="h-3.5 w-3.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                    />
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                   </svg>
                 </span>
                 {siteTitle}
@@ -313,10 +479,11 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href as any}
-                  className={`transition-colors text-[0.82rem] tracking-tight whitespace-nowrap ${isActive
-                    ? 'font-bold text-[var(--portal-color-primary)]'
-                    : 'font-medium text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-text)]'
-                    }`}
+                  className={`transition-colors text-[0.82rem] tracking-tight whitespace-nowrap ${
+                    isActive
+                      ? 'font-bold text-[var(--portal-color-primary)]'
+                      : 'font-medium text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-text)]'
+                  }`}
                 >
                   {translatedLabel}
                 </Link>
@@ -326,7 +493,6 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
 
           {/* Right side */}
           <div className="flex items-center gap-2 md:gap-3 shrink-0">
-            {/* Inline controls — hidden by CSS below md, hidden by JS when compact */}
             <div
               ref={controlsRef}
               className="hidden items-center gap-3 md:flex"
@@ -337,12 +503,10 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
               <ThemeSwitcher />
             </div>
 
-            {/* Desktop UserMenu */}
             <div ref={userMenuRef} className="hidden md:block shrink-0">
               <UserMenu />
             </div>
 
-            {/* Mobile Admin Quick Button — shown on mobile top right when logged in as admin */}
             {isAdmin && (
               <Link
                 href="/admin"
@@ -353,31 +517,21 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
               </Link>
             )}
 
-            {/* Hamburger — shown below md (mobile) OR when compact (desktop overflow) */}
             <button
-              className={`h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] ${isCompact ? 'flex' : 'flex md:hidden'
-                }`}
+              className={`h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] ${
+                isCompact ? 'flex' : 'flex md:hidden'
+              }`}
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-expanded={mobileOpen}
             >
               <span className="sr-only">Toggle menu</span>
               {mobileOpen ? (
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
@@ -387,10 +541,10 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
         {/* Mobile/Tablet Nav Drawer */}
         {mobileOpen && (
           <div
-            className={`absolute top-14 left-0 right-0 z-40 border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-4 shadow-lg ${isCompact ? '' : 'lg:hidden'
-              }`}
+            className={`absolute top-14 left-0 right-0 z-40 border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-6 py-4 shadow-lg ${
+              isCompact ? '' : 'lg:hidden'
+            }`}
           >
-            {/* Main Navigation Links (Visible only below md) */}
             <nav className="flex flex-col gap-1 md:hidden">
               {displayNavItems
                 .filter((item) => !(isAdmin && item.href === '/admin'))
@@ -406,10 +560,11 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                     <Link
                       key={item.href}
                       href={item.href as any}
-                      className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ${isActive
-                        ? 'bg-[var(--portal-color-surface-alt)] text-[var(--portal-color-primary)] font-bold'
-                        : 'text-[var(--portal-color-text-tertiary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)] font-medium'
-                        }`}
+                      className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[var(--portal-color-surface-alt)] text-[var(--portal-color-primary)] font-bold'
+                          : 'text-[var(--portal-color-text-tertiary)] hover:bg-[var(--portal-color-surface-alt)] hover:text-[var(--portal-color-text)] font-medium'
+                      }`}
                       onClick={() => setMobileOpen(false)}
                     >
                       {getNavIcon(item.href)}
@@ -419,10 +574,8 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
                 })}
             </nav>
 
-            {/* Top Divider (Visible only below md) */}
             <div className="mt-3 border-t border-[var(--portal-color-border)] md:hidden" />
 
-            {/* Settings Actions Row 1: Search, Language, Theme */}
             <div className="pt-3 pb-1 flex flex-row items-center justify-center gap-3 px-3 w-full">
               <SearchDialog
                 className="flex w-36 items-center gap-2 rounded-full border border-compat bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] transition-colors hover:border-[var(--portal-color-primary)] hover:text-[var(--portal-color-text)] py-2 px-3 text-[0.78rem]"
@@ -432,10 +585,8 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
               <ThemeSwitcher iconOnly={true} onItemClick={() => setMobileOpen(false)} />
             </div>
 
-            {/* Divider Line between Search row & User Account row */}
             <div className="my-2.5 border-t border-[var(--portal-color-border)]/60 md:hidden" />
 
-            {/* Settings Actions Row 2: User Account / Login */}
             <div className="pt-1 pb-1 px-1 md:hidden">
               <UserMenu showDetails={true} align="left" onItemClick={() => setMobileOpen(false)} />
             </div>
@@ -443,11 +594,11 @@ export function Header({ siteTitle, navItems }: HeaderProps) {
         )}
       </header>
 
-      {/* Backdrop for closing menu on outside click */}
       {mobileOpen && (
         <div
-          className={`fixed inset-0 z-30 bg-black/30 backdrop-blur-xs transition-opacity ${isCompact ? '' : 'lg:hidden'
-            }`}
+          className={`fixed inset-0 z-30 bg-black/30 backdrop-blur-xs transition-opacity ${
+            isCompact ? '' : 'lg:hidden'
+          }`}
           onClick={() => setMobileOpen(false)}
         />
       )}

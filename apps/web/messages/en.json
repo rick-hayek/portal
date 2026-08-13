@@ -32,7 +32,7 @@
     "initComment": "// Initializing Project",
     "title1": "Reflections on",
     "title2": "Life & Work",
-    "description": "A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.",
+    "description": "A personal space dedicated to sharing tech insights, life reflections.",
     "exploreBlog": "Explore Blog",
     "viewProjects": "View Projects",
     "latestPosts": "Latest Posts",
@@ -164,6 +164,10 @@
       "desc": "Encode to or decode from Base64 format instantly."
     },
     "jwt": {
+      "name": "JWT Decoder",
+      "desc": "Decode and inspect JSON Web Tokens inline securely."
+    },
+    "jwtDecoder": {
       "name": "JWT Decoder",
       "desc": "Decode and inspect JSON Web Tokens inline securely."
     },

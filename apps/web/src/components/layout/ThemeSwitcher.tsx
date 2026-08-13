@@ -4,6 +4,7 @@ import { themes, useTheme } from '@portal/theme';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
+import siteConfig from '@/site.config';
 
 export function ThemeSwitcher({
   iconOnly = false,
@@ -15,10 +16,19 @@ export function ThemeSwitcher({
   const t = useTranslations('Themes');
   const { themeId, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const isMetro = siteConfig.homeLayout === 'metro';
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (isMetro) {
+      setTheme('dark-neon' as any);
+      document.documentElement.classList.add('dark');
+    }
+  }, [isMetro, setTheme]);
+
+  if (isMetro) {
+    return null;
+  }
 
   const getThemeLabel = (id: string, fallbackName: string) => {
     try {
