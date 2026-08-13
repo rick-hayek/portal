@@ -3,7 +3,16 @@
 A modern, full-stack personal portal and portfolio built with Next.js 16, tRPC, Prisma, and Tailwind CSS v4.
 
 English | [中文](./README.zh.md) 
-![Metro Homepage](./designs/screenshot/voocii-metro-en.png){width=400}  ![Classic Homepage](./designs/screenshot/voocii-classic-en.png){width=400}
+
+## Layout
+
+Classic:
+
+![Classic Homepage](./designs/screenshot/voocii-classic-en.png)
+
+Metro:
+
+![Metro Homepage](./designs/screenshot/voocii-metro-en.png)
 
 
 ## Features

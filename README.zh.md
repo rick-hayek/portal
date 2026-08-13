@@ -4,7 +4,15 @@
 
 [English](./README.md) | 中文
 
-![Metro Homepage](./designs/screenshot/voocii-metro.png){width=400} | ![Classic Homepage](./designs/screenshot/voocii-classic-zh.png){width=400}
+## 布局
+
+经典:
+
+![Classic Homepage](./designs/screenshot/voocii-classic-zh.png)
+
+Metro:
+
+![Metro Homepage](./designs/screenshot/voocii-metro-zh.png)
 
 
 ## 特性
