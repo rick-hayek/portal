@@ -1,155 +1,155 @@
 # Voocii Portal ![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)
 
-A modern, full-stack personal portal and portfolio built with Next.js 16, tRPC, Prisma, and Tailwind CSS v4.
+基于 Next.js 16、tRPC、Prisma 与 Tailwind CSS v4 构建的现代全栈个人门户网站与作品集平台。
 
-English | [中文](./README.zh.md) 
+[English](./README.en.md) | 中文
 
-## Layout
+## 布局
 
-Classic:
+经典:
 
-![Classic Homepage](./designs/screenshot/voocii-classic-en.png)
+![Classic Homepage](./designs/screenshot/voocii-classic-zh.png)
 
 Metro:
 
-![Metro Homepage](./designs/screenshot/voocii-metro-en.png)
+![Metro Homepage](./designs/screenshot/voocii-metro-zh.png)
 
 
-## Features
+## 特性
 
-- **Next.js 16 App Router**: Leverage the latest React features and server components.
-- **tRPC**: End-to-end typesafe APIs.
-- **Prisma ORM**: Type-safe database access with PostgreSQL.
-- **Tailwind CSS v4**: Utility-first styling with a modern design system.
-- **Next-Intl**: Full internationalization (i18n) support for English and Chinese.
-- **Theme Engine**: Built-in dark mode and multiple theme presets.
-- **Monorepo Architecture**: Managed with Turborepo and pnpm workspaces.
-- **Modular Design**: Includes Blog, Portfolio, Guestbook, Links, and developer Tools.
-- **Admin Dashboard**: Integrated content management and analytics.
+- **Next.js 16 App Router**：充分利用最新的 React 特性与服务端组件 (RSC)。
+- **tRPC**：端到端类型安全的 API 接口。
+- **Prisma ORM**：结合 PostgreSQL 的类型安全数据库访问。
+- **Tailwind CSS v4**：基于现代设计系统的原子化样式。
+- **Next-Intl**：完善的英文与中文国际化 (i18n) 支持。
+- **主题引擎 (Theme Engine)**：内置暗黑模式与多种预设主题。
+- **Monorepo 架构**：基于 Turborepo 和 pnpm workspaces 统一管理。
+- **模块化设计**：包含博客、作品集、留言板、友链及开发者工具箱。
+- **后台管理系统**：集成式的集中内容管理与数据统计。
 
-## Prerequisites
+## 环境要求
 
 - Node.js >= 20
 - pnpm >= 9
 - PostgreSQL >= 16
-- Redis (Optional, for caching)
+- Redis（可选，用于缓存）
 
-## Getting Started
+## 快速上手
 
-### 1. Clone the repository
+### 1. 克隆代码库
 
 ```bash
 git clone https://github.com/rick-hayek/portal.git
 cd portal
 ```
 
-### 2. Install dependencies
+### 2. 安装依赖
 
-This project uses `pnpm` as the package manager.
+本项目使用 `pnpm` 作为包管理器：
 
 ```bash
 pnpm install
 ```
 
-### 3. Environment Variables
+### 3. 配置环境变量
 
-Copy the example environment file and fill in your variables:
+复制示例环境变量文件并填写您的配置：
 
 ```bash
 cp .env.example .env
 ```
 
-Ensure you set the `DATABASE_URL` to your local or remote PostgreSQL instance.
+请确保将 `DATABASE_URL` 设置为您本地或远程的 PostgreSQL 实例地址。
 
-### 4. Database Setup & Migrations
+### 4. 数据库初始化与迁移
 
-Launch local PostgreSQL database with Docker:
+使用 Docker 启动本地 PostgreSQL 数据库：
 ```bash
 docker compose up -d
 ```
 
-#### For Local Development
-Run Prisma migrations to execute all version-controlled SQL scripts in chronological order:
+#### 本地开发环境
+按时间顺序执行所有版本控制的 SQL 迁移脚本：
 
 ```bash
 pnpm --filter @portal/db migrate:dev
 ```
 
-#### For Production Deployment
-Apply all incremental migrations safely to your production database without resetting data:
+#### 生产部署环境
+安全地向生产数据库应用所有增量迁移（不会重置现有数据）：
 
 ```bash
 pnpm --filter @portal/db migrate:deploy
 ```
 
 > [!NOTE]
-> All database structural changes and version history are tracked in `packages/db/prisma/migrations/`. Running the migration command automatically applies every migration sequentially from `20260213044327_init` to the latest schema version.
+> 所有的数据库结构变更与版本历史均追踪于 `packages/db/prisma/migrations/`。运行迁移命令会自动按顺序应用每个 SQL 脚本。
 
-(Optional) Seed the database with initial data:
+（可选）导入初始种子数据：
 
 ```bash
 pnpm --filter @portal/db seed
 ```
 
-### 5. Run the Development Server
+### 5. 启动开发服务器
 
-Start the Turborepo development server across all packages:
+启动跨包的 Turborepo 开发服务器：
 
 ```bash
 pnpm dev
 ```
 
-- The main application will be available at `http://localhost:3000`.
-- The **Admin Dashboard** is accessible at `/admin` (e.g. `http://localhost:3000/admin`). Only authenticated users with the `admin` role can access it.
+- 主应用访问地址：`http://localhost:3000`。
+- **后台管理系统**访问地址：`/admin`（例如 `http://localhost:3000/admin`），仅具有 `admin` 角色的已登录用户可访问。
 
-### 6. Database Studio & Administration
+### 6. 数据库可视化管理 (Prisma Studio)
 
-To open the visual database editor (Prisma Studio) to manage users, roles (e.g. setting yourself to `admin`), and content records directly:
+打开可视化数据库编辑器来管理用户、角色（例如将自己设为 `admin`）及内容记录：
 
 ```bash
 pnpm --filter @portal/db studio
 ```
 
-This will start a web client at `http://localhost:5555`.
+将在 `http://localhost:5555` 启动可视化 Web 界面。
 
-## Project Structure
+## 项目结构
 
-This is a Turborepo monorepo.
+本项目基于 Turborepo Monorepo 架构构建：
 
-- `apps/web`: The main Next.js application.
-- `packages/api`: tRPC routers and API logic.
-- `packages/db`: Prisma schema and database client.
-- `packages/theme`: Design system and theme configurations.
-- `packages/config`: Shared site configurations and utilities.
-- `packages/shared`: Shared TypeScript types and constants.
+- `apps/web`: Next.js 前端主应用。
+- `packages/api`: tRPC 路由与 API 业务逻辑。
+- `packages/db`: Prisma Schema 数据库客户端。
+- `packages/theme`: 设计系统与主题配置包。
+- `packages/config`: 共享站点配置文件与工具库。
+- `packages/shared`: 共享 TypeScript 类型与常量。
 
-## Layout Configuration & Extensibility
+## 布局配置与可扩展性
 
-### 1. Configuring Homepage Layout (`homeLayout`)
+### 1. 首页布局切换 (`homeLayout`)
 
-You can switch the homepage layout style easily in [`apps/web/src/site.config.ts`](apps/web/src/site.config.ts):
+您可以在 [`apps/web/src/site.config.ts`](apps/web/src/site.config.ts) 中轻松切换首页排版风格：
 
 ```ts
 const siteConfig = defineConfig({
   // ...
-  homeLayout: 'classic', // Built-in options: 'classic' | 'metro'
+  homeLayout: 'classic', // 内置选项: 'classic' | 'metro'
 });
 ```
 
-Built-in layouts:
-- `'classic'`: Traditional responsive flow layout with clean hero section, post lists, and card grids.
-- `'metro'`: Microsoft Windows Metro-style grid layout (Tessellate Noir dark high-contrast grid design).
+内置布局风格：
+- `'classic'`：经典自适应流式排版（包含 Hero 介绍、文章列表与项目卡片网格）。
+- `'metro'`：微软 Windows Metro 网格瓷砖排版（Tessellate Noir 极简高对比度块状设计）。
 
-### 2. Layout Extensibility (Adding Custom Layouts)
+### 2. 布局的可扩展性 (扩展自定义布局)
 
-The architecture decouples layout components from page data fetching, allowing seamless addition of new homepage layouts (e.g. `'bento'`, `'newspaper'`, `'minimal'`):
+系统采用了数据获取与布局组件解耦的架构设计，可以非常方便地添加新的自定义首页布局（如 `'bento'`、`'newspaper'`、`'minimal'` 等）：
 
-1. **Create Layout Component**:
-   Build your layout component inside [`apps/web/src/components/home/layouts/`](apps/web/src/components/home/layouts/) (e.g. `BentoLayout.tsx`).
-2. **Register Config Option**:
-   Add your new layout key to `homeLayout` type/options in configuration.
-3. **Dispatch in Home Route**:
-   In [`apps/web/src/app/[locale]/(site)/page.tsx`](apps/web/src/app/[locale]/(site)/page.tsx), add a dispatch branch:
+1. **创建布局组件**：
+   在 [`apps/web/src/components/home/layouts/`](apps/web/src/components/home/layouts/) 下创建新的 Layout 组件（例如 `BentoLayout.tsx`）。
+2. **注册配置选项**：
+   在配置文件中将新布局 key 添加至 `homeLayout` 类型与选项中。
+3. **在首页路由中配置分发**：
+   在 [`apps/web/src/app/[locale]/(site)/page.tsx`](apps/web/src/app/[locale]/(site)/page.tsx) 中增加分发分支：
    ```tsx
    if (activeLayout === 'bento') {
      return <BentoLayout {...layoutProps} />;
@@ -158,18 +158,18 @@ The architecture decouples layout components from page data fetching, allowing s
 
 ---
 
-## Deployment
+## 部署说明
 
-### 1. Site Configuration (Pre-deployment)
+### 1. 站点配置 (预部署)
 
-Before deploying to production, update your site configuration in [`apps/web/src/site.config.ts`](apps/web/src/site.config.ts) with your domain name and site metadata:
+在部署到生产环境之前，请更新 [`apps/web/src/site.config.ts`](apps/web/src/site.config.ts) 中的域名及元数据信息：
 
 ```ts
 const siteConfig = defineConfig({
   site: {
-    title: 'Your Site Title',
-    description: 'Your site description',
-    url: 'https://your-domain.com', // Must be set to your production domain
+    title: '您的站点标题',
+    description: '您的站点描述',
+    url: 'https://your-domain.com', // 必须设置为您的实际生产域名
     locale: 'zh-CN',
   },
   // ...
@@ -177,43 +177,41 @@ const siteConfig = defineConfig({
 ```
 
 > [!IMPORTANT]
-> Setting `site.url` to your actual production domain is required for:
-> - **SEO & Search Crawlers**: Canonical URLs generated in `sitemap.xml` and `robots.txt`.
-> - **Social Sharing**: Open Graph and Twitter Card preview links when sharing pages.
-> - **RSS Feed**: Article canonical URLs in `/feed.xml`.
+> 将 `site.url` 设置为实际生产域名是以下功能正常运行的必要前提：
+> - **SEO 与搜索引擎爬虫**：`sitemap.xml` 和 `robots.txt` 中生成的 Standard 规范 URL。
+> - **社交分享**：分享页面时的 Open Graph 和 Twitter Card 预览卡片链接。
+> - **RSS 订阅**：`/feed.xml` 中文章的规范链接。
 
-### 2. Vercel Deployment
+### 2. Vercel 部署
 
-The project is optimized for deployment on Vercel. Ensure you configure all relevant environment variables in your Vercel project settings.
+本项目针对 Vercel 部署进行了全面优化。请确保在 Vercel 项目设置中配置了所有必需的环境变量。
 
-### 3. Database Migrations (Production)
+### 3. 生产环境数据库迁移
 
-When deploying updates that involve database schema changes, you must apply the migrations to your production database.
+当部署包含数据库 Schema 变更的更新时，必须将迁移应用到生产数据库。
 
-#### Option 1: Manual Migration
-Run the following command locally with your production database URL set as the `DATABASE_URL` environment variable:
+#### 方案 1：手动迁移
+在本地将 `DATABASE_URL` 环境变量设置为生产数据库地址后运行：
 ```bash
 DATABASE_URL="your-production-database-url" pnpm --filter @portal/db migrate:deploy
 ```
 
-#### Option 2: Automatic Vercel Build Step (Recommended)
-Configure the **Build Command** in your Vercel project settings to run migrations automatically before every build:
+#### 方案 2：Vercel 自动构建步骤 (推荐)
+在 Vercel 项目设置的 **Build Command** 中配置在每次构建前自动运行数据库迁移：
 ```bash
 pnpm --filter @portal/db migrate:deploy && turbo build
 ```
-This ensures the database schema is always updated before building and serving the new version.
+这可确保在编译和提供新版本之前，数据库结构始终是最新的。
 
-## Versioning & Changelog
+## 版本管理与更新日志
 
-This project adheres to [Semantic Versioning (SemVer)](https://semver.org/):
-- **MAJOR (`X.0.0`)**: Breaking changes or major architectural overhauls.
-- **MINOR (`0.X.0`)**: New feature modules, layouts, or non-breaking API additions.
-- **PATCH (`0.0.X`)**: Bug fixes, performance optimizations, or UI styling polish.
+本项目严格遵循 [语义化版本规范 (Semantic Versioning - SemVer)](https://semver.org/lang/zh-CN/)：
+- **主版本号 (`X.0.0`)**：包含不兼容的破坏性 API 变更或重大架构重构。
+- **次版本号 (`0.X.0`)**：包含向下兼容的功能模块新增、新布局 preset 或非破坏性 API 扩展。
+- **修订号 (`0.0.X`)**：包含向下兼容的 Bug 修复、性能优化或样式微调。
 
-All version releases, detailed feature additions, and breaking changes are documented in [`CHANGELOG.md`](CHANGELOG.md).
+所有版本的发布记录、详细特性更新及重大变更说明均完整维护于 [`CHANGELOG.md`](CHANGELOG.md) 中。
 
-## License
+## 开源协议
 
 MIT
-
-
