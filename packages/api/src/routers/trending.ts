@@ -1,0 +1,139 @@
+import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { protectedProcedure, publicProcedure, router } from '../trpc';
+
+export const trendingRouter = router({
+  /** List trending repos for a given week (defaults to latest week) */
+  list: publicProcedure
+    .input(
+      z
+        .object({
+          weekOf: z.string().optional(), // ISO date string for the Monday
+          limit: z.number().int().min(1).max(100).optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      const defaultLimit = process.env.TRENDING_FETCH_LIMIT
+        ? parseInt(process.env.TRENDING_FETCH_LIMIT, 10)
+        : 10;
+      const limit = input?.limit ?? defaultLimit;
+
+      const fetchTargetWeek = async (wOf?: string) => {
+        if (wOf) {
+          return new Date(wOf);
+        }
+        const latest = await ctx.prisma.trendingRepo.findFirst({
+          orderBy: { weekOf: 'desc' },
+          select: { weekOf: true },
+        });
+        return latest?.weekOf;
+      };
+
+      const fetchRepos = async (targetWeek: Date, lim: number) => {
+        const [repos, totalCount, pastRepos] = await Promise.all([
+          ctx.prisma.trendingRepo.findMany({
+            where: { weekOf: targetWeek },
+            orderBy: { starsGrowth: 'desc' },
+            take: lim,
+          }),
+          ctx.prisma.trendingRepo.count({
+            where: { weekOf: targetWeek },
+          }),
+          ctx.prisma.trendingRepo.findMany({
+            where: {
+              weekOf: { lte: targetWeek },
+            },
+            select: {
+              githubId: true,
+              weekOf: true,
+            },
+            orderBy: { weekOf: 'desc' },
+          }),
+        ]);
+
+        // Map githubId -> Set of week YYYY-MM-DD keys
+        const repoWeeksMap = new Map<number, Set<string>>();
+        for (const item of pastRepos) {
+          const key = item.weekOf.toISOString().slice(0, 10);
+          if (!repoWeeksMap.has(item.githubId)) {
+            repoWeeksMap.set(item.githubId, new Set());
+          }
+          repoWeeksMap.get(item.githubId)!.add(key);
+        }
+
+        // Helper to check if date or near date exists in set
+        const hasDateNear = (set: Set<string>, targetDate: Date) => {
+          for (let offset = -2; offset <= 2; offset++) {
+            const d = new Date(targetDate.getTime() + offset * 24 * 60 * 60 * 1000);
+            if (set.has(d.toISOString().slice(0, 10))) return true;
+          }
+          return false;
+        };
+
+        const reposWithStreak = repos.map((repo) => {
+          const weeksSet = repoWeeksMap.get(repo.githubId);
+          let streak = 0;
+          let curr = new Date(targetWeek);
+
+          while (weeksSet) {
+            if (hasDateNear(weeksSet, curr)) {
+              streak++;
+              curr = new Date(curr.getTime() - 7 * 24 * 60 * 60 * 1000);
+            } else {
+              break;
+            }
+          }
+
+          return {
+            ...repo,
+            consecutiveWeeks: streak > 0 ? streak : 1,
+          };
+        });
+
+        return { repos: reposWithStreak, totalCount };
+      };
+
+      const fetchQuery = async (lim: number, wOf?: string) => {
+        const targetWeek = await fetchTargetWeek(wOf);
+        if (!targetWeek) {
+          return { repos: [], weekOf: null, totalCount: 0 };
+        }
+        const { repos, totalCount } = await fetchRepos(targetWeek, lim);
+        return { repos, weekOf: targetWeek.toISOString(), totalCount };
+      };
+
+      if (ctx.unstable_cache) {
+        const getCached = ctx.unstable_cache(
+          async (lim: number, wOf?: string) => {
+            return fetchQuery(lim, wOf);
+          },
+          ['trending-list'],
+          { tags: ['trending'], revalidate: 3600 },
+        );
+        return (await getCached(limit, input?.weekOf)) as Awaited<ReturnType<typeof fetchQuery>>;
+      }
+      return fetchQuery(limit, input?.weekOf);
+    }),
+
+  /** List all available weeks (for the week switcher dropdown) */
+  weeks: publicProcedure.query(async ({ ctx }) => {
+    const fetchWeeks = async () => {
+      const weeks = await ctx.prisma.trendingWeek.findMany({
+        select: { weekOf: true },
+        orderBy: { weekOf: 'desc' },
+        take: 52, // Up to 52 weeks (1 year)
+      });
+      return weeks.map((w) => w.weekOf.toISOString());
+    };
+
+    if (ctx.unstable_cache) {
+      const getCached = ctx.unstable_cache(fetchWeeks, ['trending-weeks'], {
+        tags: ['trending'],
+        revalidate: 3600,
+      });
+      return (await getCached()) as Awaited<ReturnType<typeof fetchWeeks>>;
+    }
+    return fetchWeeks();
+  }),
+});

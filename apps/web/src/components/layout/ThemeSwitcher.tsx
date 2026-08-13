@@ -1,85 +1,111 @@
 'use client';
 
 import { themes, useTheme } from '@portal/theme';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
 
-export function ThemeSwitcher({ iconOnly = false }: { iconOnly?: boolean }) {
+export function ThemeSwitcher({
+  iconOnly = false,
+  onItemClick,
+}: {
+  iconOnly?: boolean;
+  onItemClick?: () => void;
+}) {
+  const t = useTranslations('Themes');
   const { themeId, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const currentTheme = themes[themeId as keyof typeof themes];
-  const activeIcon = currentTheme
-    ? {
-        'minimal-light': '⚪',
-        'dark-neon': '⚡',
-        cyberpunk: '👾',
-        'nature-green': '🌿',
-        'retro-brown': '☕',
-      }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
-    : '☀️';
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const getThemeLabel = (id: string, fallbackName: string) => {
+    try {
+      if (t.has(id as any)) {
+        return t(id as any);
+      }
+    } catch {
+      // Fallback
+    }
+    return fallbackName;
+  };
+
+  const themeOptions: DropdownOption[] = [
+    {
+      value: 'system',
+      label: getThemeLabel('system', 'System (Auto)'),
+      icon: <span>💻</span>,
+    },
+    ...Object.values(themes).map((themeItem) => ({
+      value: themeItem.id,
+      label: getThemeLabel(themeItem.id, themeItem.name),
+      icon: (
+        <span>
+          {{
+            'minimal-light': '⚪',
+            'dark-neon': '⚡',
+            cyberpunk: '👾',
+            'retro-brown': '☕',
+            zenith: '🧘',
+            lumiere: '✨',
+          }[themeItem.id] || (themeItem.mode === 'dark' ? '🌙' : '☀️')}
+        </span>
+      ),
+    })),
+  ];
+
+  const displayThemeId = mounted ? themeId : 'system';
+  const currentTheme = themes[displayThemeId as keyof typeof themes];
+  const activeIcon =
+    displayThemeId === 'system'
+      ? '💻'
+      : currentTheme
+        ? {
+            'minimal-light': '⚪',
+            'dark-neon': '⚡',
+            cyberpunk: '👾',
+            'retro-brown': '☕',
+            zenith: '🧘',
+            lumiere: '✨',
+          }[currentTheme.id] || (currentTheme.mode === 'dark' ? '🌙' : '☀️')
+        : '💻';
+
+  const handleChange = (val: string) => {
+    setTheme(val as any);
+    onItemClick?.();
+  };
 
   if (iconOnly) {
     return (
-      <div className="portal-theme-switcher relative h-9 w-9 flex items-center justify-center">
-        {/* Visual Button */}
-        <div className="flex h-9 w-9 items-center justify-center rounded-full border border-compat bg-[var(--portal-color-surface)] text-sm text-[var(--portal-color-text)] transition-colors hover:border-[var(--portal-color-primary)]">
-          {activeIcon}
-        </div>
-        {/* Native Select (invisible but clickable on top) */}
-        <select
-          value={themeId}
-          onChange={(e) => setTheme(e.target.value)}
-          aria-label="Switch theme"
-          className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-        >
-          {Object.values(themes).map((t) => {
-            const icon =
-              {
-                'minimal-light': '⚪',
-                'dark-neon': '⚡',
-                cyberpunk: '👾',
-                'nature-green': '🌿',
-                'retro-brown': '☕',
-              }[t.id] || (t.mode === 'dark' ? '🌙' : '☀️');
-
-            return (
-              <option key={t.id} value={t.id}>
-                {icon} {t.name}
-              </option>
-            );
-          })}
-        </select>
-      </div>
+      <Dropdown
+        value={displayThemeId}
+        onChange={handleChange}
+        options={themeOptions}
+        align="right"
+        menuClassName="w-48"
+        renderTrigger={() => (
+          <button
+            type="button"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--portal-color-border,#e5e7eb)] bg-[var(--portal-color-surface)] text-sm text-[var(--portal-color-text)] transition-colors hover:border-[var(--portal-color-primary)] cursor-pointer focus:outline-none"
+            aria-label="Switch theme"
+          >
+            <span suppressHydrationWarning>{activeIcon}</span>
+          </button>
+        )}
+      />
     );
   }
 
   return (
-    <div className="portal-theme-switcher relative">
-      <select
-        value={themeId}
-        onChange={(e) => setTheme(e.target.value)}
-        aria-label="Switch theme"
-        className="appearance-none cursor-pointer rounded-md px-3 py-2.5 md:py-1.5 text-sm
-          border border-compat
-          bg-[var(--portal-color-surface)] text-[var(--portal-color-text)]
-          transition-colors hover-border-compat-primary
-          focus:outline-none focus:ring-2 focus:ring-[var(--portal-color-primary)]"
-      >
-        {Object.values(themes).map((t) => {
-          const icon =
-            {
-              'minimal-light': '⚪',
-              'dark-neon': '⚡',
-              cyberpunk: '👾',
-              'nature-green': '🌿',
-              'retro-brown': '☕',
-            }[t.id] || (t.mode === 'dark' ? '🌙' : '☀️');
-
-          return (
-            <option key={t.id} value={t.id}>
-              {icon} {t.name}
-            </option>
-          );
-        })}
-      </select>
+    <div className="portal-theme-switcher w-44">
+      <Dropdown
+        value={displayThemeId}
+        onChange={handleChange}
+        options={themeOptions}
+        align="right"
+        menuClassName="w-48"
+      />
     </div>
   );
 }

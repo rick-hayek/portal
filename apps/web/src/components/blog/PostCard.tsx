@@ -1,5 +1,6 @@
 import type { Prisma } from '@portal/db';
 import { useLocale } from 'next-intl';
+import { getCategoryName } from '@/lib/category';
 
 type PostWithRelations = Prisma.PostGetPayload<{
   include: {
@@ -65,7 +66,7 @@ export function PostCard({ post }: { post: PostWithRelations }) {
                 borderRadius: 6,
               }}
             >
-              {post.category.name}
+              {getCategoryName(post.category, locale)}
             </span>
           )}
         </div>

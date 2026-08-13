@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "highlight.js/styles/atom-one-dark.css";
 
 /* ──────────────────────────────────────────────
    Tailwind v4 @theme — map CSS variables to Tailwind tokens
@@ -18,38 +19,38 @@
 }
 
 :root {
-  /* Default Theme: Clean Portal (minimal-light) */
-  --portal-color-primary: #6b8ec9;
-  --portal-color-secondary: #5a7db8;
-  --portal-color-accent: #10b981;
-  --portal-color-background: #f8f9fb;
+  /* Default Theme: Zenith Ethereal (zenith) */
+  --portal-color-primary: #536746;
+  --portal-color-secondary: #755754;
+  --portal-color-accent: #98a68e;
+  --portal-color-background: #efefef;
   --portal-color-surface: #ffffff;
-  --portal-color-text: #111827;
-  --portal-color-text-secondary: #4b5563;
-  --portal-color-text-tertiary: #9ca3af;
-  --portal-color-border: #f0f1f3;
-  --portal-color-surface-alt: #f1f3f7;
-  --portal-color-error: #ef4444;
-  --portal-color-success: #10b981;
+  --portal-color-text: #191c18;
+  --portal-color-text-secondary: #444841;
+  --portal-color-text-tertiary: #74796e;
+  --portal-color-border: #e1e4db;
+  --portal-color-surface-alt: #ecefe8;
+  --portal-color-error: #ba1a1a;
+  --portal-color-success: #55624d;
 
   /* Derived Defaults */
-  --portal-color-primary-soft: rgba(107, 142, 201, 0.08);
-  --portal-color-border-soft: #f0f1f3;
+  --portal-color-primary-soft: rgba(83, 103, 70, 0.08);
+  --portal-color-border-soft: #e1e4db;
 
   /* Typography */
-  --portal-font-family: var(--font-sora), system-ui, sans-serif;
-  --portal-font-heading: var(--font-sora), system-ui, sans-serif;
-  --portal-font-mono: var(--font-mono), monospace;
+  --portal-font-family: "Plus Jakarta Sans", "Manrope", system-ui, sans-serif;
+  --portal-font-heading: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
+  --portal-font-mono: "Fira Code", monospace;
   --portal-font-scale: 1;
 
   /* Spacing */
   --portal-spacing-unit: 4px;
-  --portal-radius: 0.75rem;
+  --portal-radius: 1rem;
 
   /* Effects */
-  --portal-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-  --portal-blur: 12px;
-  --portal-transition: 0.2s ease;
+  --portal-shadow: 0 8px 30px rgba(85, 98, 77, 0.06);
+  --portal-blur: 20px;
+  --portal-transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ──────────────────────────────────────────────
@@ -114,6 +115,17 @@ textarea {
   background: var(--portal-color-text-secondary, #6b7280);
 }
 
+/* Hide scrollbar utility */
+.scrollbar-none,
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-none::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
 /* ──────────────────────────────────────────────
    MDX / Prose styles for blog content
    ────────────────────────────────────────────── */
@@ -170,10 +182,11 @@ textarea {
 }
 
 .prose-portal pre {
-  background: var(--portal-color-surface);
+  background: #282c34 !important;
+  color: #abb2bf;
   border: 1px solid var(--portal-color-border);
-  border-radius: 8px;
-  padding: 1em;
+  border-radius: 12px;
+  padding: 1em 1.2em;
   overflow-x: auto;
   margin: 1.5em 0;
   font-size: 0.875em;
@@ -182,7 +195,10 @@ textarea {
   overflow-wrap: break-word !important;
 }
 
-.prose-portal pre code {
+.prose-portal pre code,
+.prose-portal pre .hljs {
+  color: #abb2bf;
+  background: transparent !important;
   white-space: pre-wrap !important;
   word-break: break-word !important;
   overflow-wrap: break-word !important;
@@ -196,14 +212,87 @@ textarea {
   font-size: 0.875em;
 }
 
-.prose-portal ul,
-.prose-portal ol {
-  margin: 1em 0;
-  padding-left: 1.5em;
+.prose-portal :not(pre)>code.math-inline,
+.prose-portal .math-inline {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: 1.1em !important;
 }
 
-.prose-portal li {
-  margin-bottom: 0.5em;
+.prose-portal :not(pre)>code.math-display,
+.prose-portal .math-display {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: 1.15em !important;
+}
+
+.prose-portal ul,
+.prose ul {
+  list-style: disc !important;
+  list-style-type: disc !important;
+  margin: 1em 0 !important;
+  padding-left: 1.75em !important;
+}
+
+.prose-portal ol,
+.prose ol {
+  list-style: decimal !important;
+  list-style-type: decimal !important;
+  margin: 1em 0 !important;
+  padding-left: 1.75em !important;
+}
+
+.prose-portal li,
+.prose li {
+  display: list-item !important;
+  list-style: inherit !important;
+  list-style-type: inherit !important;
+  margin-bottom: 0.35em !important;
+}
+
+.prose-portal li::marker,
+.prose li::marker {
+  color: var(--portal-color-text-secondary, currentColor);
+}
+
+.prose-portal ul ul,
+.prose ul ul,
+.prose-portal ol ul,
+.prose ol ul {
+  list-style: circle !important;
+  list-style-type: circle !important;
+  margin: 0.35em 0 !important;
+}
+
+.prose-portal ul ul ul,
+.prose ul ul ul,
+.prose-portal ol ul ul,
+.prose ol ul ul {
+  list-style: square !important;
+  list-style-type: square !important;
+  margin: 0.35em 0 !important;
+}
+
+.prose-portal ul.contains-task-list,
+.prose ul.contains-task-list {
+  list-style: none !important;
+  list-style-type: none !important;
+  padding-left: 0.25em !important;
+}
+
+.prose-portal li.task-list-item,
+.prose li.task-list-item {
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+.prose-portal li > p,
+.prose li > p {
+  margin-bottom: 0.25em;
 }
 
 .prose-portal table {

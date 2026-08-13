@@ -6,7 +6,7 @@ async function main() {
   const links = [
     {
       name: 'John Doe',
-      url: 'https://johndoe.example.com',
+      url: 'https://johndoe.your-site.com',
       avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=John',
       description: 'Full-stack developer and open source enthusiast.',
       category: 'friend',
@@ -14,7 +14,7 @@ async function main() {
     },
     {
       name: 'Jane Smith',
-      url: 'https://janesmith.example.com',
+      url: 'https://janesmith.your-site.com',
       avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Jane',
       description: 'UI/UX Designer who loves typography.',
       category: 'friend',

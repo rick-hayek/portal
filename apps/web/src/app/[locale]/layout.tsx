@@ -29,6 +29,13 @@ export const metadata: Metadata = {
   },
   description: siteConfig.site.description,
   metadataBase: new URL(siteConfig.site.url),
+  alternates: {
+    canonical: '/',
+    languages: {
+      en: '/en',
+      zh: '/zh',
+    },
+  },
   openGraph: {
     title: siteConfig.site.title,
     description: siteConfig.site.description,
@@ -47,6 +54,10 @@ export const metadata: Metadata = {
     follow: true,
   },
 };
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export default async function RootLayout({
   children,
@@ -78,7 +89,7 @@ export default async function RootLayout({
       <body className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <TRPCReactProvider>
-            <ThemeProvider defaultTheme="minimal-light">{children}</ThemeProvider>
+            <ThemeProvider defaultTheme={siteConfig.theme.default || 'zenith'}>{children}</ThemeProvider>
           </TRPCReactProvider>
         </NextIntlClientProvider>
       </body>

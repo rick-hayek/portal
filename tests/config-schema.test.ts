@@ -21,7 +21,7 @@ const VALID_INPUT = {
   site: {
     title: 'Test Portal',
     description: 'Testing',
-    url: 'https://example.com',
+    url: 'https://your-site.com',
     locale: 'en-US',
   },
   preset: 'tech-blog' as const,

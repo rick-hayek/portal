@@ -1,5 +1,5 @@
 {
-  "name": "portal",
+  "name": "voocii-portal",
   "private": true,
   "description": "Modular personal website platform",
   "packageManager": "pnpm@9.15.4",
@@ -20,6 +20,7 @@
     "db:generate": "pnpm --filter @portal/db generate",
     "db:migrate": "pnpm --filter @portal/db migrate:dev",
     "db:migrate:dev": "pnpm --filter @portal/db migrate:dev",
+    "db:migrate:deploy": "pnpm --filter @portal/db migrate:deploy",
     "db:seed": "pnpm --filter @portal/db exec prisma db seed",
     "db:studio": "pnpm --filter @portal/db studio"
   },

@@ -16,10 +16,16 @@ export async function createContext(opts?: {
     };
     expires: string;
   } | null;
+  revalidateTag?: (...args: any[]) => any;
+  revalidatePath?: (...args: any[]) => any;
+  unstable_cache?: (...args: any[]) => any;
 }) {
   return {
     prisma,
     session: opts?.session ?? null,
+    revalidateTag: opts?.revalidateTag,
+    revalidatePath: opts?.revalidatePath,
+    unstable_cache: opts?.unstable_cache,
   };
 }
 
@@ -32,6 +38,7 @@ const t = initTRPC.context<Context>().create({
 export const router = t.router;
 export const publicProcedure = t.procedure;
 export const middleware = t.middleware;
+export const createCallerFactory = t.createCallerFactory;
 
 /** Requires authenticated user */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {

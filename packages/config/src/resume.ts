@@ -39,8 +39,8 @@ export interface ResumeConfig {
 export const defaultResumeConfig: ResumeConfig = {
   name: 'Your Name',
   title: 'Full Stack Developer',
-  email: 'hello@example.com',
-  website: 'https://example.com',
+  email: 'hello@your-site.com',
+  website: 'https://your-site.com',
   location: 'City, Country',
   summary:
     'A passionate developer with experience in building scalable web applications using React, Node.js, and modern web technologies. Specialized in crafting exceptional digital experiences with a focus on web accessibility, performance, and responsive design.',

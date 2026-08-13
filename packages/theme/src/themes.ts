@@ -1,35 +1,35 @@
 import type { ThemeConfig } from '@portal/shared';
 
 export const themes: Record<string, ThemeConfig> = {
-  'minimal-light': {
-    id: 'minimal-light',
-    name: 'Clean Portal',
+  zenith: {
+    id: 'zenith',
+    name: 'Zenith Ethereal',
     mode: 'light',
     colors: {
-      primary: '#6b8ec9', // Soft Blue
-      secondary: '#5a7db8', // Darker Blue
-      accent: '#10b981', // Green for success/terminal
-      background: '#f8f9fb', // Off-white
-      surface: '#ffffff', // Pure white
-      text: '#111827', // Gray 900
-      textSecondary: '#4b5563', // Gray 600
-      textTertiary: '#9ca3af', // Gray 400
-      border: '#f0f1f3', // Lighter Gray
-      surfaceAlt: '#f1f3f7', // Light Gray Surface
-      error: '#ef4444',
-      success: '#10b981',
+      primary: '#536746', // Organic Sage Green
+      secondary: '#755754', // Muted Warm Terracotta
+      accent: '#98a68e', // Soft Sage Container
+      background: '#efefef', // Sanctuary Surface Base (off-white)
+      surface: '#ffffff', // Pure White Elevated Card Lift
+      surfaceAlt: '#ecefe8', // Surface Nest / Secondary Section
+      text: '#191c18', // Soft Charcoal (no pure black)
+      textSecondary: '#444841', // Soft Olive Gray / On-surface-variant
+      textTertiary: '#74796e', // Muted Olive Outline
+      border: '#e1e4db', // Ambient Ghost Border
+      error: '#ba1a1a', // Muted Crimson
+      success: '#55624d', // Sage Green
     },
     typography: {
-      fontFamily: 'var(--font-sora), system-ui, sans-serif',
-      headingFont: 'var(--font-sora), system-ui, sans-serif',
-      monoFont: 'var(--font-mono), monospace',
+      fontFamily: '"Plus Jakarta Sans", "Manrope", system-ui, sans-serif',
+      headingFont: '"Manrope", "Plus Jakarta Sans", system-ui, sans-serif',
+      monoFont: '"Fira Code", monospace',
       scale: 1,
     },
-    spacing: { unit: 4, radius: '0.75rem' },
+    spacing: { unit: 4, radius: '1rem' },
     effects: {
-      shadow: '0 4px 16px rgba(0,0,0,0.05)',
-      blur: '12px',
-      transition: '0.2s ease',
+      shadow: '0 8px 30px rgba(85, 98, 77, 0.06)',
+      blur: '20px',
+      transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     },
   },
 
@@ -93,36 +93,6 @@ export const themes: Record<string, ThemeConfig> = {
     },
   },
 
-  'nature-green': {
-    id: 'nature-green',
-    name: 'Nature Green',
-    mode: 'light',
-    colors: {
-      primary: '#2d6a4f',
-      secondary: '#40916c',
-      accent: '#d4a373',
-      background: '#fefae0',
-      surface: '#ffffff',
-      text: '#1b4332',
-      textSecondary: '#52796f',
-      border: '#d8e2dc',
-      error: '#bc4749',
-      success: '#2d6a4f',
-    },
-    typography: {
-      fontFamily: '"Lora", Georgia, serif',
-      headingFont: '"Playfair Display", Georgia, serif',
-      monoFont: '"IBM Plex Mono", monospace',
-      scale: 1,
-    },
-    spacing: { unit: 4, radius: '0.75rem' },
-    effects: {
-      shadow: '0 2px 8px rgba(45, 106, 79, 0.1)',
-      blur: '10px',
-      transition: '0.3s ease',
-    },
-  },
-
   'retro-brown': {
     id: 'retro-brown',
     name: 'Retro Brown',
@@ -150,6 +120,70 @@ export const themes: Record<string, ThemeConfig> = {
       shadow: '0 1px 4px rgba(92, 64, 51, 0.12)',
       blur: '6px',
       transition: '0.25s ease',
+    },
+  },
+
+  'minimal-light': {
+    id: 'minimal-light',
+    name: 'Clean Portal',
+    mode: 'light',
+    colors: {
+      primary: '#6b8ec9', // Soft Blue
+      secondary: '#5a7db8', // Darker Blue
+      accent: '#10b981', // Green for success/terminal
+      background: '#f8f9fb', // Off-white
+      surface: '#ffffff', // Pure white
+      text: '#111827', // Gray 900
+      textSecondary: '#4b5563', // Gray 600
+      textTertiary: '#9ca3af', // Gray 400
+      border: '#f0f1f3', // Lighter Gray
+      surfaceAlt: '#f1f3f7', // Light Gray Surface
+      error: '#ef4444',
+      success: '#10b981',
+    },
+    typography: {
+      fontFamily: 'var(--font-sora), system-ui, sans-serif',
+      headingFont: 'var(--font-sora), system-ui, sans-serif',
+      monoFont: 'var(--font-mono), monospace',
+      scale: 1,
+    },
+    spacing: { unit: 4, radius: '0.75rem' },
+    effects: {
+      shadow: '0 4px 16px rgba(0,0,0,0.05)',
+      blur: '12px',
+      transition: '0.2s ease',
+    },
+  },
+
+  lumiere: {
+    id: 'lumiere',
+    name: 'Lumiere Editorial',
+    mode: 'light',
+    colors: {
+      primary: '#e85d04', // Pure Black – high-impact CTAs & headings
+      secondary: '#ff942e', // Primary Container – satin gradient endpoint
+      accent: '#1b1b1b', // On-surface – editorial emphasis
+      background: '#faf8f5', // Surface base – warm off-white "luxury vellum"
+      surface: '#ffffff', // Surface-container-lowest – lifted cards
+      surfaceAlt: '#f3f3f3', // Surface-container-low – nested sections
+      text: '#1b1b1b', // On-surface – deep charcoal
+      textSecondary: '#5e5e5e', // On-surface-variant
+      textTertiary: '#9e9e9e', // Outline / metadata labels
+      border: 'rgba(198, 198, 198, 0.15)', // Ghost Border at 15% opacity
+      error: '#b3261e', // Muted editorial red
+      success: '#1b1b1b', // Monochromatic success
+    },
+    typography: {
+      fontFamily: '"Inter", system-ui, sans-serif',
+      headingFont: '"Noto Serif", Georgia, serif',
+      monoFont: '"IBM Plex Mono", monospace',
+      scale: 1,
+    },
+    spacing: { unit: 4, radius: '0px' },
+    effects: {
+      shadow: '0 0 40px rgba(27, 27, 27, 0.04)', // Ambient shadow – 4% opacity
+      blur: '20px',
+      transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     },
   },
 };

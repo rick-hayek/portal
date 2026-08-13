@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { notFound } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 import { UserMenu } from '@/components/auth/UserMenu';
 import { Link, usePathname } from '@/i18n/routing';
 
@@ -12,10 +12,13 @@ const navItems = [
   { href: '/admin/categories', label: 'Categories', icon: '📁' },
   { href: '/admin/portfolio', label: 'Portfolio', icon: '🚀' },
   { href: '/admin/books', label: 'Books', icon: '📚' },
+  { href: '/admin/links', label: 'Links', icon: '🔗' },
   { href: '/admin/comments', label: 'Comments', icon: '💬' },
   { href: '/admin/guestbook', label: 'Guestbook', icon: '📒' },
   { href: '/admin/references', label: 'References', icon: '📎' },
   { href: '/admin/attachments', label: 'Attachments', icon: '🖼️' },
+  { href: '/admin/trending', label: 'AI Trending', icon: '🔥' },
+  { href: '/admin/about', label: 'About', icon: '👤' },
   { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
   { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
 ];
@@ -86,8 +89,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 z-40 flex h-full w-56 flex-col border-r border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed left-0 top-0 z-40 flex h-full w-56 flex-col border-r border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] transition-transform duration-300 md:translate-x-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         {/* Brand */}
         <div className="flex h-14 items-center justify-between border-b border-[var(--portal-color-border)] px-4">
@@ -102,7 +106,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             className="flex h-8 w-8 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] md:hidden"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -123,10 +132,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${isActive
-                  ? 'bg-[var(--portal-color-primary)]/10 font-medium text-[var(--portal-color-primary)]'
-                  : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-text)]'
-                  }`}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
+                  isActive
+                    ? 'bg-[var(--portal-color-primary)]/10 font-medium text-[var(--portal-color-primary)]'
+                    : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-text)]'
+                }`}
               >
                 <span>{item.icon}</span>
                 {item.label}
@@ -142,7 +152,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-6 md:ml-56 min-h-screen pt-20 md:pt-6 min-w-0 w-full overflow-x-hidden">{children}</main>
+      <main className="flex-1 p-6 md:ml-56 min-h-screen pt-20 md:pt-6 min-w-0 w-full overflow-x-hidden">
+        {children}
+      </main>
     </div>
   );
 }

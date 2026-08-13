@@ -19,7 +19,7 @@ describe('@portal/shared — Type Exports', () => {
       site: {
         title: 'Test Portal',
         description: 'A test site',
-        url: 'https://example.com',
+        url: 'https://your-site.com',
         locale: 'en-US',
       },
       preset: 'minimal',

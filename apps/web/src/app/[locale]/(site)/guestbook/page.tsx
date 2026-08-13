@@ -3,7 +3,8 @@
 import Image from 'next/image';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useLocalSWR } from '@/hooks/useLocalSWR';
 
 interface GuestbookEntry {
   id: string;
@@ -27,28 +28,27 @@ interface GuestbookData {
 export default function GuestbookPage() {
   const t = useTranslations('Guestbook');
   const { data: session, status: sessionStatus } = useSession();
-  const [entries, setEntries] = useState<GuestbookEntry[]>([]);
-  const [total, setTotal] = useState(0);
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  const fetchEntries = async () => {
-    try {
+  const {
+    data: cachedData,
+    loading,
+    mutate,
+  } = useLocalSWR(
+    'guestbook-entries',
+    useCallback(async () => {
       const res = await fetch('/api/trpc/guestbook.list?input={}');
       const data: GuestbookData = await res.json();
-      setEntries(data.result.data.json.entries);
-      setTotal(data.result.data.json.pagination.total);
-    } catch {
-      // silently fail
-    } finally {
-      setLoading(false);
-    }
-  };
+      return {
+        entries: data.result.data.json.entries,
+        total: data.result.data.json.pagination.total,
+      };
+    }, []),
+  );
 
-  useEffect(() => {
-    fetchEntries();
-  }, []);
+  const entries = cachedData?.entries ?? [];
+  const total = cachedData?.total ?? 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ export default function GuestbookPage() {
         }),
       });
       setContent('');
-      await fetchEntries();
+      await mutate();
     } catch {
       // silently fail
     } finally {

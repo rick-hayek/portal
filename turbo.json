@@ -9,7 +9,13 @@
     "GITHUB_CLIENT_SECRET",
     "REDIS_URL",
     "MEILISEARCH_URL",
-    "MEILISEARCH_KEY"
+    "MEILISEARCH_KEY",
+    "R2_ACCOUNT_ID",
+    "R2_ACCESS_KEY_ID",
+    "R2_SECRET_ACCESS_KEY",
+    "R2_BUCKET_NAME",
+    "R2_PUBLIC_URL",
+    "ADMIN_API_KEY"
   ],
   "tasks": {
     "build": {

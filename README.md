@@ -1,4 +1,4 @@
-# Portal
+# Voocii Portal
 
 A modern, full-stack personal portal and portfolio built with Next.js 16, tRPC, Prisma, and Tailwind CSS v4.
 
@@ -48,23 +48,34 @@ cp .env.example .env
 
 Ensure you set the `DATABASE_URL` to your local or remote PostgreSQL instance.
 
-### 4. Database Setup
+### 4. Database Setup & Migrations
 
-Launch database server:
+Launch local PostgreSQL database with Docker:
 ```bash
 docker compose up -d
 ```
 
-Run Prisma migrations to initialize the database schema:
+#### For Local Development
+Run Prisma migrations to execute all version-controlled SQL scripts in chronological order:
 
 ```bash
-pnpm prisma migrate dev
+pnpm --filter @portal/db migrate:dev
 ```
+
+#### For Production Deployment
+Apply all incremental migrations safely to your production database without resetting data:
+
+```bash
+pnpm --filter @portal/db migrate:deploy
+```
+
+> [!NOTE]
+> All database structural changes and version history are tracked in `packages/db/prisma/migrations/`. Running the migration command automatically applies every migration sequentially from `20260213044327_init` to the latest schema version.
 
 (Optional) Seed the database with initial data:
 
 ```bash
-pnpm prisma db seed
+pnpm --filter @portal/db seed
 ```
 
 ### 5. Run the Development Server
@@ -100,9 +111,33 @@ This is a Turborepo monorepo.
 - `packages/shared`: Shared TypeScript types and constants.
 ## Deployment
 
+### 1. Site Configuration (Pre-deployment)
+
+Before deploying to production, update your site configuration in [`apps/web/src/site.config.ts`](file:///Users/rick/src/portal/apps/web/src/site.config.ts) with your domain name and site metadata:
+
+```ts
+const siteConfig = defineConfig({
+  site: {
+    title: 'Your Site Title',
+    description: 'Your site description',
+    url: 'https://your-domain.com', // Must be set to your production domain
+    locale: 'zh-CN',
+  },
+  // ...
+});
+```
+
+> [!IMPORTANT]
+> Setting `site.url` to your actual production domain is required for:
+> - **SEO & Search Crawlers**: Canonical URLs generated in `sitemap.xml` and `robots.txt`.
+> - **Social Sharing**: Open Graph and Twitter Card preview links when sharing pages.
+> - **RSS Feed**: Article canonical URLs in `/feed.xml`.
+
+### 2. Vercel Deployment
+
 The project is optimized for deployment on Vercel. Ensure you configure all relevant environment variables in your Vercel project settings.
 
-### Database Migrations (Production)
+### 3. Database Migrations (Production)
 
 When deploying updates that involve database schema changes, you must apply the migrations to your production database.
 
@@ -122,4 +157,5 @@ This ensures the database schema is always updated before building and serving t
 ## License
 
 MIT
+
 

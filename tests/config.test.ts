@@ -10,7 +10,7 @@ const validConfig: SiteConfig = {
   site: {
     title: 'Test Portal',
     description: 'Test Site',
-    url: 'https://example.com',
+    url: 'https://your-site.com',
     locale: 'en-US',
   },
   modules: {

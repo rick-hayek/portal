@@ -1,9 +1,9 @@
-'use client';
-
 import { marked } from 'marked';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
+import { getTRPCServer } from '@/lib/trpc-server';
 
 interface Project {
   id: string;
@@ -16,7 +16,7 @@ interface Project {
   repoUrl: string | null;
   techStack: string[];
   featured: boolean;
-  createdAt: string;
+  createdAt: string | Date;
   privacyPolicy?: string | null;
   privacyPolicyEn?: string | null;
   termsOfService?: string | null;
@@ -25,56 +25,64 @@ interface Project {
   downloadLinks?: any;
 }
 
-export default function ProjectDetailPage() {
-  const params = useParams();
-  const locale = params.locale as string;
-  const [project, setProject] = useState<Project | null>(null);
-  const [loading, setLoading] = useState(true);
+interface PageProps {
+  params: Promise<{ locale: string; slug: string }>;
+}
 
-  useEffect(() => {
-    fetch(
-      '/api/trpc/portfolio.bySlug?batch=1&input=' +
-        encodeURIComponent(
-          JSON.stringify({
-            '0': { json: { slug: params.slug } },
-          }),
-        ),
-    )
-      .then((r) => r.json())
-      .then((data) => setProject(data[0]?.result?.data?.json))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [params.slug]);
+export async function generateMetadata({ params }: PageProps) {
+  const { locale, slug } = await params;
+  try {
+    const trpc = await getTRPCServer();
+    const project = (await trpc.portfolio.bySlug({ slug })) as Project | null;
+    if (!project) return { title: 'Not Found' };
+    const tNav = await getTranslations({ locale, namespace: 'Navigation' });
+    return {
+      title: `${project.title} | ${tNav('portfolio')}`,
+      description: project.description ?? '',
+    };
+  } catch {
+    return { title: 'Project Details' };
+  }
+}
 
-  if (loading) {
-    return (
-      <div className="mx-auto max-w-4xl px-4 py-10">
-        <div className="h-8 w-64 animate-pulse rounded bg-[var(--portal-color-border)]" />
-        <div className="mt-4 aspect-video animate-pulse rounded-xl bg-[var(--portal-color-border)]" />
-      </div>
-    );
+export default async function ProjectDetailPage({ params }: PageProps) {
+  const { locale, slug } = await params;
+  let project: Project | null = null;
+
+  try {
+    const trpc = await getTRPCServer();
+    project = (await trpc.portfolio.bySlug({ slug })) as Project | null;
+  } catch (err) {
+    console.error('Failed to load project details:', err);
   }
 
   if (!project) {
-    return (
-      <div className="mx-auto max-w-4xl px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Project not found</h1>
-        <a
-          href="/portfolio"
-          className="mt-4 inline-block text-[var(--portal-color-primary)] hover:underline"
-        >
-          ← Back to Portfolio
-        </a>
-      </div>
-    );
+    notFound();
   }
+
+  const projectSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: project.title,
+    description:
+      locale === 'en' && project.descriptionEn ? project.descriptionEn : project.description,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'All',
+    screenshot: project.coverImage || undefined,
+    downloadUrl: project.liveUrl || undefined,
+    softwareVersion: '1.0.0',
+    publisher: {
+      '@type': 'Person',
+      name: 'Jane Doe',
+    },
+  };
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
-      {/* Breadcrumb */}
-      <a href="/portfolio" className="text-sm text-[var(--portal-color-primary)] hover:underline">
-        ← Portfolio
-      </a>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
+      />
 
       <div className="mt-4 flex items-center gap-3">
         {project.logo && (
@@ -505,6 +513,7 @@ export default function ProjectDetailPage() {
           </a>
         )}
       </div>
+      <MermaidRenderer />
     </div>
   );
 }

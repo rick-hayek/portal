@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { ensurePostsIndex, indexPost, meili, POSTS_INDEX, removePostFromIndex } from '../search';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
@@ -127,6 +128,11 @@ export const adminRouter = router({
         }
       }
 
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+        ctx.revalidateTag('categories');
+      }
+
       return post;
     }),
 
@@ -193,6 +199,11 @@ export const adminRouter = router({
         console.error('Failed to sync post in MeiliSearch:', e);
       }
 
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+        ctx.revalidateTag('categories');
+      }
+
       return updatedPost;
     }),
 
@@ -205,6 +216,10 @@ export const adminRouter = router({
         await removePostFromIndex(input.id);
       } catch (e) {
         console.error('Failed to remove post from MeiliSearch:', e);
+      }
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+        ctx.revalidateTag('categories');
       }
       return post;
     }),
@@ -219,24 +234,40 @@ export const adminRouter = router({
         status: z.enum(['approved', 'spam', 'pending']),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.comment.update({
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.comment.update({
         where: { id: input.id },
         data: { status: input.status },
-      }),
-    ),
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+      }
+      return comment;
+    }),
 
   /** Delete comment */
   commentDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.comment.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.comment.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('posts');
+      }
+      return comment;
+    }),
 
   // ── Guestbook Moderation ───────────────────────────
 
   /** Delete guestbook entry */
   guestbookDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.guestbookEntry.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const entry = await ctx.prisma.guestbookEntry.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('guestbook');
+      }
+      return entry;
+    }),
 
   // ── Portfolio CRUD ─────────────────────────────────
 
@@ -274,7 +305,13 @@ export const adminRouter = router({
         downloadLinks: z.any().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => ctx.prisma.project.create({ data: input })),
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.prisma.project.create({ data: input });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('projects');
+      }
+      return project;
+    }),
 
   /** Update project */
   projectUpdate: adminProcedure
@@ -299,15 +336,25 @@ export const adminRouter = router({
         downloadLinks: z.any().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.project.update({ where: { id }, data });
+      const project = await ctx.prisma.project.update({ where: { id }, data });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('projects');
+      }
+      return project;
     }),
 
   /** Delete project */
   projectDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.project.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.prisma.project.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('projects');
+      }
+      return project;
+    }),
 
   // ── Books CRUD ─────────────────────────────────
 
@@ -332,36 +379,40 @@ export const adminRouter = router({
           .min(1)
           .regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores'),
         title: z.string().min(1),
-        coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
-        coverImage: z.string().nullable().optional().or(z.literal('')),
+        coverImageURL: z.string().nullable().optional().or(z.literal('')),
         author: z.string().min(1),
         publisher: z.string().nullable().optional().or(z.literal('')),
         translator: z.string().nullable().optional().or(z.literal('')),
         isbn: z.string().nullable().optional().or(z.literal('')),
         publishYear: z.string().nullable().optional().or(z.literal('')),
+        ebookUrl: z.string().url().nullable().optional().or(z.literal('')),
         originalBookId: z.string().nullable().optional().or(z.literal('')),
         description: z.string().nullable().optional().or(z.literal('')),
         review: z.string().nullable().optional().or(z.literal('')),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.book.create({
+    .mutation(async ({ ctx, input }) => {
+      const book = await ctx.prisma.book.create({
         data: {
           slug: input.slug.toLowerCase().trim(),
           title: input.title,
           coverImageURL: input.coverImageURL || null,
-          coverImage: input.coverImage || null,
           author: input.author,
           publisher: input.publisher || null,
           translator: input.translator || null,
           isbn: input.isbn || null,
           publishYear: input.publishYear || null,
+          ebookUrl: input.ebookUrl || null,
           originalBookId: input.originalBookId || null,
           description: input.description || null,
           review: input.review || null,
         },
-      }),
-    ),
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('books');
+      }
+      return book;
+    }),
 
   /** Update book */
   bookUpdate: adminProcedure
@@ -374,51 +425,111 @@ export const adminRouter = router({
           .regex(/^[a-z0-9_-]+$/, 'Slug must be lowercase alphanumeric, dashes, or underscores')
           .optional(),
         title: z.string().min(1).optional(),
-        coverImageURL: z.string().url().nullable().optional().or(z.literal('')),
-        coverImage: z.string().nullable().optional().or(z.literal('')),
+        coverImageURL: z.string().nullable().optional().or(z.literal('')),
         author: z.string().min(1).optional(),
         publisher: z.string().nullable().optional().or(z.literal('')),
         translator: z.string().nullable().optional().or(z.literal('')),
         isbn: z.string().nullable().optional().or(z.literal('')),
         publishYear: z.string().nullable().optional().or(z.literal('')),
+        ebookUrl: z.string().url().nullable().optional().or(z.literal('')),
         originalBookId: z.string().nullable().optional().or(z.literal('')),
         description: z.string().nullable().optional().or(z.literal('')),
         review: z.string().nullable().optional().or(z.literal('')),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.book.update({
+      const book = await ctx.prisma.book.update({
         where: { id },
         data: {
           ...data,
           slug: data.slug ? data.slug.toLowerCase().trim() : undefined,
           coverImageURL: data.coverImageURL || null,
-          coverImage: data.coverImage || null,
           publisher: data.publisher || null,
           translator: data.translator || null,
           isbn: data.isbn || null,
           publishYear: data.publishYear || null,
+          ebookUrl: data.ebookUrl !== undefined ? data.ebookUrl || null : undefined,
           originalBookId: data.originalBookId || null,
           description: data.description || null,
           review: data.review || null,
         },
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('books');
+      }
+      return book;
     }),
 
   /** Delete book */
   bookDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.book.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const book = await ctx.prisma.book.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('books');
+      }
+      return book;
+    }),
 
   // ── Links CRUD ─────────────────────────────────
 
   /** List all links (admin) */
   linkList: adminProcedure.query(({ ctx }) =>
     ctx.prisma.link.findMany({
+      where: { NOT: { id: 'site-self-link' } },
       orderBy: [{ category: 'asc' }, { sortOrder: 'asc' }],
     }),
   ),
+
+  /** Get self link for admin */
+  linkGetSelf: adminProcedure.query(({ ctx }) =>
+    ctx.prisma.link.findUnique({
+      where: { id: 'site-self-link' },
+    }),
+  ),
+
+  /** Save self link (upsert) */
+  linkSaveSelf: adminProcedure
+    .input(
+      z.object({
+        name: z.string().min(1).max(200),
+        url: z.string().url(),
+        rss: z.string().optional().or(z.literal('')),
+        avatar: z.string().optional().or(z.literal('')),
+        screenshot: z.string().optional().or(z.literal('')),
+        description: z.string().optional().or(z.literal('')),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const link = await ctx.prisma.link.upsert({
+        where: { id: 'site-self-link' },
+        create: {
+          id: 'site-self-link',
+          name: input.name,
+          url: input.url,
+          rss: input.rss || null,
+          avatar: input.avatar || null,
+          screenshot: input.screenshot || null,
+          description: input.description || null,
+          category: 'site-self',
+          status: 'approved',
+          isAlive: true,
+        },
+        update: {
+          name: input.name,
+          url: input.url,
+          rss: input.rss === '' ? null : input.rss,
+          avatar: input.avatar === '' ? null : input.avatar,
+          screenshot: input.screenshot === '' ? null : input.screenshot,
+          description: input.description === '' ? null : input.description,
+        },
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('links');
+      }
+      return link;
+    }),
 
   /** Create link */
   linkCreate: adminProcedure
@@ -426,22 +537,31 @@ export const adminRouter = router({
       z.object({
         name: z.string().min(1).max(200),
         url: z.string().url(),
+        rss: z.string().optional().or(z.literal('')),
         avatar: z.string().url().optional().or(z.literal('')),
+        screenshot: z.string().url().optional().or(z.literal('')),
         description: z.string().optional().or(z.literal('')),
         category: z.string().default('default'),
+        status: z.string().default('approved'),
         isAlive: z.boolean().default(true),
         sortOrder: z.number().int().default(0),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.link.create({
+    .mutation(async ({ ctx, input }) => {
+      const link = await ctx.prisma.link.create({
         data: {
           ...input,
+          rss: input.rss || null,
           avatar: input.avatar || null,
+          screenshot: input.screenshot || null,
           description: input.description || null,
         },
-      }),
-    ),
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('links');
+      }
+      return link;
+    }),
 
   /** Update link */
   linkUpdate: adminProcedure
@@ -450,29 +570,44 @@ export const adminRouter = router({
         id: z.string(),
         name: z.string().min(1).max(200).optional(),
         url: z.string().url().optional(),
+        rss: z.string().nullable().optional().or(z.literal('')),
         avatar: z.string().url().nullable().optional().or(z.literal('')),
+        screenshot: z.string().url().nullable().optional().or(z.literal('')),
         description: z.string().nullable().optional().or(z.literal('')),
         category: z.string().optional(),
+        status: z.string().optional(),
         isAlive: z.boolean().optional(),
         sortOrder: z.number().int().optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.link.update({
+      const link = await ctx.prisma.link.update({
         where: { id },
         data: {
           ...data,
+          rss: data.rss === '' ? null : data.rss,
           avatar: data.avatar === '' ? null : data.avatar,
+          screenshot: data.screenshot === '' ? null : data.screenshot,
           description: data.description === '' ? null : data.description,
         },
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('links');
+      }
+      return link;
     }),
 
   /** Delete link */
   linkDelete: adminProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => ctx.prisma.link.delete({ where: { id: input.id } })),
+    .mutation(async ({ ctx, input }) => {
+      const link = await ctx.prisma.link.delete({ where: { id: input.id } });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('links');
+      }
+      return link;
+    }),
 
   // ── Site Settings ──────────────────────────────────
 
@@ -502,14 +637,34 @@ export const adminRouter = router({
     .input(
       z.object({
         name: z.string().min(1).max(50),
+        name_en: z.string().max(50).optional().nullable(),
         slug: z.string().min(1).max(50),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.category.create({
+    .mutation(async ({ ctx, input }) => {
+      // Check if a category with the same name or slug already exists
+      const duplicate = await ctx.prisma.category.findFirst({
+        where: {
+          OR: [{ name: input.name }, { slug: input.slug }],
+        },
+      });
+      if (duplicate) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Category with this name or slug already exists',
+        });
+      }
+
+      const category = await ctx.prisma.category.create({
         data: input,
-      }),
-    ),
+      });
+
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('categories');
+      }
+
+      return category;
+    }),
 
   /** Update category */
   categoryUpdate: adminProcedure
@@ -517,15 +672,41 @@ export const adminRouter = router({
       z.object({
         id: z.string(),
         name: z.string().min(1).max(50).optional(),
+        name_en: z.string().max(50).optional().nullable(),
         slug: z.string().min(1).max(50).optional(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
-      return ctx.prisma.category.update({
+
+      // Check if the updated name or slug conflicts with another category
+      if (data.name || data.slug) {
+        const duplicate = await ctx.prisma.category.findFirst({
+          where: {
+            id: { not: id },
+            OR: [
+              ...(data.name ? [{ name: data.name }] : []),
+              ...(data.slug ? [{ slug: data.slug }] : []),
+            ],
+          },
+        });
+        if (duplicate) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Another category with this name or slug already exists',
+          });
+        }
+      }
+
+      const category = await ctx.prisma.category.update({
         where: { id },
         data,
       });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('categories');
+        ctx.revalidateTag('posts');
+      }
+      return category;
     }),
 
   /** Delete category */
@@ -535,11 +716,16 @@ export const adminRouter = router({
         id: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) =>
-      ctx.prisma.category.delete({
+    .mutation(async ({ ctx, input }) => {
+      const category = await ctx.prisma.category.delete({
         where: { id: input.id },
-      }),
-    ),
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('categories');
+        ctx.revalidateTag('posts');
+      }
+      return category;
+    }),
 
   /** Sync all posts to MeiliSearch index */
   searchSync: adminProcedure.mutation(async ({ ctx }) => {
@@ -569,5 +755,281 @@ export const adminRouter = router({
     } catch (e: any) {
       throw new Error(`MeiliSearch sync failed: ${e?.message ?? e}`);
     }
+  }),
+
+  // ============ AI Trending ============
+
+  /** Fetch trending AI/LLM repos from GitHub for the current week */
+  trendingFetch: adminProcedure.mutation(async ({ ctx }) => {
+    try {
+      // Calculate the Monday of this week
+      const now = new Date();
+      const day = now.getDay();
+      const diff = day === 0 ? 6 : day - 1; // Monday = 0 offset
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - diff);
+      monday.setHours(0, 0, 0, 0);
+
+      // Monday of last week to compute star growth delta
+      const lastMonday = new Date(monday);
+      lastMonday.setDate(monday.getDate() - 7);
+      lastMonday.setHours(0, 0, 0, 0);
+
+      // 180 days ago for the search query (to capture recently created trending projects)
+      const halfYearAgo = new Date(now);
+      halfYearAgo.setDate(now.getDate() - 180);
+      const dateStr = halfYearAgo.toISOString().split('T')[0];
+
+      // Build GitHub Search API request with advanced OR query terms split to respect OR limitations
+      const searchTerms1 = [
+        'ai',
+        'llm',
+        '"large language model"',
+        '"generative ai"',
+        '"generative-ai"',
+      ].join(' OR ');
+
+      const searchTerms2 = [
+        '"ai agent"',
+        '"ai-agent"',
+        '"agentic ai"',
+        '"agentic-ai"',
+        '"agent harness"',
+      ].join(' OR ');
+
+      const searchTerms3 = ['"openai"', '"anthropic"', '"gemini"', '"grok"', '"llama"'].join(
+        ' OR ',
+      );
+
+      const searchTerms4 = ['"claude"', '"qwen"', '"deepseek"', '"agentic"', '"glm"'].join(' OR ');
+
+      const headers: Record<string, string> = {
+        Accept: 'application/vnd.github+json',
+        'User-Agent': 'Portal-Trending-Bot',
+      };
+      const token = process.env.GITHUB_TOKEN;
+      if (token && !token.startsWith('your_')) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      interface GithubRepo {
+        id: number;
+        name: string;
+        full_name: string;
+        html_url: string;
+        description: string | null;
+        language: string | null;
+        stargazers_count: number;
+        forks_count: number;
+        created_at: string;
+        topics: string[];
+      }
+
+      const fetchRepos = async (searchTerms: string): Promise<GithubRepo[]> => {
+        const query = `${searchTerms} created:>${dateStr}`;
+        const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=100`;
+        console.log(`[GitHub API] Fetching from: ${url}`);
+        const res = await fetch(url, { headers });
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`GitHub API error ${res.status}: ${text}`);
+        }
+        const data = (await res.json()) as { items: GithubRepo[] };
+        return data.items ?? [];
+      };
+
+      const [repos1, repos2, repos3, repos4] = await Promise.all([
+        fetchRepos(searchTerms1),
+        fetchRepos(searchTerms2),
+        fetchRepos(searchTerms3),
+        fetchRepos(searchTerms4),
+      ]);
+
+      // Merge and deduplicate by GitHub ID
+      const mergedMap = new Map<number, GithubRepo>();
+      for (const r of [...repos1, ...repos2, ...repos3, ...repos4]) {
+        mergedMap.set(r.id, r);
+      }
+
+      // Sort by stargazers_count desc and take top 100
+      const finalItems = Array.from(mergedMap.values())
+        .sort((a, b) => b.stargazers_count - a.stargazers_count)
+        .slice(0, 100);
+
+      console.log(
+        `[GitHub API] Successfully retrieved and merged ${finalItems.length} candidate repositories.`,
+      );
+
+      let upsertCount = 0;
+      for (const repo of finalItems) {
+        // Find last week's star count to calculate starsGrowth
+        const lastWeekRecord = await ctx.prisma.trendingRepo.findUnique({
+          where: {
+            githubId_weekOf: {
+              githubId: repo.id,
+              weekOf: lastMonday,
+            },
+          },
+          select: { stars: true },
+        });
+
+        let growth = 0;
+        if (lastWeekRecord) {
+          growth = repo.stargazers_count - lastWeekRecord.stars;
+        } else {
+          // Fallback: estimate growth based on total stars divided by age in days times 7
+          const createdDate = new Date(repo.created_at);
+          const daysOld = Math.max(
+            1,
+            Math.round((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24)),
+          );
+          const weekDays = daysOld > 7 ? 7 : daysOld;
+          growth = Math.round((repo.stargazers_count / daysOld) * weekDays);
+        }
+
+        growth = Math.max(0, growth);
+
+        await ctx.prisma.trendingRepo.upsert({
+          where: {
+            githubId_weekOf: {
+              githubId: repo.id,
+              weekOf: monday,
+            },
+          },
+          update: {
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            starsGrowth: growth,
+            description: repo.description,
+            topics: repo.topics ?? [],
+          },
+          create: {
+            githubId: repo.id,
+            name: repo.name,
+            fullName: repo.full_name,
+            url: repo.html_url,
+            description: repo.description,
+            language: repo.language,
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            starsGrowth: growth,
+            repoCreatedAt: new Date(repo.created_at),
+            topics: repo.topics ?? [],
+            weekOf: monday,
+          },
+        });
+        upsertCount++;
+      }
+
+      // Upsert current week into TrendingWeek table
+      await ctx.prisma.trendingWeek.upsert({
+        where: { weekOf: monday },
+        update: {},
+        create: { weekOf: monday },
+      });
+
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('trending');
+      }
+      return { success: true, count: upsertCount, weekOf: monday.toISOString() };
+    } catch (error: any) {
+      console.error('[adminRouter.trendingFetch] Error fetching/saving trending repos:', error);
+      throw error;
+    }
+  }),
+
+  /** Update trending repo summaries */
+  trendingUpdate: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        summaryZh: z.string().optional(),
+        summaryEn: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const repo = await ctx.prisma.trendingRepo.update({
+        where: { id: input.id },
+        data: {
+          summaryZh: input.summaryZh,
+          summaryEn: input.summaryEn,
+        },
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('trending');
+      }
+      return repo;
+    }),
+
+  /** List all trending repos for admin management (with pagination) */
+  trendingList: adminProcedure
+    .input(
+      z
+        .object({
+          page: z.number().int().min(1).default(1),
+          limit: z.number().int().min(1).max(100).default(20),
+          weekOf: z.string().optional(),
+        })
+        .default({ page: 1, limit: 20 }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, limit } = input;
+      const skip = (page - 1) * limit;
+
+      let targetWeek: Date | undefined;
+      if (input.weekOf) {
+        targetWeek = new Date(input.weekOf);
+      } else {
+        const latest = await ctx.prisma.trendingRepo.findFirst({
+          orderBy: { weekOf: 'desc' },
+          select: { weekOf: true },
+        });
+        targetWeek = latest?.weekOf;
+      }
+
+      if (!targetWeek) {
+        return { repos: [], total: 0, totalPages: 0, weekOf: null };
+      }
+
+      const [repos, total] = await Promise.all([
+        ctx.prisma.trendingRepo.findMany({
+          where: { weekOf: targetWeek },
+          orderBy: { starsGrowth: 'desc' },
+          skip,
+          take: limit,
+        }),
+        ctx.prisma.trendingRepo.count({
+          where: { weekOf: targetWeek },
+        }),
+      ]);
+
+      return {
+        repos,
+        total,
+        totalPages: Math.ceil(total / limit),
+        weekOf: targetWeek.toISOString(),
+      };
+    }),
+
+  /** Delete a trending repo by ID */
+  trendingDelete: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const repo = await ctx.prisma.trendingRepo.delete({
+        where: { id: input.id },
+      });
+      if (ctx.revalidateTag) {
+        ctx.revalidateTag('trending');
+      }
+      return repo;
+    }),
+
+  /** Invalidate server cache for trending repos */
+  trendingCacheRefresh: adminProcedure.mutation(async ({ ctx }) => {
+    if (ctx.revalidateTag) {
+      ctx.revalidateTag('trending');
+      return { success: true };
+    }
+    return { success: false, message: 'Revalidation function not available' };
   }),
 });

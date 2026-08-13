@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
 const WEB_SRC = path.resolve(__dirname, '../apps/web/src');
 
 describe('About Page', () => {
-  const aboutPath = path.join(WEB_SRC, 'app/(site)/about/page.tsx');
+  const aboutPath = path.join(WEB_SRC, 'app/[locale]/(site)/about/page.tsx');
 
   it('about/page.tsx exists', () => {
     expect(fs.existsSync(aboutPath)).toBe(true);
@@ -20,10 +20,10 @@ describe('About Page', () => {
     expect(content).toContain('siteConfig');
   });
 
-  it('Renders name and bio', () => {
+  it('Renders title and description', () => {
     const content = fs.readFileSync(aboutPath, 'utf-8');
-    expect(content).toContain('name');
-    expect(content).toContain('bio');
+    expect(content).toContain('title');
+    expect(content).toContain('description');
   });
 
   it('Renders social links', () => {
@@ -31,68 +31,78 @@ describe('About Page', () => {
     expect(content).toContain('socialLinks');
   });
 
-  it('Renders skills', () => {
+  it('Renders experience', () => {
     const content = fs.readFileSync(aboutPath, 'utf-8');
-    expect(content).toContain('skills');
+    expect(content).toContain('experience');
   });
 
   it('site.config.ts has about section', () => {
     const content = fs.readFileSync(path.join(WEB_SRC, 'site.config.ts'), 'utf-8');
     expect(content).toContain('about:');
-    expect(content).toContain('skills:');
-    expect(content).toContain('socialLinks:');
   });
 });
 
 describe('Blog Module — Pages', () => {
   it('blog/page.tsx exists', () => {
-    expect(fs.existsSync(path.join(WEB_SRC, 'app/(site)/blog/page.tsx'))).toBe(true);
+    expect(fs.existsSync(path.join(WEB_SRC, 'app/[locale]/(site)/blog/page.tsx'))).toBe(true);
   });
 
   it('blog/[slug]/page.tsx exists', () => {
-    expect(fs.existsSync(path.join(WEB_SRC, 'app/(site)/blog/[slug]/page.tsx'))).toBe(true);
+    expect(fs.existsSync(path.join(WEB_SRC, 'app/[locale]/(site)/blog/[slug]/page.tsx'))).toBe(
+      true,
+    );
   });
 });
 
 describe('Blog Module — List page', () => {
-  const content = fs.readFileSync(path.join(WEB_SRC, 'app/(site)/blog/page.tsx'), 'utf-8');
+  const pageContent = fs.readFileSync(
+    path.join(WEB_SRC, 'app/[locale]/(site)/blog/page.tsx'),
+    'utf-8',
+  );
+  const listContent = fs.readFileSync(path.join(WEB_SRC, 'components/blog/BlogList.tsx'), 'utf-8');
+
+  it('Renders BlogList client component', () => {
+    expect(pageContent).toContain('BlogList');
+  });
 
   it('Uses tRPC post.list', () => {
-    expect(content).toContain('post.list');
+    expect(listContent).toContain('post.list');
   });
 
   it('Uses tRPC category.list', () => {
-    expect(content).toContain('category.list');
+    expect(listContent).toContain('category.list');
   });
 
   it('Has pagination controls', () => {
-    expect(content).toContain('Previous');
-    expect(content).toContain('Next');
+    expect(listContent).toContain('pg:');
   });
 
   it('Has category filter', () => {
-    expect(content).toContain('category=');
+    expect(listContent).toContain('cat:');
   });
 
   it('Uses PostCard component', () => {
-    expect(content).toContain('PostCard');
+    expect(listContent).toContain('PostCard');
   });
 });
 
 describe('Blog Module — Detail page', () => {
-  const content = fs.readFileSync(path.join(WEB_SRC, 'app/(site)/blog/[slug]/page.tsx'), 'utf-8');
+  const content = fs.readFileSync(
+    path.join(WEB_SRC, 'app/[locale]/(site)/blog/[slug]/page.tsx'),
+    'utf-8',
+  );
 
   it('Uses tRPC post.bySlug', () => {
     expect(content).toContain('post.bySlug');
   });
 
-  it('Uses MDXRemote for rendering', () => {
-    expect(content).toContain('MDXRemote');
+  it('Uses SafeMDXRemote for rendering', () => {
+    expect(content).toContain('SafeMDXRemote');
   });
 
   it('Uses remark-gfm and rehype plugins', () => {
     expect(content).toContain('remarkGfm');
-    expect(content).toContain('rehypeHighlight');
+    expect(content).toContain('rehypeCustomHighlight');
     expect(content).toContain('rehypeSlug');
   });
 
@@ -154,7 +164,7 @@ describe('Blog Module — Components', () => {
 });
 
 describe('Guestbook Module', () => {
-  const guestbookPath = path.join(WEB_SRC, 'app/(site)/guestbook/page.tsx');
+  const guestbookPath = path.join(WEB_SRC, 'app/[locale]/(site)/guestbook/page.tsx');
 
   it('guestbook/page.tsx exists', () => {
     expect(fs.existsSync(guestbookPath)).toBe(true);

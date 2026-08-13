@@ -14,6 +14,7 @@ export function defineConfig(config: SiteConfigInput): SiteConfig {
 
 // Re-exports
 export type { SiteConfig };
+export * from './defaultAbout';
 export * from './defaultModules';
 export {
   clearRegistry,

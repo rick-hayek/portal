@@ -1,12 +1,30 @@
-import { FileJson, Hash, Settings2, Shield } from 'lucide-react';
+import { FileJson, FileText, Hash, Settings2, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import React from 'react';
 import { Link } from '@/i18n/routing';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const tNav = await getTranslations({ locale, namespace: 'Navigation' });
+  return {
+    title: tNav('tools'),
+  };
+}
 
 export default function ToolsPage() {
   const t = useTranslations('Tools');
 
   const tools = [
+    {
+      id: 'markdown-editor',
+      name: t('markdownEditor.name'),
+      description: t('markdownEditor.desc'),
+      icon: <FileText className="h-6 w-6" />,
+      href: '/tools/markdown-editor',
+      color: 'text-emerald-500',
+      bg: 'bg-[rgba(16,185,129,0.1)]',
+    },
     {
       id: 'json-formatter',
       name: t('jsonFormatter.name'),
@@ -37,36 +55,38 @@ export default function ToolsPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-16">
-      <header className="space-y-4 text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(107,142,201,0.1)] text-[var(--portal-color-primary)]">
-          <Settings2 className="h-8 w-8" />
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 pt-8 sm:pt-12">
+      <header className="space-y-3 text-center">
+        <div className="flex items-center justify-center gap-3 sm:gap-4">
+          <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl bg-[rgba(107,142,201,0.1)] text-[var(--portal-color-primary)]">
+            <Settings2 className="h-5 w-5 sm:h-6 sm:w-6" />
+          </div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-[var(--portal-color-text)] sm:text-4xl md:text-5xl">
+            {t('title')}
+          </h1>
         </div>
-        <h1 className="text-4xl font-extrabold tracking-tight text-[var(--portal-color-text)] md:text-5xl">
-          {t('title')}
-        </h1>
-        <p className="mx-auto max-w-2xl text-lg text-[var(--portal-color-text-secondary)]">
+        <p className="mx-auto max-w-2xl text-xs sm:text-base text-[var(--portal-color-text-secondary)]">
           {t('description')}
         </p>
       </header>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {tools.map((tool) => (
           <Link
             key={tool.id}
             href={tool.href}
-            className="group relative flex flex-col gap-4 rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 transition-all hover:-translate-y-1 hover:border-[var(--portal-color-primary)] hover:shadow-lg hover:shadow-[0_8px_30px_rgba(107,142,201,0.05)]"
+            className="group relative flex flex-row items-start gap-4 rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-4 sm:p-6 transition-all hover:-translate-y-1 hover:border-[var(--portal-color-primary)] hover:shadow-lg hover:shadow-[0_8px_30px_rgba(107,142,201,0.05)]"
           >
             <div
-              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${tool.bg} ${tool.color} transition-transform group-hover:scale-110`}
+              className={`flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl ${tool.bg} ${tool.color} transition-transform group-hover:scale-110`}
             >
               {tool.icon}
             </div>
-            <div className="space-y-1.5 mt-2">
-              <h3 className="text-lg font-semibold leading-none tracking-tight text-[var(--portal-color-text)]">
+            <div className="space-y-1 flex-1 min-w-0">
+              <h3 className="text-base sm:text-lg font-semibold leading-snug tracking-tight text-[var(--portal-color-text)]">
                 {tool.name}
               </h3>
-              <p className="line-clamp-2 text-sm text-[var(--portal-color-text-secondary)]">
+              <p className="line-clamp-2 text-xs sm:text-sm text-[var(--portal-color-text-secondary)] leading-relaxed">
                 {tool.description}
               </p>
             </div>

@@ -15,6 +15,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     GitHub({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      authorization: { params: { scope: 'read:user user:email' } },
+      //allowDangerousEmailAccountLinking: true, // 开启了 allowDangerousEmailAccountLinking: true 后，登录流程在发现没有关联的 Account 时，将直接把该 GitHub 账户链接绑定到你现有的 User 记录上，不会再产生 OAuthAccountNotLinked 报错。
     }),
     Credentials({
       name: 'Email',
@@ -62,6 +64,31 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.id = token.id as string;
       session.user.role = token.role as string;
       return session;
+    },
+  },
+  // NextAuth 的 events.signIn 异步事件处理器中更新 Token 和 Scope
+  events: {
+    async signIn({ user, account }) {
+      // Automatically update account credentials (token, scope) in the database asynchronously after successful sign-in
+      if (account && user?.id) {
+        await prisma.account
+          .updateMany({
+            where: {
+              userId: user.id,
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+            },
+            data: {
+              access_token: account.access_token,
+              refresh_token: account.refresh_token,
+              scope: account.scope,
+              expires_at: account.expires_at,
+            },
+          })
+          .catch((err) => {
+            console.error('Failed to update OAuth credentials in database:', err);
+          });
+      }
     },
   },
 });

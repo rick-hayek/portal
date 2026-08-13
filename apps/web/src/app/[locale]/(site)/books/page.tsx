@@ -1,15 +1,12 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { use, useCallback, useEffect, useState } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
+import { getTRPCServer } from '@/lib/trpc-server';
 
 interface Book {
   id: string;
   slug: string;
   title: string;
   coverImageURL: string | null;
-  coverImage: string | null;
   author: string;
   publisher: string | null;
   translator: string | null;
@@ -20,29 +17,28 @@ interface PageProps {
   params: Promise<{ locale: string }>;
 }
 
-export default function PublicBooksPage({ params }: PageProps) {
-  const { locale } = use(params);
-  const t = useTranslations('Books');
+export async function generateMetadata({ params }: PageProps) {
+  const { locale } = await params;
+  const tNav = await getTranslations({ locale, namespace: 'Navigation' });
+  return {
+    title: tNav('books'),
+  };
+}
 
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+export default async function PublicBooksPage({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Books' });
 
-  const loadBooks = useCallback(async () => {
-    try {
-      const res = await fetch('/api/trpc/book.list?batch=1');
-      const data = await res.json();
-      setBooks(data[0]?.result?.data?.json ?? []);
-    } catch {
-      setError('Failed to load books');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  let books: Book[] = [];
+  let error = '';
 
-  useEffect(() => {
-    loadBooks();
-  }, [loadBooks]);
+  try {
+    const trpc = await getTRPCServer();
+    books = await trpc.book.list();
+  } catch (err) {
+    console.error('Failed to load books:', err);
+    error = 'Failed to load books';
+  }
 
   return (
     <div className="border-t border-b border-compat-soft bg-[var(--portal-color-surface)]">
@@ -71,19 +67,7 @@ export default function PublicBooksPage({ params }: PageProps) {
           </h1>
         </div>
 
-        {loading ? (
-          <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 sm:gap-x-8 sm:gap-y-12">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="animate-pulse flex flex-row sm:flex-col gap-4 sm:gap-0 items-start">
-                <div className="aspect-[3/4] w-20 sm:w-full rounded-xl bg-[var(--portal-color-surface-alt)] mb-0 sm:mb-4 shrink-0" />
-                <div className="flex-1 space-y-2 py-1 w-full">
-                  <div className="h-4 w-3/4 rounded bg-[var(--portal-color-surface-alt)]" />
-                  <div className="h-3 w-1/2 rounded bg-[var(--portal-color-surface-alt)]" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : error ? (
+        {error ? (
           <div className="rounded-xl bg-red-500/10 p-6 text-center text-sm text-red-500">
             {error}
           </div>
@@ -94,7 +78,7 @@ export default function PublicBooksPage({ params }: PageProps) {
         ) : (
           <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 sm:gap-x-8 sm:gap-y-12">
             {books.map((book) => {
-              const coverSrc = book.coverImage ?? book.coverImageURL ?? '';
+              const coverSrc = book.coverImageURL ?? '';
               return (
                 <Link
                   key={book.id}

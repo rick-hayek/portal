@@ -13,10 +13,23 @@
     "admin": "Admin",
     "profile": "Profile",
     "signOut": "Sign Out",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "account": "Account",
+    "trending": "AI Trending",
+    "tableOfContents": "On this page"
+  },
+  "Themes": {
+    "system": "System (Auto)",
+    "minimal-light": "Clean Portal",
+    "dark-neon": "Dark Neon",
+    "cyberpunk": "Cyberpunk",
+    "retro-brown": "Retro Brown",
+    "zenith": "Zenith Ethereal",
+    "lumiere": "Lumiere Editorial"
   },
   "Index": {
-    "badge": "Full-Stack Developer",
+    "badge": "My Space",
+    "initComment": "// Initializing Project",
     "title1": "Reflections on",
     "title2": "Life & Work",
     "description": "A personal space dedicated to sharing tech insights, life reflections, and practical tool development stories.",
@@ -26,18 +39,49 @@
     "blogTitle": "Blog",
     "selectedWork": "Selected Work",
     "projectsTitle": "Projects",
+    "readingList": "Reading List",
+    "booksTitle": "Books",
     "viewAll": "View all",
     "community": "Community",
-    "guestbookTitle": "Guestbook"
+    "guestbookTitle": "Guestbook (Unavailable)"
   },
   "Blog": {
     "title": "Blog",
     "latestPosts": "Latest Posts",
     "all": "All",
+    "allCategories": "Categories",
+    "archives": "Archives",
+    "allMonths": "All Months",
+    "allTime": "All Time",
+    "selectMonth": "Select Month",
+    "activeFilters": "Active filters:",
+    "clearAll": "Clear all",
+    "noArchives": "No archives",
+    "viewAllPosts": "View all posts",
     "noPosts": "No posts found.",
     "previous": "← Previous",
     "pageOffset": "Page {page} of {totalPages}",
     "next": "Next →"
+  },
+  "Comments": {
+    "title": "Comments",
+    "count": "Comments ({count})",
+    "noComments": "No comments yet. Be the first!",
+    "reply": "Reply",
+    "replyingTo": "Replying to @{name}",
+    "cancel": "Cancel",
+    "replyPlaceholder": "Write your reply…",
+    "commentPlaceholder": "Write your comment…",
+    "submit": "Submit",
+    "submitting": "Submitting…",
+    "replySubmitted": "✅ Reply submitted! It will appear after review.",
+    "commentSubmitted": "✅ Comment submitted! It will appear after review.",
+    "replyFailed": "Failed to submit reply, please try again.",
+    "commentFailed": "Failed to submit comment, please try again.",
+    "signInToComment": "Please sign in to leave a comment.",
+    "signInButton": "Sign in to comment",
+    "leaveComment": "Leave a comment",
+    "postingAs": "Posting as {name}"
   },
   "Portfolio": {
     "title": "Portfolio",
@@ -76,15 +120,37 @@
   "Links": {
     "title": "Bookmarks & Friends",
     "description": "A collection of tools I use, people I admire, and websites that inspire me.",
-    "loading": "Loading Links...",
     "noLinks": "No links found",
     "noLinksDesc": "Looks like the collection is empty for now.",
+    "selfInfoTitle": "Site Link Information",
+    "selfInfoDesc": "Welcome to link back to this site! Here are our site details:",
+    "copyMarkdown": "Copy Markdown",
+    "copyJson": "Copy JSON",
+    "copyText": "Copy Text",
+    "copied": "Copied!",
+    "selfFields": {
+      "name": "Title",
+      "desc": "Description",
+      "url": "URL",
+      "avatar": "Avatar",
+      "screenshot": "Screenshot",
+      "rss": "RSS Feed"
+    },
     "categories": {
       "friend": "Friends",
       "tool": "Tools & Utilities",
       "inspiration": "Inspirations",
       "other": "Other Links"
-    }
+    },
+    "applyTitle": "Apply for Link Exchange",
+    "applyDesc": "Welcome to exchange links! Please add our site link first, then send your site info via email.",
+    "step1Title": "Add Our Site First",
+    "step1Desc": "Add our site details to your friend links page using the info below.",
+    "step2Title": "Send Application",
+    "step2Desc": "Send an email containing your site title, URL, avatar, description, and optional RSS/screenshot.",
+    "sendEmailBtn": "Send Application Email",
+    "copyTemplateBtn": "Copy Template",
+    "templateCopied": "Template Copied!"
   },
   "Tools": {
     "title": "Developer Tools",
@@ -100,12 +166,59 @@
     "jwt": {
       "name": "JWT Decoder",
       "desc": "Decode and inspect JSON Web Tokens inline securely."
+    },
+    "markdownEditor": {
+      "name": "Markdown Editor",
+      "desc": "Real-time Markdown editor with instant live HTML & diagram preview."
     }
+  },
+  "ToolsMarkdown": {
+    "title": "Markdown Editor",
+    "description": "Write Markdown and see the rendered HTML preview & diagrams in real time.",
+    "editor": "Markdown Input",
+    "preview": "Live Preview",
+    "loadSample": "Load Sample",
+    "importFile": "Import File",
+    "clear": "Clear",
+    "copyMd": "Copy MD",
+    "copyHtml": "Copy HTML",
+    "copied": "Copied!",
+    "words": "words",
+    "chars": "characters",
+    "placeholder": "Type or paste your Markdown content here, or drag & drop a .md file..."
   },
   "About": {
     "title": "The Developer",
     "subtitle": "About Me",
-    "intro1": "Hello! I'm Rick, a Full-Stack Engineer who loves building tools that make development easier and more enjoyable.",
+    "siteSubtitle": "About Site",
+    "siteTitle": "Voocii Portal Platform & Architecture",
+    "siteDesc": "Voocii Portal is a modern, modular personal website platform built from scratch. It integrates technical blog, portfolio showcase, book reviews, friend links, and developer utilities into a unified digital workspace.",
+    "modulesTitle": "Main Modules",
+    "techTitle": "Tech Stack & Architecture",
+    "openSourceTitle": "Self-Developed Open Source Project",
+    "openSourceDesc": "This website is an open-source personal portal system. You are welcome to inspect the source code, star the repository, or deploy your own instance.",
+    "viewOnGithub": "View Source on GitHub",
+    "modules": {
+      "blog": "Blog — Technical articles, insights & deep-dive writing",
+      "trending": "AI Trending — Weekly GitHub hot repos with AI summaries",
+      "portfolio": "Portfolio — Featured projects, works & applications",
+      "books": "Books — Recommended reading list & book reflections",
+      "links": "Links — Blog roll & friendly connections",
+      "tools": "Tools — Handy developer utilities (Base64, JSON, JWT, Markdown)"
+    },
+    "techCategory": {
+      "core": "Core Framework",
+      "api": "API & Database",
+      "search": "Search & Storage",
+      "feature": "i18n & Auth"
+    },
+    "tech": {
+      "core": "Next.js 15 (App Router), React 19, TypeScript",
+      "api": "tRPC v11, Prisma ORM, PostgreSQL, Redis",
+      "search": "Meilisearch, Cloudflare R2 / S3 Storage",
+      "feature": "next-intl (Bilingual), NextAuth.js, TailwindCSS"
+    },
+    "intro1": "Hello! I'm Jane Doe, a Full-Stack Engineer who loves building tools that make development easier and more enjoyable.",
     "intro2": "With a background in computer science and years of experience in the JavaScript ecosystem, I focus on creating performant, accessible, and beautiful web applications.",
     "intro3": "When I'm not coding, you can find me exploring new technologies, contributing to open source, or sharing my knowledge through writing.",
     "experience": "Experience",
@@ -176,6 +289,9 @@
       "translator": "Translator",
       "isbn": "ISBN",
       "publishYear": "Publish Year",
+      "ebookUrl": "E-Book URL",
+      "onlineBook": "Online E-Book",
+      "readOnline": "Read Online",
       "originalBook": "Original Work",
       "description": "Description",
       "review": "Book Review / Thoughts"
@@ -214,5 +330,41 @@
       "mismatch": "Passwords do not match!",
       "minLength": "Password must be at least 6 characters long!"
     }
+  },
+  "Trending": {
+    "sectionLabel": "AI / LLM",
+    "title": "AI Trending",
+    "subtitle": "Most popular AI & LLM open-source projects this week from GitHub (updated every Sunday)",
+    "weekOf": "Week of",
+    "stars": "Stars",
+    "forks": "Forks",
+    "language": "Language",
+    "createdAt": "Created",
+    "viewOnGithub": "View on GitHub",
+    "noData": "No trending data yet. Check back later!",
+    "noSummary": "AI summary coming soon...",
+    "summary": "AI Summary",
+    "topics": "Topics",
+    "starsThisWeek": "this week",
+    "loginToStar": "Log in with GitHub to star",
+    "starFailed": "Failed to star, check GitHub permissions!",
+    "summarizeBtn": "Summarize",
+    "summarizeTitle": "Weekly AI Trending",
+    "saveImage": "Save Image",
+    "saving": "Saving...",
+    "consecutiveWeeks": "{weeks} wks on list",
+    "consecutiveWeeksShort": "{weeks}wks streak"
+  },
+  "Auth": {
+    "welcome": "Welcome to {title}",
+    "subtitle": "A personal portal for fun",
+    "github": "Continue with GitHub",
+    "or": "OR",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "invalidCredentials": "Invalid email or password",
+    "verifying": "Verifying...",
+    "signInButton": "Sign In",
+    "cancel": "Cancel"
   }
 }

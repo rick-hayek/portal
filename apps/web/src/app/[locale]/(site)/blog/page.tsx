@@ -1,138 +1,76 @@
-import { useTranslations } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
-import { PostCard } from '@/components/blog/PostCard';
-import { getTRPCServer } from '@/lib/trpc-server';
-import siteConfig from '@/site.config';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
+import { BlogList } from '@/components/blog/BlogList';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Blog' });
   return {
-    title: `${t('title')} — ${siteConfig.site.title}`,
+    title: t('title'),
     description: t('latestPosts'),
   };
 }
 
-export default async function BlogPage({
-  searchParams,
-  params,
-}: {
-  searchParams: Promise<{ page?: string; category?: string; tag?: string }>;
-  params: Promise<{ locale: string }>;
-}) {
-  const sParams = await searchParams;
+export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const page = Number(sParams.page) || 1;
-  const t = await getTranslations({ locale, namespace: 'Blog' });
 
-  const trpc = await getTRPCServer();
-
-  const data = await trpc.post.list({
-    page,
-    limit: 10,
-    categorySlug: sParams.category,
-    tagSlug: sParams.tag,
-  });
-
-  const categories = await trpc.category.list();
+  // Set requested locale for translation mappings
+  setRequestLocale(locale);
 
   return (
-    <div className="pt-8 md:pt-24 pb-12 md:pb-20 px-4 md:px-8 max-w-[1200px] mx-auto w-full">
-      {/* Section header */}
-      <div className="flex items-baseline" style={{ gap: '.8rem', marginBottom: '2.5rem' }}>
-        <span
-          style={{ width: 28, height: 2, background: 'var(--portal-color-primary)', flexShrink: 0 }}
-        ></span>
-        <span
-          className="font-mono uppercase text-[var(--portal-color-primary)]"
-          style={{ fontSize: '.7rem', fontWeight: 500, letterSpacing: '.1em' }}
-        >
-          {t('latestPosts')}
-        </span>
-        <h1
-          className="text-[var(--portal-color-text)]"
-          style={{ fontSize: '1.6rem', fontWeight: 700, letterSpacing: '-.03em' }}
-        >
-          {t('title')}
-        </h1>
-      </div>
+    <Suspense
+      fallback={
+        <div className="pt-8 md:pt-16 pb-12 md:pb-20 px-4 sm:px-6 lg:px-8 mx-auto w-full max-w-[1536px]">
+          <div className="flex justify-center items-start gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
+            {/* Left Balance Spacer Skeleton */}
+            <div
+              className="hidden min-[1250px]:block shrink w-[200px] xl:w-[240px] 2xl:w-[280px] min-w-[180px] max-w-[280px]"
+              aria-hidden="true"
+            />
 
-      {/* Category Filters */}
-      <div
-        className="mb-8 flex flex-nowrap overflow-x-auto md:flex-wrap md:overflow-visible pb-2 md:pb-0 gap-2 scrollbar-none"
-        style={{
-          WebkitOverflowScrolling: 'touch',
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-        }}
-      >
-        <a
-          href="/blog"
-          className={`rounded-full shrink-0 transition-colors ${!sParams.category
-              ? 'bg-[var(--portal-color-primary)] text-white'
-              : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
-            }`}
-          style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
-        >
-          {t('all')}
-        </a>
-        {categories.map((cat) => (
-          <a
-            key={cat.id}
-            href={`/blog?category=${cat.slug}`}
-            className={`rounded-full shrink-0 transition-colors ${sParams.category === cat.slug
-                ? 'bg-[var(--portal-color-primary)] text-white'
-                : 'border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] hover:border-[var(--portal-color-primary)]'
-              }`}
-            style={{ padding: '.3rem .85rem', fontSize: '.78rem', fontWeight: 500 }}
-          >
-            {cat.name} ({cat._count.posts})
-          </a>
-        ))}
-      </div>
+            {/* Post List Skeleton Column */}
+            <div className="w-full max-w-3xl shrink min-w-0">
+              {/* Header Skeleton */}
+              <div className="flex items-baseline mb-6 md:mb-8" style={{ gap: '.8rem' }}>
+                <span
+                  style={{
+                    width: 28,
+                    height: 2,
+                    background: 'var(--portal-color-primary)',
+                    flexShrink: 0,
+                  }}
+                ></span>
+                <span className="h-4 bg-gray-200 rounded w-16 dark:bg-gray-800 animate-pulse"></span>
+                <span className="h-6 bg-gray-200 rounded w-24 dark:bg-gray-800 animate-pulse"></span>
+              </div>
 
-      {/* Post List */}
-      {data.posts.length > 0 ? (
-        <div className="flex flex-col">
-          {data.posts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
+              {/* Post List Skeleton */}
+              <div className="flex flex-col gap-4">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="animate-pulse rounded-xl border border-[var(--portal-color-border)] p-6 bg-[var(--portal-color-surface)]"
+                  >
+                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-3 dark:bg-gray-800"></div>
+                    <div className="h-6 bg-gray-200 rounded w-3/4 mb-3 dark:bg-gray-800"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 dark:bg-gray-800"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Sidebar Skeleton Column */}
+            <aside className="hidden lg:block shrink w-[200px] xl:w-[240px] 2xl:w-[280px] min-w-[180px] max-w-[280px] space-y-6">
+              <div className="space-y-6">
+                <div className="animate-pulse rounded-2xl border border-[var(--portal-color-border)] p-5 bg-[var(--portal-color-surface)] h-48"></div>
+                <div className="animate-pulse rounded-2xl border border-[var(--portal-color-border)] p-5 bg-[var(--portal-color-surface)] h-48"></div>
+              </div>
+            </aside>
+          </div>
         </div>
-      ) : (
-        <p className="py-12 text-center text-[var(--portal-color-text-secondary)]">
-          {t('noPosts')}
-        </p>
-      )}
-
-      {/* Pagination */}
-      {data.pagination.totalPages > 1 && (
-        <div className="mt-8 flex items-center justify-center gap-4">
-          {page > 1 && (
-            <a
-              href={`/blog?page=${page - 1}${sParams.category ? `&category=${sParams.category}` : ''}`}
-              className="rounded-full border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] transition-colors hover:border-[var(--portal-color-primary)] hover:text-[var(--portal-color-primary)]"
-              style={{ padding: '.4rem 1rem', fontSize: '.82rem' }}
-            >
-              {t('previous')}
-            </a>
-          )}
-          <span
-            style={{ fontSize: '.82rem' }}
-            className="text-[var(--portal-color-text-secondary)]"
-          >
-            {t('pageOffset', { page, totalPages: data.pagination.totalPages })}
-          </span>
-          {page < data.pagination.totalPages && (
-            <a
-              href={`/blog?page=${page + 1}${sParams.category ? `&category=${sParams.category}` : ''}`}
-              className="rounded-full border border-[var(--portal-color-border)] text-[var(--portal-color-text-secondary)] transition-colors hover:border-[var(--portal-color-primary)] hover:text-[var(--portal-color-primary)]"
-              style={{ padding: '.4rem 1rem', fontSize: '.82rem' }}
-            >
-              {t('next')}
-            </a>
-          )}
-        </div>
-      )}
-    </div>
+      }
+    >
+      <BlogList />
+    </Suspense>
   );
 }

@@ -27,7 +27,7 @@ async function main() {
     data: {
       id: 'clk123456000008l28z3z3z3z', // Fixed CUID to prevent session orphaning after re-seeding
       email: 'admin@portal.dev',
-      name: 'Rick',
+      name: 'Jane Doe',
       role: 'admin',
       passwordHash,
     },
@@ -277,7 +277,7 @@ const elapsedMs = Date.now() - startTime;
     await prisma.comment.create({
       data: {
         postId: firstPost.id,
-        authorName: 'Rick',
+        authorName: 'Jane Doe',
         content: '谢谢！有什么具体想了解的可以继续讨论。',
         status: 'approved',
         parentId: comment1.id,
@@ -363,15 +363,13 @@ const elapsedMs = Date.now() - startTime;
       {
         slug: 'free-to-choose',
         title: '自由选择',
-        coverImageURL:
-          'https://img9.doubanio.com/view/subject/s/public/s3129915.jpg',
+        coverImageURL: 'https://img9.doubanio.com/view/subject/s/public/s3129915.jpg',
         author: '[美] 米尔顿·弗里德曼 / 罗丝·弗里德曼',
-        publisher: "机械工业出版社",
+        publisher: '机械工业出版社',
         isbn: '9787111240792',
         description:
           '在这本探讨经济、自由以及二者之间关系的经典著作当中，米尔顿·弗里德曼和罗斯·弗里德曼为我们揭示了，正是由于华盛顿当局制定了过多的法律法规、实施了过多的政府管制、建立了过多的行政机构、花费了过多的财政预算，才使我们的自由和财富受到了侵蚀和削弱。一旦政府以中间人的身份插手干预，良好的愿望往往会导致悲惨的结果，对此，两位作者也进行了细致的考察研究。此外，针对这些经济问题，弗里德曼夫妇还提出了积极的建议和意见，告诉我们应当如何扩展自由、增进财富。',
-        review:
-          '本书揭示了自由在经济发展中的重要性，以及政府过度干预对自由和财富的侵蚀。',
+        review: '本书揭示了自由在经济发展中的重要性，以及政府过度干预对自由和财富的侵蚀。',
       },
     ],
   });

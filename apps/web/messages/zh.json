@@ -13,10 +13,23 @@
     "admin": "管理",
     "profile": "个人中心",
     "signOut": "退出登录",
-    "signIn": "登录"
+    "signIn": "登录",
+    "account": "账号中心",
+    "trending": "AI 热榜",
+    "tableOfContents": "目录"
+  },
+  "Themes": {
+    "system": "跟随系统",
+    "minimal-light": "极简极光",
+    "dark-neon": "暗黑霓虹",
+    "cyberpunk": "赛博朋克",
+    "retro-brown": "复古棕调",
+    "zenith": "静谧圣所",
+    "lumiere": "光影手札"
   },
   "Index": {
-    "badge": "全栈开发者",
+    "badge": "我的空间",
+    "initComment": "// 顺木之天，以致其性",
     "title1": "生活与工作",
     "title2": "随想随记",
     "description": "记录和分享技术心得、生活感悟，顺便推荐个书",
@@ -26,18 +39,49 @@
     "blogTitle": "博客",
     "selectedWork": "精选作品",
     "projectsTitle": "项目",
+    "readingList": "书单推荐",
+    "booksTitle": "图书",
     "viewAll": "查看全部",
     "community": "社区互动",
-    "guestbookTitle": "留言板"
+    "guestbookTitle": "留言板（退休了）"
   },
   "Blog": {
     "title": "博客",
     "latestPosts": "最新文章",
     "all": "全部",
+    "allCategories": "全部分类",
+    "archives": "文章归档",
+    "allMonths": "全部月份",
+    "allTime": "全部时间",
+    "selectMonth": "选择月份",
+    "activeFilters": "已筛选:",
+    "clearAll": "清空筛选",
+    "noArchives": "暂无归档数据",
+    "viewAllPosts": "查看全部文章",
     "noPosts": "空空如也。",
     "previous": "← 上一页",
     "pageOffset": "第 {page} 页，共 {totalPages} 页",
     "next": "下一页 →"
+  },
+  "Comments": {
+    "title": "评论",
+    "count": "评论 ({count})",
+    "noComments": "暂无评论，快来抢沙发吧！",
+    "reply": "回复",
+    "replyingTo": "回复 @{name}",
+    "cancel": "取消",
+    "replyPlaceholder": "写下你的回复…",
+    "commentPlaceholder": "写下你的评论…",
+    "submit": "提交",
+    "submitting": "提交中…",
+    "replySubmitted": "✅ 回复已提交！审核后将会显示。",
+    "commentSubmitted": "✅ 评论已提交！审核后将会显示。",
+    "replyFailed": "提交回复失败，请重试。",
+    "commentFailed": "提交评论失败，请重试。",
+    "signInToComment": "请登录后发表评论。",
+    "signInButton": "登录以发表评论",
+    "leaveComment": "发表评论",
+    "postingAs": "当前以 {name} 身份评论"
   },
   "Portfolio": {
     "title": "作品集",
@@ -74,17 +118,39 @@
     }
   },
   "Links": {
-    "title": "书签与友链",
-    "description": "收集我常用的工具、欣赏的人以及给我带来灵感的网站。",
-    "loading": "加载链接中...",
+    "title": "友情链接",
+    "description": "一些欣赏的人，和给我带来灵感的网站。",
     "noLinks": "暂无链接",
     "noLinksDesc": "看起来收藏夹暂时是空的。",
+    "selfInfoTitle": "本站友链信息",
+    "selfInfoDesc": "欢迎添加本站为友情链接，以下为本站配置信息：",
+    "copyMarkdown": "复制 Markdown",
+    "copyJson": "复制 JSON",
+    "copyText": "复制文本",
+    "copied": "已复制！",
+    "selfFields": {
+      "name": "站点名称",
+      "desc": "站点描述",
+      "url": "站点链接",
+      "avatar": "站点Logo",
+      "screenshot": "站点截图",
+      "rss": "RSS 订阅"
+    },
     "categories": {
       "friend": "友情链接",
       "tool": "工具与效率",
       "inspiration": "灵感发现",
       "other": "其他链接"
-    }
+    },
+    "applyTitle": "申请友情链接",
+    "applyDesc": "欢迎互换友情链接！请先在贵站添加本站链接，然后将贵站信息发送邮件至站长。",
+    "step1Title": "先添加本站",
+    "step1Desc": "请参考下方“本站友链信息”在贵站友情链接页面添加本站。",
+    "step2Title": "发送申请邮件",
+    "step2Desc": "提交包含贵站名称、URL、头像、描述及可选的 RSS/截图地址的信息。",
+    "sendEmailBtn": "发送申请邮件",
+    "copyTemplateBtn": "复制申请格式",
+    "templateCopied": "已复制格式！"
   },
   "Tools": {
     "title": "开发者工具",
@@ -100,12 +166,59 @@
     "jwt": {
       "name": "JWT 解析",
       "desc": "安全地在本地解析并查看 JSON Web Tokens 内容。"
+    },
+    "markdownEditor": {
+      "name": "Markdown 编辑器",
+      "desc": "实时 Markdown 文本编辑器，支持 HTML 与图表同步预览。"
     }
+  },
+  "ToolsMarkdown": {
+    "title": "Markdown 编辑器",
+    "description": "输入 Markdown 源码，实时渲染 HTML 效果与流程图预览。",
+    "editor": "Markdown 输入",
+    "preview": "实时预览",
+    "loadSample": "加载示例",
+    "importFile": "导入文件",
+    "clear": "清空",
+    "copyMd": "复制 MD",
+    "copyHtml": "复制 HTML",
+    "copied": "已复制!",
+    "words": "字数",
+    "chars": "字符数",
+    "placeholder": "在此输入或粘贴 Markdown 内容，或直接拖拽本地 .md 文件至此..."
   },
   "About": {
     "title": "关于开发者",
     "subtitle": "关于我",
-    "intro1": "你好！我是 Rick，一名全栈工程师，热爱构建能让开发变得更轻松愉悦的工具。",
+    "siteSubtitle": "About Site",
+    "siteTitle": "Voocii Portal 系统架构与项目介绍",
+    "siteDesc": "Voocii Portal 是一个完全自研的个人站点系统，集成了技术博客、作品集展示、读书笔记、友链朋友圈及实用开发者工具箱。",
+    "modulesTitle": "核心功能模块",
+    "techTitle": "技术栈与系统架构",
+    "openSourceTitle": "自研开源项目",
+    "openSourceDesc": "本站是一个完全开源的个人门户系统，欢迎前往 GitHub 查看源代码、提交 Star 或 Issue，亦可部署属于你自己的个人站点。",
+    "viewOnGithub": "在 GitHub 上查看源码",
+    "modules": {
+      "blog": "博客 — 技术长文、心得体会与知识沉淀",
+      "trending": "AI Trending — GitHub 热门开源项目周榜与 AI 智能摘要",
+      "portfolio": "作品集 — 个人精选开源项目与代表作展示",
+      "books": "读书推荐 — 精选书单推荐与深度书评随感",
+      "links": "朋友圈 — 独立博客友人与互联互通",
+      "tools": "开发者工具 — 常用 Web 工具箱（Base64、JSON、JWT、Markdown）"
+    },
+    "techCategory": {
+      "core": "核心框架",
+      "api": "API 与数据库",
+      "search": "搜索与存储",
+      "feature": "国际化与认证"
+    },
+    "tech": {
+      "core": "Next.js 15 (App Router)、React 19、TypeScript",
+      "api": "tRPC v11、Prisma ORM、PostgreSQL、Redis",
+      "search": "Meilisearch、Cloudflare R2 对象存储",
+      "feature": "next-intl 中英双语、NextAuth.js 认证、TailwindCSS"
+    },
+    "intro1": "你好！我是 Jane Doe，一名全栈工程师，热爱构建能让开发变得更轻松愉悦的工具。",
     "intro2": "拥有计算机科学背景以及在 JavaScript 生态多年的深耕经验，我专注于打造高性能、高可用且设计精美的 Web 应用。",
     "intro3": "不在写代码的时候，我通常在探索新技术、为开源社区做贡献，或是通过写作分享我的所见所学。",
     "experience": "工作经历",
@@ -176,6 +289,9 @@
       "translator": "译者",
       "isbn": "ISBN",
       "publishYear": "出版年份",
+      "ebookUrl": "电子书链接",
+      "onlineBook": "在线电子书",
+      "readOnline": "在线阅读",
       "originalBook": "原作",
       "description": "简介",
       "review": "书评 / 随感"
@@ -214,5 +330,41 @@
       "mismatch": "两次输入的密码不一致！",
       "minLength": "密码长度不能少于 6 位！"
     }
+  },
+  "Trending": {
+    "sectionLabel": "AI / LLM",
+    "title": "AI 热榜",
+    "subtitle": "来自 GitHub 的本周最热门 AI 与大模型开源项目（每周日更新）",
+    "weekOf": "所属周",
+    "stars": "Stars",
+    "forks": "Forks",
+    "language": "语言",
+    "createdAt": "创建于",
+    "viewOnGithub": "在 GitHub 上查看",
+    "noData": "暂无热榜数据，请稍后再来！",
+    "noSummary": "AI 摘要即将上线...",
+    "summary": "AI 摘要",
+    "topics": "标签",
+    "starsThisWeek": "本周",
+    "loginToStar": "使用 GitHub 登录以 star 仓库",
+    "starFailed": "操作失败，请检查 GitHub 授权！",
+    "summarizeBtn": "AI 摘要",
+    "summarizeTitle": "本周 AI 开源项目焦虑排行榜",
+    "saveImage": "保存图片",
+    "saving": "保存中...",
+    "consecutiveWeeks": "连续 {weeks} 周上榜",
+    "consecutiveWeeksShort": "{weeks}周连榜"
+  },
+  "Auth": {
+    "welcome": "欢迎来到 {title}",
+    "subtitle": "记录、分享与感悟",
+    "github": "使用 GitHub 账号登录",
+    "or": "或",
+    "emailPlaceholder": "电子邮箱",
+    "passwordPlaceholder": "密码",
+    "invalidCredentials": "邮箱或密码错误",
+    "verifying": "正在验证...",
+    "signInButton": "登录",
+    "cancel": "取消"
   }
 }

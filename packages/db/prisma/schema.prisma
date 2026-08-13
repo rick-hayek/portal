@@ -77,9 +77,10 @@ model Post {
 }
 
 model Category {
-  id   String @id @default(cuid())
-  name String @unique
-  slug String @unique
+  id      String  @id @default(cuid())
+  name    String  @unique
+  name_en String?
+  slug    String  @unique
 
   posts Post[]
 }
@@ -171,9 +172,12 @@ model Link {
   id          String  @id @default(cuid())
   name        String
   url         String
+  rss         String?
   avatar      String?
+  screenshot  String?
   description String?
   category    String  @default("default")
+  status      String  @default("approved")
   isAlive     Boolean @default(true)
   sortOrder   Int     @default(0)
 }
@@ -202,6 +206,24 @@ model SiteConfig {
   @@index([key])
 }
 
+// ============ About Info ============
+
+model AboutInfo {
+  id             String   @id @default("default")
+  title          String   @default("The Developer")
+  title_en       String?
+  subtitle       String   @default("ABOUT ME")
+  subtitle_en    String?
+  description    String   @db.Text
+  description_en String?  @db.Text
+  experiences    Json     @default("[]")
+  socialLinks    Json     @default("[]")
+  email          Json?
+  author         Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
 // ============ References ============
 
 model Reference {
@@ -219,7 +241,7 @@ model Attachment {
   id        String   @id @default(cuid())
   filename  String   @unique
   mimeType  String
-  fileData  Bytes
+  url       String   @default("") // S3/R2 Public URL
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -231,12 +253,12 @@ model Book {
   slug               String     @unique
   title              String
   coverImageURL      String?
-  coverImage         String?    @db.Text
   author             String
   publisher          String?
   translator         String?
   isbn               String?
   publishYear        String?
+  ebookUrl           String?
   description        String?  @db.Text
   review             String?  @db.Text
   createdAt          DateTime @default(now())
@@ -264,3 +286,44 @@ model BookLike {
   @@index([bookId])
   @@index([userId])
 }
+
+// ============ AI Trending ============
+
+model TrendingRepo {
+  id             String   @id @default(cuid())
+  githubId       Int                       // GitHub repo numeric ID
+  name           String                    // e.g. "codex"
+  fullName       String                    // e.g. "openai/codex"
+  url            String                    // GitHub URL
+  description    String?                   // GitHub original description
+  language       String?                   // Primary language
+  stars          Int                       // Star count at fetch time
+  forks          Int      @default(0)
+  starsGrowth    Int      @default(0)       // Stars gained this week (calculated delta)
+  repoCreatedAt  DateTime                  // When the repo was created on GitHub
+  topics         String[] @default([])     // GitHub topics array
+
+  // AI-generated bilingual summaries (filled manually via Admin)
+  summaryZh      String?  @db.Text         // 中文摘要
+  summaryEn      String?  @db.Text         // English summary
+
+  // Metadata
+  weekOf         DateTime                  // The Monday of the week this was fetched for
+  fetchedAt      DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([githubId, weekOf])
+  @@index([weekOf])
+  @@index([stars])
+  @@index([starsGrowth])
+}
+
+model TrendingWeek {
+  id        String   @id @default(cuid())
+  weekOf    DateTime @unique
+  createdAt DateTime @default(now())
+
+  @@index([weekOf])
+}
+

@@ -18,15 +18,26 @@ export interface SiteConfig {
     basePath: string;
   };
   about?: {
-    name?: string;
-    bio?: string;
-    avatar?: string;
-    skills?: string[];
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    experiences?: {
+      role: string;
+      company: string;
+      period: string;
+      public?: boolean;
+    }[];
     socialLinks?: {
       label: string;
       href: string;
       icon?: string;
+      displayMode?: 'icon' | 'text' | 'both';
     }[];
+    email?: {
+      address: string;
+      icon?: string;
+      displayMode?: 'icon' | 'text' | 'both';
+    };
   };
 }
 

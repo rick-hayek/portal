@@ -1,5 +1,7 @@
+import { aboutRouter } from './routers/about';
 import { adminRouter } from './routers/admin';
 import { analyticsRouter } from './routers/analytics';
+import { attachmentRouter } from './routers/attachment';
 import { bookRouter } from './routers/book';
 import { categoryRouter } from './routers/category';
 import { commentRouter } from './routers/comment';
@@ -11,10 +13,10 @@ import { postRouter } from './routers/post';
 import { profileRouter } from './routers/profile';
 import { referenceRouter } from './routers/reference';
 import { searchRouter } from './routers/search';
-import { attachmentRouter } from './routers/attachment';
+import { trendingRouter } from './routers/trending';
 import { router } from './trpc';
 
-export { createContext } from './trpc';
+export { createCallerFactory, createContext } from './trpc';
 
 export const appRouter = router({
   post: postRouter,
@@ -31,6 +33,8 @@ export const appRouter = router({
   book: bookRouter,
   profile: profileRouter,
   attachment: attachmentRouter,
+  trending: trendingRouter,
+  about: aboutRouter,
 });
 
 export type AppRouter = typeof appRouter;

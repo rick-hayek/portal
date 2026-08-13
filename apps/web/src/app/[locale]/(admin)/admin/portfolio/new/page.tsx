@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Dropdown } from '@/components/ui/Dropdown';
 import { useRouter } from '@/i18n/routing';
 
 export default function NewProjectPage() {
@@ -274,19 +275,21 @@ export default function NewProjectPage() {
               ))}
             </div>
           )}
-          <div className="flex gap-2">
-            <select
-              value={newPlatform}
-              onChange={(e) => setNewPlatform(e.target.value)}
-              className="rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-            >
-              <option value="appstore">App Store</option>
-              <option value="playstore">Google Play</option>
-              <option value="windows">Windows</option>
-              <option value="macos">macOS</option>
-              <option value="linux">Linux</option>
-              <option value="apk">APK</option>
-            </select>
+          <div className="flex gap-2 items-center">
+            <div className="w-44 shrink-0">
+              <Dropdown
+                value={newPlatform}
+                onChange={(val) => setNewPlatform(val)}
+                options={[
+                  { value: 'appstore', label: 'App Store' },
+                  { value: 'playstore', label: 'Google Play' },
+                  { value: 'windows', label: 'Windows' },
+                  { value: 'macos', label: 'macOS' },
+                  { value: 'linux', label: 'Linux' },
+                  { value: 'apk', label: 'APK' },
+                ]}
+              />
+            </div>
             <input
               type="text"
               value={newUrl}

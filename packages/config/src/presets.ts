@@ -23,16 +23,17 @@ const presetModules: Record<PresetName, string[]> = {
     'books',
     'analytics',
     'search',
+    'trending',
   ],
   devtools: ['tools', 'blog', 'search', 'analytics'],
 };
 
 /** Preset → recommended default theme */
 const presetThemes: Record<PresetName, string> = {
-  minimal: 'minimal-light',
-  'tech-blog': 'minimal-light',
+  minimal: 'zenith',
+  'tech-blog': 'zenith',
   creative: 'dark-neon',
-  full: 'minimal-light',
+  full: 'zenith',
   devtools: 'dark-neon',
 };
 

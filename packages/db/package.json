@@ -14,20 +14,12 @@
   },
   "dependencies": {
     "@portal/shared": "workspace:*",
-    "@prisma/adapter-pg": "^6.6.0",
     "@prisma/client": "^6.6.0",
-    "bcryptjs": "^3.0.3",
-    "pg": "^8.13.1",
-    "pg-cloudflare": "^1.4.0"
+    "bcryptjs": "^3.0.3"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.2.0",
     "@types/node": "^20",
-    "@types/pg": "^8.11.10",
     "prisma": "^6.6.0",
     "tsx": "^4.21.0"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   }
 }

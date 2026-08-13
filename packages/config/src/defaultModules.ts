@@ -10,12 +10,20 @@ export function registerDefaultModules() {
     navItems: [{ label: 'Blog', href: '/blog', icon: '📝', order: 1 }],
   });
   registerModule({
+    id: 'trending',
+    name: 'AI Trending',
+    icon: '🔥',
+    version: '1.0.0',
+    routes: [{ path: '/trending', label: 'AI Trending' }],
+    navItems: [{ label: 'Trending', href: '/trending', icon: '🔥', order: 2 }],
+  });
+  registerModule({
     id: 'portfolio',
     name: 'Portfolio',
     icon: '🚀',
     version: '1.0.0',
     routes: [{ path: '/portfolio', label: 'Portfolio' }],
-    navItems: [{ label: 'Portfolio', href: '/portfolio', icon: '🚀', order: 2 }],
+    navItems: [{ label: 'Portfolio', href: '/portfolio', icon: '🚀', order: 3 }],
   });
   registerModule({
     id: 'books',
@@ -23,7 +31,7 @@ export function registerDefaultModules() {
     icon: '📚',
     version: '1.0.0',
     routes: [{ path: '/books', label: 'Books' }],
-    navItems: [{ label: 'Books', href: '/books', icon: '📚', order: 3 }],
+    navItems: [{ label: 'Books', href: '/books', icon: '📚', order: 4 }],
   });
   registerModule({
     id: 'resume',
@@ -31,7 +39,7 @@ export function registerDefaultModules() {
     icon: '📄',
     version: '1.0.0',
     routes: [{ path: '/resume', label: 'Resume' }],
-    navItems: [{ label: 'Resume', href: '/resume', icon: '📄', order: 4 }],
+    navItems: [{ label: 'Resume', href: '/resume', icon: '📄', order: 5 }],
   });
   registerModule({
     id: 'gallery',
@@ -39,7 +47,7 @@ export function registerDefaultModules() {
     icon: '🖼️',
     version: '1.0.0',
     routes: [{ path: '/gallery', label: 'Gallery' }],
-    navItems: [{ label: 'Gallery', href: '/gallery', icon: '🖼️', order: 5 }],
+    navItems: [{ label: 'Gallery', href: '/gallery', icon: '🖼️', order: 6 }],
   });
   registerModule({
     id: 'guestbook',
@@ -47,7 +55,7 @@ export function registerDefaultModules() {
     icon: '💬',
     version: '1.0.0',
     routes: [{ path: '/guestbook', label: 'Guestbook' }],
-    navItems: [{ label: 'Guestbook', href: '/guestbook', icon: '💬', order: 6 }],
+    navItems: [{ label: 'Guestbook', href: '/guestbook', icon: '💬', order: 7 }],
   });
   registerModule({
     id: 'links',
@@ -55,15 +63,7 @@ export function registerDefaultModules() {
     icon: '🔗',
     version: '1.0.0',
     routes: [{ path: '/links', label: 'Links' }],
-    navItems: [{ label: 'Links', href: '/links', icon: '🔗', order: 7 }],
-  });
-  registerModule({
-    id: 'about',
-    name: 'About',
-    icon: '👤',
-    version: '1.0.0',
-    routes: [{ path: '/about', label: 'About' }],
-    navItems: [{ label: 'About', href: '/about', icon: '👤', order: 8 }],
+    navItems: [{ label: 'Links', href: '/links', icon: '🔗', order: 8 }],
   });
   registerModule({
     id: 'tools',
@@ -72,5 +72,13 @@ export function registerDefaultModules() {
     version: '1.0.0',
     routes: [{ path: '/tools', label: 'Tools' }],
     navItems: [{ label: 'Tools', href: '/tools', icon: '🛠️', order: 9 }],
+  });
+  registerModule({
+    id: 'about',
+    name: 'About',
+    icon: '👤',
+    version: '1.0.0',
+    routes: [{ path: '/about', label: 'About' }],
+    navItems: [{ label: 'About', href: '/about', icon: '👤', order: 10 }],
   });
 }

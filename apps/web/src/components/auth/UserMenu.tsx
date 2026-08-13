@@ -1,14 +1,22 @@
 'use client';
 
 import Image from 'next/image';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { Link } from '@/i18n/routing';
+import { Link, usePathname, useRouter } from '@/i18n/routing';
 
-export function UserMenu() {
+interface UserMenuProps {
+  showDetails?: boolean;
+  align?: 'left' | 'right';
+  onItemClick?: () => void;
+}
+
+export function UserMenu({ showDetails = false, align = 'right', onItemClick }: UserMenuProps) {
   const { data: session, status } = useSession();
   const t = useTranslations('Navigation');
+  const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -18,15 +26,37 @@ export function UserMenu() {
     return () => window.removeEventListener('click', closeMenu);
   }, [isOpen]);
 
+  const handleSignIn = () => {
+    onItemClick?.();
+    router.push(`/auth/signin?callbackUrl=${encodeURIComponent(pathname)}`);
+  };
+
   if (status === 'loading') {
     return <div className="h-8 w-8 animate-pulse rounded-full bg-[var(--portal-color-border)]" />;
   }
 
   if (!session) {
+    if (showDetails) {
+      return (
+        <button
+          type="button"
+          onClick={handleSignIn}
+          className="flex items-center gap-3 w-full py-1 focus:outline-none cursor-pointer group"
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--portal-color-surface-alt)] text-[var(--portal-color-text-secondary)] border border-compat shrink-0">
+            👤
+          </div>
+          <span className="text-xs font-semibold text-[var(--portal-color-text)] group-hover:text-[var(--portal-color-primary)] transition-colors">
+            {t('signIn')}
+          </span>
+        </button>
+      );
+    }
     return (
       <button
-        onClick={() => signIn()}
-        className="rounded-full bg-[var(--portal-color-text)] text-[0.78rem] font-semibold text-white transition-all hover:bg-[var(--portal-color-primary)]"
+        type="button"
+        onClick={handleSignIn}
+        className="rounded-full bg-[var(--portal-color-text)] text-[0.78rem] font-semibold text-[var(--portal-color-background)] transition-all hover:bg-[var(--portal-color-primary)] hover:text-white cursor-pointer"
         style={{ padding: '.35rem 1rem' }}
       >
         {t('signIn')}
@@ -37,31 +67,50 @@ export function UserMenu() {
   const userInitial = (session.user.name ?? session.user.email ?? 'U')[0].toUpperCase();
 
   return (
-    <div className="relative">
+    <div className={`relative ${showDetails ? 'w-full' : ''}`}>
       {/* Dropdown Trigger */}
       <button
+        type="button"
         onClick={(e) => {
           e.stopPropagation();
           setIsOpen(!isOpen);
         }}
-        className="flex items-center gap-1.5 focus:outline-none focus:ring-0 cursor-pointer"
+        className={`flex items-center focus:outline-none focus:ring-0 cursor-pointer ${
+          showDetails ? 'w-full justify-between gap-3 py-1' : 'gap-1.5'
+        }`}
         aria-label="User menu"
       >
-        {session.user.image ? (
-          <Image
-            src={session.user.image}
-            alt={session.user.name ?? 'User'}
-            width={32}
-            height={32}
-            className="h-8 w-8 rounded-full border border-compat object-cover hover:border-[var(--portal-color-primary)] transition-colors"
-          />
-        ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--portal-color-primary)] text-sm font-bold text-white hover:opacity-90 transition-opacity">
-            {userInitial}
-          </div>
-        )}
+        <div className="flex items-center gap-3 min-w-0">
+          {session.user.image ? (
+            <Image
+              src={session.user.image}
+              alt={session.user.name ?? 'User'}
+              width={32}
+              height={32}
+              className="h-8 w-8 shrink-0 rounded-full border border-compat object-cover hover:border-[var(--portal-color-primary)] transition-colors"
+            />
+          ) : (
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--portal-color-primary)] text-sm font-bold text-white hover:opacity-90 transition-opacity">
+              {userInitial}
+            </div>
+          )}
+
+          {showDetails && (
+            <div className="flex flex-col text-left min-w-0">
+              <span className="text-xs font-bold text-[var(--portal-color-text)] truncate">
+                {session.user.name ?? 'User'}
+              </span>
+              {session.user.email && (
+                <span className="text-[10px] text-[var(--portal-color-text-secondary)] truncate">
+                  {session.user.email}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+
         <svg
-          className={`h-3 w-3 text-[var(--portal-color-text-secondary)] transition-transform duration-200 ${
+          className={`h-3 w-3 text-[var(--portal-color-text-secondary)] shrink-0 transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
           }`}
           fill="none"
@@ -77,23 +126,31 @@ export function UserMenu() {
       {isOpen && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="absolute right-0 top-10 z-50 w-44 origin-top-right rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150"
+          className={`absolute bottom-full mb-2 md:bottom-auto md:top-10 md:mb-0 z-50 w-44 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-bottom-2 md:slide-in-from-top-2 duration-150 ${
+            align === 'left'
+              ? 'left-0 origin-bottom-left md:left-auto md:right-0 md:origin-top-right'
+              : 'right-0 origin-bottom-right md:origin-top-right'
+          }`}
         >
-          {/* User brief info */}
-          <div className="px-3.5 py-2 border-b border-[var(--portal-color-border)]/60 text-left">
-            <p className="text-xs font-semibold text-[var(--portal-color-text)] truncate">
-              {session.user.name ?? 'User'}
-            </p>
-            <p className="text-[10px] text-[var(--portal-color-text-secondary)] truncate">
-              {session.user.email}
-            </p>
-          </div>
+          {!showDetails && (
+            <div className="px-3.5 py-2 border-b border-[var(--portal-color-border)]/60 text-left">
+              <p className="text-xs font-semibold text-[var(--portal-color-text)] truncate">
+                {session.user.name ?? 'User'}
+              </p>
+              <p className="text-[10px] text-[var(--portal-color-text-secondary)] truncate">
+                {session.user.email}
+              </p>
+            </div>
+          )}
 
           <div className="py-1">
             {/* Profile & Password link */}
             <Link
               href="/profile"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                onItemClick?.();
+              }}
               className="flex w-full items-center px-3.5 py-1.5 text-xs text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)] no-underline"
             >
               <span className="mr-2">👤</span>
@@ -104,7 +161,10 @@ export function UserMenu() {
             {session.user.role === 'admin' && (
               <Link
                 href="/admin"
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  onItemClick?.();
+                }}
                 className="flex w-full items-center px-3.5 py-1.5 text-xs text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)] no-underline"
               >
                 <span className="mr-2">⚙️</span>
@@ -116,8 +176,10 @@ export function UserMenu() {
           <div className="border-t border-[var(--portal-color-border)]/60 py-1">
             {/* Logout button */}
             <button
+              type="button"
               onClick={() => {
                 setIsOpen(false);
+                onItemClick?.();
                 signOut();
               }}
               className="flex w-full items-center px-3.5 py-1.5 text-xs text-red-500 hover:bg-red-500/5 hover:text-red-600 font-medium text-left cursor-pointer"

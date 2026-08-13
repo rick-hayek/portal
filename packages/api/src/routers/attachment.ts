@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { adminProcedure, publicProcedure, router } from '../trpc';
+import { deleteFromR2, uploadToR2 } from '../utils/r2';
 
 export const attachmentRouter = router({
   /** List all attachments (metadata only) */
@@ -9,6 +10,7 @@ export const attachmentRouter = router({
         id: true,
         filename: true,
         mimeType: true,
+        url: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -45,20 +47,36 @@ export const attachmentRouter = router({
         finalFilename = `${base}-${Date.now()}${ext}`;
       }
 
-      // Convert base64 string to Buffer for Prisma Bytes type
+      // Convert base64 string to Buffer
       const buffer = Buffer.from(input.fileData, 'base64');
+
+      // Upload to Cloudflare R2
+      const url = await uploadToR2(finalFilename, buffer, input.mimeType);
 
       return ctx.prisma.attachment.create({
         data: {
           filename: finalFilename,
           mimeType: input.mimeType,
-          fileData: buffer,
+          url,
         },
       });
     }),
 
   /** Delete an attachment */
   delete: adminProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const attachment = await ctx.prisma.attachment.findUnique({
+      where: { id: input.id },
+      select: { filename: true },
+    });
+
+    if (attachment) {
+      try {
+        await deleteFromR2(attachment.filename);
+      } catch (err) {
+        console.error('Failed to delete file from R2', err);
+      }
+    }
+
     return ctx.prisma.attachment.delete({
       where: { id: input.id },
     });

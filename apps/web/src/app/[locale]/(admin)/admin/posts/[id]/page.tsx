@@ -1,8 +1,11 @@
 'use client';
 
+import { Check, Copy } from 'lucide-react';
 import { marked } from 'marked';
 import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useState } from 'react';
+import { MermaidRenderer } from '@/components/blog/MermaidRenderer';
+import { Dropdown, DropdownOption } from '@/components/ui/Dropdown';
 import { Link } from '@/i18n/routing';
 
 const parseGfmAlertsInHtml = (html: string) => {
@@ -69,6 +72,7 @@ const parseGfmAlertsInHtml = (html: string) => {
 interface Category {
   id: string;
   name: string;
+  name_en?: string | null;
 }
 
 export default function EditPostPage() {
@@ -93,6 +97,18 @@ export default function EditPostPage() {
   const [creatingCat, setCreatingCat] = useState(false);
 
   const [tab, setTab] = useState<'edit' | 'preview'>('edit');
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyMarkdown = async () => {
+    if (!content) return;
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy markdown', err);
+    }
+  };
 
   const handleCreateCategory = async () => {
     if (!newCatName.trim()) return;
@@ -299,32 +315,31 @@ export default function EditPostPage() {
                 </button>
               </div>
             ) : (
-              <select
+              <Dropdown
                 value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:outline-none"
-              >
-                <option value="">No category</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setCategoryId(val)}
+                options={[
+                  { value: '', label: 'No category' },
+                  ...categories.map((c) => ({
+                    value: c.id,
+                    label: c.name_en ? `${c.name} (${c.name_en})` : c.name,
+                  })),
+                ]}
+              />
             )}
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-[var(--portal-color-text)]">
               Status
             </label>
-            <select
+            <Dropdown
               value={status}
-              onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
-              className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)]"
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
+              onChange={(val) => setStatus(val as any)}
+              options={[
+                { value: 'draft', label: 'Draft' },
+                { value: 'published', label: 'Published' },
+              ]}
+            />
           </div>
         </div>
 
@@ -348,29 +363,50 @@ export default function EditPostPage() {
             <label className="text-sm font-medium text-[var(--portal-color-text)]">
               Content (Markdown)
             </label>
-            <div className="flex rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] p-0.5 text-xs font-medium">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setTab('edit')}
-                className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
-                  tab === 'edit'
-                    ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
-                    : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
-                }`}
+                onClick={handleCopyMarkdown}
+                title="Copy Markdown"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)] hover:bg-[var(--portal-color-background)] transition-colors shadow-sm cursor-pointer"
               >
-                Edit
+                {copied ? (
+                  <>
+                    <Check className="h-3.5 w-3.5 text-emerald-500" />
+                    <span className="text-emerald-500 font-semibold">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3.5 w-3.5" />
+                    <span>Copy</span>
+                  </>
+                )}
               </button>
-              <button
-                type="button"
-                onClick={() => setTab('preview')}
-                className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
-                  tab === 'preview'
-                    ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
-                    : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
-                }`}
-              >
-                Preview
-              </button>
+
+              <div className="flex rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] p-0.5 text-xs font-medium">
+                <button
+                  type="button"
+                  onClick={() => setTab('edit')}
+                  className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
+                    tab === 'edit'
+                      ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
+                      : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
+                  }`}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTab('preview')}
+                  className={`rounded-md px-3 py-1.5 focus:outline-none transition-colors ${
+                    tab === 'preview'
+                      ? 'bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] shadow-sm'
+                      : 'text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]'
+                  }`}
+                >
+                  Preview
+                </button>
+              </div>
             </div>
           </div>
 
@@ -412,6 +448,7 @@ export default function EditPostPage() {
           </Link>
         </div>
       </form>
+      <MermaidRenderer content={content} />
     </div>
   );
 }
