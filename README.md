@@ -1,4 +1,4 @@
-# Voocii Portal ![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)
+# Voocii Portal ![Version](https://img.shields.io/badge/version-v1.0.1-blue.svg)
 
 基于 Next.js 16、tRPC、Prisma 与 Tailwind CSS v4 构建的现代全栈个人门户网站与作品集平台。
 
@@ -18,6 +18,7 @@ Metro:
 ## 特性
 
 - **Next.js 16 App Router**：充分利用最新的 React 特性与服务端组件 (RSC)。
+- **动态多布局引擎 (Dynamic Multi-Layout Engine)**：支持经典自适应流式与极客网格等多种首页布局。
 - **tRPC**：端到端类型安全的 API 接口。
 - **Prisma ORM**：结合 PostgreSQL 的类型安全数据库访问。
 - **Tailwind CSS v4**：基于现代设计系统的原子化样式。

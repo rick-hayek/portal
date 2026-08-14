@@ -119,7 +119,7 @@ export function SearchDialog({
         aria-label="Search"
       >
         <svg
-          className="h-3.5 w-3.5"
+          className="h-4.5 w-4.5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -131,7 +131,7 @@ export function SearchDialog({
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
           />
         </svg>
-        <span className={showLabel ? 'inline' : 'hidden sm:inline'}>Search</span>
+        {showLabel && <span>Search</span>}
         {!className && (
           <kbd className="hidden rounded border border-compat bg-[var(--portal-color-surface-alt)] px-1.5 py-0.5 text-[rgba(75,85,99,0.7)] sm:inline text-[0.65rem]">
             ⌘K
@@ -183,6 +183,7 @@ export function SearchDialog({
             onKeyDown={handleKeyDown}
             placeholder="Search..."
             className="flex-1 bg-transparent text-[1.05rem] text-[var(--portal-color-text)] placeholder-[var(--portal-color-text-tertiary)] outline-none"
+            style={{ outline: 'none', outlineOffset: 0, border: 'none', boxShadow: 'none' }}
           />
 
           {loading && (
@@ -212,19 +213,17 @@ export function SearchDialog({
                     <li key={hit.id} className="px-2">
                       <a
                         href={href}
-                        className={`group flex items-center gap-3 rounded-xl px-3 py-3 transition-colors ${
-                          i === selectedIndex
+                        className={`group flex items-center gap-3 rounded-xl px-3 py-3 transition-colors ${i === selectedIndex
                             ? 'bg-[var(--portal-color-surface-alt)]'
                             : 'hover:bg-[var(--portal-color-surface-alt)]'
-                        }`}
+                          }`}
                         onClick={() => setOpen(false)}
                       >
                         <div
-                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${
-                            i === selectedIndex
+                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${i === selectedIndex
                               ? 'border-[rgba(107,142,201,0.2)] bg-[var(--portal-color-surface)] text-[var(--portal-color-primary)]'
                               : 'border-compat bg-[var(--portal-color-surface)] text-[var(--portal-color-text-tertiary)]'
-                          }`}
+                            }`}
                         >
                           {hit.type === 'book' ? (
                             <svg

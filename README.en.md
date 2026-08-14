@@ -1,4 +1,4 @@
-# Voocii Portal ![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)
+# Voocii Portal ![Version](https://img.shields.io/badge/version-v1.0.1-blue.svg)
 
 A modern, full-stack personal portal and portfolio built with Next.js 16, tRPC, Prisma, and Tailwind CSS v4.
 
@@ -18,6 +18,7 @@ Metro:
 ## Features
 
 - **Next.js 16 App Router**: Leverage the latest React features and server components.
+- **Dynamic Multi-Layout Engine**: Dynamic layouts with pluggable factory architecture.
 - **tRPC**: End-to-end typesafe APIs.
 - **Prisma ORM**: Type-safe database access with PostgreSQL.
 - **Tailwind CSS v4**: Utility-first styling with a modern design system.

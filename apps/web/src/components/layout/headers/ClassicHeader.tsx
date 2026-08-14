@@ -142,9 +142,8 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
     <>
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 flex justify-center transition-transform duration-300 ease-in-out md:translate-y-0 ${headerBgClass} ${
-          isHidden ? '-translate-y-full' : 'translate-y-0'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 flex justify-center transition-transform duration-300 ease-in-out md:translate-y-0 ${headerBgClass} ${isHidden ? '-translate-y-full' : 'translate-y-0'
+          }`}
       >
         <div className="flex h-full items-center justify-between px-4 md:px-8 w-full">
           {/* Logo / Mobile Back Button */}
@@ -202,9 +201,8 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href as any}
-                  className={`transition-colors whitespace-nowrap ${navLinkTextClass} ${
-                    isActive ? navLinkActiveClass : navLinkInactiveClass
-                  }`}
+                  className={`transition-colors whitespace-nowrap ${navLinkTextClass} ${isActive ? navLinkActiveClass : navLinkInactiveClass
+                    }`}
                 >
                   {translatedLabel}
                 </Link>
@@ -212,7 +210,7 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
             })}
           </nav>
 
-          {/* Right Side (≡ Hamburger Button) */}
+          {/* Right Side (Search Icon + ≡ Hamburger Button) */}
           <div className="flex items-center gap-2 md:gap-3 shrink-0">
             {isAdmin && (
               <Link
@@ -223,6 +221,11 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
                 <span>{t('admin')}</span>
               </Link>
             )}
+
+            <SearchDialog
+              className="flex h-9 w-9 items-center justify-center text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)] transition-colors cursor-pointer"
+              showLabel={false}
+            />
 
             <button
               className={`flex h-9 w-9 items-center justify-center transition-colors cursor-pointer ${hamburgerButtonClass}`}
@@ -245,7 +248,7 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
 
         {/* Drawer Menu */}
         {mobileOpen && (
-          <div className={`absolute top-14 left-0 right-0 z-40 px-6 py-4 shadow-lg ${drawerBgClass}`}>
+          <div className={`absolute top-14 left-0 right-0 z-40 px-6 py-3 shadow-lg ${drawerBgClass}`}>
             <nav className="flex flex-col gap-1 md:hidden">
               {displayNavItems
                 .filter((item) => !(isAdmin && item.href === '/admin'))
@@ -261,9 +264,8 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
                     <Link
                       key={item.href}
                       href={item.href as any}
-                      className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${drawerNavLinkClass} ${
-                        isActive ? drawerNavLinkActiveClass : drawerNavLinkInactiveClass
-                      }`}
+                      className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${drawerNavLinkClass} ${isActive ? drawerNavLinkActiveClass : drawerNavLinkInactiveClass
+                        }`}
                       onClick={() => setMobileOpen(false)}
                     >
                       {getNavIcon(item.href)}
@@ -273,19 +275,18 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
                 })}
             </nav>
 
-            <div className="mt-3 border-t md:hidden border-[var(--portal-color-border)]" />
+            <div className="my-2.5 border-t md:hidden border-[var(--portal-color-border)]" />
 
-            <div className="pt-2.5 pb-1 flex flex-row items-center justify-start md:justify-center gap-2.5 sm:gap-3 px-2 md:px-3 w-full">
-              <SearchDialog className={searchDialogClass} showLabel={true} />
+            <div className="py-0 flex flex-row items-center justify-start md:justify-center gap-2.5 sm:gap-3 px-2 md:px-3 w-full">
               <LanguageSwitcher onItemClick={() => setMobileOpen(false)} />
-              <ThemeSwitcher responsive={true} onItemClick={() => setMobileOpen(false)} />
+              <ThemeSwitcher onItemClick={() => setMobileOpen(false)} />
               <div className="hidden md:block">
                 <UserMenu showDetails={true} align="right" onItemClick={() => setMobileOpen(false)} />
               </div>
             </div>
 
             {/* Mobile UserMenu on separate last row */}
-            <div className="md:hidden pt-2 pb-1 border-t mt-2 px-2 border-[var(--portal-color-border)]/60">
+            <div className="md:hidden border-t mt-2.5 pt-3 pb-0 px-2 border-[var(--portal-color-border)]/60">
               <UserMenu showDetails={true} align="left" onItemClick={() => setMobileOpen(false)} />
             </div>
           </div>
