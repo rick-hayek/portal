@@ -76,8 +76,8 @@ export default async function Image() {
                 paddingLeft: '110px',
               }}
             >
-              <div>Built with Next.js 16, tRPC, Prisma & Tailwind CSS v4.</div>
-              <div>Dynamic layout engine with zero-bundle cost.</div>
+              <div>All-in-one personal hub featuring blog & showcase.</div>
+              <div>Pluggable layout architecture with zero-bundle cost.</div>
             </div>
           </div>
 
@@ -252,7 +252,7 @@ export default async function Image() {
                 letterSpacing: '-0.01em',
               }}
             >
-              Read More
+              Explore
             </div>
           </div>
         </div>
