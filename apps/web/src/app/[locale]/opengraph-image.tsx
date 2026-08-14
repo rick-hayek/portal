@@ -59,7 +59,7 @@ export default async function Image() {
                 lineHeight: 1.15,
                 color: '#ffffff',
                 letterSpacing: '-0.02em',
-                paddingLeft: '105px',
+                paddingLeft: '160px',
               }}
             >
               Modular personal website & portfolio platform
@@ -72,7 +72,8 @@ export default async function Image() {
                 fontSize: '20px',
                 color: '#94a3b8',
                 lineHeight: 1.4,
-                paddingLeft: '85px',
+                paddingTop: '20px',
+                paddingLeft: '110px',
               }}
             >
               <div>Built with Next.js 16, tRPC, Prisma & Tailwind CSS v4.</div>
@@ -86,7 +87,7 @@ export default async function Image() {
               display: 'flex',
               flexDirection: 'column',
               gap: '10px',
-              paddingLeft: '40px',
+              paddingLeft: '70px',
             }}
           >
             {/* Row 1: 4 badges */}
@@ -135,10 +136,10 @@ export default async function Image() {
         <div
           style={{
             position: 'absolute',
-            top: '-60px',
-            bottom: '-60px',
-            left: '-60px',
-            width: '540px',
+            top: '-10px',
+            bottom: '-10px',
+            left: '50px',
+            width: '480px',
             background: 'linear-gradient(150deg, #1b1c20 0%, #0d0e11 100%)',
             transform: 'skewX(-14deg)',
             transformOrigin: 'bottom left',
@@ -168,7 +169,7 @@ export default async function Image() {
 
           {/* Tapered Amber Polygon shifted right next to text */}
           <polygon
-            points="640,-10 649,-10 484,640 434,640"
+            points="680,-10 690,-10 525,640 465,640"
             fill="url(#amberStripeGrad)"
           />
         </svg>
