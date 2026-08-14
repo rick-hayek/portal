@@ -19,147 +19,241 @@ export default async function Image() {
           height: '100%',
           width: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          backgroundColor: '#0a0d14',
-          backgroundImage:
-            'radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.18) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%)',
-          padding: '70px 80px',
+          position: 'relative',
+          overflow: 'hidden',
+          backgroundColor: '#090c15',
           fontFamily: 'system-ui, -apple-system, sans-serif',
           color: '#ffffff',
-          boxSizing: 'border-box',
         }}
       >
-        {/* Top Header Row */}
+        {/* Right Side Background (Navy Mesh Glow) */}
         <div
           style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage:
+              'radial-gradient(circle at 82% 35%, rgba(99, 102, 241, 0.22) 0%, transparent 55%), radial-gradient(circle at 95% 85%, rgba(168, 85, 247, 0.15) 0%, transparent 45%)',
+          }}
+        />
+
+        {/* Right Side Content Container */}
+        <div
+          style={{
+            position: 'absolute',
+            left: '520px',
+            top: '70px',
+            bottom: '60px',
+            right: '70px',
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: 'column',
             justifyContent: 'space-between',
-            width: '100%',
+            zIndex: 1,
           }}
         >
-          {/* Logo Badge */}
+          {/* Main Headline */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div
+              style={{
+                fontSize: '52px',
+                fontWeight: '900',
+                lineHeight: 1.15,
+                color: '#ffffff',
+                letterSpacing: '-0.02em',
+                paddingLeft: '105px',
+              }}
+            >
+              Modular personal website & portfolio platform
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+                fontSize: '20px',
+                color: '#94a3b8',
+                lineHeight: 1.4,
+                paddingLeft: '85px',
+              }}
+            >
+              <div>Built with Next.js 16, tRPC, Prisma & Tailwind CSS v4.</div>
+              <div>Dynamic layout engine with zero-bundle cost.</div>
+            </div>
+          </div>
+
+          {/* Bottom Tech Badges - 2 Explicit Rows shifted right */}
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
+              flexDirection: 'column',
+              gap: '10px',
+              paddingLeft: '40px',
             }}
           >
+            {/* Row 1: 4 badges */}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {['Next.js 16', 'tRPC', 'Prisma', 'Tailwind CSS v4'].map((tech) => (
+                <div
+                  key={tech}
+                  style={{
+                    backgroundColor: 'rgba(30, 41, 59, 0.85)',
+                    border: '1px solid rgba(148, 163, 184, 0.25)',
+                    color: '#cbd5e1',
+                    padding: '8px 18px',
+                    borderRadius: '12px',
+                    fontSize: '15px',
+                    fontWeight: '600',
+                  }}
+                >
+                  {tech}
+                </div>
+              ))}
+            </div>
+
+            {/* Row 2: 2 badges */}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {['TypeScript', 'i18n'].map((tech) => (
+                <div
+                  key={tech}
+                  style={{
+                    backgroundColor: 'rgba(30, 41, 59, 0.85)',
+                    border: '1px solid rgba(148, 163, 184, 0.25)',
+                    color: '#cbd5e1',
+                    padding: '8px 18px',
+                    borderRadius: '12px',
+                    fontSize: '15px',
+                    fontWeight: '600',
+                  }}
+                >
+                  {tech}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Left Slanted Polygon Block (Dark Charcoal) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '-60px',
+            bottom: '-60px',
+            left: '-60px',
+            width: '540px',
+            background: 'linear-gradient(150deg, #1b1c20 0%, #0d0e11 100%)',
+            transform: 'skewX(-14deg)',
+            transformOrigin: 'bottom left',
+            zIndex: 2,
+          }}
+        />
+
+        {/* SVG Tapered Amber Stripe (Widens from 4px at top to 30px at bottom) */}
+        <svg
+          width="1200"
+          height="630"
+          viewBox="0 0 1200 630"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 2,
+            pointerEvents: 'none',
+          }}
+        >
+          <defs>
+            <linearGradient id="amberStripeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.85" />
+              <stop offset="100%" stopColor="#fbbf24" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+
+          {/* Tapered Amber Polygon shifted right next to text */}
+          <polygon
+            points="640,-10 649,-10 484,640 434,640"
+            fill="url(#amberStripeGrad)"
+          />
+        </svg>
+
+        {/* Left Content Overlay (Un-skewed text on left side) */}
+        <div
+          style={{
+            position: 'absolute',
+            left: '75px',
+            top: '0px',
+            bottom: '0px',
+            width: '380px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '32px',
+            zIndex: 3,
+          }}
+        >
+          {/* Logo & Sub-tag */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '14px',
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '22px',
+                  fontWeight: 'bold',
+                  color: '#0f172a',
+                  boxShadow: '0 6px 20px rgba(245, 158, 11, 0.4)',
+                }}
+              >
+                {'</>'}
+              </div>
+              <span
+                style={{
+                  fontSize: '15px',
+                  fontWeight: '800',
+                  letterSpacing: '0.22em',
+                  color: '#f59e0b',
+                  textTransform: 'uppercase',
+                }}
+              >
+                PORTAL PLATFORM
+              </span>
+            </div>
+
             <div
               style={{
-                width: '56px',
-                height: '56px',
-                borderRadius: '16px',
-                background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+                fontSize: '64px',
+                fontWeight: '900',
+                color: '#ffffff',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.05,
+              }}
+            >
+              {siteConfig.site.title}
+            </div>
+          </div>
+
+          {/* Glowing Amber CTA Button */}
+          <div style={{ display: 'flex' }}>
+            <div
+              style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 24px rgba(99, 102, 241, 0.35)',
+                background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                color: '#0f172a',
+                fontSize: '20px',
+                fontWeight: '800',
+                padding: '14px 32px',
+                borderRadius: '16px',
+                boxShadow: '0 8px 30px rgba(245, 158, 11, 0.5)',
+                letterSpacing: '-0.01em',
               }}
             >
-              <span style={{ fontSize: '26px', fontWeight: 'bold', color: '#ffffff' }}>
-                {'</>'}
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '32px', fontWeight: 'bold', color: '#ffffff', letterSpacing: '-0.02em' }}>
-                {siteConfig.site.title}
-              </span>
-              <span style={{ fontSize: '18px', color: '#818cf8', fontWeight: '500' }}>
-                voocii.com
-              </span>
+              Read More
             </div>
           </div>
-
-          {/* Status Badge */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor: 'rgba(255, 255, 255, 0.06)',
-              padding: '10px 20px',
-              borderRadius: '9999px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-            }}
-          >
-            <div
-              style={{
-                width: '10px',
-                height: '10px',
-                borderRadius: '50%',
-                backgroundColor: '#10b981',
-              }}
-            />
-            <span style={{ fontSize: '16px', color: '#cbd5e1', fontWeight: '500' }}>
-              Full-Stack Personal Portal
-            </span>
-          </div>
-        </div>
-
-        {/* Center Main Content */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-            maxWidth: '1000px',
-          }}
-        >
-          <h1
-            style={{
-              fontSize: '68px',
-              fontWeight: '900',
-              letterSpacing: '-0.03em',
-              lineHeight: 1.1,
-              margin: 0,
-              background: 'linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%)',
-              backgroundClip: 'text',
-              color: 'transparent',
-            }}
-          >
-            {siteConfig.site.title} — {siteConfig.site.description}
-          </h1>
-          <p
-            style={{
-              fontSize: '24px',
-              color: '#94a3b8',
-              margin: 0,
-              lineHeight: 1.4,
-            }}
-          >
-            Modular, high-performance personal website & portfolio platform with dynamic layout engine.
-          </p>
-        </div>
-
-        {/* Bottom Tech Stack Tags */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            width: '100%',
-          }}
-        >
-          {['Next.js 16', 'tRPC', 'Prisma', 'Tailwind CSS v4', 'TypeScript', 'i18n'].map((tech) => (
-            <div
-              key={tech}
-              style={{
-                backgroundColor: 'rgba(99, 102, 241, 0.12)',
-                border: '1px solid rgba(99, 102, 241, 0.25)',
-                color: '#a5b4fc',
-                padding: '8px 18px',
-                borderRadius: '10px',
-                fontSize: '16px',
-                fontWeight: '600',
-              }}
-            >
-              {tech}
-            </div>
-          ))}
         </div>
       </div>
     ),
