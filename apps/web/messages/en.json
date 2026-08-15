@@ -174,6 +174,116 @@
     "markdownEditor": {
       "name": "Markdown Editor",
       "desc": "Real-time Markdown editor with instant live HTML & diagram preview."
+    },
+    "qrcode": {
+      "name": "QR Code Generator",
+      "desc": "Generate custom QR codes from URLs, text, Wi-Fi, vCard, emails and more."
+    }
+  },
+  "ToolsQrcode": {
+    "title": "QR Code Generator",
+    "description": "Create customized QR codes from URLs, plain text, Wi-Fi credentials, contact cards, and more with high-res export.",
+    "tabs": {
+      "url": "URL",
+      "text": "Text",
+      "wifi": "Wi-Fi",
+      "vcard": "vCard",
+      "email": "Email",
+      "phone": "Phone",
+      "sms": "SMS"
+    },
+    "url": {
+      "label": "Target URL",
+      "placeholder": "https://example.com or enter domain directly..."
+    },
+    "text": {
+      "label": "Text Content",
+      "placeholder": "Enter plain text, notes, or code snippets..."
+    },
+    "wifi": {
+      "ssid": "Network Name (SSID)",
+      "ssidPlaceholder": "Enter Wi-Fi network name...",
+      "password": "Password",
+      "passwordPlaceholder": "Enter network password...",
+      "encryption": "Encryption Type",
+      "encWpa": "WPA / WPA2 / WPA3",
+      "encWep": "WEP",
+      "encNone": "No Password (Open)",
+      "hidden": "Hidden Network (Hidden SSID)"
+    },
+    "vcard": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "fullName": "Full Name",
+      "organization": "Company / Organization",
+      "title": "Job Title",
+      "phone": "Phone Number",
+      "email": "Email Address",
+      "url": "Website / Portfolio",
+      "address": "Address",
+      "note": "Notes"
+    },
+    "email": {
+      "email": "Recipient Email",
+      "emailPlaceholder": "name@example.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "Email subject...",
+      "body": "Body",
+      "bodyPlaceholder": "Email body content..."
+    },
+    "phone": {
+      "label": "Phone Number",
+      "placeholder": "+1 234 567 8900"
+    },
+    "sms": {
+      "phone": "Recipient Number",
+      "phonePlaceholder": "+1 234 567 8900",
+      "message": "Message",
+      "messagePlaceholder": "Pre-filled SMS text..."
+    },
+    "logoSection": {
+      "title": "Center Logo & Icons",
+      "subtitle": "Pick a minimalist outline icon or upload a custom logo (click selected icon again to deselect)",
+      "typeIcons": "Type Icons",
+      "socialIcons": "Popular Platforms",
+      "uploadCustom": "Upload Image",
+      "iconColor": "Icon Line Color",
+      "iconBgColor": "Badge Background",
+      "logoSize": "Logo Size",
+      "showBorder": "Icon Border",
+      "excavate": "Excavate Background",
+      "removeLogo": "Remove Logo",
+      "deselectHint": "Selected, click to deselect"
+    },
+    "customization": {
+      "title": "Customize & Style",
+      "fgColor": "Foreground",
+      "bgColor": "Background",
+      "transparentBg": "Transparent Background",
+      "level": "Error Correction",
+      "levelL": "L (7% Low)",
+      "levelM": "M (15% Medium)",
+      "levelQ": "Q (25% High)",
+      "levelH": "H (30% Best - Ideal for Logos)",
+      "margin": "Quiet Zone / Margin",
+      "logo": "Center Logo",
+      "uploadLogo": "Upload Logo",
+      "removeLogo": "Remove Logo",
+      "logoSize": "Logo Size",
+      "excavate": "Excavate Background"
+    },
+    "preview": {
+      "title": "Live Preview",
+      "empty": "Enter content to generate QR Code",
+      "downloadPng": "Download PNG",
+      "downloadSvg": "Download SVG",
+      "copyImage": "Copy Image",
+      "copyPayload": "Copy Payload",
+      "copiedImage": "Image Copied!",
+      "copiedPayload": "Payload Copied!",
+      "resolution": "Resolution",
+      "payloadPreview": "Encoded Content",
+      "charCount": "characters"
     }
   },
   "ToolsMarkdown": {

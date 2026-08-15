@@ -174,6 +174,116 @@
     "markdownEditor": {
       "name": "Markdown 编辑器",
       "desc": "实时 Markdown 文本编辑器，支持 HTML 与图表同步预览。"
+    },
+    "qrcode": {
+      "name": "二维码生成器",
+      "desc": "支持网址、文本、Wi-Fi、电子名片、邮件等多素材生成与定制导出。"
+    }
+  },
+  "ToolsQrcode": {
+    "title": "二维码生成器",
+    "description": "支持网址、文本、Wi-Fi、电子名片等多种格式生成二维码，提供配色定制、Logo 嵌入及高清矢量导出。",
+    "tabs": {
+      "url": "网址链接",
+      "text": "纯文本",
+      "wifi": "Wi-Fi 网络",
+      "vcard": "电子名片",
+      "email": "发送邮件",
+      "phone": "电话",
+      "sms": "短信"
+    },
+    "url": {
+      "label": "目标网址 (URL)",
+      "placeholder": "https://example.com 或直接输入域名..."
+    },
+    "text": {
+      "label": "文本内容",
+      "placeholder": "输入任意纯文本、代码、备注或笔记..."
+    },
+    "wifi": {
+      "ssid": "网络名称 (SSID)",
+      "ssidPlaceholder": "输入 Wi-Fi 名称...",
+      "password": "网络密码",
+      "passwordPlaceholder": "输入 Wi-Fi 密码...",
+      "encryption": "加密方式",
+      "encWpa": "WPA / WPA2 / WPA3",
+      "encWep": "WEP",
+      "encNone": "无密码 (开放网络)",
+      "hidden": "隐藏网络 (Hidden SSID)"
+    },
+    "vcard": {
+      "firstName": "名",
+      "lastName": "姓",
+      "fullName": "姓名",
+      "organization": "公司 / 组织",
+      "title": "职位 / 头衔",
+      "phone": "电话号码",
+      "email": "电子邮箱",
+      "url": "个人主页 / 网址",
+      "address": "办公或联系地址",
+      "note": "备注说明"
+    },
+    "email": {
+      "email": "收件人邮箱",
+      "emailPlaceholder": "name@example.com",
+      "subject": "邮件主题",
+      "subjectPlaceholder": "预填的邮件主题...",
+      "body": "邮件正文",
+      "bodyPlaceholder": "预填的邮件正文内容..."
+    },
+    "phone": {
+      "label": "电话号码",
+      "placeholder": "+86 13800000000"
+    },
+    "sms": {
+      "phone": "接收手机号",
+      "phonePlaceholder": "+86 13800000000",
+      "message": "短信内容",
+      "messagePlaceholder": "输入预填短信内容..."
+    },
+    "logoSection": {
+      "title": "中心 Logo / 图标",
+      "subtitle": "选择内置线条图标或上传自定义 Logo（再次点击已选中的图标可取消）",
+      "typeIcons": "类型专属",
+      "socialIcons": "常用平台",
+      "uploadCustom": "上传图片",
+      "iconColor": "图标线条颜色",
+      "iconBgColor": "底衬背景色",
+      "logoSize": "Logo 尺寸",
+      "showBorder": "图标外边框",
+      "excavate": "挖空背景 (防重叠遮挡)",
+      "removeLogo": "移除 Logo",
+      "deselectHint": "已选中，点击取消"
+    },
+    "customization": {
+      "title": "样式定制",
+      "fgColor": "前景色",
+      "bgColor": "背景色",
+      "transparentBg": "透明背景",
+      "level": "容错等级",
+      "levelL": "L (7% 低)",
+      "levelM": "M (15% 中)",
+      "levelQ": "Q (25% 较高)",
+      "levelH": "H (30% 极高 - 适合嵌入Logo)",
+      "margin": "边距留白",
+      "logo": "中心 Logo",
+      "uploadLogo": "上传图标/Logo",
+      "removeLogo": "移除 Logo",
+      "logoSize": "Logo 尺寸",
+      "excavate": "挖空背景 (防遮挡)"
+    },
+    "preview": {
+      "title": "实时预览",
+      "empty": "请输入内容以生成二维码",
+      "downloadPng": "下载 PNG",
+      "downloadSvg": "下载 SVG",
+      "copyImage": "复制图片",
+      "copyPayload": "复制原始内容",
+      "copiedImage": "图片已复制！",
+      "copiedPayload": "内容已复制！",
+      "resolution": "分辨率",
+      "payloadPreview": "编码内容",
+      "charCount": "字符数"
     }
   },
   "ToolsMarkdown": {
