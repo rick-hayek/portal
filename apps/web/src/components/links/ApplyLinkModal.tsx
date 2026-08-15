@@ -73,19 +73,19 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
 
     // Basic client validation
     if (!name.trim()) {
-      setErrorMessage(t('modal.errors.nameRequired'));
+      setErrorMessage(t('applyModal.errors.nameRequired'));
       return;
     }
     if (!url.trim()) {
-      setErrorMessage(t('modal.errors.urlRequired'));
+      setErrorMessage(t('applyModal.errors.urlRequired'));
       return;
     }
     if (!/^https?:\/\//i.test(url.trim())) {
-      setErrorMessage(t('modal.errors.invalidUrl'));
+      setErrorMessage(t('applyModal.errors.invalidUrl'));
       return;
     }
     if (!description.trim()) {
-      setErrorMessage(t('modal.errors.descRequired'));
+      setErrorMessage(t('applyModal.errors.descRequired'));
       return;
     }
 
@@ -93,7 +93,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
     const answer = Number.parseInt(captchaInput.trim(), 10);
     const expected = captcha.a + captcha.b;
     if (Number.isNaN(answer) || answer !== expected) {
-      setErrorMessage(t('modal.errors.invalidCaptcha'));
+      setErrorMessage(t('applyModal.errors.invalidCaptcha'));
       refreshCaptcha();
       return;
     }
@@ -116,23 +116,23 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
 
       if (!res.success) {
         if (res.error === 'INVALID_CAPTCHA') {
-          setErrorMessage(t('modal.errors.invalidCaptcha'));
+          setErrorMessage(t('applyModal.errors.invalidCaptcha'));
           refreshCaptcha();
         } else if (res.error === 'BOT_DETECTED') {
-          setErrorMessage(t('modal.errors.botDetected'));
+          setErrorMessage(t('applyModal.errors.botDetected'));
         } else if (res.error === 'SUBMISSION_TOO_FAST') {
-          setErrorMessage(t('modal.errors.submissionTooFast'));
+          setErrorMessage(t('applyModal.errors.submissionTooFast'));
         } else if (res.error === 'RATE_LIMIT_EXCEEDED') {
-          setErrorMessage(t('modal.errors.rateLimitExceeded'));
+          setErrorMessage(t('applyModal.errors.rateLimitExceeded'));
         } else {
-          setErrorMessage(t('modal.errors.default'));
+          setErrorMessage(t('applyModal.errors.default'));
         }
         return;
       }
 
       setSuccessInfo({ action: res.action });
     } catch {
-      setErrorMessage(t('modal.errors.default'));
+      setErrorMessage(t('applyModal.errors.default'));
     }
   };
 
@@ -172,10 +172,10 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-[var(--portal-color-text)]">
-                {t('modal.title')}
+                {t('applyModal.title')}
               </h2>
               <p className="text-xs text-[var(--portal-color-text-secondary)]">
-                {t('modal.subtitle')}
+                {t('applyModal.subtitle')}
               </p>
             </div>
           </div>
@@ -196,12 +196,12 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-bold text-[var(--portal-color-text)]">
-                {t('modal.successTitle')}
+                {t('applyModal.successTitle')}
               </h3>
               <p className="text-xs sm:text-sm text-[var(--portal-color-text-secondary)] max-w-md mx-auto leading-relaxed">
                 {successInfo.action === 'updated'
-                  ? t('modal.updateSuccessDesc')
-                  : t('modal.successDesc')}
+                  ? t('applyModal.updateSuccessDesc')
+                  : t('applyModal.successDesc')}
               </p>
             </div>
             <div className="pt-2">
@@ -210,7 +210,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                 onClick={handleReset}
                 className="inline-flex items-center justify-center rounded-xl bg-[var(--portal-color-primary)] text-white px-6 py-2.5 text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
               >
-                {t('modal.close')}
+                {t('applyModal.close')}
               </button>
             </div>
           </div>
@@ -243,8 +243,8 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Site Name (Required) */}
-              <label className="flex items-center gap-2.5">
-                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+              <label className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-14 sm:w-16">
                   {t('selfFields.name')} <span className="text-red-500">*</span>
                 </span>
                 <div className="relative flex-1 min-w-0">
@@ -254,7 +254,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                     maxLength={50}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder={t('modal.namePlaceholder')}
+                    placeholder={t('applyModal.namePlaceholder')}
                     className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 pr-11 text-xs text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
                   />
                   <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-[var(--portal-color-text-tertiary)] font-mono pointer-events-none">
@@ -264,8 +264,8 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
               </label>
 
               {/* Site URL (Required) */}
-              <label className="flex items-center gap-2.5">
-                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+              <label className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-14 sm:w-16">
                   {t('selfFields.url')} <span className="text-red-500">*</span>
                 </span>
                 <input
@@ -281,8 +281,8 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
             </div>
 
             {/* Description (Required) - Placed above Logo/Avatar */}
-            <label className="flex items-center gap-2.5">
-              <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+            <label className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-14 sm:w-16">
                 {t('selfFields.desc')} <span className="text-red-500">*</span>
               </span>
               <div className="relative flex-1 min-w-0">
@@ -292,7 +292,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                   maxLength={200}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder={t('modal.descPlaceholder')}
+                  placeholder={t('applyModal.descPlaceholder')}
                   className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 pr-14 text-xs text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
                 />
                 <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-[var(--portal-color-text-tertiary)] font-mono pointer-events-none">
@@ -304,8 +304,8 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
             {/* Avatar URL & Screenshot URL (2 columns, inline label) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Avatar URL (Optional) */}
-              <label className="flex items-center gap-2.5">
-                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+              <label className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-14 sm:w-16">
                   {t('selfFields.avatar')}
                 </span>
                 <input
@@ -319,8 +319,8 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
               </label>
 
               {/* Screenshot URL (Optional) */}
-              <label className="flex items-center gap-2.5">
-                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+              <label className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-14 sm:w-16">
                   {t('selfFields.screenshot')}
                 </span>
                 <input
@@ -337,8 +337,8 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
             {/* RSS & Email (2 columns, inline label) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* RSS Feed URL */}
-              <label className="flex items-center gap-2.5">
-                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+              <label className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-14 sm:w-16">
                   {t('selfFields.rss')}
                 </span>
                 <input
@@ -352,9 +352,9 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
               </label>
 
               {/* Submitter Email */}
-              <label className="flex items-center gap-2.5">
-                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
-                  {t('modal.email')}
+              <label className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-14 sm:w-16">
+                  {t('applyModal.email')}
                 </span>
                 <input
                   type="email"
@@ -373,7 +373,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                 {/* Left: Live Preview Card */}
                 <div className="space-y-1.5">
                   <span className="block text-[11px] font-semibold text-[var(--portal-color-text-tertiary)] uppercase tracking-wider">
-                    实时展示预览
+                    {t('applyModal.previewTitle')}
                   </span>
                   <div className="flex items-center gap-3.5 rounded-2xl border border-compat bg-[var(--portal-color-bg)] p-3.5 shadow-2xs h-[72px]">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--portal-color-primary-soft)] border border-compat text-[var(--portal-color-primary)] font-bold text-xs">
@@ -390,7 +390,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <h4 className="font-semibold text-xs sm:text-sm text-[var(--portal-color-text)] truncate">
-                          {name || '站点名称'}
+                          {name || t('applyModal.previewDefaultName')}
                         </h4>
                         {rss.trim() ? (
                           <div
@@ -406,7 +406,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                         )}
                       </div>
                       <p className="text-[11px] text-[var(--portal-color-text-secondary)] truncate mt-0.5">
-                        {description || '站点一句话描述...'}
+                        {description || t('applyModal.previewDefaultDesc')}
                       </p>
                     </div>
                   </div>
@@ -416,16 +416,16 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="block text-[11px] font-semibold text-[var(--portal-color-text-tertiary)] uppercase tracking-wider">
-                      {t('modal.captcha')} <span className="text-red-500">*</span>
+                      {t('applyModal.captcha')} <span className="text-red-500">*</span>
                     </span>
                     <button
                       type="button"
                       onClick={refreshCaptcha}
                       className="inline-flex items-center gap-1 text-[10px] text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors cursor-pointer"
-                      title="刷新算术题"
+                      title={t('applyModal.refreshCaptchaTitle')}
                     >
                       <RotateCw className="h-2.5 w-2.5" />
-                      <span>换一题</span>
+                      <span>{t('applyModal.refreshCaptcha')}</span>
                     </button>
                   </div>
                   <div className="flex items-center gap-3 rounded-2xl border border-compat bg-[var(--portal-color-bg)] px-4 py-3.5 shadow-2xs h-[72px] focus-within:border-[var(--portal-color-primary)] transition-colors">
@@ -437,7 +437,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                       required
                       value={captchaInput}
                       onChange={(e) => setCaptchaInput(e.target.value)}
-                      placeholder={t('modal.captchaPlaceholder')}
+                      placeholder={t('applyModal.captchaPlaceholder')}
                       className="w-full bg-transparent border-0 p-0 text-xs font-mono text-[var(--portal-color-text)] placeholder:text-[var(--portal-color-text-tertiary)] outline-none"
                     />
                   </div>
@@ -452,7 +452,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                 onClick={onClose}
                 className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] hover:text-[var(--portal-color-text)] transition-colors cursor-pointer"
               >
-                {t('modal.cancel')}
+                {t('applyModal.cancel')}
               </button>
               <button
                 type="submit"
@@ -462,11 +462,11 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                 className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--portal-color-primary)] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs cursor-pointer"
               >
                 {applyMutation.isPending ? (
-                  <span>{t('modal.submitting')}</span>
+                  <span>{t('applyModal.submitting')}</span>
                 ) : (
                   <>
                     <Send className="h-3.5 w-3.5" />
-                    <span>{t('modal.submit')}</span>
+                    <span>{t('applyModal.submit')}</span>
                   </>
                 )}
               </button>

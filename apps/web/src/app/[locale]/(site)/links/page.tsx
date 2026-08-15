@@ -78,7 +78,14 @@ export default function LinksPage() {
     setTimeout(() => setCopiedType(null), 2000);
   };
 
-  const markdownSnippet = `[${siteName}](${siteUrl}) - ${siteDesc}`;
+  const yamlSnippet = [
+    `  name: ${siteName}`,
+    `  url: ${siteUrl}`,
+    ...(siteAvatar ? [`  avatar: ${siteAvatar}`] : []),
+    ...(siteScreenshot ? [`  screenshot: ${siteScreenshot}`] : []),
+    `  desc: ${siteDesc}`,
+    ...(siteRss ? [`  rss: ${siteRss}`] : []),
+  ].join('\n');
   const jsonSnippet = JSON.stringify(
     {
       name: siteName,
@@ -443,8 +450,26 @@ export default function LinksPage() {
             </div>
           ))}
 
-          {/* Quick Markdown & JSON batch copy buttons */}
+          {/* Quick YAML & JSON batch copy buttons */}
           <div className="flex flex-wrap items-center gap-3 pt-3">
+            <button
+              type="button"
+              onClick={() => handleCopy(yamlSnippet, 'yaml')}
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface)] hover:bg-[var(--portal-color-primary)] hover:text-white px-4 py-2.5 text-xs font-semibold text-[var(--portal-color-text)] border border-[var(--portal-color-border)]/50 transition-all shadow-2xs cursor-pointer"
+            >
+              {copiedType === 'yaml' ? (
+                <>
+                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                  <span>{t('copied')}</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3.5 w-3.5" />
+                  <span>{t('copyYaml')}</span>
+                </>
+              )}
+            </button>
+
             <button
               type="button"
               onClick={() => handleCopy(jsonSnippet, 'json')}
@@ -459,24 +484,6 @@ export default function LinksPage() {
                 <>
                   <Copy className="h-3.5 w-3.5" />
                   <span>{t('copyJson')}</span>
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleCopy(markdownSnippet, 'markdown')}
-              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface)] hover:bg-[var(--portal-color-primary)] hover:text-white px-4 py-2.5 text-xs font-semibold text-[var(--portal-color-text)] border border-[var(--portal-color-border)]/50 transition-all shadow-2xs cursor-pointer"
-            >
-              {copiedType === 'markdown' ? (
-                <>
-                  <Check className="h-3.5 w-3.5 text-emerald-500" />
-                  <span>{t('copied')}</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>{t('copyMarkdown')}</span>
                 </>
               )}
             </button>
