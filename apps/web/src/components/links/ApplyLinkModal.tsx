@@ -243,30 +243,30 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Site Name (Required) */}
-              <label className="block space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="block text-xs font-semibold text-[var(--portal-color-text)]">
-                    {t('modal.name')} <span className="text-red-500">*</span>
-                  </span>
-                  <span className="text-[10px] text-[var(--portal-color-text-tertiary)] font-mono">
+              <label className="flex items-center gap-2.5">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+                  {t('selfFields.name')} <span className="text-red-500">*</span>
+                </span>
+                <div className="relative flex-1 min-w-0">
+                  <input
+                    type="text"
+                    required
+                    maxLength={50}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={t('modal.namePlaceholder')}
+                    className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 pr-11 text-xs text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
+                  />
+                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-[var(--portal-color-text-tertiary)] font-mono pointer-events-none">
                     {name.length}/50
                   </span>
                 </div>
-                <input
-                  type="text"
-                  required
-                  maxLength={50}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={t('modal.namePlaceholder')}
-                  className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3.5 py-2 text-xs text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
-                />
               </label>
 
               {/* Site URL (Required) */}
-              <label className="block space-y-1.5">
-                <span className="block text-xs font-semibold text-[var(--portal-color-text)]">
-                  {t('modal.url')} <span className="text-red-500">*</span>
+              <label className="flex items-center gap-2.5">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+                  {t('selfFields.url')} <span className="text-red-500">*</span>
                 </span>
                 <input
                   type="url"
@@ -274,39 +274,39 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                   maxLength={255}
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder={t('modal.urlPlaceholder')}
-                  className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3.5 py-2 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
+                  placeholder="https://yourdomain.com"
+                  className="flex-1 min-w-0 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
                 />
               </label>
             </div>
 
             {/* Description (Required) - Placed above Logo/Avatar */}
-            <label className="block space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="block text-xs font-semibold text-[var(--portal-color-text)]">
-                  {t('modal.desc')} <span className="text-red-500">*</span>
-                </span>
-                <span className="text-[10px] text-[var(--portal-color-text-tertiary)] font-mono">
+            <label className="flex items-center gap-2.5">
+              <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+                {t('selfFields.desc')} <span className="text-red-500">*</span>
+              </span>
+              <div className="relative flex-1 min-w-0">
+                <input
+                  type="text"
+                  required
+                  maxLength={200}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder={t('modal.descPlaceholder')}
+                  className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 pr-14 text-xs text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
+                />
+                <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-[var(--portal-color-text-tertiary)] font-mono pointer-events-none">
                   {description.length}/200
                 </span>
               </div>
-              <textarea
-                rows={2}
-                required
-                maxLength={200}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder={t('modal.descPlaceholder')}
-                className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] p-3 text-xs text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all resize-none"
-              />
             </label>
 
-            {/* Avatar URL & Screenshot URL (2 columns) */}
+            {/* Avatar URL & Screenshot URL (2 columns, inline label) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Avatar URL (Optional) */}
-              <label className="block space-y-1.5">
-                <span className="block text-xs font-semibold text-[var(--portal-color-text)]">
-                  {t('modal.avatar')}
+              <label className="flex items-center gap-2.5">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+                  {t('selfFields.avatar')}
                 </span>
                 <input
                   type="url"
@@ -314,14 +314,14 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                   value={avatar}
                   onChange={(e) => setAvatar(e.target.value)}
                   placeholder="https://yourdomain.com/avatar.png"
-                  className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3.5 py-2 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
+                  className="flex-1 min-w-0 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
                 />
               </label>
 
               {/* Screenshot URL (Optional) */}
-              <label className="block space-y-1.5">
-                <span className="block text-xs font-semibold text-[var(--portal-color-text)]">
-                  {t('modal.screenshot')}
+              <label className="flex items-center gap-2.5">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+                  {t('selfFields.screenshot')}
                 </span>
                 <input
                   type="url"
@@ -329,17 +329,17 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                   value={screenshot}
                   onChange={(e) => setScreenshot(e.target.value)}
                   placeholder="https://yourdomain.com/screenshot.png"
-                  className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3.5 py-2 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
+                  className="flex-1 min-w-0 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
                 />
               </label>
             </div>
 
-            {/* RSS & Email (2 columns) */}
+            {/* RSS & Email (2 columns, inline label) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* RSS Feed URL */}
-              <label className="block space-y-1.5">
-                <span className="block text-xs font-semibold text-[var(--portal-color-text)]">
-                  {t('modal.rss')}
+              <label className="flex items-center gap-2.5">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
+                  {t('selfFields.rss')}
                 </span>
                 <input
                   type="url"
@@ -347,13 +347,13 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                   value={rss}
                   onChange={(e) => setRss(e.target.value)}
                   placeholder="https://yourdomain.com/feed.xml"
-                  className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3.5 py-2 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
+                  className="flex-1 min-w-0 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
                 />
               </label>
 
               {/* Submitter Email */}
-              <label className="block space-y-1.5">
-                <span className="block text-xs font-semibold text-[var(--portal-color-text)]">
+              <label className="flex items-center gap-2.5">
+                <span className="text-xs font-semibold text-[var(--portal-color-text)] shrink-0 w-16 sm:w-20">
                   {t('modal.email')}
                 </span>
                 <input
@@ -362,7 +362,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your-email@example.com"
-                  className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3.5 py-2 text-xs text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
+                  className="flex-1 min-w-0 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 text-xs text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all"
                 />
               </label>
             </div>
@@ -456,8 +456,10 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
               </button>
               <button
                 type="submit"
-                disabled={applyMutation.isPending}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--portal-color-primary)] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-xs cursor-pointer"
+                disabled={
+                  applyMutation.isPending || !name.trim() || !url.trim() || !description.trim()
+                }
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--portal-color-primary)] text-white px-5 py-2 text-xs font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs cursor-pointer"
               >
                 {applyMutation.isPending ? (
                   <span>{t('modal.submitting')}</span>
