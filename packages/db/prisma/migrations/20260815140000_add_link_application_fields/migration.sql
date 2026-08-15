@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "Link" ADD COLUMN IF NOT EXISTS "submitterIp" TEXT,
+ADD COLUMN IF NOT EXISTS "email" TEXT,
+ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN IF NOT EXISTS "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- CreateIndex
+CREATE INDEX IF NOT EXISTS "Link_submitterIp_createdAt_idx" ON "Link"("submitterIp", "createdAt");
+
+-- CreateIndex
+CREATE INDEX IF NOT EXISTS "Link_status_idx" ON "Link"("status");

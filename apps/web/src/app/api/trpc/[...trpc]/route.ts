@@ -11,6 +11,7 @@ const handler = async (req: Request) => {
     router: appRouter,
     createContext: () =>
       createContext({
+        req,
         session,
         unstable_cache,
         revalidateTag,

@@ -150,7 +150,42 @@
     "step2Desc": "Send an email containing your site title, URL, avatar, description, and optional RSS/screenshot.",
     "sendEmailBtn": "Send Application Email",
     "copyTemplateBtn": "Copy Template",
-    "templateCopied": "Template Copied!"
+    "templateCopied": "Template Copied!",
+    "onlineApplyBtn": "Quick Apply Online",
+    "modal": {
+      "title": "Apply for Friendship Link",
+      "subtitle": "Fill in your site info to submit into the review queue",
+      "name": "Site Name",
+      "namePlaceholder": "e.g. Voocii",
+      "url": "Site URL",
+      "urlPlaceholder": "https://yourdomain.com",
+      "avatar": "Logo / Avatar URL",
+      "desc": "Site Description",
+      "descPlaceholder": "A brief introduction about your site...",
+      "rss": "RSS Feed URL",
+      "screenshot": "Screenshot URL",
+      "email": "Contact Email",
+      "captcha": "Security Check",
+      "captchaPlaceholder": "Result",
+      "cancel": "Cancel",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "successTitle": "Application Submitted!",
+      "successDesc": "Your application has been received and will appear once approved by the site owner.",
+      "updateSuccessDesc": "Updated your pending submission with the latest info!",
+      "close": "Close",
+      "errors": {
+        "nameRequired": "Site name is required",
+        "urlRequired": "Site URL is required",
+        "invalidUrl": "Site URL must start with http:// or https://",
+        "descRequired": "Site description is required",
+        "invalidCaptcha": "Incorrect math verification answer, please try again",
+        "botDetected": "Submission rejected: automated tool detected",
+        "submissionTooFast": "Submitted too fast, please try again",
+        "rateLimitExceeded": "Daily limit reached (max 5 submissions/day). Please try again tomorrow or send an email.",
+        "default": "Submission failed, please check your input or try again later"
+      }
+    }
   },
   "Tools": {
     "title": "Developer Tools",

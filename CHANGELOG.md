@@ -5,6 +5,17 @@ All notable changes to the Voocii Portal project will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.0.3] - 2026-08-15
+
+### Added
+- **Online Link Application**: Fast and intuitive friendship link application channel featuring real-time card preview, dynamic RSS badge rendering, and anti-bot protection (honeypot trap, timing token, rate limiting, and interactive math security challenge).
+
+## [1.0.2] - 2026-08-14
+
+### Added
+- **QR Code**： Add QR code generator tool with custom styling and logo support.([`3b078a5`](https://github.com/rick-hayek/voocii-portal/commit/3b078a5b5597b4d4a4c7403406fa0fc8463ae230))
+
 ## [1.0.0] - 2026-08-13
 
 ### Added

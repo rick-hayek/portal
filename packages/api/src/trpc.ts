@@ -6,6 +6,7 @@ import superjson from 'superjson';
  * tRPC Context — provides Prisma client and optional session to all procedures.
  */
 export async function createContext(opts?: {
+  req?: Request;
   session?: {
     user: {
       id: string;
@@ -20,9 +21,25 @@ export async function createContext(opts?: {
   revalidatePath?: (...args: any[]) => any;
   unstable_cache?: (...args: any[]) => any;
 }) {
+  let clientIp = '127.0.0.1';
+  if (opts?.req) {
+    const cfIp = opts.req.headers.get('cf-connecting-ip');
+    const forwardedFor = opts.req.headers.get('x-forwarded-for');
+    const realIp = opts.req.headers.get('x-real-ip');
+    if (cfIp) {
+      clientIp = cfIp.trim();
+    } else if (forwardedFor) {
+      clientIp = forwardedFor.split(',')[0]?.trim() || '127.0.0.1';
+    } else if (realIp) {
+      clientIp = realIp.trim();
+    }
+  }
+
   return {
     prisma,
     session: opts?.session ?? null,
+    req: opts?.req,
+    clientIp,
     revalidateTag: opts?.revalidateTag,
     revalidatePath: opts?.revalidatePath,
     unstable_cache: opts?.unstable_cache,

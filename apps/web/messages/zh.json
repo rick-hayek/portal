@@ -150,7 +150,42 @@
     "step2Desc": "提交包含贵站名称、URL、头像、描述及可选的 RSS/截图地址的信息。",
     "sendEmailBtn": "发送申请邮件",
     "copyTemplateBtn": "复制申请格式",
-    "templateCopied": "已复制格式！"
+    "templateCopied": "已复制格式！",
+    "onlineApplyBtn": "在线快速申请",
+    "modal": {
+      "title": "快速申请友情链接",
+      "subtitle": "填写站点信息，提交后自动进入待审核队列",
+      "name": "站点名称",
+      "namePlaceholder": "例如：Voocii",
+      "url": "站点首页地址",
+      "urlPlaceholder": "https://yourdomain.com",
+      "avatar": "Logo / 头像链接",
+      "desc": "站点一句话描述",
+      "descPlaceholder": "一句话介绍你的网站或博客...",
+      "rss": "RSS 订阅地址",
+      "screenshot": "站点截图地址",
+      "email": "联系邮箱",
+      "captcha": "安全验证",
+      "captchaPlaceholder": "输入结果",
+      "cancel": "取消",
+      "submit": "立即提交申请",
+      "submitting": "提交中...",
+      "successTitle": "申请提交成功！",
+      "successDesc": "您的友链申请已记录，站长审核通过后将自动展示在页面中。",
+      "updateSuccessDesc": "已为您覆盖更新今日提交的待审核信息！",
+      "close": "关闭",
+      "errors": {
+        "nameRequired": "网站名称不能为空",
+        "urlRequired": "站点首页地址不能为空",
+        "invalidUrl": "网站链接必须以 http:// 或 https:// 开头",
+        "descRequired": "站点描述不能为空",
+        "invalidCaptcha": "算术验证题答案不正确，请重新计算",
+        "botDetected": "提交异常，检测到自动化工具",
+        "submissionTooFast": "提交速度过快，请稍候重试",
+        "rateLimitExceeded": "今日申请次数已达上限（5次/天），请明日再试或直接发送邮件申请",
+        "default": "提交失败，请检查输入或稍后重试"
+      }
+    }
   },
   "Tools": {
     "title": "开发者工具",

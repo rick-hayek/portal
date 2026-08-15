@@ -1,8 +1,19 @@
 'use client';
 
-import { ArrowUpRight, Check, Copy, Globe, Link2, Mail, Rss, Share2, UserPlus } from 'lucide-react';
+import {
+  ArrowUpRight,
+  Check,
+  Copy,
+  Link2,
+  Mail,
+  Rss,
+  Share2,
+  Sparkles,
+  UserPlus,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import React from 'react';
+import React, { useState } from 'react';
+import { ApplyLinkModal } from '@/components/links/ApplyLinkModal';
 import { useLocalSWR } from '@/hooks/useLocalSWR';
 import { trpc } from '@/lib/api/client';
 
@@ -38,7 +49,8 @@ export default function LinksPage() {
     'portal:about:info',
     React.useCallback(() => trpcUtils.about.getAbout.fetch(), [trpcUtils]),
   );
-  const [copiedType, setCopiedType] = React.useState<string | null>(null);
+  const [copiedType, setCopiedType] = useState<string | null>(null);
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   let targetEmail = 'ricksname@your-site.com';
   if (aboutData?.email) {
@@ -335,11 +347,20 @@ export default function LinksPage() {
             </div>
           </div>
 
-          {/* Buttons: Send Email & Copy Application Template */}
+          {/* Buttons: Online Apply, Send Email & Copy Application Template */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setIsApplyModalOpen(true)}
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-primary)] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm cursor-pointer"
+            >
+              <Sparkles className="h-4 w-4" />
+              <span>{t('onlineApplyBtn')}</span>
+            </button>
+
             <a
               href={`mailto:${targetEmail}?subject=${encodeURIComponent('友情链接申请 - Voocii')}&body=${encodeURIComponent(`站点名称：\n站点链接：\n站点描述：\n头像链接：\nRSS订阅：\n网页截图：`)}`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-primary)] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm cursor-pointer no-underline"
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface-alt)] hover:bg-[var(--portal-color-border-soft)] px-5 py-2.5 text-xs sm:text-sm font-semibold text-[var(--portal-color-text)] border border-compat transition-all cursor-pointer no-underline"
             >
               <Mail className="h-4 w-4" />
               <span>{t('sendEmailBtn')}</span>
@@ -425,6 +446,7 @@ export default function LinksPage() {
           {/* Quick Markdown & JSON batch copy buttons */}
           <div className="flex flex-wrap items-center gap-3 pt-3">
             <button
+              type="button"
               onClick={() => handleCopy(jsonSnippet, 'json')}
               className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface)] hover:bg-[var(--portal-color-primary)] hover:text-white px-4 py-2.5 text-xs font-semibold text-[var(--portal-color-text)] border border-[var(--portal-color-border)]/50 transition-all shadow-2xs cursor-pointer"
             >
@@ -442,6 +464,7 @@ export default function LinksPage() {
             </button>
 
             <button
+              type="button"
               onClick={() => handleCopy(markdownSnippet, 'markdown')}
               className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface)] hover:bg-[var(--portal-color-primary)] hover:text-white px-4 py-2.5 text-xs font-semibold text-[var(--portal-color-text)] border border-[var(--portal-color-border)]/50 transition-all shadow-2xs cursor-pointer"
             >
@@ -460,6 +483,9 @@ export default function LinksPage() {
           </div>
         </div>
       </section>
+
+      {/* Online Application Modal */}
+      <ApplyLinkModal isOpen={isApplyModalOpen} onClose={() => setIsApplyModalOpen(false)} />
     </div>
   );
 }
