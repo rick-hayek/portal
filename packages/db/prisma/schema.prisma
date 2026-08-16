@@ -108,6 +108,7 @@ model Comment {
   content     String
   authorName  String
   authorEmail String?
+  authorUrl   String?
   status      String   @default("pending") // pending, approved, spam
   postId      String
   parentId    String?
