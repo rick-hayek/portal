@@ -47,15 +47,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      // On initial sign-in, attach role from DB
+    async jwt({ token, user, trigger, session }) {
+      // On initial sign-in, attach role and latest name from DB
       if (user?.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { role: true },
+          select: { role: true, name: true },
         });
         token.id = user.id;
         token.role = dbUser?.role ?? 'viewer';
+        if (dbUser?.name) {
+          token.name = dbUser.name;
+        }
+      }
+      // On session.update() triggered on client
+      if (trigger === 'update') {
+        if (session?.name !== undefined) {
+          token.name = session.name;
+        } else if (token.id) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { name: true, role: true },
+          });
+          if (dbUser) {
+            token.name = dbUser.name;
+            token.role = dbUser.role;
+          }
+        }
       }
       return token;
     },
@@ -63,6 +81,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Pass JWT claims into session
       session.user.id = token.id as string;
       session.user.role = token.role as string;
+      if (token.name !== undefined) {
+        session.user.name = token.name as string | null;
+      }
       return session;
     },
   },

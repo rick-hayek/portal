@@ -454,11 +454,15 @@
     "title": "Profile & Account Settings",
     "subtitle": "Manage your personal account info and modify your password.",
     "accountInfo": "Account Info",
+    "profileInfo": "Profile Details",
+    "profileInfoDesc": "Set your public display name shown across blog posts, comments, and site features.",
+    "saveProfile": "Save Name",
+    "profileSuccess": "Display name updated successfully!",
     "changePassword": "Change Password",
     "setPassword": "Set Local Password",
     "setPasswordDesc": "You are currently signed in via GitHub. Setting a local password allows you to log in directly using your email and password.",
     "fields": {
-      "name": "Name",
+      "name": "Display Name",
       "email": "Email Address",
       "role": "Account Role",
       "currentPassword": "Current Password",
@@ -466,6 +470,7 @@
       "confirmPassword": "Confirm New Password"
     },
     "placeholders": {
+      "name": "Enter your display name (1-50 chars)",
       "currentPassword": "Enter your current password",
       "newPassword": "Enter new password (min 6 chars)",
       "confirmPassword": "Confirm your new password"
@@ -474,6 +479,7 @@
     "loading": "Saving...",
     "success": "Password changed successfully!",
     "validation": {
+      "nameRequired": "Display name cannot be empty!",
       "mismatch": "Passwords do not match!",
       "minLength": "Password must be at least 6 characters long!"
     }

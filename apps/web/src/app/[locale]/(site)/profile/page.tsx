@@ -15,19 +15,25 @@ interface ProfileData {
 
 export default function ProfilePage() {
   const t = useTranslations('Profile');
-  const { status } = useSession();
+  const { status, update } = useSession();
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Form states
+  // Profile Form states
+  const [displayName, setDisplayName] = useState('');
+  const [profileError, setProfileError] = useState('');
+  const [profileSuccessMsg, setProfileSuccessMsg] = useState('');
+  const [profileSubmitting, setProfileSubmitting] = useState(false);
+
+  // Password Form states
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [formError, setFormError] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccessMsg, setPasswordSuccessMsg] = useState('');
+  const [passwordSubmitting, setPasswordSubmitting] = useState(false);
 
   const loadProfile = useCallback(async () => {
     try {
@@ -36,6 +42,7 @@ export default function ProfilePage() {
       const profileData = data[0]?.result?.data?.json;
       if (profileData) {
         setProfile(profileData);
+        setDisplayName(profileData.name ?? '');
       } else if (data[0]?.error) {
         setError(data[0].error.json?.message ?? 'Failed to load profile');
       }
@@ -54,27 +61,69 @@ export default function ProfilePage() {
     }
   }, [status, loadProfile]);
 
+  async function handleProfileUpdate(e: React.FormEvent) {
+    e.preventDefault();
+    setProfileError('');
+    setProfileSuccessMsg('');
+
+    const trimmedName = displayName.trim();
+    if (!trimmedName) {
+      setProfileError(t('validation.nameRequired'));
+      return;
+    }
+
+    setProfileSubmitting(true);
+
+    try {
+      const res = await fetch('/api/trpc/profile.updateProfile?batch=1', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          '0': {
+            json: {
+              name: trimmedName,
+            },
+          },
+        }),
+      });
+      const data = await res.json();
+
+      if (data[0]?.error) {
+        setProfileError(data[0].error.json?.message ?? 'Failed to update display name');
+      } else {
+        setProfileSuccessMsg(t('profileSuccess'));
+        setProfile((prev) => (prev ? { ...prev, name: trimmedName } : null));
+        // Sync NextAuth session so Header/Navbar immediately reflects the change
+        await update({ name: trimmedName });
+      }
+    } catch {
+      setProfileError('Network error. Please try again.');
+    } finally {
+      setProfileSubmitting(false);
+    }
+  }
+
   async function handlePasswordChange(e: React.FormEvent) {
     e.preventDefault();
-    setFormError('');
-    setSuccessMsg('');
+    setPasswordError('');
+    setPasswordSuccessMsg('');
 
     if (profile?.hasPassword && !currentPassword) {
-      setFormError(t('placeholders.currentPassword'));
+      setPasswordError(t('placeholders.currentPassword'));
       return;
     }
 
     if (newPassword.length < 6) {
-      setFormError(t('validation.minLength'));
+      setPasswordError(t('validation.minLength'));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setFormError(t('validation.mismatch'));
+      setPasswordError(t('validation.mismatch'));
       return;
     }
 
-    setSubmitting(true);
+    setPasswordSubmitting(true);
 
     try {
       const res = await fetch('/api/trpc/profile.changePassword?batch=1', {
@@ -92,9 +141,9 @@ export default function ProfilePage() {
       const data = await res.json();
 
       if (data[0]?.error) {
-        setFormError(data[0].error.json?.message ?? 'Failed to update password');
+        setPasswordError(data[0].error.json?.message ?? 'Failed to update password');
       } else {
-        setSuccessMsg(t('success'));
+        setPasswordSuccessMsg(t('success'));
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
@@ -102,9 +151,9 @@ export default function ProfilePage() {
         await loadProfile();
       }
     } catch {
-      setFormError('Network error. Please try again.');
+      setPasswordError('Network error. Please try again.');
     } finally {
-      setSubmitting(false);
+      setPasswordSubmitting(false);
     }
   }
 
@@ -127,7 +176,7 @@ export default function ProfilePage() {
           </p>
           <button
             onClick={() => signIn()}
-            className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 cursor-pointer"
           >
             Sign In
           </button>
@@ -185,6 +234,58 @@ export default function ProfilePage() {
 
         {/* Right Side: Forms */}
         <div className="space-y-6">
+          {/* Edit Display Name Card */}
+          <div className="rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 md:p-8 shadow-sm">
+            <h2 className="text-lg font-bold text-[var(--portal-color-text)] mb-1">
+              {t('profileInfo')}
+            </h2>
+            <p className="text-xs text-[var(--portal-color-text-secondary)] leading-relaxed mb-4">
+              {t('profileInfoDesc')}
+            </p>
+
+            {profileError && (
+              <div className="rounded-lg bg-red-500/10 p-3 text-xs text-red-500 mb-4">
+                {profileError}
+              </div>
+            )}
+
+            {profileSuccessMsg && (
+              <div className="rounded-lg bg-green-500/10 p-3 text-xs text-green-600 dark:text-green-400 mb-4">
+                {profileSuccessMsg}
+              </div>
+            )}
+
+            <form onSubmit={handleProfileUpdate} className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-[var(--portal-color-text-secondary)]">
+                    {t('fields.name')}
+                  </label>
+                  <span className="text-[10px] text-[var(--portal-color-text-tertiary)] font-mono">
+                    {displayName.length}/50
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  required
+                  maxLength={50}
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder={t('placeholders.name')}
+                  className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={profileSubmitting || !displayName.trim() || displayName.trim() === (profile.name ?? '')}
+                className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+              >
+                {profileSubmitting ? t('loading') : t('saveProfile')}
+              </button>
+            </form>
+          </div>
+
           {/* Change/Set Password Card */}
           <div className="rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 md:p-8 shadow-sm">
             <h2 className="text-lg font-bold text-[var(--portal-color-text)] mb-1">
@@ -197,15 +298,15 @@ export default function ProfilePage() {
               </p>
             )}
 
-            {formError && (
+            {passwordError && (
               <div className="rounded-lg bg-red-500/10 p-3 text-xs text-red-500 mb-4">
-                {formError}
+                {passwordError}
               </div>
             )}
 
-            {successMsg && (
+            {passwordSuccessMsg && (
               <div className="rounded-lg bg-green-500/10 p-3 text-xs text-green-600 dark:text-green-400 mb-4">
-                {successMsg}
+                {passwordSuccessMsg}
               </div>
             )}
 
@@ -221,7 +322,7 @@ export default function ProfilePage() {
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder={t('placeholders.currentPassword')}
-                    className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+                    className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
                   />
                 </div>
               )}
@@ -236,7 +337,7 @@ export default function ProfilePage() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder={t('placeholders.newPassword')}
-                  className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+                  className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
                 />
               </div>
 
@@ -250,16 +351,16 @@ export default function ProfilePage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder={t('placeholders.confirmPassword')}
-                  className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
+                  className="w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
-                disabled={submitting}
-                className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50"
+                disabled={passwordSubmitting}
+                className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               >
-                {submitting ? t('loading') : t('submit')}
+                {passwordSubmitting ? t('loading') : t('submit')}
               </button>
             </form>
           </div>

@@ -132,7 +132,7 @@
       "name": "站点名称",
       "desc": "站点描述",
       "url": "站点链接",
-      "avatar": "站点Logo",
+      "avatar": "头像Logo",
       "screenshot": "站点截图",
       "rss": "RSS 订阅"
     },
@@ -144,10 +144,10 @@
     },
     "applyTitle": "申请友情链接",
     "applyDesc": "欢迎互换友情链接！请先在贵站添加本站链接，然后将贵站信息发送邮件至站长。",
-    "step1Title": "先添加本站",
+    "step1Title": "添加本站",
     "step1Desc": "请参考下方“本站友链信息”在贵站友情链接页面添加本站。",
-    "step2Title": "发送申请邮件",
-    "step2Desc": "提交包含贵站名称、URL、头像、描述及可选的 RSS/截图地址的信息。",
+    "step2Title": "发起申请",
+    "step2Desc": "提交包含贵站名称、URL、描述、头像及RSS/截图信息。",
     "sendEmailBtn": "发送申请邮件",
     "copyTemplateBtn": "复制申请格式",
     "templateCopied": "已复制格式！",
@@ -454,6 +454,10 @@
     "title": "个人中心 & 账户设置",
     "subtitle": "管理你的个人账户信息并修改登录密码。",
     "accountInfo": "账户基本信息",
+    "profileInfo": "个人资料设置",
+    "profileInfoDesc": "设置在博客文章、评论及全站各处展示的公开昵称。",
+    "saveProfile": "保存昵称",
+    "profileSuccess": "个人昵称修改成功！",
     "changePassword": "修改登录密码",
     "setPassword": "设置本地密码",
     "setPasswordDesc": "你当前正在通过 GitHub 第三方登录。设置本地密码后，你即可同时使用邮箱与密码直接登录。",
@@ -466,6 +470,7 @@
       "confirmPassword": "确认新密码"
     },
     "placeholders": {
+      "name": "请输入您的显示昵称 (1-50 个字符)",
       "currentPassword": "请输入当前正在使用的密码",
       "newPassword": "请输入新密码 (最少 6 位)",
       "confirmPassword": "请再次输入新密码"
@@ -474,6 +479,7 @@
     "loading": "保存中...",
     "success": "密码修改成功！",
     "validation": {
+      "nameRequired": "显示昵称不能为空！",
       "mismatch": "两次输入的密码不一致！",
       "minLength": "密码长度不能少于 6 位！"
     }

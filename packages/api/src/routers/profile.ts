@@ -32,6 +32,29 @@ export const profileRouter = router({
     };
   }),
 
+  /** Update user profile (display name) */
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().trim().min(1, 'Display name cannot be empty').max(50, 'Name too long'),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const updatedUser = await ctx.prisma.user.update({
+        where: { id: ctx.user.id },
+        data: { name: input.name },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          image: true,
+          role: true,
+        },
+      });
+
+      return { success: true, user: updatedUser };
+    }),
+
   /** Securely change user password */
   changePassword: protectedProcedure
     .input(
