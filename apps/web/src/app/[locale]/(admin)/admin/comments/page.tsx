@@ -6,6 +6,7 @@ interface Comment {
   id: string;
   authorName: string;
   authorEmail: string | null;
+  authorUrl?: string | null;
   content: string;
   status: string;
   createdAt: string;
@@ -93,6 +94,16 @@ export default function CommentsPage() {
                       <span className="text-[var(--portal-color-text-secondary)]">
                         ({c.authorEmail})
                       </span>
+                    )}
+                    {c.authorUrl && (
+                      <a
+                        href={c.authorUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-[var(--portal-color-primary)] hover:underline"
+                      >
+                        🌐 {c.authorUrl}
+                      </a>
                     )}
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs ${

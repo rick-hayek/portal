@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
+import { attachCommentAvatars } from '../utils/gravatar';
 
 export const postRouter = router({
   /** Paginated post list with optional category/tag/month filters */
@@ -134,7 +135,7 @@ export const postRouter = router({
   /** Get a single post by slug */
   bySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
     const fetchPost = async (s: string) => {
-      return ctx.prisma.post.findUnique({
+      const post = await ctx.prisma.post.findUnique({
         where: { slug: s, status: 'published' },
         include: {
           author: { select: { id: true, name: true, image: true } },
@@ -152,6 +153,15 @@ export const postRouter = router({
           },
         },
       });
+
+      if (!post) return null;
+
+      const commentsWithAvatars = await attachCommentAvatars(ctx.prisma, post.comments);
+
+      return {
+        ...post,
+        comments: commentsWithAvatars,
+      };
     };
 
     if (ctx.unstable_cache) {
