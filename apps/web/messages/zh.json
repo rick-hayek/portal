@@ -92,7 +92,6 @@
     "website": "个人网址",
     "websitePlaceholder": "选填，需以 https:// 开头",
     "moderationNotice": "访客评论需站长审核后展示",
-    "authNotice": "已登录账号，评论将直接发布",
     "nameRequired": "请输入昵称",
     "emailRequired": "请输入有效的邮箱地址",
     "urlHttpsRequired": "个人网址必须以 https:// 开头"

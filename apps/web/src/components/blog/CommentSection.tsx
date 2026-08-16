@@ -243,13 +243,6 @@ function CommentItem({
                 <span className="font-semibold text-[var(--portal-color-text)]">
                   {t('replyingTo', { name: comment.authorName })}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => setShowReplyForm(false)}
-                  className="hover:underline text-[var(--portal-color-text-tertiary)] hover:text-red-500 font-medium cursor-pointer"
-                >
-                  {t('cancel')}
-                </button>
               </div>
 
               {replyError && (
@@ -309,7 +302,7 @@ function CommentItem({
 
               <div className="flex items-center justify-between pt-1">
                 <span className="text-[11px] text-[var(--portal-color-text-tertiary)]">
-                  {session ? t('authNotice') : t('moderationNotice')}
+                  {session ? '' : t('moderationNotice')}
                 </span>
                 <div className="flex items-center gap-2">
                   <button
@@ -595,7 +588,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
             {/* Form Footer */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
               <span className="text-[11px] text-[var(--portal-color-text-tertiary)] leading-tight">
-                {session ? t('authNotice') : t('moderationNotice')}
+                {session ? '' : t('moderationNotice')}
               </span>
               <button
                 type="submit"

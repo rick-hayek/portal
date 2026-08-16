@@ -92,7 +92,6 @@
     "website": "Website",
     "websitePlaceholder": "https://yourdomain.com (Optional, must start with https://)",
     "moderationNotice": "Guest comments will appear after moderation; Gravatar is automatically fetched via email.",
-    "authNotice": "Signed in. Your comment will be published immediately.",
     "nameRequired": "Name is required",
     "emailRequired": "Please enter a valid email address",
     "urlHttpsRequired": "Website URL must start with https://"
