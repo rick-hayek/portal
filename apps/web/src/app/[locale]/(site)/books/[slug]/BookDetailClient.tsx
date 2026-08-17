@@ -28,19 +28,25 @@ interface Book {
   review: string | null;
 }
 
-export function BookDetailClient() {
+interface BookDetailClientProps {
+  initialBook?: any;
+}
+
+export function BookDetailClient({ initialBook = null }: BookDetailClientProps) {
   const params = useParams();
-  const slug = params.slug as string;
+  const slug = (params?.slug as string) || initialBook?.slug;
   const t = useTranslations('Books');
 
-  const [book, setBook] = useState<Book | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [book, setBook] = useState<Book | null>(initialBook);
+  const [loading, setLoading] = useState(!initialBook);
   const [error, setError] = useState('');
 
   const { status } = useSession();
-  const [likesCount, setLikesCount] = useState(0);
-  const [dislikesCount, setDislikesCount] = useState(0);
-  const [userReaction, setUserReaction] = useState<'LIKE' | 'DISLIKE' | null>(null);
+  const [likesCount, setLikesCount] = useState(initialBook?.likesCount ?? 0);
+  const [dislikesCount, setDislikesCount] = useState(initialBook?.dislikesCount ?? 0);
+  const [userReaction, setUserReaction] = useState<'LIKE' | 'DISLIKE' | null>(
+    initialBook?.userReaction ?? null,
+  );
 
   const [descriptionHtml, setDescriptionHtml] = useState('');
   const [reviewHtml, setReviewHtml] = useState('');
@@ -80,10 +86,10 @@ export function BookDetailClient() {
   }, [slug]);
 
   useEffect(() => {
-    if (slug) {
+    if (slug && !initialBook) {
       loadBook();
     }
-  }, [slug, loadBook]);
+  }, [slug, initialBook, loadBook]);
 
   async function handleReact(type: 'LIKE' | 'DISLIKE') {
     if (status !== 'authenticated') return;

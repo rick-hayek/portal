@@ -2,20 +2,48 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
 import { BlogList } from '@/components/blog/BlogList';
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+interface BlogPageProps {
+  params: Promise<{ locale: string }>;
+  searchParams?: Promise<{ category?: string; tag?: string; month?: string }>;
+}
+
+export async function generateMetadata({ params, searchParams }: BlogPageProps) {
   const { locale } = await params;
+  const sParams = searchParams ? await searchParams : {};
   const t = await getTranslations({ locale, namespace: 'Blog' });
+
+  let pageTitle = t('title');
+  if (sParams.category) {
+    const catName = sParams.category.charAt(0).toUpperCase() + sParams.category.slice(1);
+    pageTitle = `${catName} | ${t('title')}`;
+  } else if (sParams.tag) {
+    pageTitle = `#${sParams.tag} | ${t('title')}`;
+  } else if (sParams.month) {
+    pageTitle = `${sParams.month} | ${t('title')}`;
+  }
+
   return {
-    title: t('title'),
+    title: pageTitle,
     description: t('latestPosts'),
   };
 }
 
-export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function BlogPage({ params, searchParams }: BlogPageProps) {
   const { locale } = await params;
+  const sParams = searchParams ? await searchParams : {};
 
   // Set requested locale for translation mappings
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'Blog' });
+
+  let displayTitle = t('title');
+  if (sParams.category) {
+    displayTitle = `${sParams.category.charAt(0).toUpperCase() + sParams.category.slice(1)} - ${t('title')}`;
+  } else if (sParams.tag) {
+    displayTitle = `#${sParams.tag} - ${t('title')}`;
+  } else if (sParams.month) {
+    displayTitle = `${sParams.month} - ${t('title')}`;
+  }
 
   return (
     <Suspense
@@ -30,7 +58,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
 
             {/* Post List Skeleton Column */}
             <div className="w-full max-w-3xl shrink min-w-0">
-              {/* Header Skeleton */}
+              {/* Header Skeleton with Semantic H1 */}
               <div className="flex items-baseline mb-6 md:mb-8" style={{ gap: '.8rem' }}>
                 <span
                   style={{
@@ -39,9 +67,19 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
                     background: 'var(--portal-color-primary)',
                     flexShrink: 0,
                   }}
-                ></span>
-                <span className="h-4 bg-gray-200 rounded w-16 dark:bg-gray-800 animate-pulse"></span>
-                <span className="h-6 bg-gray-200 rounded w-24 dark:bg-gray-800 animate-pulse"></span>
+                />
+                <span
+                  className="font-mono uppercase text-[var(--portal-color-primary)]"
+                  style={{ fontSize: '.7rem', fontWeight: 500, letterSpacing: '.1em' }}
+                >
+                  {t('latestPosts')}
+                </span>
+                <h1
+                  className="text-[var(--portal-color-text)]"
+                  style={{ fontSize: '1.6rem', fontWeight: 700, letterSpacing: '-.03em' }}
+                >
+                  {displayTitle}
+                </h1>
               </div>
 
               {/* Post List Skeleton */}

@@ -1,4 +1,5 @@
-import { getTranslations } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getTRPCServer } from '@/lib/trpc-server';
 import { BookDetailClient } from './BookDetailClient';
 
@@ -15,12 +16,33 @@ export async function generateMetadata({
     const tNav = await getTranslations({ locale, namespace: 'Navigation' });
     return {
       title: `${book.title} | ${tNav('books')}`,
+      description: book.description || book.review || '',
     };
   } catch {
     return { title: 'Book Details' };
   }
 }
 
-export default function BookDetailPage() {
-  return <BookDetailClient />;
+export default async function BookDetailPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+
+  let book = null;
+  try {
+    const trpc = await getTRPCServer();
+    book = await trpc.book.get({ slug });
+  } catch {
+    // Ignore fetch error, fallback to client fetch
+  }
+
+  if (!book) {
+    notFound();
+  }
+
+  return <BookDetailClient initialBook={book} />;
 }
+
