@@ -1,3 +1,5 @@
+import { parseStyleString } from './rehype-sanitize-html-attrs';
+
 /**
  * Standard valid HTML tag names that are safe in MDX if closed or self-closing.
  */
@@ -19,6 +21,7 @@ const STANDARD_HTML_TAGS = new Set([
   'button',
   'canvas',
   'caption',
+  'center',
   'cite',
   'code',
   'col',
@@ -38,6 +41,7 @@ const STANDARD_HTML_TAGS = new Set([
   'fieldset',
   'figcaption',
   'figure',
+  'font',
   'footer',
   'form',
   'h1',
@@ -170,7 +174,7 @@ export function sanitizeMdxContent(
     tokens.push({ type: 'text', value: content.slice(lastIndex) });
   }
 
-  // Process text tokens to escape unhandled `<`
+  // Process text tokens to normalize HTML tags and escape unhandled `<`
   const sanitizedTokens = tokens.map((token) => {
     if (token.type !== 'text') {
       return token.value;
@@ -181,6 +185,10 @@ export function sanitizeMdxContent(
     if (!text.includes('<')) {
       return text;
     }
+
+    // 1. Normalize unquoted attribute values on HTML tags (e.g. <font color=blue> -> <font color="blue">)
+    text = text.replace(/(<[a-zA-Z0-9_-]+\s+[^>]*?)([a-zA-Z0-9_-]+)=([^\s"'`=<>/]+)([\s/>]|$)/g, '$1$2="$3"$4');
+
 
     // Replace `<` that is not a valid known component or valid HTML tag
     text = text.replace(/<([^>\n]*)(>|$)/g, (fullMatch, tagInner, closingBracket) => {
@@ -220,7 +228,7 @@ export function sanitizeMdxContent(
         }
 
         const closingTagRegex = new RegExp(`</\\s*${lowerTagName}\\s*>`, 'i');
-        if (closingTagRegex.test(content)) {
+        if (closingTagRegex.test(text)) {
           return fullMatch;
         }
       }

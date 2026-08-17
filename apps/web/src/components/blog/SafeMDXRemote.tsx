@@ -3,6 +3,8 @@ import type React from 'react';
 import { CodeBlock } from '@/components/blog/CodeBlock';
 import { sanitizeMdxContent } from '@/lib/mdx-sanitizer';
 
+import rehypeSanitizeHtmlAttrs from '@/lib/rehype-sanitize-html-attrs';
+
 interface SafeMDXRemoteProps extends MDXRemoteProps {
   knownComponents?: string[];
 }
@@ -15,7 +17,7 @@ interface SafeMDXRemoteProps extends MDXRemoteProps {
 export async function SafeMDXRemote({
   source,
   components = {},
-  options,
+  options = {},
   knownComponents = [],
 }: SafeMDXRemoteProps) {
   const componentKeys = components && typeof components === 'object' ? Object.keys(components) : [];
@@ -57,11 +59,21 @@ export async function SafeMDXRemote({
     ...components,
   };
 
+  const userRehypePlugins = options?.mdxOptions?.rehypePlugins || [];
+  const mdxOptions = {
+    ...options?.mdxOptions,
+    rehypePlugins: [rehypeSanitizeHtmlAttrs, ...userRehypePlugins],
+  };
+  const finalOptions = {
+    ...options,
+    mdxOptions,
+  };
+
   try {
     return await MDXRemote({
       source: sanitizedSource,
       components: mergedComponents,
-      options,
+      options: finalOptions,
     });
   } catch (err) {
     console.error('[SafeMDXRemote] MDX compilation error:', err);
