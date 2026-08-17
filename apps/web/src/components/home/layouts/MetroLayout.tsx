@@ -105,7 +105,6 @@ export function MetroLayout({
       <main className="flex-grow px-4 sm:px-8 py-8 sm:py-12 max-w-[1400px] mx-auto w-full">
         {/* Masonry Tile Grid (12-cols desktop, 6-cols tablet, 2-cols mobile) */}
         <div className="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-12 gap-3 auto-rows-[minmax(190px,auto)]">
-
           {/* ================================================================= */}
           {/* ROW 1 & 2: HERO TILE (spans 8 cols, 2 rows) */}
           {/* ================================================================= */}
@@ -175,12 +174,12 @@ export function MetroLayout({
                   <span>
                     {post1.publishedAt
                       ? new Date(post1.publishedAt)
-                        .toLocaleDateString(locale, {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })
-                        .toUpperCase()
+                          .toLocaleDateString(locale, {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })
+                          .toUpperCase()
                       : 'RECENT'}
                   </span>
                 </div>
@@ -222,12 +221,12 @@ export function MetroLayout({
                   <span>
                     {post2.publishedAt
                       ? new Date(post2.publishedAt)
-                        .toLocaleDateString(locale, {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })
-                        .toUpperCase()
+                          .toLocaleDateString(locale, {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })
+                          .toUpperCase()
                       : 'RECENT'}
                   </span>
                 </div>
@@ -392,7 +391,11 @@ export function MetroLayout({
           {/* ================================================================= */}
           <div className="col-span-2 md:col-span-3 lg:col-span-4 row-span-1 bg-[#e11d48] text-white p-5 flex flex-col justify-between relative overflow-hidden group rounded-none">
             {/* Absolute overlay link covering the tile (goes to /links) */}
-            <Link href="/links" className="absolute inset-0 z-0" aria-label="View all friend links" />
+            <Link
+              href="/links"
+              className="absolute inset-0 z-0"
+              aria-label="View all friend links"
+            />
 
             {/* Header */}
             <div className="flex items-center justify-between mb-2 z-10 pointer-events-none">
@@ -465,7 +468,6 @@ export function MetroLayout({
               KNOW MORE ABOUT ME →
             </div>
           </Link>
-
         </div>
 
         {/* STATS STRIP */}

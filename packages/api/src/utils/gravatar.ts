@@ -28,11 +28,12 @@ export function getGravatarUrl(
   if (!email || !email.trim()) return null;
   const hash = crypto.createHash('md5').update(email.trim().toLowerCase()).digest('hex');
   const displayName = (name || email.split('@')[0] || 'User').trim();
-  
+
   // Pick a deterministic pleasant background color based on email hash
-  const colorIndex = Math.abs(hash.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % PALETTE.length;
+  const colorIndex =
+    Math.abs(hash.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % PALETTE.length;
   const bg = PALETTE[colorIndex];
-  
+
   // REST path format avoiding query string parameter stripping in Gravatar proxy
   const fallbackUrl = `https://ui-avatars.com/api/${encodeURIComponent(displayName)}/${size}/${bg}/ffffff`;
   return `https://gravatar.com/avatar/${hash}?d=${encodeURIComponent(fallbackUrl)}&s=${size}`;

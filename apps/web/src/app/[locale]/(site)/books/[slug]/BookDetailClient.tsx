@@ -68,7 +68,7 @@ export function BookDetailClient({ initialBook = null }: BookDetailClientProps) 
     try {
       const res = await fetch(
         '/api/trpc/book.get?batch=1&input=' +
-        encodeURIComponent(JSON.stringify({ '0': { json: { slug } } })),
+          encodeURIComponent(JSON.stringify({ '0': { json: { slug } } })),
       );
       const data = await res.json();
       const bookData = data[0]?.result?.data?.json;
@@ -259,13 +259,15 @@ export function BookDetailClient({ initialBook = null }: BookDetailClientProps) 
                   type="button"
                   disabled={status !== 'authenticated'}
                   onClick={() => handleReact('LIKE')}
-                  className={`flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${userReaction === 'LIKE'
-                    ? 'border-green-500 bg-green-500/10 text-green-500'
-                    : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:text-green-500 hover:border-green-500/50'
-                    } ${status !== 'authenticated'
+                  className={`flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${
+                    userReaction === 'LIKE'
+                      ? 'border-green-500 bg-green-500/10 text-green-500'
+                      : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:text-green-500 hover:border-green-500/50'
+                  } ${
+                    status !== 'authenticated'
                       ? 'cursor-not-allowed opacity-60'
                       : 'hover:-translate-y-0.5 active:translate-y-0'
-                    }`}
+                  }`}
                 >
                   <svg
                     className="h-4 w-4"
@@ -288,13 +290,15 @@ export function BookDetailClient({ initialBook = null }: BookDetailClientProps) 
                   type="button"
                   disabled={status !== 'authenticated'}
                   onClick={() => handleReact('DISLIKE')}
-                  className={`flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${userReaction === 'DISLIKE'
-                    ? 'border-red-500 bg-red-500/10 text-red-500'
-                    : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:text-red-500 hover:border-red-500/50'
-                    } ${status !== 'authenticated'
+                  className={`flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-300 ${
+                    userReaction === 'DISLIKE'
+                      ? 'border-red-500 bg-red-500/10 text-red-500'
+                      : 'border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] hover:text-red-500 hover:border-red-500/50'
+                  } ${
+                    status !== 'authenticated'
                       ? 'cursor-not-allowed opacity-60'
                       : 'hover:-translate-y-0.5 active:translate-y-0'
-                    }`}
+                  }`}
                 >
                   <svg
                     className="h-4 w-4"

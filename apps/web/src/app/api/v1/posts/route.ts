@@ -60,11 +60,9 @@ export async function POST(req: Request) {
     if (category) {
       const caller1 = await getPublicCaller();
       const categories = await caller1.category.list();
-      const foundCategory = categories.find((c) =>
-        c.id === category ||
-        c.slug === category ||
-        c.name === category ||
-        c.name_en === category,
+      const foundCategory = categories.find(
+        (c) =>
+          c.id === category || c.slug === category || c.name === category || c.name_en === category,
       );
       if (foundCategory) {
         categoryId = foundCategory.id;

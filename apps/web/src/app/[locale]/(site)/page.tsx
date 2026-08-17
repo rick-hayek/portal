@@ -55,9 +55,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       authorStackArr = Array.isArray(authorObj.stack)
         ? authorObj.stack
         : String(authorObj.stack)
-          .split(',')
-          .map((s: string) => s.trim())
-          .filter(Boolean);
+            .split(',')
+            .map((s: string) => s.trim())
+            .filter(Boolean);
     }
   } else {
     authorStackArr = ['.NETCore', 'TypeScript', 'Vue', 'Python', 'AI Agent'];
@@ -116,8 +116,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const heroDesc = hasAuthorConfig
     ? (locale === 'en'
-      ? authorObj.description_en || authorObj.description
-      : authorObj.description) || t('description')
+        ? authorObj.description_en || authorObj.description
+        : authorObj.description) || t('description')
     : t('description');
 
   const aboutDesc =

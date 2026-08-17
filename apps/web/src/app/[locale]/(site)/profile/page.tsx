@@ -278,7 +278,11 @@ export default function ProfilePage() {
 
               <button
                 type="submit"
-                disabled={profileSubmitting || !displayName.trim() || displayName.trim() === (profile.name ?? '')}
+                disabled={
+                  profileSubmitting ||
+                  !displayName.trim() ||
+                  displayName.trim() === (profile.name ?? '')
+                }
                 className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               >
                 {profileSubmitting ? t('loading') : t('saveProfile')}

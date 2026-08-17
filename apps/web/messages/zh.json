@@ -224,6 +224,67 @@
     "qrcode": {
       "name": "二维码生成器",
       "desc": "支持网址、文本、Wi-Fi、电子名片、邮件等多素材生成与定制导出。"
+    },
+    "httpClient": {
+      "name": "HTTP / API 请求调试",
+      "desc": "便捷的 API 测试与 Webhook 推送工具，支持常用 HTTP 方法、请求头、Body、鉴权与 cURL 导出。"
+    }
+  },
+  "ToolsHttpClient": {
+    "title": "HTTP / API 请求发送器",
+    "description": "面向日常发请求、测试 API 与 Webhook 推送的轻量工具，无需繁重的 Postman 即可直接调试。",
+    "send": "发送请求",
+    "sending": "发送中...",
+    "urlPlaceholder": "输入目标 URL，例如 https://api.example.com/v1/resource ...",
+    "useProxy": "使用服务端代理 (解决 CORS 跨域)",
+    "proxyNotice": "提示：浏览器直接发起请求可能受跨域 (CORS) 限制。若目标 API 拦截跨域，请勾选“使用服务端代理”。",
+    "presetsTitle": "常用预设",
+    "presets": {
+      "indexnow": "IndexNow 提交 (Bing)",
+      "httpbinGet": "HTTPBin GET 测试",
+      "httpbinPost": "HTTPBin POST 测试",
+      "jsonplaceholder": "JSONPlaceholder API"
+    },
+    "tabs": {
+      "params": "Query 参数",
+      "headers": "请求头 (Headers)",
+      "body": "请求体 (Body)",
+      "auth": "鉴权 (Auth)"
+    },
+    "bodyType": {
+      "none": "无 (None)",
+      "json": "JSON Data",
+      "form": "Form Urlencoded",
+      "text": "Plain Text / XML"
+    },
+    "authType": {
+      "none": "无鉴权 (None)",
+      "bearer": "Bearer Token",
+      "basic": "Basic Auth",
+      "apiKey": "API Key"
+    },
+    "response": {
+      "title": "响应结果",
+      "status": "状态码",
+      "time": "耗时",
+      "size": "大小",
+      "tabs": {
+        "body": "响应体",
+        "headers": "响应头",
+        "code": "代码导出"
+      },
+      "copyBody": "复制 Body",
+      "copyCurl": "复制 cURL 命令",
+      "copyFetch": "复制 Fetch 代码",
+      "copied": "已复制！",
+      "noResponse": "尚未发送请求。在上方输入 URL 并点击“发送请求”体验！",
+      "corsErrorTitle": "请求触发跨域限制 (CORS Error)",
+      "corsErrorDesc": "目标服务器未允许当前域名的跨域请求。你可以勾选右上方“使用服务端代理”来绕过浏览器的 CORS 限制。"
+    },
+    "history": {
+      "title": "最近请求历史",
+      "empty": "暂无请求历史",
+      "clear": "清空历史"
     }
   },
   "ToolsQrcode": {

@@ -135,7 +135,8 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
   const drawerBgClass = 'border-b border-[#333535] bg-[#121414] text-[#e2e2e2]';
   const drawerNavLinkClass = 'rounded-none font-mono uppercase tracking-wider';
   const drawerNavLinkActiveClass = 'bg-[#1e2020] text-[#00e3fd] font-bold';
-  const drawerNavLinkInactiveClass = 'text-[#9c8f78] hover:bg-[#1a1c1c] hover:text-[#00e3fd] font-medium';
+  const drawerNavLinkInactiveClass =
+    'text-[#9c8f78] hover:bg-[#1a1c1c] hover:text-[#00e3fd] font-medium';
   const searchDialogClass =
     'flex w-48 items-center gap-2 rounded-none border border-[#333535] bg-[#1a1c1c] text-[#9c8f78] hover:text-[#00e3fd] hover:border-[#00e3fd] transition-colors py-2 px-3 text-[0.78rem] font-mono';
 
@@ -143,8 +144,9 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
     <>
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 flex justify-center transition-transform duration-300 ease-in-out md:translate-y-0 ${headerBgClass} ${isHidden ? '-translate-y-full' : 'translate-y-0'
-          }`}
+        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 flex justify-center transition-transform duration-300 ease-in-out md:translate-y-0 ${headerBgClass} ${
+          isHidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
       >
         <div className="flex h-full items-center justify-between max-w-[1400px] mx-auto px-4 sm:px-8 w-full">
           {/* Logo / Mobile Back Button */}
@@ -156,8 +158,17 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
                   className={`hidden md:flex items-center transition-colors no-underline ${logoTextClass}`}
                 >
                   <span className={`flex items-center justify-center ${logoIconBoxClass}`}>
-                    <svg className={logoSvgClass} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    <svg
+                      className={logoSvgClass}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                      />
                     </svg>
                   </span>
                   {siteTitle}
@@ -167,20 +178,44 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
                   className="flex md:hidden items-center gap-2 font-bold transition-colors no-underline text-base text-[#e2e2e2] hover:text-[#fbbc00]"
                 >
                   <span className="flex h-8 w-8 items-center justify-center rounded-full text-xs border border-[#333535] bg-[#1a1c1c] text-[#9c8f78]">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                      />
                     </svg>
                   </span>
                   <span className="font-mono text-xs uppercase">
-                    {t.has(detailParent.labelKey as any) ? t(detailParent.labelKey as any) : detailParent.labelKey}
+                    {t.has(detailParent.labelKey as any)
+                      ? t(detailParent.labelKey as any)
+                      : detailParent.labelKey}
                   </span>
                 </Link>
               </>
             ) : (
-              <Link href="/" className={`flex items-center transition-colors no-underline ${logoTextClass}`}>
+              <Link
+                href="/"
+                className={`flex items-center transition-colors no-underline ${logoTextClass}`}
+              >
                 <span className={`flex items-center justify-center ${logoIconBoxClass}`}>
-                  <svg className={logoSvgClass} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  <svg
+                    className={logoSvgClass}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                    />
                   </svg>
                 </span>
                 {siteTitle}
@@ -189,7 +224,10 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
           </div>
 
           {/* Desktop Nav Links */}
-          <nav ref={navRef} className="hidden items-center gap-4 lg:gap-8 md:flex shrink-0 ml-auto mr-4 sm:mr-6">
+          <nav
+            ref={navRef}
+            className="hidden items-center gap-4 lg:gap-8 md:flex shrink-0 ml-auto mr-4 sm:mr-6"
+          >
             {displayNavItems.map((item) => {
               const labelKey = item.label.toLowerCase() as any;
               const translatedLabel = t.has(labelKey) ? t(labelKey) : item.label;
@@ -202,8 +240,9 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href as any}
-                  className={`transition-colors whitespace-nowrap ${navLinkTextClass} ${isActive ? navLinkActiveClass : navLinkInactiveClass
-                    }`}
+                  className={`transition-colors whitespace-nowrap ${navLinkTextClass} ${
+                    isActive ? navLinkActiveClass : navLinkInactiveClass
+                  }`}
                 >
                   {translatedLabel}
                 </Link>
@@ -236,11 +275,21 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
               <span className="sr-only">Toggle menu</span>
               {mobileOpen ? (
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               ) : (
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               )}
             </button>
@@ -249,7 +298,9 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
 
         {/* Drawer Menu */}
         {mobileOpen && (
-          <div className={`absolute top-14 left-0 right-0 z-40 px-6 py-3 shadow-lg ${drawerBgClass}`}>
+          <div
+            className={`absolute top-14 left-0 right-0 z-40 px-6 py-3 shadow-lg ${drawerBgClass}`}
+          >
             <nav className="flex flex-col gap-1 md:hidden">
               {displayNavItems
                 .filter((item) => !(isAdmin && item.href === '/admin'))
@@ -265,8 +316,9 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
                     <Link
                       key={item.href}
                       href={item.href as any}
-                      className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${drawerNavLinkClass} ${isActive ? drawerNavLinkActiveClass : drawerNavLinkInactiveClass
-                        }`}
+                      className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${drawerNavLinkClass} ${
+                        isActive ? drawerNavLinkActiveClass : drawerNavLinkInactiveClass
+                      }`}
                       onClick={() => setMobileOpen(false)}
                     >
                       {getNavIcon(item.href)}
@@ -281,7 +333,11 @@ export function MetroHeader({ siteTitle, navItems }: HeaderProps) {
             <div className="py-0 flex flex-row items-center justify-start md:justify-center gap-2.5 sm:gap-3 px-2 md:px-3 w-full">
               <LanguageSwitcher onItemClick={() => setMobileOpen(false)} />
               <div className="hidden md:block">
-                <UserMenu showDetails={true} align="right" onItemClick={() => setMobileOpen(false)} />
+                <UserMenu
+                  showDetails={true}
+                  align="right"
+                  onItemClick={() => setMobileOpen(false)}
+                />
               </div>
             </div>
 

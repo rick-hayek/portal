@@ -224,6 +224,67 @@
     "qrcode": {
       "name": "QR Code Generator",
       "desc": "Generate custom QR codes from URLs, text, Wi-Fi, vCard, emails and more."
+    },
+    "httpClient": {
+      "name": "HTTP / API Client",
+      "desc": "Lightweight API testing & Webhook sender tool supporting GET/POST/PUT/DELETE, headers, auth & cURL export."
+    }
+  },
+  "ToolsHttpClient": {
+    "title": "HTTP / API Request Sender",
+    "description": "A lightweight browser tool for testing APIs, triggering webhooks, and inspecting responses without Postman bloat.",
+    "send": "Send Request",
+    "sending": "Sending...",
+    "urlPlaceholder": "Enter request URL e.g. https://api.example.com/v1/resource ...",
+    "useProxy": "Use Server Proxy (Bypass CORS)",
+    "proxyNotice": "Notice: Direct browser fetch may be blocked by CORS policy. Enable 'Use Server Proxy' if target API blocks cross-origin requests.",
+    "presetsTitle": "Presets",
+    "presets": {
+      "indexnow": "IndexNow Submit (Bing)",
+      "httpbinGet": "HTTPBin GET Test",
+      "httpbinPost": "HTTPBin POST Test",
+      "jsonplaceholder": "JSONPlaceholder API"
+    },
+    "tabs": {
+      "params": "Params",
+      "headers": "Headers",
+      "body": "Body",
+      "auth": "Auth"
+    },
+    "bodyType": {
+      "none": "None",
+      "json": "JSON Data",
+      "form": "Form Urlencoded",
+      "text": "Plain Text / XML"
+    },
+    "authType": {
+      "none": "None",
+      "bearer": "Bearer Token",
+      "basic": "Basic Auth",
+      "apiKey": "API Key"
+    },
+    "response": {
+      "title": "Response",
+      "status": "Status",
+      "time": "Time",
+      "size": "Size",
+      "tabs": {
+        "body": "Body",
+        "headers": "Headers",
+        "code": "Code Snippet"
+      },
+      "copyBody": "Copy Body",
+      "copyCurl": "Copy cURL",
+      "copyFetch": "Copy Fetch Code",
+      "copied": "Copied!",
+      "noResponse": "No request sent yet. Enter a URL above and click Send Request!",
+      "corsErrorTitle": "CORS Error (Cross-Origin Request Blocked)",
+      "corsErrorDesc": "The target server did not allow cross-origin requests from this domain. Enable 'Use Server Proxy' at top right to bypass CORS."
+    },
+    "history": {
+      "title": "Recent History",
+      "empty": "No request history yet",
+      "clear": "Clear History"
     }
   },
   "ToolsQrcode": {

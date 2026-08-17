@@ -17,7 +17,12 @@ export function parseStyleString(styleStr: string): Record<string, string> {
     let camelProperty = property;
     if (property.startsWith('-')) {
       const parts = property.slice(1).split('-');
-      camelProperty = parts[0] + parts.slice(1).map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join('');
+      camelProperty =
+        parts[0] +
+        parts
+          .slice(1)
+          .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+          .join('');
     } else {
       camelProperty = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
     }

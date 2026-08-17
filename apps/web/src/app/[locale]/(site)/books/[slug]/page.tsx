@@ -45,4 +45,3 @@ export default async function BookDetailPage({
 
   return <BookDetailClient initialBook={book} />;
 }
-

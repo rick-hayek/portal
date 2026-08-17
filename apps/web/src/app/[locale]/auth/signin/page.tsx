@@ -21,8 +21,10 @@ function SignInContent() {
   useEffect(() => {
     // If current locale is default 'zh', but callbackUrl contains /en/ or NEXT_LOCALE cookie is 'en',
     // redirect to English signin route /en/auth/signin
-    const isCallbackEn = callbackUrl.includes('/en/') || callbackUrl.includes('/en?') || callbackUrl.endsWith('/en');
-    const cookieMatch = typeof document !== 'undefined' && document.cookie.includes('NEXT_LOCALE=en');
+    const isCallbackEn =
+      callbackUrl.includes('/en/') || callbackUrl.includes('/en?') || callbackUrl.endsWith('/en');
+    const cookieMatch =
+      typeof document !== 'undefined' && document.cookie.includes('NEXT_LOCALE=en');
 
     if (locale === 'zh' && (isCallbackEn || cookieMatch)) {
       router.replace(`/auth/signin?${searchParams.toString()}`, { locale: 'en' });

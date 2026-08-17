@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { sanitizeMdxContent } from '../apps/web/src/lib/mdx-sanitizer';
-import rehypeSanitizeHtmlAttrs, { parseStyleString } from '../apps/web/src/lib/rehype-sanitize-html-attrs';
+import rehypeSanitizeHtmlAttrs, {
+  parseStyleString,
+} from '../apps/web/src/lib/rehype-sanitize-html-attrs';
 
 describe('sanitizeMdxContent', () => {
   it('escapes unclosed plain text angle brackets like <RP Name>', () => {
@@ -50,7 +52,9 @@ describe('sanitizeMdxContent', () => {
 
 describe('parseStyleString & rehypeSanitizeHtmlAttrs', () => {
   it('correctly converts CSS style string to camelCase object', () => {
-    const styleObj = parseStyleString('color: blue; font-size: 14px; margin-top: 10px; -webkit-transform: scale(1)');
+    const styleObj = parseStyleString(
+      'color: blue; font-size: 14px; margin-top: 10px; -webkit-transform: scale(1)',
+    );
     expect(styleObj).toEqual({
       color: 'blue',
       fontSize: '14px',
@@ -91,15 +95,3 @@ Search instead for <span style="color: #2563eb"> voocii </span>`;
     expect(html).toContain('style="color:#2563eb"');
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-

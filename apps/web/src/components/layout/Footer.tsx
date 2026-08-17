@@ -29,11 +29,13 @@ export function Footer({ siteTitle }: FooterProps) {
 
   return (
     <footer className={`w-full flex justify-center ${footerBgClass} mt-auto`}>
-      <div className={`flex w-full items-center justify-between py-6 gap-4 ${isMetro ? 'max-w-[1400px] mx-auto px-4 sm:px-8' : 'px-4 md:px-8'} ${textBaseClass}`}>
+      <div
+        className={`flex w-full items-center justify-between py-6 gap-4 ${isMetro ? 'max-w-[1400px] mx-auto px-4 sm:px-8' : 'px-4 md:px-8'} ${textBaseClass}`}
+      >
         <div className="flex items-center gap-2">
-
           <span>
-            © {currentYear} {siteTitle}.<span className="hidden sm:inline"> Built with Next.js & tRPC.</span>
+            © {currentYear} {siteTitle}.
+            <span className="hidden sm:inline"> Built with Next.js & tRPC.</span>
           </span>
         </div>
 

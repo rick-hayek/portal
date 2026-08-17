@@ -230,14 +230,14 @@ export function ClassicLayout({
               posts.map((post) => {
                 const formattedDate = post.publishedAt
                   ? (() => {
-                    const date = new Date(post.publishedAt);
-                    const isCurrentYear = date.getFullYear() === new Date().getFullYear();
-                    return date.toLocaleDateString(locale, {
-                      year: isCurrentYear ? undefined : 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    });
-                  })()
+                      const date = new Date(post.publishedAt);
+                      const isCurrentYear = date.getFullYear() === new Date().getFullYear();
+                      return date.toLocaleDateString(locale, {
+                        year: isCurrentYear ? undefined : 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      });
+                    })()
                   : '—';
 
                 return (

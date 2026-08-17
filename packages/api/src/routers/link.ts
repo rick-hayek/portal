@@ -33,7 +33,11 @@ export const linkRouter = router({
   applyLink: publicProcedure
     .input(
       z.object({
-        name: z.string().trim().min(1, 'Name is required').max(50, 'Name cannot exceed 50 characters'),
+        name: z
+          .string()
+          .trim()
+          .min(1, 'Name is required')
+          .max(50, 'Name cannot exceed 50 characters'),
         url: z
           .string()
           .trim()
@@ -45,7 +49,10 @@ export const linkRouter = router({
           .trim()
           .max(255)
           .url('Invalid Avatar URL format')
-          .refine((val) => /^https?:\/\//i.test(val), 'Avatar URL must start with http:// or https://')
+          .refine(
+            (val) => /^https?:\/\//i.test(val),
+            'Avatar URL must start with http:// or https://',
+          )
           .optional()
           .or(z.literal('')),
         description: z
@@ -67,10 +74,19 @@ export const linkRouter = router({
           .trim()
           .max(255)
           .url('Invalid Screenshot URL format')
-          .refine((val) => /^https?:\/\//i.test(val), 'Screenshot URL must start with http:// or https://')
+          .refine(
+            (val) => /^https?:\/\//i.test(val),
+            'Screenshot URL must start with http:// or https://',
+          )
           .optional()
           .or(z.literal('')),
-        email: z.string().trim().email('Invalid email address').max(100).optional().or(z.literal('')),
+        email: z
+          .string()
+          .trim()
+          .email('Invalid email address')
+          .max(100)
+          .optional()
+          .or(z.literal('')),
         // Anti-bot safeguards
         captchaAnswer: z.number().optional(),
         captchaExpected: z.number().optional(),

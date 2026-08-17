@@ -145,7 +145,8 @@ const parseGfmAlertsInHtml = (html: string) => {
 marked.use({
   renderer: {
     code(token: any) {
-      const text = typeof token === 'object' && token !== null ? (token.text ?? '') : String(token || '');
+      const text =
+        typeof token === 'object' && token !== null ? (token.text ?? '') : String(token || '');
       const lang = typeof token === 'object' && token !== null ? (token.lang ?? '') : '';
       const language = (lang || '').trim().split(/\s+/)[0].toLowerCase();
 

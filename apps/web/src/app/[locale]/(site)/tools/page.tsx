@@ -1,4 +1,4 @@
-import { FileJson, FileText, Hash, QrCode, Settings2, Shield } from 'lucide-react';
+import { FileJson, FileText, Hash, QrCode, Send, Settings2, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
@@ -16,13 +16,13 @@ export default function ToolsPage() {
 
   const tools = [
     {
-      id: 'qrcode',
-      name: t('qrcode.name'),
-      description: t('qrcode.desc'),
-      icon: <QrCode className="h-6 w-6" />,
-      href: '/tools/qrcode',
-      color: 'text-violet-500',
-      bg: 'bg-[rgba(139,92,246,0.1)]',
+      id: 'http-client',
+      name: t('httpClient.name'),
+      description: t('httpClient.desc'),
+      icon: <Send className="h-6 w-6" />,
+      href: '/tools/http-client',
+      color: 'text-sky-500',
+      bg: 'bg-[rgba(14,165,233,0.1)]',
     },
     {
       id: 'markdown-editor',
@@ -59,6 +59,15 @@ export default function ToolsPage() {
       href: '/tools/jwt-decoder',
       color: 'text-orange-500',
       bg: 'bg-[rgba(249,115,22,0.1)]',
+    },
+    {
+      id: 'qrcode',
+      name: t('qrcode.name'),
+      description: t('qrcode.desc'),
+      icon: <QrCode className="h-6 w-6" />,
+      href: '/tools/qrcode',
+      color: 'text-violet-500',
+      bg: 'bg-[rgba(139,92,246,0.1)]',
     },
   ];
 

@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+
+## [1.0.4] - 2026-08-17
+
+### Added
+- **HTTP / API Client Tool**: Add browser-based HTTP request debugging & Webhook testing tool (`/tools/http-client`) supporting GET/POST/PUT/DELETE/HEAD/OPTIONS methods, query params builder, headers editor, JSON/Form/Text payload formatting, Auth presets, cURL/Fetch snippet export, IndexNow template, and optional server proxy to bypass CORS.
+- **Bing Search & SEO Optimizations**: Integrate Bing Webmaster Tools & IndexNow verification, fix missing `<h1>` semantic tags on SSR pre-rendered book detail (`/books/[slug]`) and blog list (`/blog`) pages.
+
 ## [1.0.3] - 2026-08-15
 
 ### Added

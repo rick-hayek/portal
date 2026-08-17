@@ -89,7 +89,9 @@ export default async function RootLayout({
       <body className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <TRPCReactProvider>
-            <ThemeProvider defaultTheme={siteConfig.theme.default || 'zenith'}>{children}</ThemeProvider>
+            <ThemeProvider defaultTheme={siteConfig.theme.default || 'zenith'}>
+              {children}
+            </ThemeProvider>
           </TRPCReactProvider>
         </NextIntlClientProvider>
       </body>

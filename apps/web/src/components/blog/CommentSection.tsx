@@ -1,6 +1,15 @@
 'use client';
 
-import { Check, ExternalLink, Globe, LogIn, Mail, MessageSquare, Send, User as UserIcon } from 'lucide-react';
+import {
+  Check,
+  ExternalLink,
+  Globe,
+  LogIn,
+  Mail,
+  MessageSquare,
+  Send,
+  User as UserIcon,
+} from 'lucide-react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
@@ -204,11 +213,14 @@ function CommentItem({
                 )}
               </div>
               <time className="text-[11px] text-[var(--portal-color-text-tertiary)] font-mono block">
-                {new Date(comment.createdAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                })}
+                {new Date(comment.createdAt).toLocaleDateString(
+                  locale === 'zh' ? 'zh-CN' : 'en-US',
+                  {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  },
+                )}
               </time>
             </div>
           </div>
@@ -412,7 +424,11 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
         setFormError(t('urlHttpsRequired'));
         return;
       }
-      handleGuestInfoUpdate({ authorName: finalName, authorEmail: finalEmail, authorUrl: finalUrl });
+      handleGuestInfoUpdate({
+        authorName: finalName,
+        authorEmail: finalEmail,
+        authorUrl: finalUrl,
+      });
     }
 
     setSubmitting(true);

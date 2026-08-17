@@ -213,17 +213,19 @@ export function SearchDialog({
                     <li key={hit.id} className="px-2">
                       <a
                         href={href}
-                        className={`group flex items-center gap-3 rounded-xl px-3 py-3 transition-colors ${i === selectedIndex
+                        className={`group flex items-center gap-3 rounded-xl px-3 py-3 transition-colors ${
+                          i === selectedIndex
                             ? 'bg-[var(--portal-color-surface-alt)]'
                             : 'hover:bg-[var(--portal-color-surface-alt)]'
-                          }`}
+                        }`}
                         onClick={() => setOpen(false)}
                       >
                         <div
-                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${i === selectedIndex
+                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${
+                            i === selectedIndex
                               ? 'border-[rgba(107,142,201,0.2)] bg-[var(--portal-color-surface)] text-[var(--portal-color-primary)]'
                               : 'border-compat bg-[var(--portal-color-surface)] text-[var(--portal-color-text-tertiary)]'
-                            }`}
+                          }`}
                         >
                           {hit.type === 'book' ? (
                             <svg

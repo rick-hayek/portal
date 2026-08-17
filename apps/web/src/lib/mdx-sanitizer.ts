@@ -187,8 +187,10 @@ export function sanitizeMdxContent(
     }
 
     // 1. Normalize unquoted attribute values on HTML tags (e.g. <font color=blue> -> <font color="blue">)
-    text = text.replace(/(<[a-zA-Z0-9_-]+\s+[^>]*?)([a-zA-Z0-9_-]+)=([^\s"'`=<>/]+)([\s/>]|$)/g, '$1$2="$3"$4');
-
+    text = text.replace(
+      /(<[a-zA-Z0-9_-]+\s+[^>]*?)([a-zA-Z0-9_-]+)=([^\s"'`=<>/]+)([\s/>]|$)/g,
+      '$1$2="$3"$4',
+    );
 
     // Replace `<` that is not a valid known component or valid HTML tag
     text = text.replace(/<([^>\n]*)(>|$)/g, (fullMatch, tagInner, closingBracket) => {

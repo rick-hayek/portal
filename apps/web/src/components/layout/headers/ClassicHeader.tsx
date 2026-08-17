@@ -121,15 +121,18 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
 
   const headerBgClass =
     'border-b border-compat bg-[var(--portal-color-background-glass)] backdrop-blur-xl backdrop-saturate-150';
-  const logoTextClass = 'gap-2 font-bold text-[var(--portal-color-text)] text-[1.1rem] tracking-tight';
-  const logoIconBoxClass = 'h-7 w-7 rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]';
+  const logoTextClass =
+    'gap-2 font-bold text-[var(--portal-color-text)] text-[1.1rem] tracking-tight';
+  const logoIconBoxClass =
+    'h-7 w-7 rounded-lg bg-[var(--portal-color-primary)] text-white text-[14px]';
   const navLinkTextClass = 'text-[0.82rem] tracking-tight';
   const navLinkActiveClass = 'font-bold text-[var(--portal-color-primary)]';
   const navLinkInactiveClass =
     'font-medium text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-text)]';
   const hamburgerButtonClass =
     'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] rounded-md';
-  const drawerBgClass = 'border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]';
+  const drawerBgClass =
+    'border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]';
   const drawerNavLinkClass = 'rounded-md';
   const drawerNavLinkActiveClass =
     'bg-[var(--portal-color-surface-alt)] text-[var(--portal-color-primary)] font-bold';
@@ -142,8 +145,9 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
     <>
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 flex justify-center transition-transform duration-300 ease-in-out md:translate-y-0 ${headerBgClass} ${isHidden ? '-translate-y-full' : 'translate-y-0'
-          }`}
+        className={`fixed top-0 left-0 right-0 z-50 w-full h-14 flex justify-center transition-transform duration-300 ease-in-out md:translate-y-0 ${headerBgClass} ${
+          isHidden ? '-translate-y-full' : 'translate-y-0'
+        }`}
       >
         <div className="flex h-full items-center justify-between px-4 md:px-8 w-full">
           {/* Logo / Mobile Back Button */}
@@ -155,8 +159,17 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
                   className={`hidden md:flex items-center transition-colors no-underline ${logoTextClass}`}
                 >
                   <span className={`flex items-center justify-center ${logoIconBoxClass}`}>
-                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    <svg
+                      className="h-3.5 w-3.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                      />
                     </svg>
                   </span>
                   {siteTitle}
@@ -166,20 +179,44 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
                   className="flex md:hidden items-center gap-2 font-bold transition-colors no-underline text-base text-[var(--portal-color-text)] hover:text-[var(--portal-color-primary)]"
                 >
                   <span className="flex h-8 w-8 items-center justify-center rounded-full text-xs border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text-secondary)] shadow-xs">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                      />
                     </svg>
                   </span>
                   <span className="text-[0.95rem]">
-                    {t.has(detailParent.labelKey as any) ? t(detailParent.labelKey as any) : detailParent.labelKey}
+                    {t.has(detailParent.labelKey as any)
+                      ? t(detailParent.labelKey as any)
+                      : detailParent.labelKey}
                   </span>
                 </Link>
               </>
             ) : (
-              <Link href="/" className={`flex items-center transition-colors no-underline ${logoTextClass}`}>
+              <Link
+                href="/"
+                className={`flex items-center transition-colors no-underline ${logoTextClass}`}
+              >
                 <span className={`flex items-center justify-center ${logoIconBoxClass}`}>
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  <svg
+                    className="h-3.5 w-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                    />
                   </svg>
                 </span>
                 {siteTitle}
@@ -201,8 +238,9 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
                 <Link
                   key={item.href}
                   href={item.href as any}
-                  className={`transition-colors whitespace-nowrap ${navLinkTextClass} ${isActive ? navLinkActiveClass : navLinkInactiveClass
-                    }`}
+                  className={`transition-colors whitespace-nowrap ${navLinkTextClass} ${
+                    isActive ? navLinkActiveClass : navLinkInactiveClass
+                  }`}
                 >
                   {translatedLabel}
                 </Link>
@@ -235,11 +273,21 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
               <span className="sr-only">Toggle menu</span>
               {mobileOpen ? (
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               ) : (
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               )}
             </button>
@@ -248,7 +296,9 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
 
         {/* Drawer Menu */}
         {mobileOpen && (
-          <div className={`absolute top-14 left-0 right-0 z-40 px-6 py-3 shadow-lg ${drawerBgClass}`}>
+          <div
+            className={`absolute top-14 left-0 right-0 z-40 px-6 py-3 shadow-lg ${drawerBgClass}`}
+          >
             <nav className="flex flex-col gap-1 md:hidden">
               {displayNavItems
                 .filter((item) => !(isAdmin && item.href === '/admin'))
@@ -264,8 +314,9 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
                     <Link
                       key={item.href}
                       href={item.href as any}
-                      className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${drawerNavLinkClass} ${isActive ? drawerNavLinkActiveClass : drawerNavLinkInactiveClass
-                        }`}
+                      className={`flex items-center gap-3 px-3 py-2 text-sm transition-colors ${drawerNavLinkClass} ${
+                        isActive ? drawerNavLinkActiveClass : drawerNavLinkInactiveClass
+                      }`}
                       onClick={() => setMobileOpen(false)}
                     >
                       {getNavIcon(item.href)}
@@ -281,7 +332,11 @@ export function ClassicHeader({ siteTitle, navItems }: HeaderProps) {
               <LanguageSwitcher onItemClick={() => setMobileOpen(false)} />
               <ThemeSwitcher onItemClick={() => setMobileOpen(false)} />
               <div className="hidden md:block">
-                <UserMenu showDetails={true} align="right" onItemClick={() => setMobileOpen(false)} />
+                <UserMenu
+                  showDetails={true}
+                  align="right"
+                  onItemClick={() => setMobileOpen(false)}
+                />
               </div>
             </div>
 

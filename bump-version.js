@@ -2,9 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Determine root directory (works whether script is run from root or scripts/)
-const rootDir = __dirname.endsWith('scripts')
-  ? path.resolve(__dirname, '..')
-  : __dirname;
+const rootDir = __dirname.endsWith('scripts') ? path.resolve(__dirname, '..') : __dirname;
 
 const pkgPath = path.join(rootDir, 'package.json');
 const readmePath = path.join(rootDir, 'README.md');
@@ -34,7 +32,7 @@ console.log(`Bumping version: ${currentVersion} -> ${targetVersion}`);
 // 3. Update package.json
 const updatedPkgContent = pkgContent.replace(
   /"version"\s*:\s*"[^"]+"/,
-  `"version": "${targetVersion}"`
+  `"version": "${targetVersion}"`,
 );
 fs.writeFileSync(pkgPath, updatedPkgContent, 'utf8');
 
@@ -43,7 +41,7 @@ if (fs.existsSync(readmePath)) {
   let readmeContent = fs.readFileSync(readmePath, 'utf8');
   readmeContent = readmeContent.replace(
     /badge\/version-v[^-\s)]+-blue\.svg/g,
-    `badge/version-v${targetVersion}-blue.svg`
+    `badge/version-v${targetVersion}-blue.svg`,
   );
   fs.writeFileSync(readmePath, readmeContent, 'utf8');
 }
@@ -53,9 +51,11 @@ if (fs.existsSync(readmeEnPath)) {
   let readmeEnContent = fs.readFileSync(readmeEnPath, 'utf8');
   readmeEnContent = readmeEnContent.replace(
     /badge\/version-v[^-\s)]+-blue\.svg/g,
-    `badge/version-v${targetVersion}-blue.svg`
+    `badge/version-v${targetVersion}-blue.svg`,
   );
   fs.writeFileSync(readmeEnPath, readmeEnContent, 'utf8');
 }
 
-console.log(`Successfully updated version to v${targetVersion} in package.json, README.md, and README.en.md!`);
+console.log(
+  `Successfully updated version to v${targetVersion} in package.json, README.md, and README.en.md!`,
+);
