@@ -7,7 +7,13 @@ export const categoryRouter = router({
       return ctx.prisma.category.findMany({
         orderBy: { name: 'asc' },
         include: {
-          _count: { select: { posts: true } },
+          _count: {
+            select: {
+              posts: {
+                where: { status: 'published' },
+              },
+            },
+          },
         },
       });
     };

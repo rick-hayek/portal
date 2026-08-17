@@ -146,7 +146,7 @@
       "desc": "站点描述",
       "url": "站点链接",
       "avatar": "头像Logo",
-      "screenshot": "站点截图",
+      "screenshot": "首页截图",
       "rss": "RSS 订阅"
     },
     "categories": {

@@ -435,7 +435,7 @@ export function ClassicLayout({
 
       {/* GUESTBOOK SECTION */}
       <section className="py-20 px-8 max-w-[1200px] mx-auto w-full">
-        <div className="flex items-baseline gap-3 mb-10">
+        {/* <div className="flex items-baseline gap-3 mb-10">
           <span className="w-7 h-[2px] bg-[var(--portal-color-primary)] shrink-0"></span>
           <span className="font-mono text-[0.7rem] tracking-widest uppercase text-[var(--portal-color-primary)] font-medium">
             {t('community')}
@@ -443,9 +443,9 @@ export function ClassicLayout({
           <h2 className="text-[1.6rem] font-bold tracking-tight text-[var(--portal-color-text)]">
             {t('guestbookTitle')}
           </h2>
-        </div>
+        </div> */}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {guestbookEntries.length > 0 ? (
             guestbookEntries.map((entry) => (
               <div
@@ -484,14 +484,14 @@ export function ClassicLayout({
               No guestbook messages yet.
             </p>
           )}
-        </div>
+        </div> */}
 
         {/* Stats Row */}
         <div className="mt-8 pt-8 border-t border-compat-soft grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center">
           {[
             { num: String(postCount), label: tGuestbook('stats.posts') },
             { num: String(projectCount), label: tGuestbook('stats.projects') },
-            { num: String(guestbookCount), label: tGuestbook('stats.guestbook') },
+            //{ num: String(guestbookCount), label: tGuestbook('stats.guestbook') },
           ].map((stat, i) => (
             <div key={i} className="text-center">
               <div className="text-3xl font-extrabold tracking-tighter leading-none text-[var(--portal-color-text)]">
