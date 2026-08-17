@@ -505,23 +505,33 @@ export default function HttpClientPage() {
         </div>
 
         {/* Proxy Option Toggle Bar */}
-        <div className="flex items-center justify-between pt-1 border-t border-[var(--portal-color-border)]/50 text-xs">
-          <label className="flex items-center gap-2 cursor-pointer text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]">
-            <input
-              type="checkbox"
-              checked={useProxy}
-              onChange={(e) => setUseProxy(e.target.checked)}
-              className="h-4 w-4 rounded border-[var(--portal-color-border)] text-[var(--portal-color-primary)] focus:ring-[var(--portal-color-primary)]"
-            />
-            <span className="font-medium">{t('useProxy')}</span>
-          </label>
+        <div className="flex flex-col gap-2 pt-1 border-t border-[var(--portal-color-border)]/50 text-xs">
+          <div className="flex items-center justify-between">
+            <label className="flex items-center gap-2 cursor-pointer text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-text)]">
+              <input
+                type="checkbox"
+                checked={useProxy}
+                onChange={(e) => setUseProxy(e.target.checked)}
+                className="h-4 w-4 rounded border-[var(--portal-color-border)] text-[var(--portal-color-primary)] focus:ring-[var(--portal-color-primary)] cursor-pointer"
+              />
+              <span className="font-medium">{t('useProxy')}</span>
+            </label>
 
-          <span className="hidden sm:inline text-[var(--portal-color-text-tertiary)]">
-            ⌨️ Shortcut:{' '}
-            <kbd className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-1.5 py-0.5 text-[10px] font-mono">
-              Cmd/Ctrl + Enter
-            </kbd>
-          </span>
+            <span className="hidden sm:inline text-[var(--portal-color-text-tertiary)]">
+              ⌨️ Shortcut:{' '}
+              <kbd className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-1.5 py-0.5 text-[10px] font-mono">
+                Cmd/Ctrl + Enter
+              </kbd>
+            </span>
+          </div>
+
+          {/* Proxy Security Caution Banner */}
+          {useProxy && (
+            <div className="flex items-start gap-2 rounded-xl bg-amber-500/10 border border-amber-500/20 px-3.5 py-2 text-xs text-amber-600 dark:text-amber-400 leading-relaxed animate-in fade-in slide-in-from-top-1 duration-150">
+              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+              <span>{t('proxyNotice')}</span>
+            </div>
+          )}
         </div>
 
         {/* Request Tabs & Content */}

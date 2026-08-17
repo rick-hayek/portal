@@ -156,7 +156,7 @@
       "other": "其他链接"
     },
     "applyTitle": "申请友情链接",
-    "applyDesc": "欢迎互换友情链接！请先在贵站添加本站链接，然后将贵站信息发送邮件至站长。",
+    "applyDesc": "欢迎互换友情链接",
     "step1Title": "添加本站",
     "step1Desc": "请参考下方“本站友链信息”在贵站友情链接页面添加本站。",
     "step2Title": "发起申请",
@@ -237,7 +237,7 @@
     "sending": "发送中...",
     "urlPlaceholder": "输入目标 URL，例如 https://api.example.com/v1/resource ...",
     "useProxy": "使用服务端代理 (解决 CORS 跨域)",
-    "proxyNotice": "提示：浏览器直接发起请求可能受跨域 (CORS) 限制。若目标 API 拦截跨域，请勾选“使用服务端代理”。",
+    "proxyNotice": "安全提示：已开启服务端代理。请求参数与数据包将由本站服务器转发中转，本站承诺不会以任何形式收集或存储您的数据，但若请求包含高度敏感/私人机密信息，仍然请谨慎使用。",
     "presetsTitle": "常用预设",
     "presets": {
       "indexnow": "IndexNow 提交 (Bing)",

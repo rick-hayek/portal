@@ -156,8 +156,8 @@
       "other": "Other Links"
     },
     "applyTitle": "Apply for Link Exchange",
-    "applyDesc": "Welcome to exchange links! Please add our site link first, then send your site info via email.",
-    "step1Title": "Add Our Site First",
+    "applyDesc": "Welcome to exchange links",
+    "step1Title": "Add Our Site",
     "step1Desc": "Add our site details to your friend links page using the info below.",
     "step2Title": "Send Application",
     "step2Desc": "Send an email containing your site title, URL, avatar, description, and optional RSS/screenshot.",
@@ -237,7 +237,7 @@
     "sending": "Sending...",
     "urlPlaceholder": "Enter request URL e.g. https://api.example.com/v1/resource ...",
     "useProxy": "Use Server Proxy (Bypass CORS)",
-    "proxyNotice": "Notice: Direct browser fetch may be blocked by CORS policy. Enable 'Use Server Proxy' if target API blocks cross-origin requests.",
+    "proxyNotice": "Security Notice: Server Proxy enabled. Your request data will be forwarded through our server. We promise not to collect or store your data in any form; however, please still use with caution if your request contains highly sensitive credentials.",
     "presetsTitle": "Presets",
     "presets": {
       "indexnow": "IndexNow Submit (Bing)",
