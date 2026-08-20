@@ -523,7 +523,7 @@ export const adminRouter = router({
   linkList: adminProcedure.query(({ ctx }) =>
     ctx.prisma.link.findMany({
       where: { NOT: { id: 'site-self-link' } },
-      orderBy: [{ category: 'asc' }, { sortOrder: 'asc' }],
+      orderBy: { createdAt: 'desc' },
     }),
   ),
 

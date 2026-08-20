@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, ChevronUp, Link as LinkIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Link as LinkIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { type FormEvent, useCallback, useEffect, useState } from 'react';
 import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
 
@@ -139,6 +139,36 @@ export default function LinksAdminPage() {
       loadLinks();
     } catch (e) {
       console.error('Delete failed', e);
+    }
+  }
+
+  async function handleApprove(link: LinkEntry) {
+    try {
+      await fetch('/api/trpc/admin.linkUpdate?batch=1', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          '0': {
+            json: {
+              id: link.id,
+              name: link.name,
+              url: link.url,
+              rss: link.rss || undefined,
+              avatar: link.avatar || undefined,
+              screenshot: link.screenshot || undefined,
+              description: link.description || undefined,
+              category: link.category,
+              status: 'approved',
+              sortOrder: link.sortOrder,
+              isAlive: link.isAlive,
+            },
+          },
+        }),
+      });
+      loadLinks();
+    } catch (e) {
+      console.error('Approve failed', e);
+      alert('Failed to approve link');
     }
   }
 
@@ -539,21 +569,26 @@ export default function LinksAdminPage() {
                     key={link.id}
                     className="hover:bg-[var(--portal-color-bg)]/50 transition-colors"
                   >
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2 font-medium text-[var(--portal-color-text)] hover:underline">
-                        <a href={link.url} target="_blank" rel="noreferrer">
+                    <td className="px-4 py-3 min-w-0 max-w-[160px] sm:max-w-none">
+                      <div className="flex items-center gap-1.5 font-medium text-[var(--portal-color-text)] min-w-0">
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="truncate hover:underline"
+                        >
                           {link.name}
                         </a>
                         {link.rss && (
                           <span
                             title={`RSS: ${link.rss}`}
-                            className="inline-flex items-center rounded-md bg-orange-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-orange-600 dark:text-orange-400"
+                            className="inline-flex shrink-0 items-center rounded-md bg-orange-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-orange-600 dark:text-orange-400"
                           >
                             RSS
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-[var(--portal-color-text-tertiary)] line-clamp-1">
+                      <div className="text-xs text-[var(--portal-color-text-tertiary)] truncate">
                         {link.description || link.url}
                       </div>
                     </td>
@@ -563,11 +598,10 @@ export default function LinksAdminPage() {
                       </span>
                       {link.status && link.status !== 'approved' && (
                         <span
-                          className={`ml-2 inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
-                            link.status === 'pending'
+                          className={`ml-2 inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${link.status === 'pending'
                               ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
                               : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
-                          }`}
+                            }`}
                         >
                           {link.status}
                         </span>
@@ -586,8 +620,18 @@ export default function LinksAdminPage() {
                     <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)]">
                       {link.sortOrder}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+                        {link.status === 'pending' && (
+                          <button
+                            type="button"
+                            onClick={() => handleApprove(link)}
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 transition-colors cursor-pointer"
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">Approve</span>
+                          </button>
+                        )}
                         <button
                           type="button"
                           onClick={() => editLink(link)}
