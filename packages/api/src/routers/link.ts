@@ -87,6 +87,7 @@ export const linkRouter = router({
           .max(100)
           .optional()
           .or(z.literal('')),
+        locale: z.string().optional(),
         // Anti-bot safeguards
         captchaAnswer: z.number().optional(),
         captchaExpected: z.number().optional(),
@@ -164,6 +165,7 @@ export const linkRouter = router({
         rss: input.rss ? input.rss : null,
         screenshot: input.screenshot ? input.screenshot : null,
         email: input.email ? input.email : null,
+        locale: input.locale || 'zh',
         status: 'pending',
         submitterIp: clientIp,
       };

@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { ensurePostsIndex, indexPost, meili, POSTS_INDEX, removePostFromIndex } from '../search';
+import { sendCommentApprovedNotification, sendLinkApprovedNotification } from '../services/email';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
 
 export const adminRouter = router({
@@ -235,10 +236,43 @@ export const adminRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.prisma.comment.findUnique({
+        where: { id: input.id },
+        include: { post: { select: { title: true, slug: true } } },
+      });
+
       const comment = await ctx.prisma.comment.update({
         where: { id: input.id },
         data: { status: input.status },
+        include: { post: { select: { title: true, slug: true } } },
       });
+
+      if (
+        existing &&
+        existing.status !== 'approved' &&
+        input.status === 'approved' &&
+        comment.authorEmail
+      ) {
+        const siteTitle = ctx.siteConfig?.site.title || 'Voocii';
+        const siteUrl = (ctx.siteConfig?.site.url || 'https://voocii.com').replace(/\/+$/, '');
+        const locale = comment.locale || ctx.siteConfig?.site.locale || 'zh';
+        const enabled = ctx.siteConfig?.email?.enabled ?? false;
+        const provider = ctx.siteConfig?.email?.enabled ? ctx.siteConfig.email.provider : undefined;
+
+        sendCommentApprovedNotification({
+          authorEmail: comment.authorEmail,
+          authorName: comment.authorName,
+          postTitle: comment.post?.title || 'Article',
+          postUrl: `${siteUrl}/blog/${comment.post?.slug || ''}`,
+          commentContent: comment.content,
+          siteTitle,
+          siteUrl,
+          locale,
+          enabled,
+          provider,
+        }).catch((err) => console.error('[commentModerate] Failed to trigger email notification:', err));
+      }
+
       if (ctx.revalidateTag) {
         ctx.revalidateTag('posts');
       }
@@ -582,6 +616,11 @@ export const adminRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
+
+      const existing = await ctx.prisma.link.findUnique({
+        where: { id },
+      });
+
       const link = await ctx.prisma.link.update({
         where: { id },
         data: {
@@ -592,6 +631,31 @@ export const adminRouter = router({
           description: data.description === '' ? null : data.description,
         },
       });
+
+      if (
+        existing &&
+        existing.status !== 'approved' &&
+        link.status === 'approved' &&
+        link.email
+      ) {
+        const siteTitle = ctx.siteConfig?.site.title || 'Voocii';
+        const siteUrl = (ctx.siteConfig?.site.url || 'https://voocii.com').replace(/\/+$/, '');
+        const locale = link.locale || ctx.siteConfig?.site.locale || 'zh';
+        const enabled = ctx.siteConfig?.email?.enabled ?? false;
+        const provider = ctx.siteConfig?.email?.enabled ? ctx.siteConfig.email.provider : undefined;
+
+        sendLinkApprovedNotification({
+          applicantEmail: link.email,
+          applicantName: link.name,
+          applicantUrl: link.url,
+          siteTitle,
+          siteUrl,
+          locale,
+          enabled,
+          provider,
+        }).catch((err) => console.error('[linkUpdate] Failed to trigger email notification:', err));
+      }
+
       if (ctx.revalidateTag) {
         ctx.revalidateTag('links');
       }

@@ -30,6 +30,7 @@ export const commentRouter = router({
         authorName: z.string().trim().max(50, 'Name too long').optional(),
         authorEmail: z.string().trim().optional(),
         authorUrl: z.string().trim().optional(),
+        locale: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -85,6 +86,7 @@ export const commentRouter = router({
           authorUrl: finalUrl,
           content: input.content,
           parentId: input.parentId || null,
+          locale: input.locale || 'zh',
           status,
         },
       });

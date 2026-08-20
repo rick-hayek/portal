@@ -18,6 +18,10 @@ export interface SiteConfig {
     enabled: boolean;
     basePath: string;
   };
+  email?: {
+    enabled?: boolean;
+    provider?: string;
+  };
   about?: {
     title?: string;
     subtitle?: string;

@@ -1,7 +1,7 @@
 'use client';
 
 import { AlertCircle, ArrowUpRight, Check, RotateCw, Rss, Send, Sparkles, X } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -14,6 +14,7 @@ interface ApplyLinkModalProps {
 
 export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
   const t = useTranslations('Links');
+  const locale = useLocale();
   const [mounted, setMounted] = useState(false);
 
   // Form state
@@ -108,6 +109,7 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
         rss: rss.trim() || undefined,
         screenshot: screenshot.trim() || undefined,
         email: email.trim() || undefined,
+        locale,
         captchaAnswer: answer,
         captchaExpected: expected,
         honeypot,

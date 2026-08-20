@@ -22,9 +22,14 @@ const validConfig: SiteConfig = {
     available: ['minimal-light', 'dark-neon'],
     allowUserSwitch: true,
   },
+  homeLayout: 'classic',
   admin: {
     enabled: true,
     basePath: '/admin',
+  },
+  email: {
+    enabled: false,
+    provider: 'mailgun',
   },
 };
 

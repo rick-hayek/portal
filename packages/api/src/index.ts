@@ -17,6 +17,7 @@ import { trendingRouter } from './routers/trending';
 import { router } from './trpc';
 
 export { createCallerFactory, createContext } from './trpc';
+export * from './services/email';
 
 export const appRouter = router({
   post: postRouter,

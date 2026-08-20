@@ -1,4 +1,5 @@
 import { prisma } from '@portal/db';
+import type { SiteConfig } from '@portal/shared';
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 
@@ -17,6 +18,7 @@ export async function createContext(opts?: {
     };
     expires: string;
   } | null;
+  siteConfig?: SiteConfig;
   revalidateTag?: (...args: any[]) => any;
   revalidatePath?: (...args: any[]) => any;
   unstable_cache?: (...args: any[]) => any;
@@ -39,6 +41,7 @@ export async function createContext(opts?: {
     prisma,
     session: opts?.session ?? null,
     req: opts?.req,
+    siteConfig: opts?.siteConfig,
     clientIp,
     revalidateTag: opts?.revalidateTag,
     revalidatePath: opts?.revalidatePath,

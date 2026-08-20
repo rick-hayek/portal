@@ -38,6 +38,16 @@ export const siteConfigSchema = z.object({
       enabled: false,
       basePath: '/admin',
     }),
+  email: z
+    .object({
+      enabled: z.boolean().default(false),
+      provider: z.string().default('mailgun'),
+    })
+    .default({
+      enabled: false,
+      provider: 'mailgun',
+    })
+    .optional(),
   about: z
     .object({
       title: z.string().optional(),

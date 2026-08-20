@@ -53,14 +53,14 @@ export default function LinksPage() {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   let targetEmail = 'ricksname@your-site.com';
-  if (aboutData?.email) {
+  if (process.env.NEXT_PUBLIC_EMAIL) {
+    targetEmail = process.env.NEXT_PUBLIC_EMAIL;
+  } else if (aboutData?.email) {
     if (typeof aboutData.email === 'object' && 'address' in (aboutData.email as any)) {
       targetEmail = (aboutData.email as any).address;
     } else if (typeof aboutData.email === 'string') {
       targetEmail = aboutData.email;
     }
-  } else if (process.env.NEXT_PUBLIC_EMAIL) {
-    targetEmail = process.env.NEXT_PUBLIC_EMAIL;
   }
 
   const siteName = selfLink?.name || 'Voocii';

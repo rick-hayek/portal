@@ -2,6 +2,7 @@ import { appRouter, createContext } from '@portal/api';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { auth } from '@/auth';
+import siteConfig from '@/site.config';
 
 const handler = async (req: Request) => {
   const session = await auth();
@@ -13,6 +14,7 @@ const handler = async (req: Request) => {
       createContext({
         req,
         session,
+        siteConfig,
         unstable_cache,
         revalidateTag,
         revalidatePath,
