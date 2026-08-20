@@ -168,9 +168,13 @@
     "applyModal": {
       "title": "Apply for Friendship Link",
       "subtitle": "Fill in your site info to submit into the review queue",
+      "rawModeToggle": "Quick Raw Paste",
+      "standardFormMode": "Standard Form",
+      "rawPastePlaceholder": "Paste YAML / JSON or free text, e.g.:\n\nname: 我的空间\nurl: https://voocii.com/\navatar: https://voocii.com/avatar.png\nscreenshot: https://voocii.com/cover.png\ndesc: Personal space for thoughts\nrss: https://voocii.com/feed.xml\n\nOr simple format:\n\nVoocii\nhttps://voocii.com/\nPersonal space for thoughts",
       "namePlaceholder": "e.g. Voocii",
       "descPlaceholder": "A brief introduction about your site...",
       "email": "Email",
+      "emailPlaceholder": "(Optional) your-email@example.com",
       "captcha": "Security Check",
       "captchaPlaceholder": "Result",
       "refreshCaptcha": "Change",
