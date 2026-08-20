@@ -14,6 +14,7 @@ export const profileRouter = router({
         name: true,
         image: true,
         role: true,
+        receiveNotifications: true,
         passwordHash: true,
       },
     });
@@ -28,9 +29,28 @@ export const profileRouter = router({
       name: user.name,
       image: user.image,
       role: user.role,
+      receiveNotifications: user.receiveNotifications ?? true,
+      isEmailServiceConfigured: ctx.siteConfig?.email?.enabled ?? false,
       hasPassword: user.passwordHash !== null,
     };
   }),
+
+  /** Update email notification preference */
+  updateNotificationSettings: protectedProcedure
+    .input(
+      z.object({
+        receiveNotifications: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: { id: ctx.user.id },
+        data: { receiveNotifications: input.receiveNotifications },
+        select: { id: true, receiveNotifications: true },
+      });
+
+      return { success: true, receiveNotifications: user.receiveNotifications };
+    }),
 
   /** Update user profile (display name) */
   updateProfile: protectedProcedure

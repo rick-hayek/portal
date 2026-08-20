@@ -16,6 +16,28 @@ export interface RenderCommentApprovedOptions {
   locale?: string;
 }
 
+export interface RenderCommentReplyOptions {
+  recipientName: string;
+  replierName: string;
+  postTitle: string;
+  postUrl: string;
+  replyContent: string;
+  siteTitle: string;
+  siteUrl: string;
+  locale?: string;
+}
+
+export interface RenderPostNewCommentOptions {
+  authorName: string;
+  commenterName: string;
+  postTitle: string;
+  postUrl: string;
+  commentContent: string;
+  siteTitle: string;
+  siteUrl: string;
+  locale?: string;
+}
+
 export function renderLinkApprovedEmail(options: RenderLinkApprovedOptions) {
   const isZh = options.locale?.toLowerCase().startsWith('zh');
 
@@ -133,6 +155,130 @@ export function renderCommentApprovedEmail(options: RenderCommentApprovedOptions
   const text = isZh
     ? `你好 ${options.authorName}，发自 ${options.siteTitle} 的通知：您在《${options.postTitle}》下的评论已发布！阅读文章: ${options.postUrl}`
     : `Hello ${options.authorName}, notification from ${options.siteTitle}: Your comment on "${options.postTitle}" is published! Read post: ${options.postUrl}`;
+
+  return { subject, html, text };
+}
+
+export function renderCommentReplyEmail(options: RenderCommentReplyOptions) {
+  const isZh = options.locale?.toLowerCase().startsWith('zh');
+
+  const subject = isZh
+    ? `💬 【${options.siteTitle}】${options.replierName} 回复了您的评论`
+    : `💬 [${options.siteTitle}] ${options.replierName} replied to your comment`;
+
+  const title = isZh ? '收到新的评论回复' : 'New Reply to Your Comment';
+
+  const greeting = isZh
+    ? `你好，<strong>${escapeHtml(options.recipientName)}</strong>：`
+    : `Hello <strong>${escapeHtml(options.recipientName)}</strong>,`;
+
+  const message = isZh
+    ? `<strong>${escapeHtml(options.replierName)}</strong> 在文章 <strong>《${escapeHtml(options.postTitle)}》</strong> 下回复了您的评论：`
+    : `<strong>${escapeHtml(options.replierName)}</strong> replied to your comment on <strong>"${escapeHtml(options.postTitle)}"</strong>:`;
+
+  const commentQuote = `<blockquote style="background: #f3f4f6; border-left: 4px solid #3b82f6; margin: 16px 0; padding: 12px 16px; border-radius: 4px; color: #4b5563;">${escapeHtml(options.replyContent)}</blockquote>`;
+
+  const actionText = isZh ? '前往查看回复' : 'View Reply';
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f6f7f9; color: #333333; margin: 0; padding: 24px 0; }
+    .container { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+    .header { background: #18181b; color: #ffffff; padding: 24px 32px; font-size: 20px; font-weight: 600; }
+    .content { padding: 32px; line-height: 1.6; }
+    .btn { display: inline-block; background-color: #2563eb; color: #ffffff !important; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px; }
+    .footer { padding: 20px 32px; background: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 13px; color: #6b7280; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">${escapeHtml(options.siteTitle)}</div>
+    <div class="content">
+      <h2 style="margin-top:0; color:#111827;">${title}</h2>
+      <p>${greeting}</p>
+      <p>${message}</p>
+      ${commentQuote}
+      <p style="margin-top: 24px;">
+        <a href="${escapeHtml(options.postUrl)}" class="btn" target="_blank">${actionText}</a>
+      </p>
+    </div>
+    <div class="footer">
+      &copy; ${new Date().getFullYear()} ${escapeHtml(options.siteTitle)}. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  const text = isZh
+    ? `你好 ${options.recipientName}，${options.replierName} 在《${options.postTitle}》下回复了您的评论：\n${options.replyContent}\n查看: ${options.postUrl}`
+    : `Hello ${options.recipientName}, ${options.replierName} replied to your comment on "${options.postTitle}":\n${options.replyContent}\nView: ${options.postUrl}`;
+
+  return { subject, html, text };
+}
+
+export function renderPostNewCommentEmail(options: RenderPostNewCommentOptions) {
+  const isZh = options.locale?.toLowerCase().startsWith('zh');
+
+  const subject = isZh
+    ? `📝 【${options.siteTitle}】您的文章《${options.postTitle}》收到了新评论`
+    : `📝 [${options.siteTitle}] New comment on your post "${options.postTitle}"`;
+
+  const title = isZh ? '文章收到新评论' : 'New Comment on Your Post';
+
+  const greeting = isZh
+    ? `你好，<strong>${escapeHtml(options.authorName)}</strong>：`
+    : `Hello <strong>${escapeHtml(options.authorName)}</strong>,`;
+
+  const message = isZh
+    ? `<strong>${escapeHtml(options.commenterName)}</strong> 在您的文章 <strong>《${escapeHtml(options.postTitle)}》</strong> 发表了新评论：`
+    : `<strong>${escapeHtml(options.commenterName)}</strong> left a comment on your post <strong>"${escapeHtml(options.postTitle)}"</strong>:`;
+
+  const commentQuote = `<blockquote style="background: #f3f4f6; border-left: 4px solid #10b981; margin: 16px 0; padding: 12px 16px; border-radius: 4px; color: #4b5563;">${escapeHtml(options.commentContent)}</blockquote>`;
+
+  const actionText = isZh ? '前往查看评论' : 'View Comment';
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f6f7f9; color: #333333; margin: 0; padding: 24px 0; }
+    .container { max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+    .header { background: #18181b; color: #ffffff; padding: 24px 32px; font-size: 20px; font-weight: 600; }
+    .content { padding: 32px; line-height: 1.6; }
+    .btn { display: inline-block; background-color: #059669; color: #ffffff !important; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px; }
+    .footer { padding: 20px 32px; background: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 13px; color: #6b7280; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">${escapeHtml(options.siteTitle)}</div>
+    <div class="content">
+      <h2 style="margin-top:0; color:#111827;">${title}</h2>
+      <p>${greeting}</p>
+      <p>${message}</p>
+      ${commentQuote}
+      <p style="margin-top: 24px;">
+        <a href="${escapeHtml(options.postUrl)}" class="btn" target="_blank">${actionText}</a>
+      </p>
+    </div>
+    <div class="footer">
+      &copy; ${new Date().getFullYear()} ${escapeHtml(options.siteTitle)}. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  const text = isZh
+    ? `你好 ${options.authorName}，${options.commenterName} 在您的文章《${options.postTitle}》发表了评论：\n${options.commentContent}\n查看: ${options.postUrl}`
+    : `Hello ${options.authorName}, ${options.commenterName} commented on your post "${options.postTitle}":\n${options.commentContent}\nView: ${options.postUrl}`;
 
   return { subject, html, text };
 }

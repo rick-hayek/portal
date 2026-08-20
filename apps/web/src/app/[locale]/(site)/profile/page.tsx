@@ -10,6 +10,8 @@ interface ProfileData {
   name: string | null;
   image: string | null;
   role: string;
+  receiveNotifications: boolean;
+  isEmailServiceConfigured: boolean;
   hasPassword: boolean;
 }
 
@@ -27,6 +29,12 @@ export default function ProfilePage() {
   const [profileSuccessMsg, setProfileSuccessMsg] = useState('');
   const [profileSubmitting, setProfileSubmitting] = useState(false);
 
+  // Notification Preference states
+  const [receiveNotifications, setReceiveNotifications] = useState(true);
+  const [notifSubmitting, setNotifSubmitting] = useState(false);
+  const [notifSuccessMsg, setNotifSuccessMsg] = useState('');
+  const [notifError, setNotifError] = useState('');
+
   // Password Form states
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -43,6 +51,7 @@ export default function ProfilePage() {
       if (profileData) {
         setProfile(profileData);
         setDisplayName(profileData.name ?? '');
+        setReceiveNotifications(profileData.receiveNotifications ?? true);
       } else if (data[0]?.error) {
         setError(data[0].error.json?.message ?? 'Failed to load profile');
       }
@@ -100,6 +109,40 @@ export default function ProfilePage() {
       setProfileError('Network error. Please try again.');
     } finally {
       setProfileSubmitting(false);
+    }
+  }
+
+  async function handleNotificationToggle(checked: boolean) {
+    setReceiveNotifications(checked);
+    setNotifError('');
+    setNotifSuccessMsg('');
+    setNotifSubmitting(true);
+    try {
+      const res = await fetch('/api/trpc/profile.updateNotificationSettings?batch=1', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          '0': {
+            json: {
+              receiveNotifications: checked,
+            },
+          },
+        }),
+      });
+      const data = await res.json();
+      if (data[0]?.error) {
+        setNotifError(data[0].error.json?.message ?? 'Failed to update settings');
+        // Rollback state if server update fails
+        setReceiveNotifications(!checked);
+      } else {
+        setNotifSuccessMsg(t('notificationSuccess'));
+        setTimeout(() => setNotifSuccessMsg(''), 3000);
+      }
+    } catch {
+      setNotifError('Network error. Please try again.');
+      setReceiveNotifications(!checked);
+    } finally {
+      setNotifSubmitting(false);
     }
   }
 
@@ -289,6 +332,43 @@ export default function ProfilePage() {
               </button>
             </form>
           </div>
+
+          {/* Notification Preference Card (Only displayed if email service is configured) */}
+          {profile.isEmailServiceConfigured && (
+            <div className="rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 md:p-8 shadow-sm">
+              <h2 className="text-lg font-bold text-[var(--portal-color-text)] mb-1">
+                {t('notificationSettings')}
+              </h2>
+              <p className="text-xs text-[var(--portal-color-text-secondary)] leading-relaxed mb-4">
+                {t('notificationSettingsDesc')}
+              </p>
+
+              {notifError && (
+                <div className="rounded-lg bg-red-500/10 p-3 text-xs text-red-500 mb-4">
+                  {notifError}
+                </div>
+              )}
+
+              {notifSuccessMsg && (
+                <div className="rounded-lg bg-green-500/10 p-3 text-xs text-green-600 dark:text-green-400 mb-4">
+                  {notifSuccessMsg}
+                </div>
+              )}
+
+              <label className="flex items-center gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={receiveNotifications}
+                  disabled={notifSubmitting}
+                  onChange={(e) => handleNotificationToggle(e.target.checked)}
+                  className="h-4 w-4 rounded border-[var(--portal-color-border)] text-[var(--portal-color-primary)] focus:ring-[var(--portal-color-primary)] cursor-pointer"
+                />
+                <span className="text-xs font-medium text-[var(--portal-color-text)]">
+                  {t('receiveNotificationsLabel')}
+                </span>
+              </label>
+            </div>
+          )}
 
           {/* Change/Set Password Card */}
           <div className="rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 md:p-8 shadow-sm">

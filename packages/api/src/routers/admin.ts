@@ -1,7 +1,11 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { ensurePostsIndex, indexPost, meili, POSTS_INDEX, removePostFromIndex } from '../search';
-import { sendCommentApprovedNotification, sendLinkApprovedNotification } from '../services/email';
+import {
+  dispatchCommentNotifications,
+  sendCommentApprovedNotification,
+  sendLinkApprovedNotification,
+} from '../services/email';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
 
 export const adminRouter = router({
@@ -250,27 +254,34 @@ export const adminRouter = router({
       if (
         existing &&
         existing.status !== 'approved' &&
-        input.status === 'approved' &&
-        comment.authorEmail
+        input.status === 'approved'
       ) {
-        const siteTitle = ctx.siteConfig?.site.title || 'Voocii';
-        const siteUrl = (ctx.siteConfig?.site.url || 'https://voocii.com').replace(/\/+$/, '');
-        const locale = comment.locale || ctx.siteConfig?.site.locale || 'zh';
-        const enabled = ctx.siteConfig?.email?.enabled ?? false;
-        const provider = ctx.siteConfig?.email?.enabled ? ctx.siteConfig.email.provider : undefined;
+        if (comment.authorEmail) {
+          const siteTitle = ctx.siteConfig?.site.title || 'Voocii';
+          const siteUrl = (ctx.siteConfig?.site.url || 'https://voocii.com').replace(/\/+$/, '');
+          const locale = comment.locale || ctx.siteConfig?.site.locale || 'zh';
+          const enabled = ctx.siteConfig?.email?.enabled ?? false;
+          const provider = ctx.siteConfig?.email?.enabled ? ctx.siteConfig.email.provider : undefined;
 
-        sendCommentApprovedNotification({
-          authorEmail: comment.authorEmail,
-          authorName: comment.authorName,
-          postTitle: comment.post?.title || 'Article',
-          postUrl: `${siteUrl}/blog/${comment.post?.slug || ''}`,
-          commentContent: comment.content,
-          siteTitle,
-          siteUrl,
-          locale,
-          enabled,
-          provider,
-        }).catch((err) => console.error('[commentModerate] Failed to trigger email notification:', err));
+          sendCommentApprovedNotification({
+            authorEmail: comment.authorEmail,
+            authorName: comment.authorName,
+            postTitle: comment.post?.title || 'Article',
+            postUrl: `${siteUrl}/blog/${comment.post?.slug || ''}`,
+            commentContent: comment.content,
+            siteTitle,
+            siteUrl,
+            locale,
+            enabled,
+            provider,
+          }).catch((err) => console.error('[commentModerate] Failed to trigger email notification:', err));
+        }
+
+        dispatchCommentNotifications({
+          prisma: ctx.prisma,
+          comment,
+          siteConfig: ctx.siteConfig,
+        }).catch((err) => console.error('[commentModerate] Failed to dispatch notifications:', err));
       }
 
       if (ctx.revalidateTag) {

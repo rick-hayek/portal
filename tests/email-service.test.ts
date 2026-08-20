@@ -1,6 +1,9 @@
 import {
+  dispatchCommentNotifications,
   getEmailProvider,
+  renderCommentReplyEmail,
   renderLinkApprovedEmail,
+  renderPostNewCommentEmail,
   sendCommentApprovedNotification,
   sendLinkApprovedNotification,
 } from '../packages/api/src/services/email';
@@ -160,5 +163,69 @@ describe('Email Service Component', () => {
       locale: 'en-US',
     });
     expect(enEmail.subject).toContain('Your Friend Link Application Has Been Approved');
+  });
+
+  it('renders comment reply and post new comment email templates correctly', () => {
+    const replyEmail = renderCommentReplyEmail({
+      recipientName: 'Alice',
+      replierName: 'Bob',
+      postTitle: 'Next.js 15 Guide',
+      postUrl: 'https://voocii.com/blog/next15',
+      replyContent: 'Thanks for sharing!',
+      siteTitle: 'Voocii',
+      siteUrl: 'https://voocii.com',
+      locale: 'zh-CN',
+    });
+    expect(replyEmail.subject).toContain('Bob 回复了您的评论');
+
+    const postCommentEmail = renderPostNewCommentEmail({
+      authorName: 'Author Rick',
+      commenterName: 'Bob',
+      postTitle: 'Next.js 15 Guide',
+      postUrl: 'https://voocii.com/blog/next15',
+      commentContent: 'Awesome post!',
+      siteTitle: 'Voocii',
+      siteUrl: 'https://voocii.com',
+      locale: 'en-US',
+    });
+    expect(postCommentEmail.subject).toContain('New comment on your post');
+  });
+
+  it('skips dispatching comment notifications if user receiveNotifications is false', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const mockPrisma = {
+      comment: {
+        findUnique: vi.fn().mockResolvedValue({
+          id: 'parent-1',
+          authorEmail: 'parent@test.com',
+          authorName: 'Parent User',
+        }),
+      },
+      user: {
+        findUnique: vi.fn().mockResolvedValue({
+          email: 'parent@test.com',
+          receiveNotifications: false, // User disabled email notifications!
+        }),
+      },
+    };
+
+    await dispatchCommentNotifications({
+      prisma: mockPrisma,
+      comment: {
+        id: 'reply-1',
+        postId: 'post-1',
+        parentId: 'parent-1',
+        authorName: 'Replier',
+        authorEmail: 'replier@test.com',
+        content: 'Replying here',
+        locale: 'zh',
+      },
+      siteConfig: {
+        email: { enabled: true, provider: 'mailgun' },
+        site: { title: 'Voocii', url: 'https://voocii.com' },
+      },
+    });
+
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 });

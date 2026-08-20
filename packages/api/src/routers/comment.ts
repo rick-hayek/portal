@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+import { dispatchCommentNotifications } from '../services/email';
 import { publicProcedure, router } from '../trpc';
 import { attachCommentAvatars } from '../utils/gravatar';
 
@@ -91,8 +92,16 @@ export const commentRouter = router({
         },
       });
 
-      if (status === 'approved' && ctx.revalidateTag) {
-        ctx.revalidateTag('posts');
+      if (status === 'approved') {
+        dispatchCommentNotifications({
+          prisma: ctx.prisma,
+          comment,
+          siteConfig: ctx.siteConfig,
+        }).catch((err) => console.error('[comment.create] Failed to dispatch notifications:', err));
+
+        if (ctx.revalidateTag) {
+          ctx.revalidateTag('posts');
+        }
       }
 
       return comment;

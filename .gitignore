@@ -51,4 +51,4 @@ meili-data/
 *.tgz
 *.log
 
-blogs/*
+**/blogs/*
