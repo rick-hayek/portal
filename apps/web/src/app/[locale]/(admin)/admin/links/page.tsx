@@ -1,21 +1,9 @@
 'use client';
 
 import { Check, ChevronDown, ChevronUp, Link as LinkIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
-import { type FormEvent, useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { type FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
-
-const linkCategoryOptions: DropdownOption[] = [
-  { value: 'friend', label: 'Friend' },
-  { value: 'tool', label: 'Tool' },
-  { value: 'inspiration', label: 'Inspiration' },
-  { value: 'other', label: 'Other' },
-];
-
-const linkStatusOptions: DropdownOption[] = [
-  { value: 'approved', label: 'Approved' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'rejected', label: 'Rejected' },
-];
 
 interface LinkEntry {
   id: string;
@@ -32,6 +20,27 @@ interface LinkEntry {
 }
 
 export default function LinksAdminPage() {
+  const t = useTranslations('Admin.links');
+
+  const linkCategoryOptions: DropdownOption[] = useMemo(
+    () => [
+      { value: 'friend', label: t('categories.friend') },
+      { value: 'tool', label: t('categories.tool') },
+      { value: 'inspiration', label: t('categories.inspiration') },
+      { value: 'other', label: t('categories.other') },
+    ],
+    [t],
+  );
+
+  const linkStatusOptions: DropdownOption[] = useMemo(
+    () => [
+      { value: 'approved', label: t('statuses.approved') },
+      { value: 'pending', label: t('statuses.pending') },
+      { value: 'rejected', label: t('statuses.rejected') },
+    ],
+    [t],
+  );
+
   const [links, setLinks] = useState<LinkEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState<string | null>(null);
@@ -118,18 +127,18 @@ export default function LinksAdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ '0': { json: selfData } }),
       });
-      setSelfFeedback('Site link info saved successfully!');
+      setSelfFeedback(t('savedSuccess'));
       setIsSelfExpanded(false);
       setTimeout(() => setSelfFeedback(null), 3000);
     } catch (e) {
       console.error('Failed to save self link', e);
-      alert('Failed to save site link info');
+      alert(t('saveSelfFailed'));
     }
     setSavingSelf(false);
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Delete this link?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       await fetch('/api/trpc/admin.linkDelete?batch=1', {
         method: 'POST',
@@ -168,7 +177,7 @@ export default function LinksAdminPage() {
       loadLinks();
     } catch (e) {
       console.error('Approve failed', e);
-      alert('Failed to approve link');
+      alert(t('approveFailed'));
     }
   }
 
@@ -201,7 +210,7 @@ export default function LinksAdminPage() {
       loadLinks();
     } catch (err) {
       console.error('Submission failed', err);
-      alert('Failed to save link. Check console for details.');
+      alert(t('saveFailed'));
     }
   }
 
@@ -227,7 +236,7 @@ export default function LinksAdminPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[var(--portal-color-text)] flex items-center gap-2">
           <LinkIcon className="h-6 w-6 text-[var(--portal-color-primary)]" />
-          Links Management
+          {t('title')}
         </h1>
         <button
           onClick={() => {
@@ -246,10 +255,10 @@ export default function LinksAdminPage() {
               isAlive: true,
             });
           }}
-          className="flex items-center gap-2 rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          className="flex items-center gap-2 rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 cursor-pointer"
         >
           <Plus className="h-4 w-4" />
-          Add Link
+          {t('addLink')}
         </button>
       </div>
 
@@ -261,11 +270,10 @@ export default function LinksAdminPage() {
         >
           <div>
             <h2 className="text-lg font-semibold text-[var(--portal-color-text)] flex items-center gap-2">
-              <span>🏠</span> My Site Link Info (本站友链信息配置)
+              <span>🏠</span> {t('mySiteInfo')}
             </h2>
             <p className="text-xs text-[var(--portal-color-text-secondary)] mt-0.5">
-              This information will be displayed at the bottom of the /links page for other bloggers
-              to copy.
+              {t('mySiteInfoDesc')}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -294,72 +302,72 @@ export default function LinksAdminPage() {
           >
             <div className="space-y-1">
               <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
-                Site Name (Title)
+                {t('siteName')}
               </label>
               <input
                 required
                 value={selfData.name}
-                placeholder="e.g. Rick's Space"
+                placeholder={t('siteNamePlaceholder')}
                 onChange={(e) => setSelfData((p) => ({ ...p, name: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
             </div>
             <div className="space-y-1">
               <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
-                Site URL
+                {t('siteUrl')}
               </label>
               <input
                 required
                 type="url"
                 value={selfData.url}
-                placeholder="https://your-site.com"
+                placeholder={t('siteUrlPlaceholder')}
                 onChange={(e) => setSelfData((p) => ({ ...p, url: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
             </div>
             <div className="space-y-1">
               <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
-                Avatar URL
+                {t('avatarUrl')}
               </label>
               <input
                 type="url"
                 value={selfData.avatar}
-                placeholder="https://your-site.com/avatar.png"
+                placeholder={t('avatarUrlPlaceholder')}
                 onChange={(e) => setSelfData((p) => ({ ...p, avatar: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
             </div>
             <div className="space-y-1">
               <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
-                Screenshot URL
+                {t('screenshotUrl')}
               </label>
               <input
                 type="url"
                 value={selfData.screenshot}
-                placeholder="https://your-site.com/screenshot.png"
+                placeholder={t('screenshotUrlPlaceholder')}
                 onChange={(e) => setSelfData((p) => ({ ...p, screenshot: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
             </div>
             <div className="space-y-1 sm:col-span-2">
               <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
-                RSS Feed URL
+                {t('rssUrl')}
               </label>
               <input
                 type="url"
                 value={selfData.rss}
-                placeholder="https://your-site.com/feed.xml"
+                placeholder={t('rssUrlPlaceholder')}
                 onChange={(e) => setSelfData((p) => ({ ...p, rss: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
             </div>
             <div className="space-y-1 sm:col-span-2">
               <label className="text-xs font-medium text-[var(--portal-color-text-secondary)]">
-                Site Description
+                {t('siteDescription')}
               </label>
               <input
                 value={selfData.description}
-                placeholder="A personal space dedicated to tech and life reflections..."
+                placeholder={t('siteDescriptionPlaceholder')}
                 onChange={(e) => setSelfData((p) => ({ ...p, description: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-1.5 text-sm"
               />
@@ -368,9 +376,9 @@ export default function LinksAdminPage() {
               <button
                 type="submit"
                 disabled={savingSelf}
-                className="rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
               >
-                {savingSelf ? 'Saving...' : 'Save Site Link Info'}
+                {savingSelf ? t('saving') : t('saveSiteInfo')}
               </button>
             </div>
           </form>
@@ -381,14 +389,14 @@ export default function LinksAdminPage() {
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-[var(--portal-color-text)]">
-              {isEditing ? 'Edit Link' : 'Add New Link'}
+              {isEditing ? t('editLink') : t('addNewLink')}
             </h2>
             <button
               onClick={() => {
                 setIsCreating(false);
                 setIsEditing(null);
               }}
-              className="text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-text)]"
+              className="text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-text)] cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>
@@ -396,7 +404,7 @@ export default function LinksAdminPage() {
           <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1 sm:col-span-2 md:col-span-1">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                Name
+                {t('name')}
               </label>
               <input
                 required
@@ -407,7 +415,7 @@ export default function LinksAdminPage() {
             </div>
             <div className="space-y-1 sm:col-span-2 md:col-span-1">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                URL
+                {t('url')}
               </label>
               <input
                 required
@@ -419,19 +427,19 @@ export default function LinksAdminPage() {
             </div>
             <div className="space-y-1 sm:col-span-2">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                RSS Feed URL (Optional)
+                {t('rssUrlOptional')}
               </label>
               <input
                 type="url"
                 value={formData.rss}
-                placeholder="https://your-site.com/feed.xml"
+                placeholder={t('rssUrlPlaceholder')}
                 onChange={(e) => setFormData((p) => ({ ...p, rss: e.target.value }))}
                 className="w-full rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] px-3 py-2 text-sm"
               />
             </div>
             <div className="space-y-1 sm:col-span-2">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                Description
+                {t('description')}
               </label>
               <textarea
                 value={formData.description}
@@ -442,7 +450,7 @@ export default function LinksAdminPage() {
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                Avatar URL (Optional)
+                {t('avatarUrlOptional')}
               </label>
               <input
                 type="url"
@@ -453,7 +461,7 @@ export default function LinksAdminPage() {
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                Screenshot URL (Optional)
+                {t('screenshotUrlOptional')}
               </label>
               <input
                 type="url"
@@ -464,7 +472,7 @@ export default function LinksAdminPage() {
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                Category
+                {t('category')}
               </label>
               <Dropdown
                 value={formData.category}
@@ -474,7 +482,7 @@ export default function LinksAdminPage() {
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                Status
+                {t('status')}
               </label>
               <Dropdown
                 value={formData.status}
@@ -484,7 +492,7 @@ export default function LinksAdminPage() {
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium text-[var(--portal-color-text-secondary)]">
-                Sort Order
+                {t('sortOrder')}
               </label>
               <input
                 type="number"
@@ -507,7 +515,7 @@ export default function LinksAdminPage() {
                 htmlFor="isAlive"
                 className="text-sm font-medium text-[var(--portal-color-text-secondary)]"
               >
-                Site is active
+                {t('siteIsActive')}
               </label>
             </div>
             <div className="sm:col-span-2 mt-4 flex justify-end gap-3">
@@ -517,15 +525,15 @@ export default function LinksAdminPage() {
                   setIsCreating(false);
                   setIsEditing(null);
                 }}
-                className="rounded-md px-4 py-2 text-sm text-[var(--portal-color-text-secondary)] border border-[var(--portal-color-border)] hover:bg-[var(--portal-color-bg)]"
+                className="rounded-md px-4 py-2 text-sm text-[var(--portal-color-text-secondary)] border border-[var(--portal-color-border)] hover:bg-[var(--portal-color-bg)] cursor-pointer"
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 type="submit"
-                className="rounded-md bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+                className="rounded-md bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 cursor-pointer"
               >
-                {isEditing ? 'Update Link' : 'Save Link'}
+                {isEditing ? t('updateLink') : t('saveLink')}
               </button>
             </div>
           </form>
@@ -537,11 +545,11 @@ export default function LinksAdminPage() {
           <table className="w-full text-left text-sm">
             <thead className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] text-[var(--portal-color-text-secondary)]">
               <tr>
-                <th className="px-4 py-3 font-medium">Link</th>
-                <th className="hidden md:table-cell px-4 py-3 font-medium">Category</th>
-                <th className="hidden md:table-cell px-4 py-3 font-medium">Status</th>
-                <th className="hidden md:table-cell px-4 py-3 font-medium">Order</th>
-                <th className="px-4 py-3 font-medium text-right">Actions</th>
+                <th className="px-4 py-3 font-medium">{t('colLink')}</th>
+                <th className="hidden md:table-cell px-4 py-3 font-medium">{t('colCategory')}</th>
+                <th className="hidden md:table-cell px-4 py-3 font-medium">{t('colStatus')}</th>
+                <th className="hidden md:table-cell px-4 py-3 font-medium">{t('colOrder')}</th>
+                <th className="px-4 py-3 font-medium text-right">{t('colActions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--portal-color-border)]">
@@ -551,7 +559,7 @@ export default function LinksAdminPage() {
                     colSpan={5}
                     className="p-4 text-center text-sm text-[var(--portal-color-text-tertiary)]"
                   >
-                    Loading...
+                    {t('loading')}
                   </td>
                 </tr>
               ) : links.length === 0 ? (
@@ -560,7 +568,7 @@ export default function LinksAdminPage() {
                     colSpan={5}
                     className="p-8 text-center text-sm text-[var(--portal-color-text-tertiary)]"
                   >
-                    No links found
+                    {t('noLinks')}
                   </td>
                 </tr>
               ) : (
@@ -594,27 +602,32 @@ export default function LinksAdminPage() {
                     </td>
                     <td className="hidden md:table-cell px-4 py-3">
                       <span className="inline-flex rounded-full bg-[var(--portal-color-primary)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--portal-color-primary)] capitalize">
-                        {link.category}
+                        {t(`categories.${link.category}` as any) || link.category}
                       </span>
                       {link.status && link.status !== 'approved' && (
                         <span
-                          className={`ml-2 inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${link.status === 'pending'
+                          className={`ml-2 inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
+                            link.status === 'pending'
                               ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
                               : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400'
-                            }`}
+                          }`}
                         >
-                          {link.status}
+                          {t(`statuses.${link.status}` as any) || link.status}
                         </span>
                       )}
                     </td>
                     <td className="hidden md:table-cell px-4 py-3">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ${link.isAlive ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}
+                        className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ${
+                          link.isAlive
+                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                            : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                        }`}
                       >
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${link.isAlive ? 'bg-green-500' : 'bg-red-500'}`}
                         ></span>
-                        {link.isAlive ? 'Active' : 'Broken'}
+                        {link.isAlive ? t('active') : t('broken')}
                       </span>
                     </td>
                     <td className="hidden md:table-cell px-4 py-3 text-[var(--portal-color-text-secondary)]">
@@ -629,7 +642,7 @@ export default function LinksAdminPage() {
                             className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 transition-colors cursor-pointer"
                           >
                             <Check className="h-3.5 w-3.5" />
-                            <span className="hidden sm:inline">Approve</span>
+                            <span className="hidden sm:inline">{t('approve')}</span>
                           </button>
                         )}
                         <button
@@ -638,7 +651,7 @@ export default function LinksAdminPage() {
                           className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline cursor-pointer"
                         >
                           <Pencil className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">Edit</span>
+                          <span className="hidden sm:inline">{t('edit')}</span>
                         </button>
                         <button
                           type="button"
@@ -646,7 +659,7 @@ export default function LinksAdminPage() {
                           className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">Delete</span>
+                          <span className="hidden sm:inline">{t('delete')}</span>
                         </button>
                       </div>
                     </td>
@@ -660,3 +673,4 @@ export default function LinksAdminPage() {
     </div>
   );
 }
+

@@ -2,31 +2,35 @@
 
 import { notFound } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { UserMenu } from '@/components/auth/UserMenu';
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import { Link, usePathname } from '@/i18n/routing';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/posts', label: 'Posts', icon: '📝' },
-  { href: '/admin/categories', label: 'Categories', icon: '📁' },
-  { href: '/admin/portfolio', label: 'Portfolio', icon: '🚀' },
-  { href: '/admin/books', label: 'Books', icon: '📚' },
-  { href: '/admin/links', label: 'Links', icon: '🔗' },
-  { href: '/admin/comments', label: 'Comments', icon: '💬' },
-  { href: '/admin/guestbook', label: 'Guestbook', icon: '📒' },
-  { href: '/admin/references', label: 'References', icon: '📎' },
-  { href: '/admin/attachments', label: 'Attachments', icon: '🖼️' },
-  { href: '/admin/trending', label: 'AI Trending', icon: '🔥' },
-  { href: '/admin/about', label: 'About', icon: '👤' },
-  { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
-  { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
+  { href: '/admin', key: 'dashboard', icon: '📊' },
+  { href: '/admin/posts', key: 'posts', icon: '📝' },
+  { href: '/admin/categories', key: 'categories', icon: '📁' },
+  { href: '/admin/portfolio', key: 'portfolio', icon: '🚀' },
+  { href: '/admin/books', key: 'books', icon: '📚' },
+  { href: '/admin/links', key: 'links', icon: '🔗' },
+  { href: '/admin/comments', key: 'comments', icon: '💬' },
+  { href: '/admin/guestbook', key: 'guestbook', icon: '📒' },
+  { href: '/admin/references', key: 'references', icon: '📎' },
+  { href: '/admin/attachments', key: 'attachments', icon: '🖼️' },
+  { href: '/admin/trending', key: 'trending', icon: '🔥' },
+  { href: '/admin/about', key: 'about', icon: '👤' },
+  { href: '/admin/analytics', key: 'analytics', icon: '📈' },
+  { href: '/admin/settings', key: 'settings', icon: '⚙️' },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const tNav = useTranslations('Admin.nav');
+  const tLayout = useTranslations('Admin.layout');
 
   if (status === 'loading') {
     return (
@@ -58,25 +62,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             />
           </svg>
         </button>
-        <span className="font-bold text-[var(--portal-color-text)]">Admin Panel</span>
-        <Link
-          href="/"
-          className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-primary)] transition-colors"
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
+        <span className="font-bold text-[var(--portal-color-text)]">{tLayout('panelTitle')}</span>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+          <Link
+            href="/"
+            className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-background)] hover:text-[var(--portal-color-primary)] transition-colors"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-            />
-          </svg>
-        </Link>
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
+            </svg>
+          </Link>
+        </div>
       </div>
 
       {/* Backdrop */}
@@ -99,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             href="/"
             className="text-sm text-[var(--portal-color-text-secondary)] hover:text-[var(--portal-color-primary)]"
           >
-            ← Back to site
+            {tLayout('backToSite')}
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -116,14 +123,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </button>
         </div>
 
-        <div className="px-3 py-2">
-          <h2 className="mb-1 px-2 text-xs font-semibold uppercase tracking-wider text-[var(--portal-color-text-secondary)]">
-            Admin Panel
+        <div className="flex items-center justify-between px-3 py-2">
+          <h2 className="px-2 text-xs font-semibold uppercase tracking-wider text-[var(--portal-color-text-secondary)]">
+            {tLayout('panelTitle')}
           </h2>
+          <LanguageSwitcher />
         </div>
 
         {/* Nav links */}
-        <nav className="flex-1 space-y-0.5 px-3">
+        <nav className="flex-1 space-y-0.5 px-3 overflow-y-auto">
           {navItems.map((item) => {
             const isActive =
               pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
@@ -139,7 +147,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 }`}
               >
                 <span>{item.icon}</span>
-                {item.label}
+                {tNav(item.key)}
               </Link>
             );
           })}
@@ -158,3 +166,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+

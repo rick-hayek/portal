@@ -15,6 +15,14 @@ export function LanguageSwitcher({ onItemClick }: { onItemClick?: () => void }) 
     const nextLocale = locale === 'en' ? 'zh' : 'en';
     // Explicitly update NEXT_LOCALE cookie for root path to synchronize Middleware & SSR
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('portal_locale', nextLocale);
+        localStorage.setItem('NEXT_LOCALE', nextLocale);
+      } catch (e) {
+        console.error('Failed to set locale in localStorage', e);
+      }
+    }
     startTransition(() => {
       router.replace(pathname, { locale: nextLocale });
     });
