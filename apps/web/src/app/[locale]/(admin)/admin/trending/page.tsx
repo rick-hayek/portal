@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight, ExternalLink, Pencil, RefreshCw, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 
 interface TrendingRepo {
@@ -22,6 +23,8 @@ interface TrendingRepo {
 }
 
 export default function AdminTrendingPage() {
+  const t = useTranslations('Admin.trending');
+  const tPosts = useTranslations('Admin.posts');
   const [repos, setRepos] = useState<TrendingRepo[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetching, setFetching] = useState(false);
@@ -154,7 +157,7 @@ export default function AdminTrendingPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this repository from trending?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       await fetch('/api/trpc/admin.trendingDelete?batch=1', {
         method: 'POST',
@@ -177,28 +180,27 @@ export default function AdminTrendingPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--portal-color-text)] flex items-center gap-2">
-            🔥 AI Trending
+            🔥 {t('title')}
           </h1>
-          <p className="text-sm text-[var(--portal-color-text-secondary)] mt-1">
-            Fetch trending AI/LLM repos from GitHub and manage AI summaries.
-          </p>
         </div>
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={handleRefreshCache}
             disabled={refreshingCache || fetching}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] text-sm font-medium hover:bg-[var(--portal-color-bg)]/50 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] text-[var(--portal-color-text)] text-sm font-medium hover:bg-[var(--portal-color-bg)]/50 transition-colors disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`h-4 w-4 ${refreshingCache ? 'animate-spin' : ''}`} />
-            {refreshingCache ? 'Refreshing...' : 'Refresh Cache'}
+            {refreshingCache ? 'Refreshing...' : t('refreshCache')}
           </button>
           <button
+            type="button"
             onClick={handleFetch}
             disabled={fetching || refreshingCache}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--portal-color-primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--portal-color-primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`h-4 w-4 ${fetching ? 'animate-spin' : ''}`} />
-            {fetching ? 'Fetching...' : 'Fetch from GitHub'}
+            {fetching ? 'Fetching...' : t('fetchNow')}
           </button>
         </div>
       </div>
@@ -215,11 +217,11 @@ export default function AdminTrendingPage() {
           <table className="w-full text-left text-sm table-fixed">
             <thead className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] text-[var(--portal-color-text-secondary)]">
               <tr>
-                <th className="px-4 py-3 font-medium w-[45%] md:w-1/4">Repository</th>
-                <th className="px-4 py-3 font-medium w-28 md:w-32">Stats</th>
-                <th className="px-4 py-3 font-medium w-24 hidden md:table-cell">Language</th>
-                <th className="px-4 py-3 font-medium w-5/12 hidden md:table-cell">AI Summaries</th>
-                <th className="px-4 py-3 font-medium text-right w-24 md:w-40">Actions</th>
+                <th className="px-4 py-3 font-medium w-[45%] md:w-1/4">{t('colRepo')}</th>
+                <th className="px-4 py-3 font-medium w-28 md:w-32">{t('colStars')}</th>
+                <th className="px-4 py-3 font-medium w-24 hidden md:table-cell">{t('colLang')}</th>
+                <th className="px-4 py-3 font-medium w-5/12 hidden md:table-cell">{t('colSummary')}</th>
+                <th className="px-4 py-3 font-medium text-right w-24 md:w-40">{t('colActions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--portal-color-border)]">
@@ -241,8 +243,7 @@ export default function AdminTrendingPage() {
                     colSpan={5}
                     className="p-12 text-center text-[var(--portal-color-text-secondary)]"
                   >
-                    No trending repos found for this week. Click &quot;Fetch from GitHub&quot;
-                    above.
+                    {t('noRepos')}
                   </td>
                 </tr>
               ) : (
@@ -325,18 +326,20 @@ export default function AdminTrendingPage() {
                         {editingId !== repo.id && (
                           <div className="flex justify-end gap-2">
                             <button
+                              type="button"
                               onClick={() => startEdit(repo)}
-                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors cursor-pointer"
                             >
                               <Pencil className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline">Edit</span>
+                              <span className="hidden sm:inline">{t('editSummary')}</span>
                             </button>
                             <button
+                              type="button"
                               onClick={() => handleDelete(repo.id)}
-                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
+                              className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline">Delete</span>
+                              <span className="hidden sm:inline">{t('delete')}</span>
                             </button>
                           </div>
                         )}
@@ -347,7 +350,7 @@ export default function AdminTrendingPage() {
                         <td colSpan={5} className="px-4 py-4">
                           <div className="space-y-3 p-4 rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] shadow-inner">
                             <h3 className="text-xs font-bold text-[var(--portal-color-text)] uppercase tracking-wider mb-2">
-                              Edit AI Summaries for {repo.fullName}
+                              {t('editSummary')} - {repo.fullName}
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div>
@@ -377,17 +380,19 @@ export default function AdminTrendingPage() {
                             </div>
                             <div className="flex gap-2 pt-2">
                               <button
+                                type="button"
                                 onClick={saveSummary}
                                 disabled={saving}
-                                className="px-4 py-2 rounded bg-[var(--portal-color-primary)] text-white text-xs font-semibold hover:opacity-90 disabled:opacity-50"
+                                className="px-4 py-2 rounded bg-[var(--portal-color-primary)] text-white text-xs font-semibold hover:opacity-90 disabled:opacity-50 cursor-pointer"
                               >
-                                {saving ? 'Saving...' : 'Save Summary'}
+                                {saving ? 'Saving...' : t('save')}
                               </button>
                               <button
+                                type="button"
                                 onClick={cancelEdit}
-                                className="px-4 py-2 rounded border border-compat text-xs font-semibold text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface)]"
+                                className="px-4 py-2 rounded border border-compat text-xs font-semibold text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-surface)] cursor-pointer"
                               >
-                                Cancel
+                                {t('cancel')}
                               </button>
                             </div>
                           </div>
@@ -406,18 +411,20 @@ export default function AdminTrendingPage() {
           <div className="flex items-center justify-between border-t border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-4 py-3 sm:px-6">
             <div className="flex flex-1 justify-between sm:hidden">
               <button
+                type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="relative inline-flex items-center rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-4 py-2 text-sm font-medium text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] disabled:opacity-50"
+                className="relative inline-flex items-center rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-4 py-2 text-sm font-medium text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] disabled:opacity-50 cursor-pointer"
               >
-                Previous
+                {tPosts('prev')}
               </button>
               <button
+                type="button"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="relative ml-3 inline-flex items-center rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-4 py-2 text-sm font-medium text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] disabled:opacity-50"
+                className="relative ml-3 inline-flex items-center rounded-md border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-4 py-2 text-sm font-medium text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] disabled:opacity-50 cursor-pointer"
               >
-                Next
+                {tPosts('next')}
               </button>
             </div>
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
@@ -441,11 +448,12 @@ export default function AdminTrendingPage() {
                   aria-label="Pagination"
                 >
                   <button
+                    type="button"
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="relative inline-flex items-center rounded-l-md px-2 py-2 text-[var(--portal-color-text-secondary)] ring-1 ring-inset ring-[var(--portal-color-border)] hover:bg-[var(--portal-color-bg)] focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                    className="relative inline-flex items-center rounded-l-md px-2 py-2 text-[var(--portal-color-text-secondary)] ring-1 ring-inset ring-[var(--portal-color-border)] hover:bg-[var(--portal-color-bg)] focus:z-20 focus:outline-offset-0 disabled:opacity-50 cursor-pointer"
                   >
-                    <span className="sr-only">Previous</span>
+                    <span className="sr-only">{tPosts('prev')}</span>
                     <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                   </button>
 
@@ -453,9 +461,10 @@ export default function AdminTrendingPage() {
                     const pNum = idx + 1;
                     return (
                       <button
+                        type="button"
                         key={pNum}
                         onClick={() => setPage(pNum)}
-                        className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-[var(--portal-color-border)] focus:z-20 focus:outline-offset-0 ${
+                        className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-[var(--portal-color-border)] focus:z-20 focus:outline-offset-0 cursor-pointer ${
                           page === pNum
                             ? 'z-10 bg-[var(--portal-color-primary)] text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--portal-color-primary)]'
                             : 'text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)]'
@@ -467,11 +476,12 @@ export default function AdminTrendingPage() {
                   })}
 
                   <button
+                    type="button"
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
-                    className="relative inline-flex items-center rounded-r-md px-2 py-2 text-[var(--portal-color-text-secondary)] ring-1 ring-inset ring-[var(--portal-color-border)] hover:bg-[var(--portal-color-bg)] focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                    className="relative inline-flex items-center rounded-r-md px-2 py-2 text-[var(--portal-color-text-secondary)] ring-1 ring-inset ring-[var(--portal-color-border)] hover:bg-[var(--portal-color-bg)] focus:z-20 focus:outline-offset-0 disabled:opacity-50 cursor-pointer"
                   >
-                    <span className="sr-only">Next</span>
+                    <span className="sr-only">{tPosts('next')}</span>
                     <ChevronRight className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </nav>
@@ -483,3 +493,4 @@ export default function AdminTrendingPage() {
     </div>
   );
 }
+

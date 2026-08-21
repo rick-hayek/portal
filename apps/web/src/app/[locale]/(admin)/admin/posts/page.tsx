@@ -1,6 +1,7 @@
 'use client';
 
 import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from '@/i18n/routing';
 
@@ -23,6 +24,7 @@ interface PostListData {
 }
 
 export default function PostsPage() {
+  const t = useTranslations('Admin.posts');
   const [data, setData] = useState<PostListData | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -58,7 +60,7 @@ export default function PostsPage() {
   }, [loadPosts]);
 
   async function handleDelete(id: string) {
-    if (!confirm('Are you sure you want to delete this post?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       await fetch('/api/trpc/admin.postDelete?batch=1', {
         method: 'POST',
@@ -74,12 +76,12 @@ export default function PostsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Posts</h1>
+        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
         <Link
           href="/admin/posts/new"
           className="rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
         >
-          + New Post
+          {t('newPost')}
         </Link>
       </div>
 
@@ -87,7 +89,7 @@ export default function PostsPage() {
       <div className="flex items-center gap-3">
         <input
           type="text"
-          placeholder="Search posts…"
+          placeholder={t('searchPlaceholder')}
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -108,9 +110,9 @@ export default function PostsPage() {
             <span className="font-[500]">
               {
                 {
-                  all: 'All Status',
-                  published: 'Published',
-                  draft: 'Draft',
+                  all: t('allStatus'),
+                  published: t('published'),
+                  draft: t('draft'),
                 }[status]
               }
             </span>
@@ -133,9 +135,9 @@ export default function PostsPage() {
             <div className="absolute right-0 top-full z-50 mt-1.5 w-36 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]/95 backdrop-blur-md py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150">
               {(['all', 'published', 'draft'] as const).map((opt) => {
                 const label = {
-                  all: 'All Status',
-                  published: 'Published',
-                  draft: 'Draft',
+                  all: t('allStatus'),
+                  published: t('published'),
+                  draft: t('draft'),
                 }[opt];
                 const isActive = status === opt;
 
@@ -172,22 +174,22 @@ export default function PostsPage() {
           <thead className="bg-[var(--portal-color-surface)]">
             <tr className="border-b border-[var(--portal-color-border)]">
               <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
-                Title
+                {t('colTitle')}
               </th>
               <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
-                Category
+                {t('colCategory')}
               </th>
               <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
-                Slug
+                {t('colSlug')}
               </th>
               <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
-                Comments
+                {t('colComments')}
               </th>
               <th className="hidden md:table-cell px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
-                Updated
+                {t('colUpdated')}
               </th>
               <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
-                Actions
+                {t('colActions')}
               </th>
             </tr>
           </thead>
@@ -207,7 +209,7 @@ export default function PostsPage() {
                   colSpan={6}
                   className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
                 >
-                  No posts found.
+                  {t('noPosts')}
                 </td>
               </tr>
             ) : (
@@ -226,7 +228,7 @@ export default function PostsPage() {
                       </Link>
                       {post.status === 'draft' && (
                         <span className="inline-flex items-center rounded-full bg-[#d8caa8]/60 px-2.5 py-0.5 text-xs font-semibold text-[#eab308] dark:bg-[#4a4033] dark:text-[#facc15]">
-                          draft
+                          {t('draft')}
                         </span>
                       )}
                     </div>
@@ -252,14 +254,14 @@ export default function PostsPage() {
                         className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                       >
                         <Eye className="h-3.5 w-3.5" />
-                        <span className="hidden sm:inline">View</span>
+                        <span className="hidden sm:inline">{t('view')}</span>
                       </a>
                       <Link
                         href={`/admin/posts/${post.id}`}
                         className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                       >
                         <Pencil className="h-3.5 w-3.5" />
-                        <span className="hidden sm:inline">Edit</span>
+                        <span className="hidden sm:inline">{t('edit')}</span>
                       </Link>
                       <button
                         type="button"
@@ -267,7 +269,7 @@ export default function PostsPage() {
                         className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
-                        <span className="hidden sm:inline">Delete</span>
+                        <span className="hidden sm:inline">{t('delete')}</span>
                       </button>
                     </div>
                   </td>
@@ -282,7 +284,7 @@ export default function PostsPage() {
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-[var(--portal-color-text-secondary)]">
-            Showing page {data.page} of {data.totalPages} ({data.total} total)
+            {t('showingPage', { page: data.page, totalPages: data.totalPages, total: data.total })}
           </p>
           <div className="flex gap-2">
             <button
@@ -291,7 +293,7 @@ export default function PostsPage() {
               disabled={page <= 1}
               className="rounded-lg border border-[var(--portal-color-border)] px-3 py-1.5 text-sm disabled:opacity-50"
             >
-              ← Prev
+              {t('prev')}
             </button>
             <button
               type="button"
@@ -299,7 +301,7 @@ export default function PostsPage() {
               disabled={page >= data.totalPages}
               className="rounded-lg border border-[var(--portal-color-border)] px-3 py-1.5 text-sm disabled:opacity-50"
             >
-              Next →
+              {t('next')}
             </button>
           </div>
         </div>
@@ -307,3 +309,4 @@ export default function PostsPage() {
     </div>
   );
 }
+

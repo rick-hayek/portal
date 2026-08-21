@@ -2,8 +2,8 @@
 
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useState, useTransition } from 'react';
-import { Link, useRouter } from '@/i18n/routing';
+import { useCallback, useEffect, useState } from 'react';
+import { Link } from '@/i18n/routing';
 
 interface Book {
   id: string;
@@ -20,11 +20,10 @@ interface Book {
 }
 
 export default function AdminBooksPage() {
+  const t = useTranslations('Admin.books');
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
 
   const loadBooks = useCallback(async () => {
     setLoading(true);
@@ -36,18 +35,18 @@ export default function AdminBooksPage() {
       const data = await res.json();
       setBooks(data[0]?.result?.data?.json ?? []);
     } catch {
-      setError('Failed to load books');
+      setError(t('saveFailed'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     loadBooks();
   }, [loadBooks]);
 
   async function handleDelete(id: string) {
-    if (!confirm('Are you sure you want to delete this book?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       const res = await fetch('/api/trpc/admin.bookDelete?batch=1', {
         method: 'POST',
@@ -60,12 +59,12 @@ export default function AdminBooksPage() {
       });
       const data = await res.json();
       if (data[0]?.error) {
-        alert(data[0].error.message ?? 'Failed to delete book');
+        alert(data[0].error.message ?? t('saveFailed'));
       } else {
         loadBooks();
       }
     } catch {
-      alert('Network error');
+      alert(t('saveFailed'));
     }
   }
 
@@ -82,17 +81,14 @@ export default function AdminBooksPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-[var(--portal-color-text)]">
-            Books
+            {t('title')}
           </h1>
-          <p className="text-sm text-[var(--portal-color-text-secondary)]">
-            Manage your recommended books, reviews, and reading thoughts.
-          </p>
         </div>
         <Link
           href="/admin/books/new"
           className="rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
         >
-          + Add Book
+          {t('addBook')}
         </Link>
       </div>
 
@@ -100,12 +96,12 @@ export default function AdminBooksPage() {
 
       {books.length === 0 ? (
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-12 text-center">
-          <p className="text-[var(--portal-color-text-secondary)] mb-4">No books found.</p>
+          <p className="text-[var(--portal-color-text-secondary)] mb-4">{t('noBooks')}</p>
           <Link
             href="/admin/books/new"
             className="inline-flex rounded-lg border border-compat px-4 py-2 text-sm font-medium text-[var(--portal-color-text)] hover:bg-[var(--portal-color-surface-alt)]"
           >
-            Create your first book recommendation
+            {t('addBook')}
           </Link>
         </div>
       ) : (
@@ -114,11 +110,11 @@ export default function AdminBooksPage() {
             <table className="w-full border-collapse text-left text-sm text-[var(--portal-color-text)]">
               <thead>
                 <tr className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] font-medium text-[var(--portal-color-text-secondary)]">
-                  <th className="hidden md:table-cell px-6 py-4">Cover</th>
-                  <th className="px-6 py-4">Title</th>
-                  <th className="hidden md:table-cell px-6 py-4">Author</th>
-                  <th className="hidden md:table-cell px-6 py-4">Publisher</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+                  <th className="hidden md:table-cell px-6 py-4">{t('coverUrlLabel')}</th>
+                  <th className="px-6 py-4">{t('titleLabel')}</th>
+                  <th className="hidden md:table-cell px-6 py-4">{t('authorLabel')}</th>
+                  <th className="hidden md:table-cell px-6 py-4">{t('categoryLabel')}</th>
+                  <th className="px-6 py-4 text-right">{t('colActions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--portal-color-border)]">
@@ -151,22 +147,22 @@ export default function AdminBooksPage() {
                           className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                         >
                           <Eye className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">View</span>
+                          <span className="hidden sm:inline">{t('edit')}</span>
                         </Link>
                         <Link
                           href={`/admin/books/${book.id}`}
                           className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors no-underline"
                         >
                           <Pencil className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">Edit</span>
+                          <span className="hidden sm:inline">{t('edit')}</span>
                         </Link>
                         <button
                           type="button"
                           onClick={() => handleDelete(book.id)}
-                          className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
+                          className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">Delete</span>
+                          <span className="hidden sm:inline">{t('delete')}</span>
                         </button>
                       </div>
                     </td>
@@ -180,3 +176,4 @@ export default function AdminBooksPage() {
     </div>
   );
 }
+

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 interface ConfigEntry {
@@ -17,6 +18,7 @@ const DEFAULT_KEYS = [
 ];
 
 export default function AdminSettingsPage() {
+  const t = useTranslations('Admin.settings');
   const [configs, setConfigs] = useState<ConfigEntry[]>([]);
   const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<string | null>(null);
@@ -68,7 +70,7 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Settings</h1>
+      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
 
       <div className="rounded-xl border border-yellow-200 bg-yellow-50/50 p-4 text-sm text-yellow-800 dark:border-yellow-900/30 dark:bg-yellow-900/20 dark:text-yellow-400">
         <p className="font-semibold mb-1">⚠️ Notice / 注意</p>
@@ -93,6 +95,7 @@ export default function AdminSettingsPage() {
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items do not have a natural id
             <div
               key={i}
               className="h-16 animate-pulse rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]"
@@ -104,7 +107,7 @@ export default function AdminSettingsPage() {
           {/* Preset keys */}
           <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5">
             <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--portal-color-text-secondary)]">
-              Site Configuration
+              {t('siteConfig')}
             </h2>
             <div className="space-y-4">
               {DEFAULT_KEYS.map(({ key, label }) => (
@@ -121,11 +124,12 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <button
+                    type="button"
                     onClick={() => handleSave(key)}
                     disabled={saving === key}
-                    className="shrink-0 rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+                    className="shrink-0 rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50 cursor-pointer"
                   >
-                    {saving === key ? '…' : saved === key ? '✓' : 'Save'}
+                    {saving === key ? '…' : saved === key ? '✓' : t('save')}
                   </button>
                 </div>
               ))}
@@ -157,3 +161,4 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
+

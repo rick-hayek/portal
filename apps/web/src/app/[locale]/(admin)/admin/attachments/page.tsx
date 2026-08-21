@@ -1,6 +1,7 @@
 'use client';
 
 import { Eye, FileCode, Link2, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
 interface Attachment {
@@ -11,6 +12,7 @@ interface Attachment {
 }
 
 export default function AttachmentsAdminPage() {
+  const t = useTranslations('Admin.attachments');
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -133,7 +135,7 @@ export default function AttachmentsAdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this attachment?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       await fetch('/api/trpc/attachment.delete?batch=1', {
         method: 'POST',
@@ -164,7 +166,7 @@ export default function AttachmentsAdminPage() {
 
   return (
     <div className="space-y-6 max-w-full overflow-hidden">
-      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Attachments Management</h1>
+      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
 
       <div className="grid gap-6 lg:grid-cols-3 min-w-0 w-full">
         {/* Right 1 Column - Upload Form */}
@@ -174,7 +176,7 @@ export default function AttachmentsAdminPage() {
             className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 space-y-4"
           >
             <h2 className="text-md font-bold text-[var(--portal-color-text)]">
-              Upload Attachment File
+              {t('upload')}
             </h2>
 
             {error && (
@@ -195,7 +197,7 @@ export default function AttachmentsAdminPage() {
                 htmlFor="file-input"
                 className="mb-1 block text-xs font-semibold text-[var(--portal-color-text)]"
               >
-                Select or Drop File
+                {t('upload')}
               </label>
               {/* biome-ignore lint/a11y/noStaticElementInteractions: drag and drop wrapper */}
               <div
@@ -233,9 +235,9 @@ export default function AttachmentsAdminPage() {
             <button
               type="submit"
               disabled={saving || !fileData}
-              className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
             >
-              {saving ? 'Uploading…' : 'Upload File'}
+              {saving ? 'Uploading…' : t('upload')}
             </button>
           </form>
         </div>
@@ -250,16 +252,16 @@ export default function AttachmentsAdminPage() {
                     Preview
                   </th>
                   <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] hidden md:table-cell">
-                    Filename
+                    {t('colName')}
                   </th>
                   <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] w-28 hidden md:table-cell">
-                    Type
+                    {t('colType')}
                   </th>
                   <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] w-28 hidden md:table-cell">
-                    Created
+                    {t('colDate')}
                   </th>
                   <th className="px-4 py-3 text-right font-medium text-[var(--portal-color-text-secondary)] w-56 whitespace-nowrap">
-                    Actions
+                    {t('colActions')}
                   </th>
                 </tr>
               </thead>
@@ -293,7 +295,7 @@ export default function AttachmentsAdminPage() {
                       colSpan={5}
                       className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
                     >
-                      No attachments uploaded yet.
+                      {t('noAttachments')}
                     </td>
                   </tr>
                 ) : (
@@ -331,21 +333,21 @@ export default function AttachmentsAdminPage() {
                           <button
                             type="button"
                             onClick={() => copyMarkdown(item.filename, item.id)}
-                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors cursor-pointer"
                           >
                             <FileCode className="h-3.5 w-3.5" />
                             <span className="hidden sm:inline">
-                              {copiedId === `${item.id}-md` ? 'Copied!' : 'Copy MD'}
+                              {copiedId === `${item.id}-md` ? t('copied') : 'Copy MD'}
                             </span>
                           </button>
                           <button
                             type="button"
                             onClick={() => copyLink(item.filename, item.id)}
-                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors cursor-pointer"
                           >
                             <Link2 className="h-3.5 w-3.5" />
                             <span className="hidden sm:inline">
-                              {copiedId === `${item.id}-link` ? 'Copied!' : 'Copy Link'}
+                              {copiedId === `${item.id}-link` ? t('copied') : t('copyUrl')}
                             </span>
                           </button>
                           <a
@@ -360,10 +362,10 @@ export default function AttachmentsAdminPage() {
                           <button
                             type="button"
                             onClick={() => handleDelete(item.id)}
-                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
-                            <span className="hidden sm:inline">Delete</span>
+                            <span className="hidden sm:inline">{t('delete')}</span>
                           </button>
                         </div>
                       </td>
@@ -378,3 +380,4 @@ export default function AttachmentsAdminPage() {
     </div>
   );
 }
+

@@ -1,13 +1,8 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Dropdown, type DropdownOption } from '@/components/ui/Dropdown';
-
-const analyticsDaysOptions: DropdownOption<number>[] = [
-  { value: 7, label: 'Last 7 days' },
-  { value: 30, label: 'Last 30 days' },
-  { value: 90, label: 'Last 90 days' },
-];
 
 interface AnalyticsData {
   totalViews: number;
@@ -18,9 +13,16 @@ interface AnalyticsData {
 }
 
 export default function AdminAnalyticsPage() {
+  const t = useTranslations('Admin.analytics');
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [days, setDays] = useState(30);
   const [loading, setLoading] = useState(true);
+
+  const analyticsDaysOptions: DropdownOption<number>[] = [
+    { value: 7, label: t('last7Days') },
+    { value: 30, label: t('last30Days') },
+    { value: 90, label: t('last90Days') },
+  ];
 
   useEffect(() => {
     setLoading(true);
@@ -41,9 +43,10 @@ export default function AdminAnalyticsPage() {
   if (loading || !data) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Analytics</h1>
+        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
         <div className="grid gap-4 sm:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items do not have a natural id
             <div
               key={i}
               className="h-24 animate-pulse rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]"
@@ -59,7 +62,7 @@ export default function AdminAnalyticsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Analytics</h1>
+        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
         <div className="w-36">
           <Dropdown
             value={days}
@@ -73,19 +76,19 @@ export default function AdminAnalyticsPage() {
       {/* Stat cards */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5">
-          <p className="text-sm text-[var(--portal-color-text-secondary)]">Total Page Views</p>
+          <p className="text-sm text-[var(--portal-color-text-secondary)]">{t('totalViews')}</p>
           <p className="mt-1 text-3xl font-bold text-[var(--portal-color-text)]">
             {data.totalViews.toLocaleString()}
           </p>
         </div>
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5">
-          <p className="text-sm text-[var(--portal-color-text-secondary)]">Last {data.days} Days</p>
+          <p className="text-sm text-[var(--portal-color-text-secondary)]">{t('recentViews')}</p>
           <p className="mt-1 text-3xl font-bold text-[var(--portal-color-text)]">
             {data.recentViews.toLocaleString()}
           </p>
         </div>
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5">
-          <p className="text-sm text-[var(--portal-color-text-secondary)]">Avg. / Day</p>
+          <p className="text-sm text-[var(--portal-color-text-secondary)]">{t('avgDaily')}</p>
           <p className="mt-1 text-3xl font-bold text-[var(--portal-color-text)]">
             {data.days > 0 ? Math.round(data.recentViews / data.days) : 0}
           </p>
@@ -95,11 +98,11 @@ export default function AdminAnalyticsPage() {
       {/* Daily trend bar chart */}
       <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--portal-color-text-secondary)]">
-          Daily Views
+          {t('dailyTrend')}
         </h2>
         {data.viewsByDay.length === 0 ? (
           <p className="py-8 text-center text-[var(--portal-color-text-secondary)]">
-            No data in range
+            {t('noData')}
           </p>
         ) : (
           <div
@@ -132,10 +135,10 @@ export default function AdminAnalyticsPage() {
       {/* Top pages */}
       <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--portal-color-text-secondary)]">
-          Top Pages
+          {t('topPages')}
         </h2>
         {data.topPages.length === 0 ? (
-          <p className="text-center text-[var(--portal-color-text-secondary)]">No data</p>
+          <p className="text-center text-[var(--portal-color-text-secondary)]">{t('noData')}</p>
         ) : (
           <div className="space-y-2">
             {data.topPages.map((p, i) => (
@@ -157,3 +160,4 @@ export default function AdminAnalyticsPage() {
     </div>
   );
 }
+

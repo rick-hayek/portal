@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
 interface GuestbookEntry {
@@ -10,6 +11,7 @@ interface GuestbookEntry {
 }
 
 export default function GuestbookAdminPage() {
+  const t = useTranslations('Admin.guestbook');
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +34,7 @@ export default function GuestbookAdminPage() {
   }, [loadEntries]);
 
   async function handleDelete(id: string) {
-    if (!confirm('Delete this entry?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       await fetch('/api/trpc/admin.guestbookDelete?batch=1', {
         method: 'POST',
@@ -47,11 +49,12 @@ export default function GuestbookAdminPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Guestbook Management</h1>
+      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
 
       <div className="space-y-3">
         {loading ? (
           Array.from({ length: 3 }).map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items do not have a natural id
             <div
               key={i}
               className="h-20 animate-pulse rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]"
@@ -59,7 +62,7 @@ export default function GuestbookAdminPage() {
           ))
         ) : entries.length === 0 ? (
           <p className="py-8 text-center text-[var(--portal-color-text-secondary)]">
-            No guestbook entries.
+            {t('noEntries')}
           </p>
         ) : (
           entries.map((e) => (
@@ -79,10 +82,11 @@ export default function GuestbookAdminPage() {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => handleDelete(e.id)}
-                className="shrink-0 rounded-md border border-red-300 px-2 py-1 text-xs text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
+                className="shrink-0 rounded-md border border-red-300 px-2 py-1 text-xs text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20 cursor-pointer"
               >
-                Delete
+                {t('delete')}
               </button>
             </div>
           ))
@@ -91,3 +95,4 @@ export default function GuestbookAdminPage() {
     </div>
   );
 }
+

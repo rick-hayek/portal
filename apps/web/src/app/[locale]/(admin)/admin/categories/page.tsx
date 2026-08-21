@@ -1,6 +1,7 @@
 'use client';
 
 import { Check, Pencil, Trash2, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
 interface Category {
@@ -14,6 +15,7 @@ interface Category {
 }
 
 export default function AdminCategoriesPage() {
+  const t = useTranslations('Admin.categories');
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -41,11 +43,11 @@ export default function AdminCategoriesPage() {
       const data = await res.json();
       setCategories(data[0]?.result?.data?.json ?? []);
     } catch {
-      setError('Failed to load categories');
+      setError(t('createFailed'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     loadCategories();
@@ -83,7 +85,7 @@ export default function AdminCategoriesPage() {
       });
       const data = await res.json();
       if (data[0]?.error) {
-        setError(data[0].error.message ?? 'Failed to create category');
+        setError(data[0].error.message ?? t('createFailed'));
       } else {
         setNewName('');
         setNewNameEn('');
@@ -91,7 +93,7 @@ export default function AdminCategoriesPage() {
         loadCategories();
       }
     } catch {
-      setError('Network error');
+      setError(t('createFailed'));
     } finally {
       setCreating(false);
     }
@@ -119,20 +121,20 @@ export default function AdminCategoriesPage() {
       });
       const data = await res.json();
       if (data[0]?.error) {
-        setError(data[0].error.message ?? 'Failed to update category');
+        setError(data[0].error.message ?? t('updateFailed'));
       } else {
         setEditingId(null);
         loadCategories();
       }
     } catch {
-      setError('Network error');
+      setError(t('updateFailed'));
     } finally {
       setSaving(false);
     }
   }
 
   async function handleDelete(id: string, name: string) {
-    if (!confirm(`Are you sure you want to delete the category "${name}"?`)) return;
+    if (!confirm(t('deleteConfirm', { name }))) return;
 
     setError('');
     try {
@@ -147,12 +149,12 @@ export default function AdminCategoriesPage() {
       });
       const data = await res.json();
       if (data[0]?.error) {
-        setError(data[0].error.message ?? 'Failed to delete category');
+        setError(data[0].error.message ?? t('deleteFailed'));
       } else {
         loadCategories();
       }
     } catch {
-      setError('Network error');
+      setError(t('deleteFailed'));
     }
   }
 
@@ -166,7 +168,7 @@ export default function AdminCategoriesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Categories</h1>
+        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
       </div>
 
       {error && (
@@ -178,14 +180,14 @@ export default function AdminCategoriesPage() {
       <div className="grid gap-6 md:grid-cols-[300px_1fr]">
         {/* Create Form */}
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 h-fit space-y-4">
-          <h2 className="text-lg font-bold text-[var(--portal-color-text)]">New Category</h2>
+          <h2 className="text-lg font-bold text-[var(--portal-color-text)]">{t('addNew')}</h2>
           <form onSubmit={handleCreate} className="space-y-4">
             <div className="flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-1">
               <label
                 htmlFor="category-name-zh"
                 className="w-20 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
               >
-                Name (ZH)
+                {t('nameZh')}
               </label>
               <input
                 id="category-name-zh"
@@ -194,7 +196,7 @@ export default function AdminCategoriesPage() {
                 onChange={(e) => setNewName(e.target.value)}
                 required
                 className="flex-1 md:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-                placeholder="e.g. 技术"
+                placeholder={t('nameZhPlaceholder')}
               />
             </div>
             <div className="flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-1">
@@ -202,7 +204,7 @@ export default function AdminCategoriesPage() {
                 htmlFor="category-name-en"
                 className="w-20 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
               >
-                Name (EN)
+                {t('nameEn')}
               </label>
               <input
                 id="category-name-en"
@@ -210,7 +212,7 @@ export default function AdminCategoriesPage() {
                 value={newNameEn}
                 onChange={(e) => setNewNameEn(e.target.value)}
                 className="flex-1 md:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-                placeholder="e.g. Technology"
+                placeholder={t('nameEnPlaceholder')}
               />
             </div>
             <div className="flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-1">
@@ -218,7 +220,7 @@ export default function AdminCategoriesPage() {
                 htmlFor="category-slug"
                 className="w-20 md:w-full text-xs font-semibold text-[var(--portal-color-text-secondary)] uppercase shrink-0"
               >
-                Slug
+                {t('slug')}
               </label>
               <input
                 id="category-slug"
@@ -227,7 +229,7 @@ export default function AdminCategoriesPage() {
                 onChange={(e) => setNewSlug(e.target.value)}
                 required
                 className="flex-1 md:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 font-mono text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-                placeholder="e.g. technology"
+                placeholder={t('slugPlaceholder')}
               />
             </div>
             <button
@@ -235,7 +237,7 @@ export default function AdminCategoriesPage() {
               disabled={creating}
               className="w-full rounded-lg bg-[var(--portal-color-primary)] px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
             >
-              {creating ? 'Creating…' : 'Create Category'}
+              {creating ? t('creating') : t('createBtn')}
             </button>
           </form>
         </div>
@@ -247,20 +249,19 @@ export default function AdminCategoriesPage() {
               <thead>
                 <tr className="border-b border-[var(--portal-color-border)] bg-[var(--portal-color-surface-alt)] font-medium text-[var(--portal-color-text-secondary)]">
                   <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs">
-                    Name (ZH)
+                    {t('nameZh')}
                   </th>
                   <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs">
-                    Name (EN)
+                    {t('nameEn')}
                   </th>
                   <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs">
-                    Slug
+                    {t('slug')}
                   </th>
                   <th className="px-2 sm:px-4 py-3 text-left font-semibold uppercase tracking-wider text-xs whitespace-nowrap">
-                    <span className="hidden sm:inline">Posts Count</span>
-                    <span className="sm:hidden">Posts</span>
+                    {t('colPostCount')}
                   </th>
                   <th className="px-2 sm:px-4 py-3 text-right font-semibold uppercase tracking-wider text-xs whitespace-nowrap">
-                    Actions
+                    {t('colActions')}
                   </th>
                 </tr>
               </thead>
@@ -280,7 +281,7 @@ export default function AdminCategoriesPage() {
                       colSpan={5}
                       className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
                     >
-                      No categories found.
+                      {t('noCategories')}
                     </td>
                   </tr>
                 ) : (
@@ -309,7 +310,6 @@ export default function AdminCategoriesPage() {
                             type="text"
                             value={editNameEn}
                             onChange={(e) => setEditNameEn(e.target.value)}
-                            placeholder="Optional"
                             className="rounded border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-2 py-1 text-sm text-[var(--portal-color-text)] focus:outline-none focus:border-[var(--portal-color-primary)] w-full"
                           />
                         ) : (
@@ -348,7 +348,7 @@ export default function AdminCategoriesPage() {
                               className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-[var(--portal-color-primary)]/20 text-[var(--portal-color-primary)] hover:bg-[var(--portal-color-primary)]/10 transition-colors disabled:opacity-50"
                             >
                               <Check className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline">Save</span>
+                              <span className="hidden sm:inline">{t('save')}</span>
                             </button>
                             <button
                               type="button"
@@ -356,7 +356,7 @@ export default function AdminCategoriesPage() {
                               className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
                             >
                               <X className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline">Cancel</span>
+                              <span className="hidden sm:inline">{t('cancel')}</span>
                             </button>
                           </div>
                         ) : (
@@ -367,7 +367,7 @@ export default function AdminCategoriesPage() {
                               className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
                             >
                               <Pencil className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline">Edit</span>
+                              <span className="hidden sm:inline">{t('edit')}</span>
                             </button>
                             <button
                               type="button"
@@ -375,7 +375,7 @@ export default function AdminCategoriesPage() {
                               className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
-                              <span className="hidden sm:inline">Delete</span>
+                              <span className="hidden sm:inline">{t('delete')}</span>
                             </button>
                           </div>
                         )}
@@ -391,3 +391,4 @@ export default function AdminCategoriesPage() {
     </div>
   );
 }
+

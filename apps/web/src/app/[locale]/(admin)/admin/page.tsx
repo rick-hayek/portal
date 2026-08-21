@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 interface Stats {
@@ -41,6 +42,9 @@ function StatCard({ label, value, accent }: { label: string; value: number; acce
 }
 
 export default function AdminDashboard() {
+  const t = useTranslations('Admin.dashboard');
+  const tComments = useTranslations('Admin.comments');
+  const tGuestbook = useTranslations('Admin.guestbook');
   const [stats, setStats] = useState<Stats | null>(null);
   const [comments, setComments] = useState<RecentComment[]>([]);
   const [guestbook, setGuestbook] = useState<GuestbookEntry[]>([]);
@@ -82,9 +86,10 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items do not have a natural id
             <div
               key={i}
               className="h-24 animate-pulse rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]"
@@ -97,17 +102,17 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
 
       {/* Stats Grid */}
       {stats && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Total Posts" value={stats.totalPosts} accent />
-          <StatCard label="Published" value={stats.publishedPosts} />
-          <StatCard label="Comments" value={stats.totalComments} />
-          <StatCard label="Pending Comments" value={stats.pendingComments} />
-          <StatCard label="Guestbook Entries" value={stats.totalGuestbook} />
-          <StatCard label="Page Views" value={stats.totalViews} />
+          <StatCard label={t('totalPosts')} value={stats.totalPosts} accent />
+          <StatCard label={t('publishedPosts')} value={stats.publishedPosts} />
+          <StatCard label={tComments('title')} value={stats.totalComments} />
+          <StatCard label={tComments('pending')} value={stats.pendingComments} />
+          <StatCard label={t('guestbookEntries')} value={stats.totalGuestbook} />
+          <StatCard label={t('pageViews')} value={stats.totalViews} />
         </div>
       )}
 
@@ -116,10 +121,10 @@ export default function AdminDashboard() {
         {/* Recent Comments */}
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5">
           <h2 className="mb-3 text-lg font-semibold text-[var(--portal-color-text)]">
-            Recent Comments
+            {t('recentComments')}
           </h2>
           {comments.length === 0 ? (
-            <p className="text-sm text-[var(--portal-color-text-secondary)]">No comments yet.</p>
+            <p className="text-sm text-[var(--portal-color-text-secondary)]">{t('noRecentComments')}</p>
           ) : (
             <ul className="space-y-3">
               {comments.map((c) => (
@@ -140,7 +145,11 @@ export default function AdminDashboard() {
                             : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
                       }`}
                     >
-                      {c.status}
+                      {c.status === 'approved'
+                        ? tComments('approved')
+                        : c.status === 'pending'
+                          ? tComments('pending')
+                          : tComments('spam')}
                     </span>
                   </div>
                   <p className="mt-0.5 line-clamp-2 text-sm text-[var(--portal-color-text-secondary)]">
@@ -158,10 +167,10 @@ export default function AdminDashboard() {
         {/* Recent Guestbook */}
         <div className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5">
           <h2 className="mb-3 text-lg font-semibold text-[var(--portal-color-text)]">
-            Recent Guestbook
+            {tGuestbook('title')}
           </h2>
           {guestbook.length === 0 ? (
-            <p className="text-sm text-[var(--portal-color-text-secondary)]">No entries yet.</p>
+            <p className="text-sm text-[var(--portal-color-text-secondary)]">{tGuestbook('noEntries')}</p>
           ) : (
             <ul className="space-y-3">
               {guestbook.map((g) => (
@@ -187,3 +196,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

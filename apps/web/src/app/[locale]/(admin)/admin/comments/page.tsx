@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
 interface Comment {
@@ -14,6 +15,7 @@ interface Comment {
 }
 
 export default function CommentsPage() {
+  const t = useTranslations('Admin.comments');
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +51,7 @@ export default function CommentsPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Delete this comment?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       await fetch('/api/trpc/admin.commentDelete?batch=1', {
         method: 'POST',
@@ -64,11 +66,12 @@ export default function CommentsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">Comment Moderation</h1>
+      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
 
       <div className="space-y-3">
         {loading ? (
           Array.from({ length: 3 }).map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items do not have a natural id
             <div
               key={i}
               className="h-24 animate-pulse rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)]"
@@ -76,7 +79,7 @@ export default function CommentsPage() {
           ))
         ) : comments.length === 0 ? (
           <p className="py-8 text-center text-[var(--portal-color-text-secondary)]">
-            No comments found.
+            {t('noComments')}
           </p>
         ) : (
           comments.map((c) => (
@@ -114,7 +117,11 @@ export default function CommentsPage() {
                             : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
                       }`}
                     >
-                      {c.status}
+                      {c.status === 'approved'
+                        ? t('approved')
+                        : c.status === 'pending'
+                          ? t('pending')
+                          : t('spam')}
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-[var(--portal-color-text)] whitespace-pre-wrap">
@@ -128,25 +135,28 @@ export default function CommentsPage() {
                 <div className="flex flex-wrap gap-2 pt-2 border-t border-[var(--portal-color-border)]/40">
                   {c.status !== 'approved' && (
                     <button
+                      type="button"
                       onClick={() => handleModerate(c.id, 'approved')}
-                      className="rounded-md border border-green-300 px-2.5 py-1 text-xs font-medium text-green-600 hover:bg-green-50 dark:border-green-700 dark:text-green-400 dark:hover:bg-green-900/20"
+                      className="rounded-md border border-green-300 px-2.5 py-1 text-xs font-medium text-green-600 hover:bg-green-50 dark:border-green-700 dark:text-green-400 dark:hover:bg-green-900/20 cursor-pointer"
                     >
-                      Approve
+                      {t('approve')}
                     </button>
                   )}
                   {c.status !== 'spam' && (
                     <button
+                      type="button"
                       onClick={() => handleModerate(c.id, 'spam')}
-                      className="rounded-md border border-yellow-300 px-2.5 py-1 text-xs font-medium text-yellow-600 hover:bg-yellow-50 dark:border-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/20"
+                      className="rounded-md border border-yellow-300 px-2.5 py-1 text-xs font-medium text-yellow-600 hover:bg-yellow-50 dark:border-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/20 cursor-pointer"
                     >
-                      Spam
+                      {t('reject')}
                     </button>
                   )}
                   <button
+                    type="button"
                     onClick={() => handleDelete(c.id)}
-                    className="rounded-md border border-red-300 px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20"
+                    className="rounded-md border border-red-300 px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20 cursor-pointer"
                   >
-                    Delete
+                    {t('delete')}
                   </button>
                 </div>
               </div>
@@ -157,3 +167,4 @@ export default function CommentsPage() {
     </div>
   );
 }
+

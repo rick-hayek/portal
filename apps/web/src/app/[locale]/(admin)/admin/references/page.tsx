@@ -1,6 +1,7 @@
 'use client';
 
 import { Code, Copy, ExternalLink, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
 interface Reference {
@@ -11,6 +12,7 @@ interface Reference {
 }
 
 export default function ReferencesAdminPage() {
+  const t = useTranslations('Admin.references');
   const [references, setReferences] = useState<Reference[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -113,7 +115,7 @@ export default function ReferencesAdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this reference page?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       await fetch('/api/trpc/reference.delete?batch=1', {
         method: 'POST',
@@ -144,7 +146,7 @@ export default function ReferencesAdminPage() {
 
   return (
     <div className="space-y-6 max-w-full overflow-hidden">
-      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">References Management</h1>
+      <h1 className="text-2xl font-bold text-[var(--portal-color-text)]">{t('title')}</h1>
 
       <div className="grid gap-6 lg:grid-cols-3 min-w-0 w-full">
         {/* Right 1 Col - Upload Form */}
@@ -154,7 +156,7 @@ export default function ReferencesAdminPage() {
             className="rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] p-5 space-y-4"
           >
             <h2 className="text-md font-bold text-[var(--portal-color-text)]">
-              Upload Reference Page
+              {t('newRef')}
             </h2>
 
             {error && (
@@ -175,7 +177,7 @@ export default function ReferencesAdminPage() {
                 htmlFor="ref-title"
                 className="w-12 lg:w-full text-xs font-semibold text-[var(--portal-color-text)] uppercase shrink-0"
               >
-                Title
+                {t('titleLabel')}
               </label>
               <input
                 id="ref-title"
@@ -184,7 +186,7 @@ export default function ReferencesAdminPage() {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 className="flex-1 lg:w-full rounded-lg border border-[var(--portal-color-border)] bg-[var(--portal-color-background)] px-3 py-2 text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none"
-                placeholder="Reference Page Title"
+                placeholder={t('titleLabel')}
               />
             </div>
 
@@ -234,9 +236,9 @@ export default function ReferencesAdminPage() {
             <button
               type="submit"
               disabled={saving || !htmlCode}
-              className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="w-full rounded-lg bg-[var(--portal-color-primary)] py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
             >
-              {saving ? 'Uploading…' : 'Publish Reference'}
+              {saving ? 'Uploading…' : t('save')}
             </button>
           </form>
         </div>
@@ -248,7 +250,7 @@ export default function ReferencesAdminPage() {
               <thead className="bg-[var(--portal-color-surface)]">
                 <tr className="border-b border-[var(--portal-color-border)]">
                   <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)]">
-                    Title
+                    {t('titleLabel')}
                   </th>
                   <th className="px-4 py-3 text-left font-medium text-[var(--portal-color-text-secondary)] hidden md:table-cell">
                     Slug
@@ -257,7 +259,7 @@ export default function ReferencesAdminPage() {
                     Created
                   </th>
                   <th className="px-4 py-3 text-right font-medium text-[var(--portal-color-text-secondary)] whitespace-nowrap">
-                    Actions
+                    {t('colActions')}
                   </th>
                 </tr>
               </thead>
@@ -277,7 +279,7 @@ export default function ReferencesAdminPage() {
                       colSpan={4}
                       className="px-4 py-8 text-center text-[var(--portal-color-text-secondary)]"
                     >
-                      No references uploaded yet.
+                      {t('noReferences')}
                     </td>
                   </tr>
                 ) : (
@@ -300,7 +302,7 @@ export default function ReferencesAdminPage() {
                           <button
                             type="button"
                             onClick={() => copyEmbedCode(ref.slug, ref.id)}
-                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors cursor-pointer"
                           >
                             <Code className="h-3.5 w-3.5" />
                             <span className="hidden sm:inline">
@@ -310,7 +312,7 @@ export default function ReferencesAdminPage() {
                           <button
                             type="button"
                             onClick={() => copyLinkCode(ref.slug, ref.title, ref.id)}
-                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-compat text-[var(--portal-color-text-secondary)] hover:bg-[var(--portal-color-bg)] transition-colors cursor-pointer"
                           >
                             <Copy className="h-3.5 w-3.5" />
                             <span className="hidden sm:inline">
@@ -329,10 +331,10 @@ export default function ReferencesAdminPage() {
                           <button
                             type="button"
                             onClick={() => handleDelete(ref.id)}
-                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded border border-red-500/20 text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
-                            <span className="hidden sm:inline">Delete</span>
+                            <span className="hidden sm:inline">{t('delete')}</span>
                           </button>
                         </div>
                       </td>
@@ -347,3 +349,4 @@ export default function ReferencesAdminPage() {
     </div>
   );
 }
+
