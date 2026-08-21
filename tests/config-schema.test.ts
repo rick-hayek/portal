@@ -229,4 +229,16 @@ describe('Module Registry — register, query, nav', () => {
     const enabled = getEnabledModules(mockConfig);
     expect(enabled).toHaveLength(0);
   });
+
+  it('Parses comments.requireModeration setting', () => {
+    const result = siteConfigSchema.safeParse({
+      ...VALID_INPUT,
+      comments: { requireModeration: false },
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.comments?.requireModeration).toBe(false);
+    }
+  });
 });
+

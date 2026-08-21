@@ -14,6 +14,9 @@ const siteConfig = defineConfig({
     allowUserSwitch: true,
   },
   homeLayout: 'classic',
+  comments: {
+    requireModeration: false,
+  },
   email: {
     enabled: true,
     provider: 'mailgun',

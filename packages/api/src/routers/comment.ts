@@ -17,13 +17,31 @@ export const commentRouter = router({
         postId: z.string(),
         content: z.string().trim().min(1, 'Content is required').max(2000, 'Content too long'),
         parentId: z.string().optional(),
-        authorName: z.string().trim().max(50, 'Name too long').optional(),
+        authorName: z.string().trim().min(1, 'Name too short').max(50, 'Name too long').optional(),
         authorEmail: z.string().trim().optional(),
         authorUrl: z.string().trim().optional(),
         locale: z.string().optional(),
+        website_hp: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // Honeypot check: if filled out by a bot, fake success without saving to DB or sending email
+      if (input.website_hp && input.website_hp.trim().length > 0) {
+        return {
+          id: `hp-${Date.now()}`,
+          postId: input.postId,
+          authorName: input.authorName || 'Anonymous',
+          authorEmail: input.authorEmail || '',
+          authorUrl: input.authorUrl || null,
+          content: input.content,
+          parentId: input.parentId || null,
+          locale: input.locale || 'zh',
+          status: 'spam',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+      }
+
       let finalName = input.authorName?.trim() || '';
       let finalEmail = input.authorEmail?.trim() || '';
       let finalUrl = input.authorUrl?.trim() || null;
@@ -66,7 +84,8 @@ export const commentRouter = router({
         }
       }
 
-      const status = currentUser ? 'approved' : 'pending';
+      const requireModeration = ctx.siteConfig?.comments?.requireModeration ?? true;
+      const status = currentUser || !requireModeration ? 'approved' : 'pending';
 
       const comment = await ctx.prisma.comment.create({
         data: {

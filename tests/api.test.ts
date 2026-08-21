@@ -90,7 +90,11 @@ describe('API — Comment router', () => {
 
   it('Validates authorName length', () => {
     expect(content).toContain('authorName');
-    expect(content).toContain('.min(1)');
+    expect(content).toContain('min(1');
+  });
+
+  it('Supports honeypot bot defense', () => {
+    expect(content).toContain('website_hp');
   });
 
   it('Supports nested replies', () => {

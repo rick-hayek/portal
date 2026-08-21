@@ -48,6 +48,14 @@ export const siteConfigSchema = z.object({
       provider: 'mailgun',
     })
     .optional(),
+  comments: z
+    .object({
+      requireModeration: z.boolean().default(true),
+    })
+    .default({
+      requireModeration: true,
+    })
+    .optional(),
   about: z
     .object({
       title: z.string().optional(),

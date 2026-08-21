@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { formatCommentDate, getCommentAnchor } from '@portal/shared';
+import siteConfig from '@/site.config';
 
 interface Comment {
   id: string;
@@ -97,6 +98,7 @@ function CommentItem({
 }) {
   const router = useRouter();
   const t = useTranslations('Comments');
+  const requireModeration = siteConfig.comments?.requireModeration ?? true;
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [replyName, setReplyName] = useState(guestInfo.authorName);
@@ -105,6 +107,7 @@ function CommentItem({
   const [replyError, setReplyError] = useState('');
   const [replySubmitting, setReplySubmitting] = useState(false);
   const [replySubmitted, setReplySubmitted] = useState(false);
+  const [replyHp, setReplyHp] = useState('');
 
   useEffect(() => {
     if (!session) {
@@ -119,6 +122,16 @@ function CommentItem({
     setReplyError('');
 
     if (!replyContent.trim()) return;
+
+    if (replyHp.trim().length > 0) {
+      setReplySubmitted(true);
+      setReplyContent('');
+      setTimeout(() => {
+        setShowReplyForm(false);
+        setReplySubmitted(false);
+      }, 2000);
+      return;
+    }
 
     let finalName = replyName.trim();
     let finalEmail = replyEmail.trim();
@@ -158,6 +171,7 @@ function CommentItem({
               authorEmail: finalEmail || undefined,
               authorUrl: finalUrl || undefined,
               locale,
+              website_hp: replyHp || undefined,
             },
           },
         }),
@@ -167,7 +181,7 @@ function CommentItem({
       if (data[0]?.result?.data?.json || res.ok) {
         setReplySubmitted(true);
         setReplyContent('');
-        if (session) {
+        if (session || !requireModeration) {
           router.refresh();
         }
         setTimeout(() => {
@@ -243,7 +257,7 @@ function CommentItem({
           {replySubmitted ? (
             <div className="flex items-center justify-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium py-3">
               <Check className="h-4 w-4" />
-              <span>{session ? t('replyPublished') : t('replySubmitted')}</span>
+              <span>{session || !requireModeration ? t('replyPublished') : t('replySubmitted')}</span>
             </div>
           ) : (
             <form onSubmit={handleReplySubmit} className="space-y-3">
@@ -261,43 +275,58 @@ function CommentItem({
 
               {/* Guest metadata fields if unauthenticated */}
               {!session && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  <div className="relative">
-                    <UserIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
-                    <input
-                      type="text"
-                      required
-                      value={replyName}
-                      onChange={(e) => setReplyName(e.target.value)}
-                      placeholder={t('namePlaceholder')}
-                      className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                    />
-                  </div>
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div className="relative">
+                      <UserIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
+                      <input
+                        type="text"
+                        required
+                        value={replyName}
+                        onChange={(e) => setReplyName(e.target.value)}
+                        placeholder={t('namePlaceholder')}
+                        className="w-full rounded-xl border border-transparent bg-transparent pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                      />
+                    </div>
 
-                  <div className="relative">
-                    <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
-                    <input
-                      type="email"
-                      required
-                      value={replyEmail}
-                      onChange={(e) => setReplyEmail(e.target.value)}
-                      placeholder={t('emailPlaceholder')}
-                      className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                    />
-                  </div>
+                    <div className="relative">
+                      <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
+                      <input
+                        type="email"
+                        required
+                        value={replyEmail}
+                        onChange={(e) => setReplyEmail(e.target.value)}
+                        placeholder={t('emailPlaceholder')}
+                        className="w-full rounded-xl border border-transparent bg-transparent pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                      />
+                    </div>
 
-                  <div className="relative">
-                    <Globe className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
-                    <input
-                      type="url"
-                      value={replyUrl}
-                      onChange={(e) => setReplyUrl(e.target.value)}
-                      placeholder={t('websitePlaceholder')}
-                      className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                    />
+                    <div className="relative">
+                      <Globe className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
+                      <input
+                        type="url"
+                        value={replyUrl}
+                        onChange={(e) => setReplyUrl(e.target.value)}
+                        placeholder={t('websitePlaceholder')}
+                        className="w-full rounded-xl border border-transparent bg-transparent pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div className="border-b border-[var(--portal-color-border)] my-1" />
+                </>
               )}
+
+              {/* Honeypot field for bot protection */}
+              <div className="hidden" aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+                <input
+                  type="text"
+                  name="website_hp"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={replyHp}
+                  onChange={(e) => setReplyHp(e.target.value)}
+                />
+              </div>
 
               <textarea
                 placeholder={t('replyPlaceholder')}
@@ -305,12 +334,12 @@ function CommentItem({
                 onChange={(e) => setReplyContent(e.target.value)}
                 required
                 rows={2}
-                className="w-full resize-none rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                className="w-full resize-none rounded-xl border border-transparent bg-transparent px-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors block"
               />
 
               <div className="flex items-center justify-between pt-1">
                 <span className="text-[11px] text-[var(--portal-color-text-tertiary)]">
-                  {session ? '' : t('moderationNotice')}
+                  {session || !requireModeration ? '' : t('moderationNotice')}
                 </span>
                 <div className="flex items-center gap-2">
                   <button
@@ -356,6 +385,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
   const { data: session } = useSession();
   const locale = useLocale();
   const t = useTranslations('Comments');
+  const requireModeration = siteConfig.comments?.requireModeration ?? true;
 
   // Form states
   const [content, setContent] = useState('');
@@ -367,6 +397,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
 
   // Load saved guest credentials from localStorage on mount
   useEffect(() => {
@@ -399,6 +430,12 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
     setFormError('');
 
     if (!content.trim()) return;
+
+    if (honeypot.trim().length > 0) {
+      setSubmitted(true);
+      setContent('');
+      return;
+    }
 
     let finalName = guestInfo.authorName.trim();
     let finalEmail = guestInfo.authorEmail.trim();
@@ -441,6 +478,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
               authorEmail: finalEmail || undefined,
               authorUrl: finalUrl || undefined,
               locale,
+              website_hp: honeypot || undefined,
             },
           },
         }),
@@ -450,7 +488,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
       if (data[0]?.result?.data?.json || res.ok) {
         setSubmitted(true);
         setContent('');
-        if (session) {
+        if (session || !requireModeration) {
           router.refresh();
         }
       } else {
@@ -495,7 +533,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
 
       {/* Main Comment Form */}
       <div className="rounded-3xl border border-compat bg-[var(--portal-color-surface)] p-5 sm:p-7 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-base sm:text-lg font-bold text-[var(--portal-color-text)] flex items-center gap-2">
             <span>{t('leaveComment')}</span>
           </h3>
@@ -518,7 +556,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
         {submitted ? (
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-6 text-center text-sm font-medium text-emerald-600 dark:text-emerald-400 space-y-2 animate-in fade-in duration-300">
             <Check className="h-6 w-6 mx-auto text-emerald-500" />
-            <p>{session ? t('commentPublished') : t('commentSubmitted')}</p>
+            <p>{session || !requireModeration ? t('commentPublished') : t('commentSubmitted')}</p>
             <button
               type="button"
               onClick={() => setSubmitted(false)}
@@ -528,7 +566,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
             {formError && (
               <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-3 text-xs text-red-600 dark:text-red-400">
                 {formError}
@@ -537,55 +575,70 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
 
             {/* Guest Details (when unauthenticated) */}
             {!session && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* Nickname (Required) */}
-                <div className="relative">
-                  <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
-                  <input
-                    type="text"
-                    required
-                    maxLength={50}
-                    value={guestInfo.authorName}
-                    onChange={(e) =>
-                      setGuestInfo((prev) => ({ ...prev, authorName: e.target.value }))
-                    }
-                    placeholder={t('namePlaceholder')}
-                    className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                  />
-                </div>
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* Nickname (Required) */}
+                  <div className="relative">
+                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
+                    <input
+                      type="text"
+                      required
+                      maxLength={50}
+                      value={guestInfo.authorName}
+                      onChange={(e) =>
+                        setGuestInfo((prev) => ({ ...prev, authorName: e.target.value }))
+                      }
+                      placeholder={t('namePlaceholder')}
+                      className="w-full rounded-xl border border-transparent bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                    />
+                  </div>
 
-                {/* Email (Required) */}
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
-                  <input
-                    type="email"
-                    required
-                    maxLength={100}
-                    value={guestInfo.authorEmail}
-                    onChange={(e) =>
-                      setGuestInfo((prev) => ({ ...prev, authorEmail: e.target.value }))
-                    }
-                    placeholder={t('emailPlaceholder')}
-                    className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                  />
-                </div>
+                  {/* Email (Required) */}
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
+                    <input
+                      type="email"
+                      required
+                      maxLength={100}
+                      value={guestInfo.authorEmail}
+                      onChange={(e) =>
+                        setGuestInfo((prev) => ({ ...prev, authorEmail: e.target.value }))
+                      }
+                      placeholder={t('emailPlaceholder')}
+                      className="w-full rounded-xl border border-transparent bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                    />
+                  </div>
 
-                {/* Website (Optional, https:// only) */}
-                <div className="relative">
-                  <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
-                  <input
-                    type="url"
-                    maxLength={255}
-                    value={guestInfo.authorUrl}
-                    onChange={(e) =>
-                      setGuestInfo((prev) => ({ ...prev, authorUrl: e.target.value }))
-                    }
-                    placeholder={t('websitePlaceholder')}
-                    className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                  />
+                  {/* Website (Optional, https:// only) */}
+                  <div className="relative">
+                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
+                    <input
+                      type="url"
+                      maxLength={255}
+                      value={guestInfo.authorUrl}
+                      onChange={(e) =>
+                        setGuestInfo((prev) => ({ ...prev, authorUrl: e.target.value }))
+                      }
+                      placeholder={t('websitePlaceholder')}
+                      className="w-full rounded-xl border border-transparent bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                    />
+                  </div>
                 </div>
-              </div>
+                <div className="border-b border-[var(--portal-color-border)] my-1" />
+              </>
             )}
+
+            {/* Honeypot field for bot protection */}
+            <div className="hidden" aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+              <input
+                type="text"
+                name="website_hp"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
 
             {/* Comment Content */}
             <textarea
@@ -595,13 +648,13 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
               required
               rows={4}
               maxLength={2000}
-              className="w-full resize-none rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] p-3.5 text-xs sm:text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors leading-relaxed"
+              className="w-full resize-none rounded-2xl border border-transparent bg-[var(--portal-color-bg)] p-3.5 text-xs sm:text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors leading-relaxed block"
             />
 
             {/* Form Footer */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
               <span className="text-[11px] text-[var(--portal-color-text-tertiary)] leading-tight">
-                {session ? '' : t('moderationNotice')}
+                {session || !requireModeration ? '' : t('moderationNotice')}
               </span>
               <button
                 type="submit"

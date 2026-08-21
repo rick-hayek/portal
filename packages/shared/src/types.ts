@@ -22,6 +22,9 @@ export interface SiteConfig {
     enabled?: boolean;
     provider?: string;
   };
+  comments?: {
+    requireModeration?: boolean;
+  };
   about?: {
     title?: string;
     subtitle?: string;
