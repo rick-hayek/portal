@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
-import { attachCommentAvatars } from '../utils/gravatar';
+import { fetchCommentTree } from '../utils/comment-tree';
 
 export const postRouter = router({
   /** Paginated post list with optional category/tag/month filters */
@@ -141,22 +141,12 @@ export const postRouter = router({
           author: { select: { id: true, name: true, image: true } },
           category: { select: { id: true, name: true, name_en: true, slug: true } },
           tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
-          comments: {
-            where: { status: 'approved', parentId: null },
-            orderBy: { createdAt: 'desc' },
-            include: {
-              replies: {
-                where: { status: 'approved' },
-                orderBy: { createdAt: 'asc' },
-              },
-            },
-          },
         },
       });
 
       if (!post) return null;
 
-      const commentsWithAvatars = await attachCommentAvatars(ctx.prisma, post.comments);
+      const commentsWithAvatars = await fetchCommentTree(ctx.prisma, post.id);
 
       return {
         ...post,

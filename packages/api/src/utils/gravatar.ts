@@ -58,14 +58,21 @@ interface CommentWithReplies {
 export async function attachCommentAvatars<T extends CommentWithReplies>(
   prisma: PrismaClient,
   comments: T[],
-): Promise<Array<T & { avatar: string | null; replies: Array<any & { avatar: string | null }> }>> {
-  const emails = Array.from(
-    new Set(
-      comments
-        .flatMap((c) => [c.authorEmail, ...(c.replies?.map((r) => r.authorEmail) || [])])
-        .filter((e): e is string => Boolean(e && e.trim())),
-    ),
-  );
+): Promise<T[]> {
+  const collectEmails = (nodes: CommentWithReplies[]): string[] => {
+    const list: string[] = [];
+    for (const node of nodes) {
+      if (node.authorEmail?.trim()) {
+        list.push(node.authorEmail.trim());
+      }
+      if (node.replies && node.replies.length > 0) {
+        list.push(...collectEmails(node.replies));
+      }
+    }
+    return list;
+  };
+
+  const emails = Array.from(new Set(collectEmails(comments)));
 
   const userImageMap = new Map<string, string>();
   if (emails.length > 0) {
@@ -89,12 +96,11 @@ export async function attachCommentAvatars<T extends CommentWithReplies>(
     return userImageMap.get(clean) || getGravatarUrl(email, name);
   };
 
-  return comments.map((c) => ({
-    ...c,
-    avatar: resolveAvatar(c.authorEmail, c.authorName),
-    replies: (c.replies || []).map((r) => ({
-      ...r,
-      avatar: resolveAvatar(r.authorEmail, r.authorName),
-    })),
-  }));
+  const processNode = (node: CommentWithReplies): any => ({
+    ...node,
+    avatar: resolveAvatar(node.authorEmail, node.authorName),
+    replies: (node.replies || []).map(processNode),
+  });
+
+  return comments.map(processNode);
 }

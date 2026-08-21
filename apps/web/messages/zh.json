@@ -166,9 +166,9 @@
     "templateCopied": "已复制格式！",
     "onlineApplyBtn": "在线快速申请",
     "applyModal": {
-      "title": "快速申请友情链接",
+      "title": "快速申请友链",
       "subtitle": "填写站点信息，提交后进入待审核队列",
-      "rawModeToggle": "比快速更快的申请",
+      "rawModeToggle": "点我试试",
       "standardFormMode": "标准表单",
       "rawPastePlaceholder": "支持粘贴 YAML / JSON 或自由文本，例如：\n\nname: 我的空间\nurl: https://voocii.com/\navatar: https://voocii.com/avatar.png\nscreenshot: https://voocii.com/cover.png\ndesc: 分享生活与学习\nrss: https://voocii.com/feed.xml\n\n或简易纯文本格式：\n\n我的空间\nhttps://voocii.com/\n我的博客描述",
       "namePlaceholder": "例如：我的空间",

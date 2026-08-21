@@ -1,3 +1,4 @@
+import { getCommentAnchor } from '@portal/shared';
 import type { EmailProvider } from './provider';
 import { MailgunEmailProvider } from './providers/mailgun';
 import { SendgridEmailProvider } from './providers/sendgrid';
@@ -248,7 +249,7 @@ export async function dispatchCommentNotifications(params: {
             recipientName: parentComment.authorName,
             replierName: comment.authorName,
             postTitle: post?.title || 'Article',
-            postUrl: `${siteUrl}/blog/${post?.slug || ''}`,
+            postUrl: `${siteUrl}/blog/${post?.slug || ''}#${getCommentAnchor(comment.id)}`,
             replyContent: comment.content,
             siteTitle,
             siteUrl,
@@ -274,7 +275,7 @@ export async function dispatchCommentNotifications(params: {
           authorName: post.author.name || 'Author',
           commenterName: comment.authorName,
           postTitle: post.title,
-          postUrl: `${siteUrl}/blog/${post.slug}`,
+          postUrl: `${siteUrl}/blog/${post.slug}#${getCommentAnchor(comment.id)}`,
           commentContent: comment.content,
           siteTitle,
           siteUrl,

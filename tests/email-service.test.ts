@@ -9,6 +9,7 @@ import {
 } from '../packages/api/src/services/email';
 import { MailgunEmailProvider } from '../packages/api/src/services/email/providers/mailgun';
 import { SendgridEmailProvider } from '../packages/api/src/services/email/providers/sendgrid';
+import { formatCommentDate } from '../packages/shared/src/utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Email Service Component', () => {
@@ -227,5 +228,38 @@ describe('Email Service Component', () => {
     });
 
     expect(fetchSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('formatCommentDate Utility', () => {
+  it('formats comment dates based on relative days/hours', () => {
+    const now = new Date();
+
+    // Within 1 hour today
+    const thirtyMinsAgo = new Date(now.getTime() - 30 * 60 * 1000);
+    expect(formatCommentDate(thirtyMinsAgo, 'zh')).toBe('1 小时内');
+    expect(formatCommentDate(thirtyMinsAgo, 'en')).toBe('Within 1 hour');
+
+    // 3 hours ago today
+    const threeHoursAgo = new Date(now.getTime() - 3 * 3600 * 1000);
+    expect(formatCommentDate(threeHoursAgo, 'zh')).toBe('3 小时前');
+    expect(formatCommentDate(threeHoursAgo, 'en')).toBe('3 hours ago');
+
+    // Yesterday
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    expect(formatCommentDate(yesterday, 'zh')).toBe('昨天');
+    expect(formatCommentDate(yesterday, 'en')).toBe('Yesterday');
+
+    // Day before yesterday
+    const dayBeforeYesterday = new Date(now);
+    dayBeforeYesterday.setDate(now.getDate() - 2);
+    expect(formatCommentDate(dayBeforeYesterday, 'zh')).toBe('前天');
+    expect(formatCommentDate(dayBeforeYesterday, 'en')).toBe('2 days ago');
+
+    // Older than 2 days
+    const fourDaysAgo = new Date(now);
+    fourDaysAgo.setDate(now.getDate() - 4);
+    expect(formatCommentDate(fourDaysAgo, 'zh')).toContain('日');
   });
 });

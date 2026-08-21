@@ -14,6 +14,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { formatCommentDate, getCommentAnchor } from '@portal/shared';
 
 interface Comment {
   id: string;
@@ -185,9 +186,10 @@ function CommentItem({
 
   return (
     <div
+      id={getCommentAnchor(comment.id)}
       className={`${depth > 0 ? 'ml-4 sm:ml-8 border-l-2 border-[var(--portal-color-border)]/50 pl-3 sm:pl-5' : ''}`}
     >
-      <div className="mb-3 rounded-2xl bg-[var(--portal-color-surface)] p-4 sm:p-5 shadow-2xs border border-[var(--portal-color-border)]/40 hover:border-[var(--portal-color-border)]/80 transition-colors">
+      <div className="mb-3 scroll-mt-24 rounded-2xl bg-[var(--portal-color-surface)] p-4 sm:p-5 shadow-2xs border border-[var(--portal-color-border)]/40 hover:border-[var(--portal-color-border)]/80 transition-colors target:border-[var(--portal-color-primary)] target:ring-2 target:ring-[var(--portal-color-primary)]/20">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <CommentAvatar
@@ -214,14 +216,7 @@ function CommentItem({
                 )}
               </div>
               <time className="text-[11px] text-[var(--portal-color-text-tertiary)] font-mono block">
-                {new Date(comment.createdAt).toLocaleDateString(
-                  locale === 'zh' ? 'zh-CN' : 'en-US',
-                  {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  },
-                )}
+                {formatCommentDate(comment.createdAt, locale)}
               </time>
             </div>
           </div>

@@ -6,6 +6,7 @@ import {
   sendCommentApprovedNotification,
   sendLinkApprovedNotification,
 } from '../services/email';
+import { getCommentAnchor } from '@portal/shared';
 import { adminProcedure, protectedProcedure, router } from '../trpc';
 
 export const adminRouter = router({
@@ -267,7 +268,7 @@ export const adminRouter = router({
             authorEmail: comment.authorEmail,
             authorName: comment.authorName,
             postTitle: comment.post?.title || 'Article',
-            postUrl: `${siteUrl}/blog/${comment.post?.slug || ''}`,
+            postUrl: `${siteUrl}/blog/${comment.post?.slug || ''}#${getCommentAnchor(comment.id)}`,
             commentContent: comment.content,
             siteTitle,
             siteUrl,

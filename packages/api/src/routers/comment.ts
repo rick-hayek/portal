@@ -2,23 +2,12 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { dispatchCommentNotifications } from '../services/email';
 import { publicProcedure, router } from '../trpc';
-import { attachCommentAvatars } from '../utils/gravatar';
+import { fetchCommentTree } from '../utils/comment-tree';
 
 export const commentRouter = router({
-  /** Get comments for a post (top-level with nested replies) */
+  /** Get comments for a post (top-level with nested replies of arbitrary depth) */
   byPost: publicProcedure.input(z.object({ postId: z.string() })).query(async ({ ctx, input }) => {
-    const comments = await ctx.prisma.comment.findMany({
-      where: { postId: input.postId, parentId: null, status: 'approved' },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        replies: {
-          where: { status: 'approved' },
-          orderBy: { createdAt: 'asc' },
-        },
-      },
-    });
-
-    return attachCommentAvatars(ctx.prisma, comments);
+    return fetchCommentTree(ctx.prisma, input.postId);
   }),
 
   /** Submit a new comment — open to both guests and authenticated users */
