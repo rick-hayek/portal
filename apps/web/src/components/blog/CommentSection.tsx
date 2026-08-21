@@ -275,45 +275,42 @@ function CommentItem({
 
               {/* Guest metadata fields if unauthenticated */}
               {!session && (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    <div className="relative">
-                      <UserIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
-                      <input
-                        type="text"
-                        required
-                        value={replyName}
-                        onChange={(e) => setReplyName(e.target.value)}
-                        placeholder={t('namePlaceholder')}
-                        className="w-full rounded-xl border border-transparent bg-transparent pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                      />
-                    </div>
-
-                    <div className="relative">
-                      <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
-                      <input
-                        type="email"
-                        required
-                        value={replyEmail}
-                        onChange={(e) => setReplyEmail(e.target.value)}
-                        placeholder={t('emailPlaceholder')}
-                        className="w-full rounded-xl border border-transparent bg-transparent pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                      />
-                    </div>
-
-                    <div className="relative">
-                      <Globe className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
-                      <input
-                        type="url"
-                        value={replyUrl}
-                        onChange={(e) => setReplyUrl(e.target.value)}
-                        placeholder={t('websitePlaceholder')}
-                        className="w-full rounded-xl border border-transparent bg-transparent pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                      />
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div className="relative">
+                    <UserIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
+                    <input
+                      type="text"
+                      required
+                      value={replyName}
+                      onChange={(e) => setReplyName(e.target.value)}
+                      placeholder={t('namePlaceholder')}
+                      className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                    />
                   </div>
-                  <div className="border-b border-[var(--portal-color-border)] my-1" />
-                </>
+
+                  <div className="relative">
+                    <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
+                    <input
+                      type="email"
+                      required
+                      value={replyEmail}
+                      onChange={(e) => setReplyEmail(e.target.value)}
+                      placeholder={t('emailPlaceholder')}
+                      className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <Globe className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--portal-color-text-tertiary)]" />
+                    <input
+                      type="url"
+                      value={replyUrl}
+                      onChange={(e) => setReplyUrl(e.target.value)}
+                      placeholder={t('websitePlaceholder')}
+                      className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] pl-8 pr-3 py-1.5 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                    />
+                  </div>
+                </div>
               )}
 
               {/* Honeypot field for bot protection */}
@@ -334,7 +331,7 @@ function CommentItem({
                 onChange={(e) => setReplyContent(e.target.value)}
                 required
                 rows={2}
-                className="w-full resize-none rounded-xl border border-transparent bg-transparent px-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors block"
+                className="w-full resize-none rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] px-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
               />
 
               <div className="flex items-center justify-between pt-1">
@@ -575,57 +572,54 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
 
             {/* Guest Details (when unauthenticated) */}
             {!session && (
-              <>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {/* Nickname (Required) */}
-                  <div className="relative">
-                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
-                    <input
-                      type="text"
-                      required
-                      maxLength={50}
-                      value={guestInfo.authorName}
-                      onChange={(e) =>
-                        setGuestInfo((prev) => ({ ...prev, authorName: e.target.value }))
-                      }
-                      placeholder={t('namePlaceholder')}
-                      className="w-full rounded-xl border border-transparent bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  {/* Email (Required) */}
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
-                    <input
-                      type="email"
-                      required
-                      maxLength={100}
-                      value={guestInfo.authorEmail}
-                      onChange={(e) =>
-                        setGuestInfo((prev) => ({ ...prev, authorEmail: e.target.value }))
-                      }
-                      placeholder={t('emailPlaceholder')}
-                      className="w-full rounded-xl border border-transparent bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  {/* Website (Optional, https:// only) */}
-                  <div className="relative">
-                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
-                    <input
-                      type="url"
-                      maxLength={255}
-                      value={guestInfo.authorUrl}
-                      onChange={(e) =>
-                        setGuestInfo((prev) => ({ ...prev, authorUrl: e.target.value }))
-                      }
-                      placeholder={t('websitePlaceholder')}
-                      className="w-full rounded-xl border border-transparent bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
-                    />
-                  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Nickname (Required) */}
+                <div className="relative">
+                  <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
+                  <input
+                    type="text"
+                    required
+                    maxLength={50}
+                    value={guestInfo.authorName}
+                    onChange={(e) =>
+                      setGuestInfo((prev) => ({ ...prev, authorName: e.target.value }))
+                    }
+                    placeholder={t('namePlaceholder')}
+                    className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                  />
                 </div>
-                <div className="border-b border-[var(--portal-color-border)] my-1" />
-              </>
+
+                {/* Email (Required) */}
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
+                  <input
+                    type="email"
+                    required
+                    maxLength={100}
+                    value={guestInfo.authorEmail}
+                    onChange={(e) =>
+                      setGuestInfo((prev) => ({ ...prev, authorEmail: e.target.value }))
+                    }
+                    placeholder={t('emailPlaceholder')}
+                    className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Website (Optional, https:// only) */}
+                <div className="relative">
+                  <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--portal-color-text-tertiary)]" />
+                  <input
+                    type="url"
+                    maxLength={255}
+                    value={guestInfo.authorUrl}
+                    onChange={(e) =>
+                      setGuestInfo((prev) => ({ ...prev, authorUrl: e.target.value }))
+                    }
+                    placeholder={t('websitePlaceholder')}
+                    className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] pl-9 pr-3 py-2 text-xs text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
             )}
 
             {/* Honeypot field for bot protection */}
@@ -648,7 +642,7 @@ export function CommentSection({ postId, comments = [] }: { postId: string; comm
               required
               rows={4}
               maxLength={2000}
-              className="w-full resize-none rounded-2xl border border-transparent bg-[var(--portal-color-bg)] p-3.5 text-xs sm:text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors leading-relaxed block"
+              className="w-full resize-none rounded-2xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] p-3.5 text-xs sm:text-sm text-[var(--portal-color-text)] focus:border-[var(--portal-color-primary)] focus:outline-none transition-colors leading-relaxed"
             />
 
             {/* Form Footer */}

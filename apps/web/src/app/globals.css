@@ -87,8 +87,8 @@ textarea {
    Accessibility Focus Ring
    ────────────────────────────────────────────── */
 :focus-visible {
-  outline: 1px solid var(--portal-color-primary, #6b8ec9);
-  outline-offset: 0px;
+  outline: 0 solid var(--portal-color-primary, #6b8ec9);
+  outline-offset: -1px;
 }
 
 /* Selection color */
