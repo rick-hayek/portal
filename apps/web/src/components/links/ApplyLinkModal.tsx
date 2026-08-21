@@ -99,22 +99,24 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
 
     if (!isValidName || !isValidUrl || !isValidDesc) {
       return {
-        name: isValidName ? parsedName.trim() : `申请站点-${Math.random().toString(36).slice(2, 7)}`,
-        url: isValidUrl ? parsedUrl.trim() : 'https://pending-parse.local',
-        description: text.trim(),
-        avatar: parsedAvatar || undefined,
-        screenshot: parsedScreenshot || undefined,
-        rss: parsedRss || undefined,
+        name: isValidName
+          ? parsedName.trim().slice(0, 50)
+          : `申请站点-${Math.random().toString(36).slice(2, 7)}`,
+        url: isValidUrl ? parsedUrl.trim().slice(0, 255) : 'https://pending-parse.local',
+        description: text.trim().slice(0, 1000),
+        avatar: parsedAvatar ? parsedAvatar.slice(0, 255) : undefined,
+        screenshot: parsedScreenshot ? parsedScreenshot.slice(0, 255) : undefined,
+        rss: parsedRss ? parsedRss.slice(0, 255) : undefined,
       };
     }
 
     return {
-      name: parsedName.trim(),
-      url: parsedUrl.trim(),
-      description: parsedDesc.trim(),
-      avatar: parsedAvatar || undefined,
-      screenshot: parsedScreenshot || undefined,
-      rss: parsedRss || undefined,
+      name: parsedName.trim().slice(0, 50),
+      url: parsedUrl.trim().slice(0, 255),
+      description: parsedDesc.trim().slice(0, 1000),
+      avatar: parsedAvatar ? parsedAvatar.slice(0, 255) : undefined,
+      screenshot: parsedScreenshot ? parsedScreenshot.slice(0, 255) : undefined,
+      rss: parsedRss ? parsedRss.slice(0, 255) : undefined,
     };
   };
 
@@ -347,13 +349,19 @@ export function ApplyLinkModal({ isOpen, onClose }: ApplyLinkModalProps) {
             {isRawMode ? (
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <textarea
-                    rows={8}
-                    value={rawText}
-                    onChange={(e) => setRawText(e.target.value)}
-                    placeholder={t('applyModal.rawPastePlaceholder')}
-                    className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] p-3 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all resize-y leading-relaxed"
-                  />
+                  <div className="relative">
+                    <textarea
+                      rows={8}
+                      maxLength={2000}
+                      value={rawText}
+                      onChange={(e) => setRawText(e.target.value)}
+                      placeholder={t('applyModal.rawPastePlaceholder')}
+                      className="w-full rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-bg)] p-3 pb-6 text-xs font-mono text-[var(--portal-color-text)] outline-none focus:border-[var(--portal-color-primary)] transition-all resize-y leading-relaxed"
+                    />
+                    <span className="absolute right-3 bottom-2.5 text-[10px] text-[var(--portal-color-text-tertiary)] font-mono pointer-events-none select-none">
+                      {rawText.length}/2000
+                    </span>
+                  </div>
                 </div>
 
                 {/* Submitter Email & Math Captcha (2 columns on desktop) */}

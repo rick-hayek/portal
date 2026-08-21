@@ -59,7 +59,7 @@ export const linkRouter = router({
           .string()
           .trim()
           .min(1, 'Description is required')
-          .max(200, 'Description cannot exceed 200 characters'),
+          .max(1000, 'Description cannot exceed 1000 characters'),
         category: z.string().trim().max(50).default('friend'),
         rss: z
           .string()
