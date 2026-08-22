@@ -3,13 +3,14 @@
 import Image from 'next/image';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 
 interface UserMenuProps {
   showDetails?: boolean;
   responsive?: boolean;
   align?: 'left' | 'right' | 'center';
+  direction?: 'auto' | 'down' | 'up';
   onItemClick?: () => void;
 }
 
@@ -17,6 +18,7 @@ export function UserMenu({
   showDetails = false,
   responsive = false,
   align = 'right',
+  direction = 'auto',
   onItemClick,
 }: UserMenuProps) {
   const { data: session, status } = useSession();
@@ -24,12 +26,18 @@ export function UserMenu({
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [effectiveDirection, setEffectiveDirection] = useState<'up' | 'down'>('down');
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
     const closeMenu = () => setIsOpen(false);
     window.addEventListener('click', closeMenu);
-    return () => window.removeEventListener('click', closeMenu);
+    window.addEventListener('resize', closeMenu);
+    return () => {
+      window.removeEventListener('click', closeMenu);
+      window.removeEventListener('resize', closeMenu);
+    };
   }, [isOpen]);
 
   if (responsive) {
@@ -37,11 +45,11 @@ export function UserMenu({
       <>
         {/* Mobile: Circle Icon Only */}
         <div className="md:hidden">
-          <UserMenu showDetails={false} align={align} onItemClick={onItemClick} />
+          <UserMenu showDetails={false} align={align} direction={direction} onItemClick={onItemClick} />
         </div>
         {/* Desktop / Medium: Full Card Details */}
         <div className="hidden md:block">
-          <UserMenu showDetails={true} align={align} onItemClick={onItemClick} />
+          <UserMenu showDetails={true} align={align} direction={direction} onItemClick={onItemClick} />
         </div>
       </>
     );
@@ -50,6 +58,26 @@ export function UserMenu({
   const handleSignIn = () => {
     onItemClick?.();
     router.push(`/auth/signin?callbackUrl=${encodeURIComponent(pathname)}`);
+  };
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isOpen && containerRef.current) {
+      if (direction !== 'auto') {
+        setEffectiveDirection(direction);
+      } else {
+        const rect = containerRef.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        const estimatedDropdownHeight = 220;
+        if (spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow) {
+          setEffectiveDirection('up');
+        } else {
+          setEffectiveDirection('down');
+        }
+      }
+    }
+    setIsOpen(!isOpen);
   };
 
   if (status === 'loading') {
@@ -90,14 +118,11 @@ export function UserMenu({
   const userInitial = (session.user.name ?? session.user.email ?? 'U')[0].toUpperCase();
 
   return (
-    <div className={`relative ${showDetails && align !== 'center' ? 'w-full' : ''}`}>
+    <div ref={containerRef} className={`relative ${showDetails && align !== 'center' ? 'w-full' : ''}`}>
       {/* Dropdown Trigger */}
       <button
         type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsOpen(!isOpen);
-        }}
+        onClick={handleToggle}
         className={`flex items-center focus:outline-none focus:ring-0 cursor-pointer ${
           showDetails
             ? align === 'center'
@@ -153,12 +178,16 @@ export function UserMenu({
       {isOpen && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className={`absolute top-full mt-2 z-50 w-44 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150 ${
+          className={`absolute ${
+            effectiveDirection === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'
+          } z-50 w-44 rounded-xl border border-[var(--portal-color-border)] bg-[var(--portal-color-surface)] py-1 shadow-lg ring-1 ring-black/5 animate-in fade-in ${
+            effectiveDirection === 'up' ? 'slide-in-from-bottom-2' : 'slide-in-from-top-2'
+          } duration-150 ${
             align === 'center'
-              ? 'left-1/2 -translate-x-1/2 origin-top'
+              ? 'left-1/2 -translate-x-1/2 ' + (effectiveDirection === 'up' ? 'origin-bottom' : 'origin-top')
               : align === 'left'
-                ? 'left-0 origin-top-left'
-                : 'right-0 origin-top-right'
+                ? 'left-0 ' + (effectiveDirection === 'up' ? 'origin-bottom-left' : 'origin-top-left')
+                : 'right-0 ' + (effectiveDirection === 'up' ? 'origin-bottom-right' : 'origin-top-right')
           }`}
         >
           {!showDetails && (

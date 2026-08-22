@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Mono, Sora } from 'next/font/google';
 import '../globals.css';
-import { ThemeProvider } from '@portal/theme';
+import { ThemeProvider, ThemeScript } from '@portal/theme';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
@@ -80,11 +80,12 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        <script
+        <ThemeScript defaultTheme={siteConfig.theme.default || 'zenith'} />
+        {/* <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5960009177449604"
           crossOrigin="anonymous"
-        />
+        /> */}
       </head>
       <body className={`${sora.variable} ${plexMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>

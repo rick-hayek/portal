@@ -146,7 +146,7 @@ export const postRouter = router({
 
       if (!post) return null;
 
-      const commentsWithAvatars = await fetchCommentTree(ctx.prisma, post.id);
+      const commentsWithAvatars = await fetchCommentTree(ctx.prisma, post.id, ctx.siteConfig);
 
       return {
         ...post,

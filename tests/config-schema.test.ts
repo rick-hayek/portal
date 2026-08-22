@@ -230,14 +230,14 @@ describe('Module Registry — register, query, nav', () => {
     expect(enabled).toHaveLength(0);
   });
 
-  it('Parses comments.requireModeration setting', () => {
+  it('Parses avatar urlTemplate setting', () => {
     const result = siteConfigSchema.safeParse({
       ...VALID_INPUT,
-      comments: { requireModeration: false },
+      avatar: { urlTemplate: 'https://weavatar.com/avatar/{hash}' },
     });
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.comments?.requireModeration).toBe(false);
+      expect(result.data.avatar?.urlTemplate).toBe('https://weavatar.com/avatar/{hash}');
     }
   });
 });

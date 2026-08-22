@@ -155,7 +155,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* User */}
         <div className="border-t border-[var(--portal-color-border)] p-3">
-          <UserMenu />
+          <UserMenu showDetails={true} align="left" />
         </div>
       </aside>
 

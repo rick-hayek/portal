@@ -116,8 +116,15 @@ export function ThemeProvider({
   const defaultTheme = initialDefaultTheme || Object.keys(themes)[0] || 'zenith';
   const available = useMemo(() => availableThemes ?? Object.keys(themes), [availableThemes]);
 
-  // Initial state is consistently 'system' on both server and client hydration to prevent hydration mismatch
-  const [themeId, setThemeId] = useState('system');
+  const [themeId, setThemeId] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved && (saved === 'system' || (themes[saved] && available.includes(saved)))) {
+        return saved;
+      }
+    }
+    return 'system';
+  });
 
   // Read saved theme from localStorage post-hydration
   useEffect(() => {
@@ -183,4 +190,11 @@ export function ThemeProvider({
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
+
+/** Inline blocking script component to prevent theme flash (FOUC) on page load */
+export function ThemeScript({ defaultTheme = 'zenith' }: { defaultTheme?: string }) {
+  const scriptContent = `(function(){try{var k='portal-theme';var s=localStorage.getItem(k);var d='${defaultTheme}';var tId=(s&&s!=='system')?s:d;if(s==='system'){tId=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark-neon':d;}var th=${JSON.stringify(themes)};var thObj=th[tId]||th[d];if(thObj){var r=document.documentElement;for(var col in thObj.colors){var val=thObj.colors[col];var keb=col.replace(/[A-Z]/g,function(m){return '-'+m.toLowerCase()});r.style.setProperty('--portal-color-'+keb,val);}r.setAttribute('data-theme',thObj.id);r.setAttribute('data-theme-mode',thObj.mode);if(thObj.mode==='dark'){r.classList.add('dark');}else{r.classList.remove('dark');}}}catch(e){}})()`;
+
+  return <script dangerouslySetInnerHTML={{ __html: scriptContent }} />;
 }

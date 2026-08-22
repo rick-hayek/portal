@@ -7,7 +7,7 @@ import { fetchCommentTree } from '../utils/comment-tree';
 export const commentRouter = router({
   /** Get comments for a post (top-level with nested replies of arbitrary depth) */
   byPost: publicProcedure.input(z.object({ postId: z.string() })).query(async ({ ctx, input }) => {
-    return fetchCommentTree(ctx.prisma, input.postId);
+    return fetchCommentTree(ctx.prisma, input.postId, ctx.siteConfig);
   }),
 
   /** Submit a new comment — open to both guests and authenticated users */

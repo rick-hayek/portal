@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@portal/db';
 import { attachCommentAvatars } from './gravatar';
 
-export async function fetchCommentTree(prisma: PrismaClient, postId: string) {
+export async function fetchCommentTree(prisma: PrismaClient, postId: string, siteConfig?: any) {
   const allComments = await prisma.comment.findMany({
     where: { postId, status: 'approved' },
     orderBy: { createdAt: 'asc' },
@@ -28,5 +28,5 @@ export async function fetchCommentTree(prisma: PrismaClient, postId: string) {
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
-  return attachCommentAvatars(prisma, rootComments);
+  return attachCommentAvatars(prisma, rootComments, siteConfig);
 }

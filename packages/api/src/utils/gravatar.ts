@@ -24,6 +24,7 @@ export function getGravatarUrl(
   email?: string | null,
   name?: string | null,
   size = 96,
+  siteConfig?: any,
 ): string | null {
   if (!email || !email.trim()) return null;
   const hash = crypto.createHash('md5').update(email.trim().toLowerCase()).digest('hex');
@@ -34,9 +35,19 @@ export function getGravatarUrl(
     Math.abs(hash.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % PALETTE.length;
   const bg = PALETTE[colorIndex];
 
-  // REST path format avoiding query string parameter stripping in Gravatar proxy
+  // Local/UI-Avatars fallback URL format
   const fallbackUrl = `https://ui-avatars.com/api/${encodeURIComponent(displayName)}/${size}/${bg}/ffffff`;
-  return `https://gravatar.com/avatar/${hash}?d=${encodeURIComponent(fallbackUrl)}&s=${size}`;
+
+  const template =
+    siteConfig?.avatar?.urlTemplate ||
+    'https://cravatar.cn/avatar/{hash}?d={fallback}&s={size}';
+
+  return template
+    .replace('{hash}', hash)
+    .replace('{name}', encodeURIComponent(displayName))
+    .replace('{email}', encodeURIComponent(email.trim()))
+    .replace('{size}', String(size))
+    .replace('{fallback}', encodeURIComponent(fallbackUrl));
 }
 
 interface CommentWithReplies {
@@ -53,11 +64,12 @@ interface CommentWithReplies {
 /**
  * Resolves avatars for comments:
  * 1. If authorEmail belongs to a registered User with image (e.g. GitHub avatar), use User.image
- * 2. Otherwise, fallback to Gravatar URL with UI-Avatars initials fallback
+ * 2. Otherwise, fallback to configured Avatar service with UI-Avatars initials fallback
  */
 export async function attachCommentAvatars<T extends CommentWithReplies>(
   prisma: PrismaClient,
   comments: T[],
+  siteConfig?: any,
 ): Promise<T[]> {
   const collectEmails = (nodes: CommentWithReplies[]): string[] => {
     const list: string[] = [];
@@ -93,7 +105,7 @@ export async function attachCommentAvatars<T extends CommentWithReplies>(
   const resolveAvatar = (email?: string | null, name?: string | null) => {
     if (!email) return null;
     const clean = email.trim().toLowerCase();
-    return userImageMap.get(clean) || getGravatarUrl(email, name);
+    return userImageMap.get(clean) || getGravatarUrl(email, name, 96, siteConfig);
   };
 
   const processNode = (node: CommentWithReplies): any => ({

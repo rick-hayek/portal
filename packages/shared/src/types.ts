@@ -25,6 +25,9 @@ export interface SiteConfig {
   comments?: {
     requireModeration?: boolean;
   };
+  avatar?: {
+    urlTemplate?: string;
+  };
   about?: {
     title?: string;
     subtitle?: string;
