@@ -92,6 +92,28 @@ export default async function LinksPage({
     ...(siteRss ? [{ label: t('selfFields.rss'), value: siteRss, key: 'rss' }] : []),
   ];
 
+  const yamlSnippet = [
+    `name: ${siteName}`,
+    `url: ${siteUrl}`,
+    `desc: ${siteDesc}`,
+    ...(siteAvatar ? [`avatar: ${siteAvatar}`] : []),
+    ...(siteScreenshot ? [`screenshot: ${siteScreenshot}`] : []),
+    ...(siteRss ? [`rss: ${siteRss}`] : []),
+  ].join('\n');
+
+  const jsonSnippet = JSON.stringify(
+    {
+      name: siteName,
+      url: siteUrl,
+      desc: siteDesc,
+      ...(siteAvatar ? { avatar: siteAvatar } : {}),
+      ...(siteScreenshot ? { screenshot: siteScreenshot } : {}),
+      ...(siteRss ? { rss: siteRss } : {}),
+    },
+    null,
+    2,
+  );
+
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 pt-8 sm:pt-12">
       <header className="space-y-3 text-center">
@@ -345,7 +367,11 @@ export default async function LinksPage({
           <span className="flex-1 border-b border-compat content-['']"></span>
         </h2>
 
-        <LinksCopyableFields fields={selfFields} />
+        <LinksCopyableFields
+          fields={selfFields}
+          yamlSnippet={yamlSnippet}
+          jsonSnippet={jsonSnippet}
+        />
       </section>
     </div>
   );

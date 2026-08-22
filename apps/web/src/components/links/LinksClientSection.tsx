@@ -71,9 +71,14 @@ export function LinksApplyActions({ targetEmail }: LinksClientSectionProps) {
 
 export function LinksCopyableFields({
   fields,
+  yamlSnippet,
+  jsonSnippet,
 }: {
   fields: Array<{ label: string; value: string; key: string }>;
+  yamlSnippet?: string;
+  jsonSnippet?: string;
 }) {
+  const t = useTranslations('Links');
   const [copiedType, setCopiedType] = useState<string | null>(null);
 
   const handleCopy = (text: string, type: string) => {
@@ -83,34 +88,80 @@ export function LinksCopyableFields({
   };
 
   return (
-    <div className="space-y-3">
-      {fields.map((item) => (
-        <div
-          key={item.key}
-          className="flex items-center justify-between gap-4 rounded-2xl bg-[var(--portal-color-surface)] px-4 py-3 sm:px-5 sm:py-3.5 transition-colors border border-[var(--portal-color-border)]/30 hover:border-[var(--portal-color-border)]/70"
-        >
-          <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-            <span className="text-xs sm:text-sm font-medium text-[var(--portal-color-text-tertiary)] shrink-0 w-16 sm:w-20">
-              {item.label}
-            </span>
-            <div className="text-sm font-medium text-[var(--portal-color-text)] truncate font-sans min-w-0 flex-1">
-              {item.value}
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleCopy(item.value, item.key)}
-            className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg hover:bg-[var(--portal-color-bg)] text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors cursor-pointer"
-            title={`Copy ${item.label}`}
+    <div className="space-y-4">
+      <div className="space-y-3">
+        {fields.map((item) => (
+          <div
+            key={item.key}
+            className="flex items-center justify-between gap-4 rounded-2xl bg-[var(--portal-color-surface)] px-4 py-3 sm:px-5 sm:py-3.5 transition-colors border border-[var(--portal-color-border)]/30 hover:border-[var(--portal-color-border)]/70"
           >
-            {copiedType === item.key ? (
-              <Check className="h-4 w-4 text-emerald-500" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
-          </button>
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+              <span className="text-xs sm:text-sm font-medium text-[var(--portal-color-text-tertiary)] shrink-0 w-16 sm:w-20">
+                {item.label}
+              </span>
+              <div className="text-sm font-medium text-[var(--portal-color-text)] truncate font-sans min-w-0 flex-1">
+                {item.value}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleCopy(item.value, item.key)}
+              className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg hover:bg-[var(--portal-color-bg)] text-[var(--portal-color-text-tertiary)] hover:text-[var(--portal-color-primary)] transition-colors cursor-pointer"
+              title={`Copy ${item.label}`}
+            >
+              {copiedType === item.key ? (
+                <Check className="h-4 w-4 text-emerald-500" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {(yamlSnippet || jsonSnippet) && (
+        <div className="flex flex-wrap items-center gap-3 pt-1">
+          {yamlSnippet && (
+            <button
+              type="button"
+              onClick={() => handleCopy(yamlSnippet, 'yaml')}
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface-alt)] hover:bg-[var(--portal-color-border-soft)] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[var(--portal-color-text)] border border-compat transition-all cursor-pointer"
+            >
+              {copiedType === 'yaml' ? (
+                <>
+                  <Check className="h-4 w-4 text-emerald-500" />
+                  <span>{t('copied')}</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  <span>{t('copyYaml')}</span>
+                </>
+              )}
+            </button>
+          )}
+
+          {jsonSnippet && (
+            <button
+              type="button"
+              onClick={() => handleCopy(jsonSnippet, 'json')}
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface-alt)] hover:bg-[var(--portal-color-border-soft)] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[var(--portal-color-text)] border border-compat transition-all cursor-pointer"
+            >
+              {copiedType === 'json' ? (
+                <>
+                  <Check className="h-4 w-4 text-emerald-500" />
+                  <span>{t('copied')}</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  <span>{t('copyJson')}</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
-      ))}
+      )}
     </div>
   );
 }
