@@ -125,11 +125,11 @@ export function LinksCopyableFields({
             <button
               type="button"
               onClick={() => handleCopy(yamlSnippet, 'yaml')}
-              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-surface-alt)] hover:bg-[var(--portal-color-border-soft)] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[var(--portal-color-text)] border border-compat transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--portal-color-primary)] px-5 py-2.5 text-xs sm:text-sm font-semibold text-white transition-opacity hover:opacity-90 shadow-sm cursor-pointer border border-transparent"
             >
               {copiedType === 'yaml' ? (
                 <>
-                  <Check className="h-4 w-4 text-emerald-500" />
+                  <Check className="h-4 w-4 text-emerald-300" />
                   <span>{t('copied')}</span>
                 </>
               ) : (
