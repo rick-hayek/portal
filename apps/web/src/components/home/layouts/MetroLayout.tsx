@@ -40,7 +40,7 @@ export function MetroLayout({
     name: 'Jane Doe',
     url: siteConfig.site.url,
     sameAs: [
-      process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/ricksrepo',
+      process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/rick-hayek',
       process.env.NEXT_PUBLIC_X_URL || 'https://x.com/wevoocii',
     ],
     jobTitle: authorRole || 'Full-Stack Engineer',

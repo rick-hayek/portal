@@ -40,7 +40,7 @@ Metro:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/ricksrepo/portal.git
+git clone https://github.com/rick-hayek/portal.git
 cd portal
 ```
 
