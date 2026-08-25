@@ -40,7 +40,7 @@ Metro:
 ### 1. 克隆代码库
 
 ```bash
-git clone https://github.com/rick-hayek/portal.git
+git clone https://github.com/ricksrepo/portal.git
 cd portal
 ```
 

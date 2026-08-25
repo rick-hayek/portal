@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'api.dicebear.com' },
       { protocol: 'https', hostname: 'picsum.photos' },
       { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
-      { protocol: 'https', hostname: 'rick-hayek.github.io' },
+      { protocol: 'https', hostname: 'ricksrepo.github.io' },
       { protocol: 'https', hostname: 'github.com' },
       { protocol: 'https', hostname: 'pub-8e6d28a4f57a48539e93d60d9359e729.r2.dev' },
     ],

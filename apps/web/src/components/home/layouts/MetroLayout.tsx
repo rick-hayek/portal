@@ -40,7 +40,7 @@ export function MetroLayout({
     name: 'Jane Doe',
     url: siteConfig.site.url,
     sameAs: [
-      process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/rick-hayek',
+      process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/ricksrepo',
       process.env.NEXT_PUBLIC_X_URL || 'https://x.com/wevoocii',
     ],
     jobTitle: authorRole || 'Full-Stack Engineer',
@@ -174,12 +174,12 @@ export function MetroLayout({
                   <span>
                     {post1.publishedAt
                       ? new Date(post1.publishedAt)
-                          .toLocaleDateString(locale, {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })
-                          .toUpperCase()
+                        .toLocaleDateString(locale, {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })
+                        .toUpperCase()
                       : 'RECENT'}
                   </span>
                 </div>
@@ -221,12 +221,12 @@ export function MetroLayout({
                   <span>
                     {post2.publishedAt
                       ? new Date(post2.publishedAt)
-                          .toLocaleDateString(locale, {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })
-                          .toUpperCase()
+                        .toLocaleDateString(locale, {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })
+                        .toUpperCase()
                       : 'RECENT'}
                   </span>
                 </div>
