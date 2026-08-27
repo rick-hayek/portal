@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 // @portal/theme — Theme Engine Tests (Phase 1)
 // ============================================================
 
-const ALL_THEME_IDS = ['minimal-light', 'dark-neon', 'cyberpunk', 'nature-green', 'retro-brown'];
+const ALL_THEME_IDS = ['zenith', 'dark-neon', 'cyberpunk', 'retro-brown', 'minimal-light', 'lumiere'];
 
 const REQUIRED_COLOR_KEYS: (keyof ThemeConfig['colors'])[] = [
   'primary',
@@ -23,11 +23,11 @@ const REQUIRED_COLOR_KEYS: (keyof ThemeConfig['colors'])[] = [
   'success',
 ];
 
-const HEX_COLOR_REGEX = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+const HEX_COLOR_REGEX = /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgba?\([\d\s,.]+\))$/;
 
-describe('Theme Engine — All 5 themes registered', () => {
-  it('Exactly 5 themes exist', () => {
-    expect(Object.keys(themes)).toHaveLength(5);
+describe('Theme Engine — All 6 themes registered', () => {
+  it('Exactly 6 themes exist', () => {
+    expect(Object.keys(themes)).toHaveLength(6);
   });
 
   it.each(ALL_THEME_IDS)('Contains theme: %s', (id) => {
@@ -48,7 +48,7 @@ describe('Theme Engine — All 5 themes registered', () => {
   });
 });
 
-describe('Theme Engine — Token completeness for all 5 themes', () => {
+describe('Theme Engine — Token completeness for all 6 themes', () => {
   const themeEntries = Object.entries(themes);
 
   it.each(themeEntries)('%s — has all 10 color tokens', (_id, theme) => {
@@ -97,8 +97,8 @@ describe('Theme Engine — Dark/Light mode consistency', () => {
     expect(themes.cyberpunk?.mode).toBe('dark');
   });
 
-  it('nature-green is light mode', () => {
-    expect(themes['nature-green']?.mode).toBe('light');
+  it('zenith is light mode', () => {
+    expect(themes.zenith?.mode).toBe('light');
   });
 
   it('retro-brown is light mode', () => {

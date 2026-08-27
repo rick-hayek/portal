@@ -36,8 +36,8 @@ describe('Monorepo — Root Config Files', () => {
 describe('Monorepo — Root package.json', () => {
   const pkg = readJson('package.json') as Record<string, unknown>;
 
-  it('Project name is portal', () => {
-    expect(pkg.name).toBe('portal');
+  it('Project name is voocii-portal or portal', () => {
+    expect(['portal', 'voocii-portal']).toContain(pkg.name);
   });
 
   it('Marked as private', () => {

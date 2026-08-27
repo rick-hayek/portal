@@ -31,6 +31,12 @@ const validConfig: SiteConfig = {
     enabled: false,
     provider: 'mailgun',
   },
+  comments: {
+    requireModeration: true,
+  },
+  avatar: {
+    urlTemplate: 'https://cravatar.cn/avatar/{hash}?d={fallback}&s={size}',
+  },
 };
 
 describe('@portal/config — defineConfig()', () => {

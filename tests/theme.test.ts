@@ -27,7 +27,7 @@ const REQUIRED_TYPOGRAPHY_KEYS: (keyof ThemeConfig['typography'])[] = [
   'scale',
 ];
 
-const HEX_COLOR_REGEX = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+const HEX_COLOR_REGEX = /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgba?\([\d\s,.]+\))$/;
 
 describe('@portal/theme — Theme Registration', () => {
   it('At least 2 themes are registered', () => {

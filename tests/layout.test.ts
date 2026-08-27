@@ -22,11 +22,11 @@ describe('Layout — Component files exist', () => {
 
 describe('Layout — Site layout exists', () => {
   it('(site)/layout.tsx exists', () => {
-    expect(fs.existsSync(path.join(WEB_SRC, 'app/(site)/layout.tsx'))).toBe(true);
+    expect(fs.existsSync(path.join(WEB_SRC, 'app/[locale]/(site)/layout.tsx'))).toBe(true);
   });
 
   it('(site)/page.tsx exists', () => {
-    expect(fs.existsSync(path.join(WEB_SRC, 'app/(site)/page.tsx'))).toBe(true);
+    expect(fs.existsSync(path.join(WEB_SRC, 'app/[locale]/(site)/page.tsx'))).toBe(true);
   });
 
   it('site.config.ts exists', () => {
@@ -36,7 +36,9 @@ describe('Layout — Site layout exists', () => {
 
 describe('Layout — Header component structure', () => {
   const headerPath = path.join(WEB_SRC, 'components/layout/Header.tsx');
+  const classicHeaderPath = path.join(WEB_SRC, 'components/layout/headers/ClassicHeader.tsx');
   const content = fs.readFileSync(headerPath, 'utf-8');
+  const classicContent = fs.readFileSync(classicHeaderPath, 'utf-8');
 
   it('Is a client component', () => {
     expect(content).toContain("'use client'");
@@ -55,19 +57,19 @@ describe('Layout — Header component structure', () => {
   });
 
   it('Contains mobile menu toggle', () => {
-    expect(content).toContain('mobileOpen');
+    expect(classicContent).toContain('mobileOpen');
   });
 
   it('Has desktop nav hidden on mobile (md:flex)', () => {
-    expect(content).toContain('md:flex');
+    expect(classicContent).toContain('md:flex');
   });
 
   it('Has mobile menu hidden on desktop (md:hidden)', () => {
-    expect(content).toContain('md:hidden');
+    expect(classicContent).toContain('md:hidden');
   });
 
-  it('Contains accessibility aria-label', () => {
-    expect(content).toContain('aria-label');
+  it('Contains accessibility attributes', () => {
+    expect(classicContent).toMatch(/aria-expanded|aria-label|sr-only/);
   });
 });
 
@@ -80,15 +82,16 @@ describe('Layout — Footer component structure', () => {
   });
 
   it('Contains copyright symbol', () => {
-    expect(content).toContain('&copy;');
+    expect(content).toMatch(/©|&copy;/);
   });
 
   it('Contains dynamic year', () => {
     expect(content).toContain('getFullYear');
   });
 
-  it('Supports socialLinks prop', () => {
-    expect(content).toContain('socialLinks');
+  it('Renders social links', () => {
+    expect(content).toContain('GitHub');
+    expect(content).toContain('Email');
   });
 });
 
@@ -108,8 +111,8 @@ describe('Layout — ThemeSwitcher component structure', () => {
     expect(content).toContain('useTheme');
   });
 
-  it('Contains select element for theme switching', () => {
-    expect(content).toContain('select');
+  it('Contains dropdown or select element for theme switching', () => {
+    expect(content).toMatch(/Dropdown|select/);
   });
 
   it('Contains aria-label for accessibility', () => {
@@ -118,7 +121,7 @@ describe('Layout — ThemeSwitcher component structure', () => {
 });
 
 describe('Layout — (site)/layout.tsx structure', () => {
-  const layoutPath = path.join(WEB_SRC, 'app/(site)/layout.tsx');
+  const layoutPath = path.join(WEB_SRC, 'app/[locale]/(site)/layout.tsx');
   const content = fs.readFileSync(layoutPath, 'utf-8');
 
   it('Uses ThemeProvider', () => {

@@ -43,6 +43,13 @@ describe('@portal/db — Data Model Integrity', () => {
     'Link',
     'PageView',
     'SiteConfig',
+    'AboutInfo',
+    'Reference',
+    'Attachment',
+    'Book',
+    'BookLike',
+    'TrendingRepo',
+    'TrendingWeek',
   ];
 
   it.each(REQUIRED_MODELS)('Contains model %s', (model) => {
@@ -50,9 +57,9 @@ describe('@portal/db — Data Model Integrity', () => {
     expect(schema).toMatch(regex);
   });
 
-  it('Total 14 data models', () => {
+  it('Total data models matches schema', () => {
     const modelMatches = schema.match(/model\s+\w+\s+\{/g);
-    expect(modelMatches).toHaveLength(14);
+    expect(modelMatches).toHaveLength(21);
   });
 });
 
