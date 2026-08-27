@@ -86,6 +86,11 @@ describe('@portal/db — Key Field Validation', () => {
     expect(schema).toContain('author   User      @relation');
   });
 
+  it('Post contains composite index on status and publishedAt', () => {
+    const postBlock = extractModelBlock(schema, 'Post');
+    expect(postBlock).toContain('@@index([status, publishedAt])');
+  });
+
   // Comment Model
   it('Comment supports nested replies (self-reference)', () => {
     expect(schema).toContain('"CommentReplies"');
@@ -93,6 +98,11 @@ describe('@portal/db — Key Field Validation', () => {
 
   it('Comment contains review status (default pending)', () => {
     expect(schema).toMatch(/status\s+String\s+@default\("pending"\)/);
+  });
+
+  it('Comment contains composite index on postId and status', () => {
+    const commentBlock = extractModelBlock(schema, 'Comment');
+    expect(commentBlock).toContain('@@index([postId, status])');
   });
 
   // Category & Tag

@@ -67,18 +67,23 @@ describe('Portfolio — public pages', () => {
 });
 
 describe('Portfolio — admin CRUD', () => {
+  const readProject = () =>
+    exists('packages/api/src/routers/admin/project.ts')
+      ? read('packages/api/src/routers/admin/project.ts')
+      : read('packages/api/src/routers/admin.ts');
+
   it('admin router has projectCreate', () => {
-    const content = read('packages/api/src/routers/admin.ts');
+    const content = readProject();
     expect(content).toContain('projectCreate:');
   });
 
   it('admin router has projectUpdate', () => {
-    const content = read('packages/api/src/routers/admin.ts');
+    const content = readProject();
     expect(content).toContain('projectUpdate:');
   });
 
   it('admin router has projectDelete', () => {
-    const content = read('packages/api/src/routers/admin.ts');
+    const content = readProject();
     expect(content).toContain('projectDelete:');
   });
 
@@ -180,19 +185,24 @@ describe('Admin — settings page', () => {
 });
 
 describe('Admin — config CRUD in admin router', () => {
+  const readConfig = () =>
+    exists('packages/api/src/routers/admin/config.ts')
+      ? read('packages/api/src/routers/admin/config.ts')
+      : read('packages/api/src/routers/admin.ts');
+
   it('has configGet', () => {
-    const content = read('packages/api/src/routers/admin.ts');
+    const content = readConfig();
     expect(content).toContain('configGet:');
   });
 
   it('has configSet with upsert', () => {
-    const content = read('packages/api/src/routers/admin.ts');
+    const content = readConfig();
     expect(content).toContain('configSet:');
     expect(content).toContain('upsert');
   });
 
   it('has configList', () => {
-    const content = read('packages/api/src/routers/admin.ts');
+    const content = readConfig();
     expect(content).toContain('configList:');
   });
 });

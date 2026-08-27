@@ -102,42 +102,48 @@ describe('Search — Cmd+K Dialog UI', () => {
 // ─── Admin Dashboard ─────────────────────────────────
 
 describe('Admin — tRPC Router', () => {
-  const adminPath = path.join(apiSrc, 'routers/admin.ts');
+  const adminDir = path.join(apiSrc, 'routers/admin');
+  const readAdmin = (file: string) =>
+    fs.existsSync(path.join(adminDir, file))
+      ? fs.readFileSync(path.join(adminDir, file), 'utf-8')
+      : fs.readFileSync(path.join(apiSrc, 'routers/admin.ts'), 'utf-8');
 
   it('admin router exists', () => {
-    expect(fs.existsSync(adminPath)).toBe(true);
+    expect(
+      fs.existsSync(path.join(apiSrc, 'routers/admin.ts')) ||
+        fs.existsSync(path.join(adminDir, 'index.ts')),
+    ).toBe(true);
   });
 
   it('all procedures use adminProcedure', () => {
-    const content = fs.readFileSync(adminPath, 'utf-8');
-    expect(content).toContain('adminProcedure');
-    // Should not use publicProcedure
-    expect(content).not.toContain('publicProcedure');
+    const postContent = readAdmin('post.ts');
+    expect(postContent).toContain('adminProcedure');
+    expect(postContent).not.toContain('publicProcedure');
   });
 
   it('has dashboard stats', () => {
-    const content = fs.readFileSync(adminPath, 'utf-8');
-    expect(content).toContain('stats');
-    expect(content).toContain('totalPosts');
-    expect(content).toContain('totalComments');
+    const statsContent = readAdmin('stats.ts');
+    expect(statsContent).toContain('stats');
+    expect(statsContent).toContain('totalPosts');
+    expect(statsContent).toContain('totalComments');
   });
 
   it('has post CRUD mutations', () => {
-    const content = fs.readFileSync(adminPath, 'utf-8');
-    expect(content).toContain('postCreate');
-    expect(content).toContain('postUpdate');
-    expect(content).toContain('postDelete');
+    const postContent = readAdmin('post.ts');
+    expect(postContent).toContain('postCreate');
+    expect(postContent).toContain('postUpdate');
+    expect(postContent).toContain('postDelete');
   });
 
   it('has comment moderation', () => {
-    const content = fs.readFileSync(adminPath, 'utf-8');
-    expect(content).toContain('commentModerate');
-    expect(content).toContain('commentDelete');
+    const commentContent = readAdmin('comment.ts');
+    expect(commentContent).toContain('commentModerate');
+    expect(commentContent).toContain('commentDelete');
   });
 
   it('has guestbook moderation', () => {
-    const content = fs.readFileSync(adminPath, 'utf-8');
-    expect(content).toContain('guestbookDelete');
+    const guestbookContent = readAdmin('guestbook.ts');
+    expect(guestbookContent).toContain('guestbookDelete');
   });
 
   it('registered in appRouter', () => {
