@@ -1,6 +1,45 @@
 import { z } from 'zod';
 import { adminProcedure, publicProcedure, router } from '../trpc';
 
+export const KEY_PAGE_PATHS = [
+  '/',
+  '/blog',
+  '/links',
+  '/portfolio',
+  '/trending',
+  '/books',
+  '/tools',
+  '/about',
+] as const;
+
+export type KeyPagePath = (typeof KEY_PAGE_PATHS)[number];
+
+export interface ArchivedPageViews {
+  total: number;
+  lastCleanedAt?: string;
+  paths: Record<string, number>;
+}
+
+/**
+ * Normalizes a raw request path (including localized prefixes) to a canonical key page route.
+ */
+export function normalizeKeyPath(rawPath: string): KeyPagePath | null {
+  if (!rawPath) return null;
+  const clean = (rawPath.split('?')[0] ?? '').split('#')[0]?.trim() ?? '';
+  const withoutLocale = clean.replace(/^\/(?:zh|en)(?=\/|$)/, '') || '/';
+
+  if (withoutLocale === '' || withoutLocale === '/') return '/';
+  if (withoutLocale === '/blog') return '/blog';
+  if (withoutLocale === '/links' || withoutLocale.startsWith('/links')) return '/links';
+  if (withoutLocale === '/portfolio') return '/portfolio';
+  if (withoutLocale === '/trending') return '/trending';
+  if (withoutLocale === '/books') return '/books';
+  if (withoutLocale === '/tools') return '/tools';
+  if (withoutLocale === '/about') return '/about';
+
+  return null;
+}
+
 export const analyticsRouter = router({
   /** Record page views in batches (public, fire-and-forget) */
   track: publicProcedure
@@ -54,7 +93,7 @@ export const analyticsRouter = router({
       return { ok: true };
     }),
 
-  /** Page view summary — admin only */
+  /** Page view summary — admin only with baseline archive aggregation */
   summary: adminProcedure
     .input(
       z
@@ -68,26 +107,140 @@ export const analyticsRouter = router({
       const since = new Date();
       since.setDate(since.getDate() - days);
 
-      const [totalViews, recentViews, topPages, viewsByDay] = await Promise.all([
+      // 1. Fetch archived baseline data from SiteConfig
+      const archivedConfig = await ctx.prisma.siteConfig.findUnique({
+        where: { key: 'archived_page_views' },
+      });
+
+      let archived: ArchivedPageViews = { total: 0, paths: {} };
+      if (archivedConfig?.value && typeof archivedConfig.value === 'object' && !Array.isArray(archivedConfig.value)) {
+        archived = archivedConfig.value as unknown as ArchivedPageViews;
+      }
+      if (!archived.paths) archived.paths = {};
+
+      // 2. Fetch live metrics
+      const [liveTotal, recentViews, topPages, viewsByDay, livePathCounts] = await Promise.all([
         ctx.prisma.pageView.count(),
         ctx.prisma.pageView.count({ where: { createdAt: { gte: since } } }),
         ctx.prisma.$queryRaw`
-                    SELECT path, COUNT(*)::int AS views
-                    FROM "PageView"
-                    WHERE "createdAt" >= ${since}
-                    GROUP BY path
-                    ORDER BY views DESC
-                    LIMIT 10
-                ` as Promise<{ path: string; views: number }[]>,
+          SELECT path, COUNT(*)::int AS views
+          FROM "PageView"
+          WHERE "createdAt" >= ${since}
+          GROUP BY path
+          ORDER BY views DESC
+          LIMIT 10
+        ` as Promise<{ path: string; views: number }[]>,
         ctx.prisma.$queryRaw`
-                    SELECT DATE("createdAt") AS date, COUNT(*)::int AS views
-                    FROM "PageView"
-                    WHERE "createdAt" >= ${since}
-                    GROUP BY DATE("createdAt")
-                    ORDER BY date ASC
-                ` as Promise<{ date: string; views: number }[]>,
+          SELECT DATE("createdAt") AS date, COUNT(*)::int AS views
+          FROM "PageView"
+          WHERE "createdAt" >= ${since}
+          GROUP BY DATE("createdAt")
+          ORDER BY date ASC
+        ` as Promise<{ date: string; views: number }[]>,
+        ctx.prisma.$queryRaw`
+          SELECT path, COUNT(*)::int AS views
+          FROM "PageView"
+          GROUP BY path
+        ` as Promise<{ path: string; views: number }[]>,
       ]);
 
-      return { totalViews, recentViews, days, topPages, viewsByDay };
+      // 3. Compute total views & key page views (live + archived)
+      const totalViews = liveTotal + (archived.total || 0);
+
+      const keyPageViews: Record<string, number> = {};
+      for (const keyPath of KEY_PAGE_PATHS) {
+        keyPageViews[keyPath] = archived.paths[keyPath] || 0;
+      }
+
+      for (const row of livePathCounts) {
+        const norm = normalizeKeyPath(row.path);
+        if (norm) {
+          keyPageViews[norm] = (keyPageViews[norm] || 0) + row.views;
+        }
+      }
+
+      return {
+        totalViews,
+        recentViews,
+        days,
+        topPages,
+        viewsByDay,
+        keyPageViews,
+        archivedSummary: archived,
+      };
+    }),
+
+  /** Safe retention cleanup — archives baseline totals before pruning expired PageViews */
+  cleanup: adminProcedure
+    .input(
+      z
+        .object({
+          daysToKeep: z.number().int().min(30).max(365).default(90),
+        })
+        .default({ daysToKeep: 90 }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const daysToKeep = input.daysToKeep;
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - daysToKeep);
+
+      // 1. Fetch current archived baseline
+      const archivedConfig = await ctx.prisma.siteConfig.findUnique({
+        where: { key: 'archived_page_views' },
+      });
+
+      let archived: ArchivedPageViews = { total: 0, paths: {} };
+      if (archivedConfig?.value && typeof archivedConfig.value === 'object' && !Array.isArray(archivedConfig.value)) {
+        archived = archivedConfig.value as unknown as ArchivedPageViews;
+      }
+      if (!archived.paths) archived.paths = {};
+
+      // 2. Count expired rows and aggregate by path
+      const [expiredTotal, expiredRows] = await Promise.all([
+        ctx.prisma.pageView.count({ where: { createdAt: { lt: cutoff } } }),
+        ctx.prisma.$queryRaw`
+          SELECT path, COUNT(*)::int AS count
+          FROM "PageView"
+          WHERE "createdAt" < ${cutoff}
+          GROUP BY path
+        ` as Promise<{ path: string; count: number }[]>,
+      ]);
+
+      if (expiredTotal > 0) {
+        archived.total = (archived.total || 0) + expiredTotal;
+        archived.lastCleanedAt = new Date().toISOString();
+
+        for (const row of expiredRows) {
+          const norm = normalizeKeyPath(row.path);
+          if (norm) {
+            archived.paths[norm] = (archived.paths[norm] || 0) + row.count;
+          }
+        }
+
+        // 3. Atomically upsert baseline data in SiteConfig
+        await ctx.prisma.siteConfig.upsert({
+          where: { key: 'archived_page_views' },
+          create: {
+            key: 'archived_page_views',
+            value: archived as any,
+          },
+          update: {
+            value: archived as any,
+          },
+        });
+
+        // 4. Safely purge expired raw rows
+        await ctx.prisma.pageView.deleteMany({
+          where: { createdAt: { lt: cutoff } },
+        });
+      }
+
+      return {
+        success: true,
+        deletedCount: expiredTotal,
+        retainedDays: daysToKeep,
+        cutoffDate: cutoff.toISOString(),
+        archivedSummary: archived,
+      };
     }),
 });

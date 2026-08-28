@@ -1,6 +1,6 @@
 {
   "name": "voocii-portal",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": true,
   "description": "Modular personal website platform",
   "packageManager": "pnpm@9.15.4",
@@ -24,7 +24,8 @@
     "db:migrate:dev": "pnpm --filter @portal/db migrate:dev",
     "db:migrate:deploy": "pnpm --filter @portal/db migrate:deploy",
     "db:seed": "pnpm --filter @portal/db exec prisma db seed",
-    "db:studio": "pnpm --filter @portal/db studio"
+    "db:studio": "pnpm --filter @portal/db studio",
+    "db:prune-analytics": "pnpm --filter @portal/db exec tsx scripts/prune-analytics.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.15",
