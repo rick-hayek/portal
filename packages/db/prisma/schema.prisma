@@ -65,6 +65,7 @@ model Post {
   excerpt     String?
   coverImage  String?
   status      String    @default("draft") // draft, published
+  views       Int       @default(0)
   authorId    String
   categoryId  String?
   publishedAt DateTime?
@@ -77,6 +78,7 @@ model Post {
   comments Comment[]
 
   @@index([status, publishedAt])
+  @@index([views])
 }
 
 model Category {

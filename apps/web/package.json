@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "rm -rf .next .turbo && next build && find .next -name \"*.map\" -delete",
+    "build": "node ./scripts/clean.mjs && next build && node ./scripts/clean-sourcemaps.mjs",
     "start": "next start",
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf .next .turbo"
+    "clean": "node ./scripts/clean.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

@@ -25,6 +25,32 @@ export const analyticsRouter = router({
           createdAt: item.createdAt ? new Date(item.createdAt) : undefined,
         })),
       });
+
+      // Extract blog post slugs and increment Post.views
+      const blogSlugs: string[] = [];
+      for (const item of input) {
+        const match = item.path.match(/^(?:\/(?:zh|en))?\/blog\/([a-zA-Z0-9_-]+)/);
+        if (match?.[1]) {
+          blogSlugs.push(match[1]);
+        }
+      }
+
+      if (blogSlugs.length > 0) {
+        const counts: Record<string, number> = {};
+        for (const slug of blogSlugs) {
+          counts[slug] = (counts[slug] || 0) + 1;
+        }
+
+        await Promise.allSettled(
+          Object.entries(counts).map(([slug, count]) =>
+            ctx.prisma.post.updateMany({
+              where: { slug },
+              data: { views: { increment: count } },
+            }),
+          ),
+        );
+      }
+
       return { ok: true };
     }),
 

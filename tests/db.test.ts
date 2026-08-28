@@ -82,6 +82,10 @@ describe('@portal/db — Key Field Validation', () => {
     expect(schema).toMatch(/status\s+String\s+@default\("draft"\)/);
   });
 
+  it('Post contains views field (default 0)', () => {
+    expect(schema).toMatch(/views\s+Int\s+@default\(0\)/);
+  });
+
   it('Post relates to author (User)', () => {
     expect(schema).toContain('author   User      @relation');
   });

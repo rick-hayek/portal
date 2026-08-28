@@ -161,12 +161,19 @@ export default async function BlogPostPage({
 
               {post.publishedAt && (
                 <time dateTime={new Date(post.publishedAt).toISOString()}>
-                  {new Date(post.publishedAt).toLocaleDateString('zh-CN', {
+                  {new Date(post.publishedAt).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
                   })}
                 </time>
+              )}
+
+              {typeof post.views === 'number' && (
+                <span className="flex items-center gap-1.5 opacity-85">
+                  <span>·</span>
+                  <span>{post.views.toLocaleString()} {locale === 'zh' ? '次阅读' : 'views'}</span>
+                </span>
               )}
             </div>
 
