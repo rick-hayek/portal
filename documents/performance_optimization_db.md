@@ -136,3 +136,8 @@ Instead of streaming binary data from PostgreSQL, we will redirect the request d
 4. Verify that the image is uploaded successfully and appears in your Cloudflare R2 bucket console.
 5. Attempt to view the uploaded file via the `/uploads/[filename]` link, verifying that it redirects successfully to the R2 public CDN URL.
 6. Delete the attachment from the Admin dashboard and verify it is removed from R2.
+
+---
+
+## Status
+- [x] All done.
