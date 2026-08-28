@@ -52,3 +52,5 @@ meili-data/
 *.log
 
 **/blogs/*
+
+**/analysis-report*

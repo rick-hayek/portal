@@ -72,9 +72,10 @@ An agentic, progressive-disclosure workflow designed to analyze full-stack codeb
    node ./scripts/extract-routes.mjs
    node ./scripts/scan-db-models.mjs
    ```
-2. **Review High-Level Specs**:
-   - Read high-level architecture documents in `documents/` or `README.md`.
-   - Identify core design decisions, runtime environments, and documented scope.
+2. **Review High-Level Specs & Requirements**:
+   - **Search Docs Folders**: Inspect existing documentation in `docs/`, `doc/`, `documents/`, `design/`, `designs/`, `architecture/`, `spec/`, `specs/`, `rfc/`, or `wiki/`.
+   - **Read High-Level Project Guides**: Review `README.md`, `README.*.md`, `ARCHITECTURE.md`, `DESIGN.md`, or `SPEC.md`.
+   - **Extract Key Baselines**: Identify core design decisions, business scope, runtime environments, and documented technical boundaries.
 
 ---
 
