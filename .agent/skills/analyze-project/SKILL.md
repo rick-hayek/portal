@@ -1,5 +1,5 @@
 ---
-name: analyze-project-optimized
+name: analyze-project
 description: Optimized, context-efficient project analysis and architecture audit using progressive disclosure, on-demand reference retrieval, script pre-aggregation, and isolated sandboxing. Use when the user asks to analyze the project, audit frontend/backend/database/tests, or generate structured architecture reports without context window degradation.
 ---
 
